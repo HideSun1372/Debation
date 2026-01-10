@@ -59,6 +59,12 @@ export default {
           "4": "hsl(var(--chart-4) / <alpha-value>)",
           "5": "hsl(var(--chart-5) / <alpha-value>)",
         },
+        tier: {
+          beginner: "hsl(var(--tier-beginner) / <alpha-value>)",
+          intermediate: "hsl(var(--tier-intermediate) / <alpha-value>)",
+          advanced: "hsl(var(--tier-advanced) / <alpha-value>)",
+          master: "hsl(var(--tier-master) / <alpha-value>)",
+        },
         sidebar: {
           ring: "hsl(var(--sidebar-ring) / <alpha-value>)",
           DEFAULT: "hsl(var(--sidebar) / <alpha-value>)",
