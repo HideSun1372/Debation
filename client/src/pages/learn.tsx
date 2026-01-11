@@ -12,6 +12,7 @@ import {
   ASSESSMENT_QUESTIONS, 
   LESSON_UNITS, 
   type ExperienceLevel,
+  type CurriculumTier,
   getPlacementUnit,
   getLessonExercise,
   getMultiPageLesson,
@@ -1078,84 +1079,131 @@ export default function Learn() {
         </CardContent>
       </Card>
 
-      <div className="space-y-6">
-        {LESSON_UNITS.map((unit) => {
-          const unitLessons: string[] = [];
-          unit.sections.forEach(s => s.lessons.forEach(l => unitLessons.push(l.id)));
-          const completedInUnit = unitLessons.filter(id => user.lessonProgress.completedLessonIds.includes(id)).length;
-          const unitProgress = Math.round((completedInUnit / unitLessons.length) * 100);
-
+      <div className="space-y-8">
+        {/* Group units by section/tier */}
+        {(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT", "MASTER"] as CurriculumTier[]).map((tier) => {
+          const tierUnits = LESSON_UNITS.filter(u => u.tier === tier);
+          if (tierUnits.length === 0) return null;
+          
+          const tierLessonIds: string[] = [];
+          tierUnits.forEach(unit => {
+            unit.sections.forEach(s => s.lessons.forEach(l => tierLessonIds.push(l.id)));
+          });
+          const completedInTier = tierLessonIds.filter(id => user.lessonProgress.completedLessonIds.includes(id)).length;
+          const tierProgress = Math.round((completedInTier / tierLessonIds.length) * 100);
+          
+          const sectionInfo: Record<CurriculumTier, { name: string; lessonRange: string; color: string }> = {
+            BEGINNER: { name: "Section 1: Beginner", lessonRange: "Lessons 1-70", color: "bg-tier-beginner" },
+            INTERMEDIATE: { name: "Section 2: Intermediate", lessonRange: "Lessons 71-140", color: "bg-tier-intermediate" },
+            ADVANCED: { name: "Section 3: Advanced", lessonRange: "Lessons 141-210", color: "bg-tier-advanced" },
+            EXPERT: { name: "Section 4: Expert", lessonRange: "Lessons 211-280", color: "bg-tier-expert" },
+            MASTER: { name: "Section 5: Master", lessonRange: "Lessons 281-365", color: "bg-tier-master" },
+          };
+          
+          const info = sectionInfo[tier];
+          
           return (
-            <Card key={unit.id}>
-              <CardHeader>
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <BookOpen className="h-5 w-5" />
-                      {unit.title}
-                    </CardTitle>
-                    <CardDescription className="mt-1">{unit.description}</CardDescription>
-                  </div>
-                  <Badge variant="outline">{completedInUnit}/{unitLessons.length}</Badge>
-                </div>
-                <Progress value={unitProgress} className="h-2 mt-3" />
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {unit.sections.map((section) => (
-                  <div key={section.id} className="rounded-lg border p-4">
-                    <h4 className="font-medium mb-3">{section.title}</h4>
-                    <div className="space-y-2">
-                      {section.lessons.map((lesson) => {
-                        const completed = isLessonCompleted(lesson.id);
-                        const unlocked = isLessonUnlocked(lesson.id);
-                        
-                        return (
-                          <button
-                            key={lesson.id}
-                            onClick={() => handleLessonClick(unit.id, section.id, lesson.id)}
-                            disabled={!unlocked && !completed}
-                            className={cn(
-                              "w-full flex items-center gap-3 p-3 rounded-md text-left transition-colors",
-                              completed && "bg-tier-beginner/10",
-                              unlocked && !completed && "hover:bg-accent",
-                              !unlocked && !completed && "opacity-50 cursor-not-allowed"
-                            )}
-                            data-testid={`button-lesson-${lesson.id}`}
-                          >
-                            <div className={cn(
-                              "h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0",
-                              completed ? "bg-tier-beginner text-white" : unlocked ? "bg-muted" : "bg-muted"
-                            )}>
-                              {completed ? (
-                                <Check className="h-4 w-4" />
-                              ) : unlocked ? (
-                                <PlayCircle className="h-4 w-4" />
-                              ) : (
-                                <Lock className="h-4 w-4" />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className={cn(
-                                "font-medium truncate",
-                                completed && "text-tier-beginner"
-                              )}>
-                                {lesson.title}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {lesson.estimatedMinutes} min
-                              </p>
-                            </div>
-                            {(unlocked || completed) && (
-                              <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                            )}
-                          </button>
-                        );
-                      })}
+            <div key={tier} className="space-y-4">
+              <div className="sticky top-0 z-10 bg-background/95 backdrop-blur py-3 border-b">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className={cn("h-3 w-3 rounded-full", info.color)} />
+                    <div>
+                      <h2 className="text-xl font-bold">{info.name}</h2>
+                      <p className="text-sm text-muted-foreground">{info.lessonRange}</p>
                     </div>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
+                  <div className="flex items-center gap-3">
+                    <Badge variant="outline">{completedInTier}/{tierLessonIds.length}</Badge>
+                    <div className="w-24">
+                      <Progress value={tierProgress} className="h-2" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-4 pl-2">
+                {tierUnits.map((unit) => {
+                  const unitLessons: string[] = [];
+                  unit.sections.forEach(s => s.lessons.forEach(l => unitLessons.push(l.id)));
+                  const completedInUnit = unitLessons.filter(id => user.lessonProgress.completedLessonIds.includes(id)).length;
+                  const unitProgress = Math.round((completedInUnit / unitLessons.length) * 100);
+
+                  return (
+                    <Card key={unit.id}>
+                      <CardHeader>
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <CardTitle className="flex items-center gap-2">
+                              <BookOpen className="h-5 w-5" />
+                              {unit.title}
+                            </CardTitle>
+                            <CardDescription className="mt-1">{unit.description}</CardDescription>
+                          </div>
+                          <Badge variant="outline">{completedInUnit}/{unitLessons.length}</Badge>
+                        </div>
+                        <Progress value={unitProgress} className="h-2 mt-3" />
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {unit.sections.map((section) => (
+                          <div key={section.id} className="rounded-lg border p-4">
+                            <h4 className="font-medium mb-3">{section.title}</h4>
+                            <div className="space-y-2">
+                              {section.lessons.map((lesson) => {
+                                const completed = isLessonCompleted(lesson.id);
+                                const unlocked = isLessonUnlocked(lesson.id);
+                                
+                                return (
+                                  <button
+                                    key={lesson.id}
+                                    onClick={() => handleLessonClick(unit.id, section.id, lesson.id)}
+                                    disabled={!unlocked && !completed}
+                                    className={cn(
+                                      "w-full flex items-center gap-3 p-3 rounded-md text-left transition-colors",
+                                      completed && "bg-tier-beginner/10",
+                                      unlocked && !completed && "hover:bg-accent",
+                                      !unlocked && !completed && "opacity-50 cursor-not-allowed"
+                                    )}
+                                    data-testid={`button-lesson-${lesson.id}`}
+                                  >
+                                    <div className={cn(
+                                      "h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0",
+                                      completed ? "bg-tier-beginner text-white" : unlocked ? "bg-muted" : "bg-muted"
+                                    )}>
+                                      {completed ? (
+                                        <Check className="h-4 w-4" />
+                                      ) : unlocked ? (
+                                        <PlayCircle className="h-4 w-4" />
+                                      ) : (
+                                        <Lock className="h-4 w-4" />
+                                      )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <p className={cn(
+                                        "font-medium truncate",
+                                        completed && "text-tier-beginner"
+                                      )}>
+                                        {lesson.title}
+                                      </p>
+                                      <p className="text-xs text-muted-foreground">
+                                        {lesson.estimatedMinutes} min
+                                      </p>
+                                    </div>
+                                    {(unlocked || completed) && (
+                                      <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
       </div>
