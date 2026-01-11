@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { getSkillTier, getTierProgress, SKILL_TIERS } from "@shared/schema";
+import { getSkillTier, getTierProgress, SKILL_TIERS, type ExperienceLevel, getPlacementUnit } from "@shared/schema";
 
 export interface DebateHistoryItem {
   id: string;
@@ -12,6 +12,17 @@ export interface DebateHistoryItem {
   side: "pro" | "con";
 }
 
+export interface LessonProgress {
+  hasCompletedOnboarding: boolean;
+  experienceLevel: ExperienceLevel | null;
+  assessmentScore: number;
+  currentUnitId: string;
+  currentSectionId: string | null;
+  currentLessonId: string | null;
+  completedLessonIds: string[];
+  lastVisitedAt: string | null;
+}
+
 export interface UserState {
   id: string;
   username: string;
@@ -20,6 +31,7 @@ export interface UserState {
   wins: number;
   losses: number;
   debateHistory: DebateHistoryItem[];
+  lessonProgress: LessonProgress;
 }
 
 interface UserContextType {
@@ -29,7 +41,24 @@ interface UserContextType {
   addDebateToHistory: (debate: DebateHistoryItem) => void;
   getSkillTierName: () => string;
   getProgress: () => number;
+  completeOnboarding: (experience: ExperienceLevel, score: number) => void;
+  completeLesson: (lessonId: string) => void;
+  setCurrentLesson: (unitId: string, sectionId: string, lessonId: string) => void;
+  isLessonCompleted: (lessonId: string) => boolean;
+  isLessonUnlocked: (lessonId: string, allLessonIds: string[]) => boolean;
+  resetLessonProgress: () => void;
 }
+
+const defaultLessonProgress: LessonProgress = {
+  hasCompletedOnboarding: false,
+  experienceLevel: null,
+  assessmentScore: 0,
+  currentUnitId: "unit-1",
+  currentSectionId: null,
+  currentLessonId: null,
+  completedLessonIds: [],
+  lastVisitedAt: null,
+};
 
 const defaultUser: UserState = {
   id: "local-user",
@@ -39,6 +68,7 @@ const defaultUser: UserState = {
   wins: 0,
   losses: 0,
   debateHistory: [],
+  lessonProgress: defaultLessonProgress,
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -54,6 +84,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             ...defaultUser,
             ...parsed,
             debateHistory: parsed.debateHistory || [],
+            lessonProgress: {
+              ...defaultLessonProgress,
+              ...(parsed.lessonProgress || {}),
+            },
           };
         } catch {
           return defaultUser;
@@ -113,6 +147,82 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return getTierProgress(user.skillPoints);
   }, [user.skillPoints]);
 
+  const completeOnboarding = useCallback((experience: ExperienceLevel, score: number) => {
+    const placementUnit = getPlacementUnit(experience, score);
+    setUser((prev) => {
+      const newUser = {
+        ...prev,
+        lessonProgress: {
+          ...prev.lessonProgress,
+          hasCompletedOnboarding: true,
+          experienceLevel: experience,
+          assessmentScore: score,
+          currentUnitId: placementUnit,
+          lastVisitedAt: new Date().toISOString(),
+        },
+      };
+      localStorage.setItem("debate-user", JSON.stringify(newUser));
+      return newUser;
+    });
+  }, []);
+
+  const completeLesson = useCallback((lessonId: string) => {
+    setUser((prev) => {
+      if (prev.lessonProgress.completedLessonIds.includes(lessonId)) {
+        return prev;
+      }
+      const newUser = {
+        ...prev,
+        lessonProgress: {
+          ...prev.lessonProgress,
+          completedLessonIds: [...prev.lessonProgress.completedLessonIds, lessonId],
+          lastVisitedAt: new Date().toISOString(),
+        },
+      };
+      localStorage.setItem("debate-user", JSON.stringify(newUser));
+      return newUser;
+    });
+  }, []);
+
+  const setCurrentLesson = useCallback((unitId: string, sectionId: string, lessonId: string) => {
+    setUser((prev) => {
+      const newUser = {
+        ...prev,
+        lessonProgress: {
+          ...prev.lessonProgress,
+          currentUnitId: unitId,
+          currentSectionId: sectionId,
+          currentLessonId: lessonId,
+          lastVisitedAt: new Date().toISOString(),
+        },
+      };
+      localStorage.setItem("debate-user", JSON.stringify(newUser));
+      return newUser;
+    });
+  }, []);
+
+  const isLessonCompleted = useCallback((lessonId: string) => {
+    return user.lessonProgress.completedLessonIds.includes(lessonId);
+  }, [user.lessonProgress.completedLessonIds]);
+
+  const isLessonUnlocked = useCallback((lessonId: string, allLessonIds: string[]) => {
+    const lessonIndex = allLessonIds.indexOf(lessonId);
+    if (lessonIndex === 0) return true;
+    const previousLessonId = allLessonIds[lessonIndex - 1];
+    return user.lessonProgress.completedLessonIds.includes(previousLessonId);
+  }, [user.lessonProgress.completedLessonIds]);
+
+  const resetLessonProgress = useCallback(() => {
+    setUser((prev) => {
+      const newUser = {
+        ...prev,
+        lessonProgress: defaultLessonProgress,
+      };
+      localStorage.setItem("debate-user", JSON.stringify(newUser));
+      return newUser;
+    });
+  }, []);
+
   return (
     <UserContext.Provider
       value={{
@@ -122,6 +232,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         addDebateToHistory,
         getSkillTierName,
         getProgress,
+        completeOnboarding,
+        completeLesson,
+        setCurrentLesson,
+        isLessonCompleted,
+        isLessonUnlocked,
+        resetLessonProgress,
       }}
     >
       {children}

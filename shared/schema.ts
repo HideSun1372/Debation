@@ -264,3 +264,387 @@ export const EDUCATIONAL_CONTENT = {
 
 export type EducationalSection = keyof typeof EDUCATIONAL_CONTENT;
 export type EducationalItem = typeof EDUCATIONAL_CONTENT[EducationalSection][number];
+
+// Experience Levels for Initial Questionnaire
+export const EXPERIENCE_LEVELS = [
+  { id: "none", label: "No experience", description: "I've never participated in formal debate" },
+  { id: "casual", label: "Casual experience", description: "I've had informal debates or discussions" },
+  { id: "some", label: "Some experience", description: "I've participated in a few debates or a debate club" },
+  { id: "competitive", label: "Competitive experience", description: "I've competed in debate tournaments" },
+] as const;
+
+export type ExperienceLevel = typeof EXPERIENCE_LEVELS[number]["id"];
+
+// Skill Assessment Questions
+export const ASSESSMENT_QUESTIONS = [
+  {
+    id: "q1",
+    question: "What is the purpose of a 'warrant' in an argument?",
+    options: [
+      { id: "a", text: "To state your main claim" },
+      { id: "b", text: "To provide evidence or reasoning that supports your claim" },
+      { id: "c", text: "To summarize your argument" },
+      { id: "d", text: "To attack your opponent's position" },
+    ],
+    correctAnswer: "b",
+    difficulty: "beginner",
+  },
+  {
+    id: "q2",
+    question: "In a debate, what does 'burden of proof' typically mean?",
+    options: [
+      { id: "a", text: "The weight of your evidence folder" },
+      { id: "b", text: "The obligation to prove your claims are true" },
+      { id: "c", text: "The number of sources you must cite" },
+      { id: "d", text: "How long your speech should be" },
+    ],
+    correctAnswer: "b",
+    difficulty: "beginner",
+  },
+  {
+    id: "q3",
+    question: "What is 'signposting' in debate?",
+    options: [
+      { id: "a", text: "Holding up signs during your speech" },
+      { id: "b", text: "Using verbal cues to guide listeners through your arguments" },
+      { id: "c", text: "Pointing at your opponent" },
+      { id: "d", text: "Writing key points on a whiteboard" },
+    ],
+    correctAnswer: "b",
+    difficulty: "intermediate",
+  },
+  {
+    id: "q4",
+    question: "What is the best way to handle cross-examination?",
+    options: [
+      { id: "a", text: "Give long, detailed answers to every question" },
+      { id: "b", text: "Refuse to answer questions you don't like" },
+      { id: "c", text: "Answer concisely and honestly without volunteering extra information" },
+      { id: "d", text: "Ask your own questions instead of answering" },
+    ],
+    correctAnswer: "c",
+    difficulty: "intermediate",
+  },
+  {
+    id: "q5",
+    question: "What is 'crystallization' in a debate round?",
+    options: [
+      { id: "a", text: "Making your arguments as clear as crystal" },
+      { id: "b", text: "Focusing on 2-3 key voting issues in final speeches" },
+      { id: "c", text: "Freezing up during your speech" },
+      { id: "d", text: "Using fancy vocabulary" },
+    ],
+    correctAnswer: "b",
+    difficulty: "advanced",
+  },
+] as const;
+
+export type AssessmentQuestion = typeof ASSESSMENT_QUESTIONS[number];
+
+// Lesson Structure: Units > Sections > Lessons
+export const LESSON_UNITS = [
+  {
+    id: "unit-1",
+    title: "Foundations of Debate",
+    description: "Master the fundamental concepts every debater needs to know",
+    recommendedLevel: "none" as ExperienceLevel,
+    order: 1,
+    sections: [
+      {
+        id: "s1-1",
+        title: "Understanding Debate",
+        order: 1,
+        lessons: [
+          {
+            id: "l1-1-1",
+            title: "What is Debate?",
+            order: 1,
+            estimatedMinutes: 5,
+            content: "Debate is a formal discussion on a particular topic where opposing arguments are presented. It develops critical thinking, research skills, and the ability to articulate complex ideas clearly. Unlike casual arguments, debate follows structured rules and focuses on logical reasoning rather than emotional appeals.",
+            keyPoints: ["Structured argumentation", "Evidence-based reasoning", "Respectful disagreement", "Logical analysis"],
+            exercise: "Think of a topic you feel strongly about. Write down one argument for each side of the issue.",
+          },
+          {
+            id: "l1-1-2",
+            title: "Debate Formats Overview",
+            order: 2,
+            estimatedMinutes: 8,
+            content: "There are several major debate formats, each with unique rules and structures. Lincoln-Douglas focuses on value debates between two individuals. Public Forum is team-based and designed for general audiences. Policy Debate involves in-depth research on year-long resolutions. Parliamentary debate emphasizes quick thinking with limited preparation time.",
+            keyPoints: ["Lincoln-Douglas: One-on-one value debate", "Public Forum: Team-based current events", "Policy: Research-intensive year-long topics", "Parliamentary: Impromptu and adaptive"],
+            exercise: "Research one debate format and write a brief summary of its rules.",
+          },
+        ],
+      },
+      {
+        id: "s1-2",
+        title: "Building Arguments",
+        order: 2,
+        lessons: [
+          {
+            id: "l1-2-1",
+            title: "The Claim-Warrant-Impact Framework",
+            order: 1,
+            estimatedMinutes: 10,
+            content: "Every strong argument follows the CWI structure. The CLAIM is your assertion—what you believe to be true. The WARRANT is your reasoning or evidence that supports the claim. The IMPACT explains why your claim matters and what consequences follow from it being true.",
+            keyPoints: ["Claim: Your main assertion", "Warrant: Evidence and reasoning", "Impact: Why it matters"],
+            exercise: "Take a simple claim like 'Exercise is good for you' and build a complete CWI argument around it.",
+          },
+          {
+            id: "l1-2-2",
+            title: "Types of Arguments",
+            order: 2,
+            estimatedMinutes: 8,
+            content: "Arguments can be categorized into four main types. Definitional arguments establish what terms mean. Factual arguments claim something is true or false. Value arguments assess whether something is good or bad. Policy arguments propose what should be done.",
+            keyPoints: ["Definitional: What terms mean", "Factual: What is true", "Value: What is good/bad", "Policy: What should be done"],
+            exercise: "Identify which type each of these arguments is: 'Democracy is the best form of government', 'Climate change is real', 'We should ban plastic bags'.",
+          },
+          {
+            id: "l1-2-3",
+            title: "Burden of Proof",
+            order: 3,
+            estimatedMinutes: 7,
+            content: "The side proposing change (affirmative) typically bears the burden of proof. They must demonstrate why the current situation is problematic and why their solution is better. The negative side can defend the status quo or propose alternatives. Understanding burden of proof helps you know what you need to prove to win.",
+            keyPoints: ["Affirmative must prove change is needed", "Negative can defend status quo", "Burden shifts when new claims are made"],
+            exercise: "For the topic 'Schools should start later', identify what the affirmative side needs to prove.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "unit-2",
+    title: "Debate Techniques",
+    description: "Learn the skills that separate good debaters from great ones",
+    recommendedLevel: "casual" as ExperienceLevel,
+    order: 2,
+    sections: [
+      {
+        id: "s2-1",
+        title: "Listening and Note-Taking",
+        order: 1,
+        lessons: [
+          {
+            id: "l2-1-1",
+            title: "Active Listening",
+            order: 1,
+            estimatedMinutes: 8,
+            content: "Great debaters listen carefully to their opponents. Rather than just waiting for your turn to speak, actively engage with what's being said. Take notes on key claims, identify weaknesses in reasoning, and prepare targeted responses. Acknowledge valid points—it shows intellectual honesty.",
+            keyPoints: ["Note opponent's main claims", "Identify logical gaps", "Prepare specific rebuttals", "Acknowledge valid points"],
+            exercise: "Watch a debate video and take notes on one speaker's main arguments and potential weaknesses.",
+          },
+          {
+            id: "l2-1-2",
+            title: "Flowing (Note-Taking System)",
+            order: 2,
+            estimatedMinutes: 12,
+            content: "Flowing is a systematic way to track arguments across a debate. Create columns for each speech, use abbreviations for common terms, and symbols for dropped arguments. Good flowing helps you see the entire debate structure and identify which arguments have gone unanswered.",
+            keyPoints: ["Create consistent abbreviations", "Track argument responses", "Note dropped arguments", "Organize by contention"],
+            exercise: "Create your own flowing abbreviation system for 10 common debate terms.",
+          },
+        ],
+      },
+      {
+        id: "s2-2",
+        title: "Speaking Skills",
+        order: 2,
+        lessons: [
+          {
+            id: "l2-2-1",
+            title: "Signposting",
+            order: 1,
+            estimatedMinutes: 6,
+            content: "Guide your audience through your arguments with clear verbal signposts. Use phrases like 'My first point is...', 'Furthermore...', 'In response to my opponent's claim...' Signposting helps judges follow your reasoning and shows organization.",
+            keyPoints: ["Number your arguments", "Use transition phrases", "Summarize before moving on", "Reference opponent's points clearly"],
+            exercise: "Rewrite a paragraph of an essay using signposting techniques.",
+          },
+          {
+            id: "l2-2-2",
+            title: "Time Management",
+            order: 2,
+            estimatedMinutes: 8,
+            content: "Allocate your speaking time wisely. Spend roughly 70% on your strongest arguments and 30% on rebuttals. Don't try to address every minor point—focus on what matters most. Practice within time limits to develop a natural sense of pacing.",
+            keyPoints: ["Prioritize key arguments", "Don't over-extend on weak points", "Save time for summary", "Practice within time limits"],
+            exercise: "Time yourself giving a 2-minute speech on any topic. Did you finish early, late, or right on time?",
+          },
+        ],
+      },
+      {
+        id: "s2-3",
+        title: "Rebuttals",
+        order: 3,
+        lessons: [
+          {
+            id: "l2-3-1",
+            title: "Rebuttal Techniques",
+            order: 1,
+            estimatedMinutes: 10,
+            content: "Effective rebuttals directly address and dismantle opponent arguments. Don't just restate your position—explain specifically why their reasoning is flawed. Attack the warrant (their evidence or reasoning) rather than just denying the claim.",
+            keyPoints: ["Attack the warrant, not just the claim", "Provide counter-evidence", "Show logical fallacies", "Explain why your argument prevails"],
+            exercise: "Take an argument you disagree with and write a rebuttal that attacks the warrant.",
+          },
+          {
+            id: "l2-3-2",
+            title: "Cross-Examination Strategies",
+            order: 2,
+            estimatedMinutes: 10,
+            content: "Cross-examination is your chance to expose weaknesses in your opponent's case. Ask questions that clarify their position, then use closed questions to pin down commitments and open questions to reveal inconsistencies. Don't argue during cross-ex—just gather information.",
+            keyPoints: ["Ask clarifying questions", "Expose contradictions", "Don't argue during cross-ex", "Keep questions short and clear"],
+            exercise: "Write 5 cross-examination questions for a topic of your choice.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "unit-3",
+    title: "Advanced Strategy",
+    description: "Master strategic thinking to win competitive debates",
+    recommendedLevel: "some" as ExperienceLevel,
+    order: 3,
+    sections: [
+      {
+        id: "s3-1",
+        title: "Framework and Weighing",
+        order: 1,
+        lessons: [
+          {
+            id: "l3-1-1",
+            title: "Framework Debates",
+            order: 1,
+            estimatedMinutes: 12,
+            content: "Establish the criteria by which arguments should be judged. If you control the framework, you control how the debate is evaluated. Define key terms early, establish clear evaluation criteria, and consistently apply your framework to all arguments in the round.",
+            keyPoints: ["Define key terms early", "Establish evaluation criteria", "Argue why your framework matters", "Apply framework to all arguments"],
+            exercise: "For the topic 'Privacy is more important than security', propose a framework and explain how it should be used to evaluate arguments.",
+          },
+          {
+            id: "l3-1-2",
+            title: "Weighing Arguments",
+            order: 2,
+            estimatedMinutes: 10,
+            content: "Not all arguments are equal. Learn to weigh competing claims by magnitude (how big is the impact?), probability (how likely is it?), timeframe (when does it happen?), and reversibility (can it be undone?). Judges need to know why your argument outweighs your opponent's.",
+            keyPoints: ["Magnitude: Size of impact", "Probability: Likelihood of occurrence", "Timeframe: When it happens", "Reversibility: Can it be undone"],
+            exercise: "Compare two arguments on opposite sides of an issue and explain which outweighs and why.",
+          },
+        ],
+      },
+      {
+        id: "s3-2",
+        title: "Closing Strong",
+        order: 2,
+        lessons: [
+          {
+            id: "l3-2-1",
+            title: "Crystallization",
+            order: 1,
+            estimatedMinutes: 8,
+            content: "In final speeches, focus on the 2-3 most important voting issues. Explain why you've won these key points and why they should determine the outcome. Tell the story of the debate and guide the judge to your conclusion.",
+            keyPoints: ["Identify voting issues", "Weigh competing arguments", "Summarize key wins", "Tell the story of the debate"],
+            exercise: "After a practice debate, identify the 2 most important voting issues and explain why you won them.",
+          },
+          {
+            id: "l3-2-2",
+            title: "Judge Adaptation",
+            order: 2,
+            estimatedMinutes: 8,
+            content: "Different judges value different things. Lay judges (non-experts) prefer clear, simple arguments. Flow judges (experts) expect technical precision. Learn to read your judge and adapt your style accordingly without compromising your arguments.",
+            keyPoints: ["Know your judge's background", "Adapt complexity level", "Maintain core arguments", "Adjust speaking speed and style"],
+            exercise: "How would you explain the same argument to a parent vs. a debate coach?",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "unit-4",
+    title: "Competition Mastery",
+    description: "Prepare for tournament-level competition",
+    recommendedLevel: "competitive" as ExperienceLevel,
+    order: 4,
+    sections: [
+      {
+        id: "s4-1",
+        title: "Research and Preparation",
+        order: 1,
+        lessons: [
+          {
+            id: "l4-1-1",
+            title: "Building a Research File",
+            order: 1,
+            estimatedMinutes: 15,
+            content: "Competitive debaters maintain organized research files. Collect evidence from credible sources, cite properly, and organize by topic and argument type. Include both affirmative and negative evidence so you're prepared for any side.",
+            keyPoints: ["Use credible sources", "Organize by argument type", "Maintain both sides", "Update regularly"],
+            exercise: "Start a research file for one debate topic with at least 5 sources.",
+          },
+          {
+            id: "l4-1-2",
+            title: "Pre-Round Preparation",
+            order: 2,
+            estimatedMinutes: 10,
+            content: "Before each round, review your case, anticipate opponent arguments, and prepare responses. If you know your opponent, study their tendencies. Check the topic wording carefully and ensure your arguments directly address it.",
+            keyPoints: ["Review your case", "Anticipate opposition", "Research opponents if possible", "Check topic wording"],
+            exercise: "Create a pre-round checklist of everything you should do before a debate.",
+          },
+        ],
+      },
+      {
+        id: "s4-2",
+        title: "Tournament Psychology",
+        order: 2,
+        lessons: [
+          {
+            id: "l4-2-1",
+            title: "Managing Nerves",
+            order: 1,
+            estimatedMinutes: 8,
+            content: "Even experienced debaters get nervous. Use breathing techniques, positive visualization, and physical warm-ups to manage anxiety. Remember that some nervousness is good—it keeps you sharp. Focus on your preparation, not the outcome.",
+            keyPoints: ["Practice breathing techniques", "Visualize success", "Physical warm-ups help", "Focus on process, not outcome"],
+            exercise: "Try a 4-7-8 breathing exercise: inhale for 4 seconds, hold for 7, exhale for 8. Do this 3 times.",
+          },
+          {
+            id: "l4-2-2",
+            title: "Learning from Losses",
+            order: 2,
+            estimatedMinutes: 8,
+            content: "Losses are learning opportunities. After each round, reflect on what worked and what didn't. Ask judges for feedback. Don't make excuses—identify specific improvements. The best debaters analyze their losses more carefully than their wins.",
+            keyPoints: ["Seek judge feedback", "Identify specific improvements", "No excuses", "Track patterns over time"],
+            exercise: "After your next debate (win or lose), write down 3 things you could have done better.",
+          },
+        ],
+      },
+    ],
+  },
+] as const;
+
+export type LessonUnit = typeof LESSON_UNITS[number];
+export type LessonSection = LessonUnit["sections"][number];
+export type Lesson = LessonSection["lessons"][number];
+
+// Helper to get all lessons flattened
+export function getAllLessons(): Array<{ unitId: string; sectionId: string; lesson: Lesson }> {
+  const lessons: Array<{ unitId: string; sectionId: string; lesson: Lesson }> = [];
+  for (const unit of LESSON_UNITS) {
+    for (const section of unit.sections) {
+      for (const lesson of section.lessons) {
+        lessons.push({ unitId: unit.id, sectionId: section.id, lesson });
+      }
+    }
+  }
+  return lessons;
+}
+
+// Get placement unit based on experience and assessment score
+export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: number): string {
+  const maxScore = ASSESSMENT_QUESTIONS.length;
+  const scorePercent = assessmentScore / maxScore;
+  
+  if (experience === "competitive" && scorePercent >= 0.6) {
+    return "unit-4";
+  }
+  if (experience === "some" || (experience === "competitive" && scorePercent < 0.6)) {
+    return scorePercent >= 0.6 ? "unit-3" : "unit-2";
+  }
+  if (experience === "casual") {
+    return scorePercent >= 0.8 ? "unit-2" : "unit-1";
+  }
+  return "unit-1";
+}
