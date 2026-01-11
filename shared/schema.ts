@@ -197,6 +197,31 @@ export const insertDebateMessageSchema = createInsertSchema(debateMessages).omit
 export type InsertDebateMessage = z.infer<typeof insertDebateMessageSchema>;
 export type DebateMessage = typeof debateMessages.$inferSelect;
 
+// Lesson Progress table - stores user learning progress
+export const lessonProgress = pgTable("lesson_progress", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().unique(),
+  hasCompletedOnboarding: boolean("has_completed_onboarding").notNull().default(false),
+  experienceLevel: text("experience_level"), // "none", "some", "experienced"
+  assessmentScore: integer("assessment_score").default(0),
+  currentUnitId: text("current_unit_id").notNull().default("unit-1"),
+  currentSectionId: text("current_section_id"),
+  currentLessonId: text("current_lesson_id"),
+  completedLessonIds: text("completed_lesson_ids").array().notNull().default(sql`ARRAY[]::text[]`),
+  lastVisitedAt: timestamp("last_visited_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertLessonProgressSchema = createInsertSchema(lessonProgress).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertLessonProgress = z.infer<typeof insertLessonProgressSchema>;
+export type LessonProgress = typeof lessonProgress.$inferSelect;
+
 // Educational Content
 export const EDUCATIONAL_CONTENT = {
   fundamentals: [
