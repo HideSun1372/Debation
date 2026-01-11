@@ -2,7 +2,10 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import OpenAI from "openai";
-import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
+import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
+import { db } from "./db";
+import { lessonProgress } from "@shared/schema";
+import { eq } from "drizzle-orm";
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -274,6 +277,91 @@ Be fair but consider the skill level difference. If the user is debating someone
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ error: "Failed to fetch user" });
+    }
+  });
+
+  // Get lesson progress for authenticated user
+  app.get("/api/progress", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const [progress] = await db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId));
+      
+      if (!progress) {
+        // Return default progress if none exists
+        return res.json({
+          hasCompletedOnboarding: false,
+          experienceLevel: null,
+          assessmentScore: 0,
+          currentUnitId: "unit-1",
+          currentSectionId: null,
+          currentLessonId: null,
+          completedLessonIds: [],
+          lastVisitedAt: null,
+        });
+      }
+      
+      res.json(progress);
+    } catch (error) {
+      console.error("Error fetching lesson progress:", error);
+      res.status(500).json({ error: "Failed to fetch progress" });
+    }
+  });
+
+  // Save/update lesson progress for authenticated user
+  app.post("/api/progress", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const {
+        hasCompletedOnboarding,
+        experienceLevel,
+        assessmentScore,
+        currentUnitId,
+        currentSectionId,
+        currentLessonId,
+        completedLessonIds,
+      } = req.body;
+
+      const [existingProgress] = await db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId));
+
+      if (existingProgress) {
+        // Update existing progress
+        const [updated] = await db.update(lessonProgress)
+          .set({
+            hasCompletedOnboarding: hasCompletedOnboarding ?? existingProgress.hasCompletedOnboarding,
+            experienceLevel: experienceLevel ?? existingProgress.experienceLevel,
+            assessmentScore: assessmentScore ?? existingProgress.assessmentScore,
+            currentUnitId: currentUnitId ?? existingProgress.currentUnitId,
+            currentSectionId: currentSectionId ?? existingProgress.currentSectionId,
+            currentLessonId: currentLessonId ?? existingProgress.currentLessonId,
+            completedLessonIds: completedLessonIds ?? existingProgress.completedLessonIds,
+            lastVisitedAt: new Date(),
+            updatedAt: new Date(),
+          })
+          .where(eq(lessonProgress.userId, userId))
+          .returning();
+        
+        res.json(updated);
+      } else {
+        // Create new progress
+        const [created] = await db.insert(lessonProgress)
+          .values({
+            userId,
+            hasCompletedOnboarding: hasCompletedOnboarding ?? false,
+            experienceLevel,
+            assessmentScore: assessmentScore ?? 0,
+            currentUnitId: currentUnitId ?? "unit-1",
+            currentSectionId,
+            currentLessonId,
+            completedLessonIds: completedLessonIds ?? [],
+            lastVisitedAt: new Date(),
+          })
+          .returning();
+        
+        res.status(201).json(created);
+      }
+    } catch (error) {
+      console.error("Error saving lesson progress:", error);
+      res.status(500).json({ error: "Failed to save progress" });
     }
   });
 
