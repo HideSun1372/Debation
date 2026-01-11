@@ -515,6 +515,31 @@ CRITICAL RULES:
 Ask your follow-up question:`;
     }
     
+    if (cxIntent === "crossfire-start") {
+      return `You are an AI debate opponent starting a CROSSFIRE period.
+Personality: ${personality}
+${skillModifier}
+
+DEBATE CONTEXT:
+- Topic: "${topic}"
+- Your position: ${side === "pro" ? "PRO/AFFIRMATIVE" : "CON/NEGATIVE"}
+- This is CROSSFIRE - both sides can ask AND answer questions
+- You are STARTING the crossfire by asking the first question
+
+Ask ONE strategic opening question that:
+- Challenges a key part of your opponent's case
+- Is direct and specific
+- Sets you up to expose a weakness
+
+CRITICAL RULES:
+1. Ask ONLY ONE question
+2. Keep it brief (one sentence)
+3. End with a question mark
+4. Be challenging but respectful
+
+Ask your opening crossfire question:`;
+    }
+    
     if (cxIntent === "crossfire-exchange") {
       return `You are an AI debate opponent in a CROSSFIRE period.
 Personality: ${personality}

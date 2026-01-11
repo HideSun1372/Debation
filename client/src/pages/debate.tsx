@@ -205,14 +205,50 @@ export default function Debate() {
       const isCfSpeech = speechToDeliver.type === "crossfire";
       const isOpponentSpeech = !isUserSpeech(speechToDeliver);
       
-      // Handle Crossfire: both sides can ask, user gets to go first
+      // Handle Crossfire: AI asks the first question to start the back-and-forth
       if (isCfSpeech && !cxStarted) {
-        setCxStarted(true);
-        setIsCxMode(true);
-        setCxQuestioner(null); // Neither side is designated - both can ask
-        setIsTimerRunning(true);
-        setCxExchangeCount(0);
-        // Don't trigger AI - wait for user to ask first
+        const triggerCrossfireStart = async () => {
+          setIsLoading(true);
+          setIsTimerRunning(true);
+          setCxStarted(true);
+          setIsCxMode(true);
+          setCxQuestioner(null); // Crossfire - both can ask
+          try {
+            const response = await apiRequest("POST", "/api/debate/message", {
+              message: null,
+              debateId,
+              opponentId: opponent?.id,
+              opponentTier: opponent?.tier,
+              opponentPersonality: opponent?.personality,
+              topic: topic?.title,
+              side,
+              speechId: speechToDeliver.id,
+              speechName: speechToDeliver.name,
+              speechType: speechToDeliver.type,
+              cxIntent: "crossfire-start",
+              previousMessages: messages,
+            });
+
+            const data = await response.json();
+            
+            const opponentMessage: DebateMessage = {
+              id: `opponent-cf-${Date.now()}`,
+              role: "opponent",
+              content: data.response,
+              speechId: speechToDeliver.id,
+              speechName: speechToDeliver.name,
+            };
+
+            setMessages((prev) => [...prev, opponentMessage]);
+            setCxExchangeCount(1);
+          } catch (error) {
+            console.error("Error starting crossfire:", error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        
+        triggerCrossfireStart();
         return;
       }
       
