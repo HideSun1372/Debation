@@ -43,13 +43,157 @@ export function getTierProgress(points: number): number {
   return Math.min(100, Math.round((progress / range) * 100));
 }
 
-// Debate Formats
-export const DEBATE_FORMATS = [
-  { id: "lincoln-douglas", name: "Lincoln-Douglas", description: "One-on-one value debate focusing on philosophical and ethical issues", timeLimit: 6 },
-  { id: "public-forum", name: "Public Forum", description: "Team debate on current events topics designed for general audiences", timeLimit: 4 },
-  { id: "policy", name: "Policy Debate", description: "In-depth research-based debate on a year-long resolution", timeLimit: 8 },
-  { id: "parliamentary", name: "Parliamentary", description: "Impromptu debate with limited prep time on diverse topics", timeLimit: 5 },
-] as const;
+// Speech types for different debate formats
+export type SpeechType = 
+  | "constructive" 
+  | "rebuttal" 
+  | "cross-examination" 
+  | "summary" 
+  | "final-focus"
+  | "reply"
+  | "poi";
+
+export interface DebateSpeech {
+  id: string;
+  name: string;
+  speaker: "aff" | "neg" | "user" | "opponent";
+  type: SpeechType;
+  defaultMinutes: number;
+  description: string;
+}
+
+export interface DebateFormatConfig {
+  id: string;
+  name: string;
+  description: string;
+  teamSize: 1 | 2 | 3;
+  defaultPrepMinutes: number;
+  speeches: DebateSpeech[];
+  hasCrossEx: boolean;
+  hasPOI: boolean;
+}
+
+// Debate Formats with full speech structures
+export const DEBATE_FORMATS: DebateFormatConfig[] = [
+  {
+    id: "lincoln-douglas",
+    name: "Lincoln-Douglas",
+    description: "One-on-one value debate focusing on philosophical and ethical issues",
+    teamSize: 1,
+    defaultPrepMinutes: 4,
+    hasCrossEx: true,
+    hasPOI: false,
+    speeches: [
+      { id: "ld-ac", name: "Affirmative Constructive", speaker: "aff", type: "constructive", defaultMinutes: 6, description: "Present your value framework and contentions" },
+      { id: "ld-cx1", name: "Cross-Examination", speaker: "neg", type: "cross-examination", defaultMinutes: 3, description: "Negative questions the Affirmative" },
+      { id: "ld-nc", name: "Negative Constructive + Rebuttal", speaker: "neg", type: "constructive", defaultMinutes: 7, description: "Present negative case and respond to affirmative" },
+      { id: "ld-cx2", name: "Cross-Examination", speaker: "aff", type: "cross-examination", defaultMinutes: 3, description: "Affirmative questions the Negative" },
+      { id: "ld-1ar", name: "1st Affirmative Rebuttal", speaker: "aff", type: "rebuttal", defaultMinutes: 4, description: "Respond to negative case and rebuild affirmative" },
+      { id: "ld-nr", name: "Negative Rebuttal", speaker: "neg", type: "rebuttal", defaultMinutes: 6, description: "Final negative speech, crystallize voting issues" },
+      { id: "ld-2ar", name: "2nd Affirmative Rebuttal", speaker: "aff", type: "rebuttal", defaultMinutes: 3, description: "Final affirmative speech, crystallize voting issues" },
+    ],
+  },
+  {
+    id: "public-forum",
+    name: "Public Forum",
+    description: "Team debate on current events topics designed for general audiences",
+    teamSize: 2,
+    defaultPrepMinutes: 3,
+    hasCrossEx: true,
+    hasPOI: false,
+    speeches: [
+      { id: "pf-con1", name: "First Speaker Constructive (Team A)", speaker: "aff", type: "constructive", defaultMinutes: 4, description: "First team presents their case" },
+      { id: "pf-con2", name: "First Speaker Constructive (Team B)", speaker: "neg", type: "constructive", defaultMinutes: 4, description: "Second team presents their case" },
+      { id: "pf-cx1", name: "Crossfire", speaker: "aff", type: "cross-examination", defaultMinutes: 3, description: "Both first speakers question each other" },
+      { id: "pf-reb1", name: "Second Speaker Rebuttal (Team A)", speaker: "aff", type: "rebuttal", defaultMinutes: 4, description: "First team responds to opponent's case" },
+      { id: "pf-reb2", name: "Second Speaker Rebuttal (Team B)", speaker: "neg", type: "rebuttal", defaultMinutes: 4, description: "Second team responds to opponent's case" },
+      { id: "pf-cx2", name: "Crossfire", speaker: "neg", type: "cross-examination", defaultMinutes: 3, description: "Both second speakers question each other" },
+      { id: "pf-sum1", name: "First Speaker Summary (Team A)", speaker: "aff", type: "summary", defaultMinutes: 3, description: "Narrow the debate, extend key arguments" },
+      { id: "pf-sum2", name: "First Speaker Summary (Team B)", speaker: "neg", type: "summary", defaultMinutes: 3, description: "Narrow the debate, extend key arguments" },
+      { id: "pf-gcx", name: "Grand Crossfire", speaker: "aff", type: "cross-examination", defaultMinutes: 3, description: "All four debaters question each other" },
+      { id: "pf-ff1", name: "Second Speaker Final Focus (Team A)", speaker: "aff", type: "final-focus", defaultMinutes: 2, description: "Final persuasive appeal" },
+      { id: "pf-ff2", name: "Second Speaker Final Focus (Team B)", speaker: "neg", type: "final-focus", defaultMinutes: 2, description: "Final persuasive appeal" },
+    ],
+  },
+  {
+    id: "policy",
+    name: "Policy Debate",
+    description: "In-depth research-based debate on a year-long resolution with plan/counterplan",
+    teamSize: 2,
+    defaultPrepMinutes: 8,
+    hasCrossEx: true,
+    hasPOI: false,
+    speeches: [
+      { id: "pol-1ac", name: "1st Affirmative Constructive", speaker: "aff", type: "constructive", defaultMinutes: 8, description: "Present the affirmative plan and advantages" },
+      { id: "pol-cx1", name: "Cross-Examination", speaker: "neg", type: "cross-examination", defaultMinutes: 3, description: "Negative questions the 1AC speaker" },
+      { id: "pol-1nc", name: "1st Negative Constructive", speaker: "neg", type: "constructive", defaultMinutes: 8, description: "Present disadvantages, counterplans, and attacks" },
+      { id: "pol-cx2", name: "Cross-Examination", speaker: "aff", type: "cross-examination", defaultMinutes: 3, description: "Affirmative questions the 1NC speaker" },
+      { id: "pol-2ac", name: "2nd Affirmative Constructive", speaker: "aff", type: "constructive", defaultMinutes: 8, description: "Respond to negative and extend case" },
+      { id: "pol-cx3", name: "Cross-Examination", speaker: "neg", type: "cross-examination", defaultMinutes: 3, description: "Negative questions the 2AC speaker" },
+      { id: "pol-2nc", name: "2nd Negative Constructive", speaker: "neg", type: "constructive", defaultMinutes: 8, description: "Extend negative strategy and attacks" },
+      { id: "pol-cx4", name: "Cross-Examination", speaker: "aff", type: "cross-examination", defaultMinutes: 3, description: "Affirmative questions the 2NC speaker" },
+      { id: "pol-1nr", name: "1st Negative Rebuttal", speaker: "neg", type: "rebuttal", defaultMinutes: 5, description: "Collapse and extend key arguments" },
+      { id: "pol-1ar", name: "1st Affirmative Rebuttal", speaker: "aff", type: "rebuttal", defaultMinutes: 5, description: "Respond to both negative speeches" },
+      { id: "pol-2nr", name: "2nd Negative Rebuttal", speaker: "neg", type: "rebuttal", defaultMinutes: 5, description: "Final negative speech, voting issues" },
+      { id: "pol-2ar", name: "2nd Affirmative Rebuttal", speaker: "aff", type: "rebuttal", defaultMinutes: 5, description: "Final affirmative speech, voting issues" },
+    ],
+  },
+  {
+    id: "parliamentary",
+    name: "Parliamentary",
+    description: "Impromptu debate with Points of Information and limited prep time",
+    teamSize: 2,
+    defaultPrepMinutes: 15,
+    hasCrossEx: false,
+    hasPOI: true,
+    speeches: [
+      { id: "parl-pm", name: "Prime Minister Constructive", speaker: "aff", type: "constructive", defaultMinutes: 7, description: "Define the resolution and present government case" },
+      { id: "parl-lo", name: "Leader of Opposition", speaker: "neg", type: "constructive", defaultMinutes: 8, description: "Attack government case and present opposition" },
+      { id: "parl-mg", name: "Member of Government", speaker: "aff", type: "constructive", defaultMinutes: 8, description: "Rebuild government case and extend arguments" },
+      { id: "parl-mo", name: "Member of Opposition", speaker: "neg", type: "constructive", defaultMinutes: 8, description: "Extend opposition and attack government" },
+      { id: "parl-lor", name: "Leader of Opposition Rebuttal", speaker: "neg", type: "rebuttal", defaultMinutes: 4, description: "Summarize opposition case" },
+      { id: "parl-pmr", name: "Prime Minister Rebuttal", speaker: "aff", type: "rebuttal", defaultMinutes: 5, description: "Final crystallization for government" },
+    ],
+  },
+  {
+    id: "world-schools",
+    name: "World Schools",
+    description: "International format combining prepared and impromptu debate with POIs",
+    teamSize: 3,
+    defaultPrepMinutes: 30,
+    hasCrossEx: false,
+    hasPOI: true,
+    speeches: [
+      { id: "ws-1p", name: "1st Proposition", speaker: "aff", type: "constructive", defaultMinutes: 8, description: "Define motion and present team line with first argument" },
+      { id: "ws-1o", name: "1st Opposition", speaker: "neg", type: "constructive", defaultMinutes: 8, description: "Accept/challenge definition and present opposition line" },
+      { id: "ws-2p", name: "2nd Proposition", speaker: "aff", type: "constructive", defaultMinutes: 8, description: "Rebuild and extend with second argument" },
+      { id: "ws-2o", name: "2nd Opposition", speaker: "neg", type: "constructive", defaultMinutes: 8, description: "Rebut and extend with second argument" },
+      { id: "ws-3p", name: "3rd Proposition", speaker: "aff", type: "constructive", defaultMinutes: 8, description: "Rebut and present third argument" },
+      { id: "ws-3o", name: "3rd Opposition", speaker: "neg", type: "constructive", defaultMinutes: 8, description: "Rebut and present third argument" },
+      { id: "ws-or", name: "Opposition Reply", speaker: "neg", type: "reply", defaultMinutes: 4, description: "Biased adjudicator summary from opposition view" },
+      { id: "ws-pr", name: "Proposition Reply", speaker: "aff", type: "reply", defaultMinutes: 4, description: "Biased adjudicator summary from proposition view" },
+    ],
+  },
+  {
+    id: "congressional",
+    name: "Congressional Debate",
+    description: "Legislative simulation with speeches, questioning, and parliamentary procedure",
+    teamSize: 1,
+    defaultPrepMinutes: 0,
+    hasCrossEx: true,
+    hasPOI: false,
+    speeches: [
+      { id: "cong-author", name: "Authorship/Sponsorship", speaker: "aff", type: "constructive", defaultMinutes: 3, description: "Introduce and advocate for the legislation" },
+      { id: "cong-q1", name: "Questioning Period", speaker: "neg", type: "cross-examination", defaultMinutes: 2, description: "Floor questions the speaker" },
+      { id: "cong-opp1", name: "First Negation", speaker: "neg", type: "rebuttal", defaultMinutes: 3, description: "First speech against the legislation" },
+      { id: "cong-q2", name: "Questioning Period", speaker: "aff", type: "cross-examination", defaultMinutes: 2, description: "Floor questions the speaker" },
+      { id: "cong-aff2", name: "Second Affirmative", speaker: "aff", type: "constructive", defaultMinutes: 3, description: "Continue advocacy with new arguments" },
+      { id: "cong-q3", name: "Questioning Period", speaker: "neg", type: "cross-examination", defaultMinutes: 2, description: "Floor questions the speaker" },
+      { id: "cong-neg2", name: "Second Negation", speaker: "neg", type: "rebuttal", defaultMinutes: 3, description: "Continue opposition with new arguments" },
+      { id: "cong-q4", name: "Questioning Period", speaker: "aff", type: "cross-examination", defaultMinutes: 2, description: "Floor questions the speaker" },
+    ],
+  },
+];
 
 export type DebateFormat = typeof DEBATE_FORMATS[number];
 

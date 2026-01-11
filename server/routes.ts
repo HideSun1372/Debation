@@ -96,26 +96,29 @@ export async function registerRoutes(
         opponentPersonality, 
         topic, 
         side, 
-        turnNumber, 
+        speechId,
+        speechName,
+        speechType,
         previousMessages 
       } = req.body;
 
-      if (debateId) {
+      if (debateId && message) {
         await storage.createDebateMessage({
           debateId,
           role: "user",
           content: message,
-          turnNumber,
+          turnNumber: previousMessages.length + 1,
         });
       }
 
       const skillModifier = getSkillModifier(opponentTier);
-      const systemPrompt = buildDebateSystemPrompt(
+      const systemPrompt = buildDebateSpeechPrompt(
         opponentPersonality,
         topic,
         side === "pro" ? "con" : "pro",
         skillModifier,
-        turnNumber
+        speechName,
+        speechType
       );
 
       const conversationHistory = previousMessages.map((m: { role: string; content: string }) => ({
@@ -128,7 +131,7 @@ export async function registerRoutes(
         messages: [
           { role: "system", content: systemPrompt },
           ...conversationHistory,
-          { role: "user", content: message },
+          ...(message ? [{ role: "user" as const, content: message }] : []),
         ],
         max_completion_tokens: 1024,
       });
@@ -140,7 +143,7 @@ export async function registerRoutes(
           debateId,
           role: "opponent",
           content: aiResponse,
-          turnNumber,
+          turnNumber: previousMessages.length + 2,
         });
       }
 
@@ -425,6 +428,49 @@ ${turnNumber === 1 ? "This is the opening exchange. Establish your core position
 ${turnNumber >= 3 ? "This is a later round. Focus on rebuttals and strengthening your strongest arguments." : ""}
 
 Respond as your debate character would, making your best argument for your side.`;
+}
+
+function buildDebateSpeechPrompt(
+  personality: string,
+  topic: string,
+  side: string,
+  skillModifier: string,
+  speechName: string,
+  speechType: string
+): string {
+  const speechGuidelines: Record<string, string> = {
+    constructive: "Present your main arguments with clear claims, warrants, and impacts. Establish your case structure.",
+    rebuttal: "Focus on attacking your opponent's arguments. Identify weaknesses and refute their points directly.",
+    "cross-examination": "Ask probing questions to expose flaws in your opponent's case. Be strategic and pointed.",
+    summary: "Crystallize the key voting issues. Explain why your side has won the most important arguments.",
+    "final-focus": "Make your closing appeal. Weigh the debate and explain why judges should vote for your side.",
+    poi: "Make brief, strategic interventions. Points of Information should be concise (15 seconds max).",
+  };
+
+  return `You are an AI debate opponent with the following characteristics:
+Personality: ${personality}
+
+${skillModifier}
+
+DEBATE CONTEXT:
+- Topic: "${topic}"
+- Your position: ${side === "pro" ? "PRO/AFFIRMATIVE (arguing FOR the resolution)" : "CON/NEGATIVE (arguing AGAINST the resolution)"}
+- Current speech: ${speechName}
+- Speech type: ${speechType}
+
+SPEECH-SPECIFIC GUIDANCE:
+${speechGuidelines[speechType] || "Present your arguments clearly and persuasively."}
+
+RULES:
+1. Stay in character based on your personality and skill level
+2. Make arguments appropriate for your side and the speech type
+3. Respond directly to your opponent's points when relevant
+4. Keep responses focused and appropriate for the speech (150-300 words for constructives, 100-200 for rebuttals)
+5. Use the claim-warrant-impact framework when making arguments
+6. Be respectful but competitive
+7. Adapt your approach based on the specific speech type
+
+Respond as your debate character would, making your best ${speechType} speech for your side.`;
 }
 
 function calculatePointsChange(

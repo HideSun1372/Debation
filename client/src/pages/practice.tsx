@@ -7,9 +7,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUser } from "@/lib/user-context";
-import { AI_OPPONENTS, DEBATE_TOPICS, DEBATE_FORMATS, getSkillTier, type AIOpponent } from "@shared/schema";
-import { Swords, User, Target, ArrowRight, Clock, Circle, Hexagon, Star, Crown } from "lucide-react";
+import { AI_OPPONENTS, DEBATE_TOPICS, DEBATE_FORMATS, getSkillTier, type AIOpponent, type DebateFormatConfig, type DebateSpeech } from "@shared/schema";
+import { Swords, User, Target, ArrowRight, Clock, Circle, Hexagon, Star, Crown, Settings, ChevronDown, Users, Timer, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tierIcons = {
@@ -52,13 +57,41 @@ export default function Practice() {
   const [selectedSide, setSelectedSide] = useState<"pro" | "con">("pro");
   const [filterTier, setFilterTier] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  
+  const [showTimeSettings, setShowTimeSettings] = useState(false);
+  const [prepTime, setPrepTime] = useState<number>(4);
+  const [speechTimes, setSpeechTimes] = useState<Record<string, number>>({});
+  const [expandedFormat, setExpandedFormat] = useState<string | null>(null);
+  
+  const getFormat = (id: string): DebateFormatConfig | undefined => 
+    DEBATE_FORMATS.find(f => f.id === id);
+    
+  const getSpeechTime = (speechId: string, defaultMinutes: number): number => 
+    speechTimes[speechId] ?? defaultMinutes;
+    
+  const updateSpeechTime = (speechId: string, minutes: number) => {
+    setSpeechTimes(prev => ({ ...prev, [speechId]: minutes }));
+  };
+  
+  const resetToDefaults = (format: DebateFormatConfig) => {
+    setPrepTime(format.defaultPrepMinutes);
+    const defaults: Record<string, number> = {};
+    format.speeches.forEach(s => { defaults[s.id] = s.defaultMinutes; });
+    setSpeechTimes(defaults);
+  };
+  
+  const getTotalDebateTime = (): number => {
+    const format = getFormat(selectedFormat);
+    if (!format) return 0;
+    return format.speeches.reduce((sum, s) => sum + getSpeechTime(s.id, s.defaultMinutes), 0);
+  };
 
   const filteredOpponents = AI_OPPONENTS.filter((opp) => {
     if (filterTier === "all") return true;
     return opp.tier === filterTier;
   });
 
-  const categories = [...new Set(DEBATE_TOPICS.map((t) => t.category))];
+  const categories = Array.from(new Set(DEBATE_TOPICS.map((t) => t.category)));
   
   const filteredTopics = DEBATE_TOPICS.filter((topic) => {
     if (filterCategory === "all") return true;
@@ -73,9 +106,22 @@ export default function Practice() {
       format: selectedFormat,
       topic: selectedTopic,
       side: selectedSide,
+      prepTime: prepTime.toString(),
+      speechTimes: JSON.stringify(speechTimes),
     });
     
     setLocation(`/debate?${params.toString()}`);
+  };
+  
+  const handleFormatSelect = (formatId: string) => {
+    const format = getFormat(formatId);
+    if (format) {
+      setSelectedFormat(formatId);
+      setPrepTime(format.defaultPrepMinutes);
+      const defaults: Record<string, number> = {};
+      format.speeches.forEach(s => { defaults[s.id] = s.defaultMinutes; });
+      setSpeechTimes(defaults);
+    }
   };
 
   const getRecommendedOpponents = () => {
@@ -247,7 +293,7 @@ export default function Practice() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {DEBATE_FORMATS.map((format) => (
                   <Card
                     key={format.id}
@@ -255,7 +301,7 @@ export default function Practice() {
                       "cursor-pointer transition-all hover-elevate",
                       selectedFormat === format.id && "ring-2 ring-primary"
                     )}
-                    onClick={() => setSelectedFormat(format.id)}
+                    onClick={() => handleFormatSelect(format.id)}
                     data-testid={`card-format-${format.id}`}
                   >
                     <CardContent className="p-4">
@@ -263,16 +309,123 @@ export default function Practice() {
                         <h3 className="font-medium">{format.name}</h3>
                         <Badge variant="secondary" className="gap-1">
                           <Clock className="h-3 w-3" />
-                          {format.timeLimit} min
+                          {format.speeches.reduce((sum, s) => sum + s.defaultMinutes, 0)} min
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">{format.description}</p>
+                      <p className="text-sm text-muted-foreground mb-3">{format.description}</p>
+                      <div className="flex flex-wrap gap-2 text-xs">
+                        <Badge variant="outline" className="gap-1">
+                          <Users className="h-3 w-3" />
+                          {format.teamSize === 1 ? "1v1" : format.teamSize === 2 ? "2v2" : "3v3"}
+                        </Badge>
+                        <Badge variant="outline" className="gap-1">
+                          <Timer className="h-3 w-3" />
+                          {format.defaultPrepMinutes}m prep
+                        </Badge>
+                        <Badge variant="outline" className="gap-1">
+                          <MessageSquare className="h-3 w-3" />
+                          {format.speeches.length} speeches
+                        </Badge>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             </CardContent>
           </Card>
+
+          {selectedFormat && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                  <div>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Settings className="h-5 w-5" />
+                      Format Settings
+                    </CardTitle>
+                    <CardDescription>
+                      View speech order and customize times
+                    </CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="gap-1">
+                      Total: {getTotalDebateTime()} min
+                    </Badge>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => resetToDefaults(getFormat(selectedFormat)!)}
+                      data-testid="button-reset-times"
+                    >
+                      Reset to Default
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                  <div>
+                    <p className="font-medium">Prep Time</p>
+                    <p className="text-sm text-muted-foreground">Time to prepare between speeches</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      min={0}
+                      max={60}
+                      value={prepTime}
+                      onChange={(e) => setPrepTime(Math.max(0, parseInt(e.target.value) || 0))}
+                      className="w-20 text-center"
+                      data-testid="input-prep-time"
+                    />
+                    <span className="text-sm text-muted-foreground">min</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="font-medium text-sm">Speech Order</p>
+                  <ScrollArea className="h-64 rounded-lg border">
+                    <div className="p-3 space-y-2">
+                      {getFormat(selectedFormat)?.speeches.map((speech, index) => (
+                        <div 
+                          key={speech.id} 
+                          className={cn(
+                            "flex items-center justify-between p-3 rounded-lg border",
+                            speech.speaker === "aff" ? "bg-tier-beginner/5 border-tier-beginner/20" : "bg-destructive/5 border-destructive/20"
+                          )}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={cn(
+                              "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold",
+                              speech.speaker === "aff" ? "bg-tier-beginner text-white" : "bg-destructive text-white"
+                            )}>
+                              {index + 1}
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">{speech.name}</p>
+                              <p className="text-xs text-muted-foreground">{speech.description}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="number"
+                              min={1}
+                              max={30}
+                              value={getSpeechTime(speech.id, speech.defaultMinutes)}
+                              onChange={(e) => updateSpeechTime(speech.id, Math.max(1, parseInt(e.target.value) || 1))}
+                              className="w-16 text-center h-8"
+                              data-testid={`input-speech-${speech.id}`}
+                            />
+                            <span className="text-xs text-muted-foreground">min</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <div className="flex justify-between">
             <Button variant="outline" onClick={() => setStep("opponent")} data-testid="button-back-opponent">
@@ -426,7 +579,7 @@ export default function Practice() {
                 <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">Format</span>
                   <span className="font-medium">
-                    {DEBATE_FORMATS.find((f) => f.id === selectedFormat)?.name}
+                    {getFormat(selectedFormat)?.name}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b">
@@ -435,11 +588,19 @@ export default function Practice() {
                     {DEBATE_TOPICS.find((t) => t.id === selectedTopic)?.title}
                   </span>
                 </div>
-                <div className="flex justify-between py-2">
+                <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">Your Side</span>
                   <Badge className={selectedSide === "pro" ? "bg-tier-beginner" : "bg-destructive"}>
-                    {selectedSide === "pro" ? "Pro (For)" : "Con (Against)"}
+                    {selectedSide === "pro" ? "Pro (Affirmative)" : "Con (Negative)"}
                   </Badge>
+                </div>
+                <div className="flex justify-between py-2 border-b">
+                  <span className="text-muted-foreground">Total Debate Time</span>
+                  <span className="font-medium">{getTotalDebateTime()} min</span>
+                </div>
+                <div className="flex justify-between py-2">
+                  <span className="text-muted-foreground">Prep Time</span>
+                  <span className="font-medium">{prepTime} min</span>
                 </div>
               </div>
             </CardContent>

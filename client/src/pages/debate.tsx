@@ -8,8 +8,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useUser } from "@/lib/user-context";
-import { AI_OPPONENTS, DEBATE_TOPICS, DEBATE_FORMATS, getSkillTier } from "@shared/schema";
-import { Send, Clock, User, Bot, Trophy, TrendingUp, TrendingDown, ArrowLeft, Loader2 } from "lucide-react";
+import { AI_OPPONENTS, DEBATE_TOPICS, DEBATE_FORMATS, getSkillTier, type DebateSpeech } from "@shared/schema";
+import { Send, Clock, User, Bot, Trophy, TrendingUp, TrendingDown, ArrowLeft, Loader2, Play, MessageSquare, Timer, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -17,7 +17,8 @@ interface DebateMessage {
   id: string;
   role: "user" | "opponent";
   content: string;
-  turnNumber: number;
+  speechId: string;
+  speechName: string;
 }
 
 interface DebateResult {
@@ -39,24 +40,42 @@ export default function Debate() {
   const formatId = params.get("format");
   const topicId = params.get("topic");
   const side = params.get("side") as "pro" | "con";
+  const customPrepTime = parseInt(params.get("prepTime") || "0");
+  const customSpeechTimes: Record<string, number> = (() => {
+    try { return JSON.parse(params.get("speechTimes") || "{}"); } 
+    catch { return {}; }
+  })();
 
   const opponent = AI_OPPONENTS.find((o) => o.id === opponentId);
   const topic = DEBATE_TOPICS.find((t) => t.id === topicId);
   const format = DEBATE_FORMATS.find((f) => f.id === formatId);
+  
+  const getSpeechTime = (speech: DebateSpeech): number => 
+    customSpeechTimes[speech.id] ?? speech.defaultMinutes;
+  
+  const isUserSpeech = (speech: DebateSpeech): boolean => {
+    if (side === "pro") return speech.speaker === "aff";
+    return speech.speaker === "neg";
+  };
 
   const [debateId, setDebateId] = useState<string | null>(null);
   const [messages, setMessages] = useState<DebateMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(format ? format.timeLimit * 60 : 300);
+  const [currentSpeechIndex, setCurrentSpeechIndex] = useState(0);
+  const [speechTimeRemaining, setSpeechTimeRemaining] = useState(0);
+  const [prepTimeRemaining, setPrepTimeRemaining] = useState(0);
+  const [isInPrepTime, setIsInPrepTime] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [turnNumber, setTurnNumber] = useState(1);
   const [showResult, setShowResult] = useState(false);
   const [debateResult, setDebateResult] = useState<DebateResult | null>(null);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
-
-  const maxTurns = 4;
+  const [showSpeechPanel, setShowSpeechPanel] = useState(true);
+  
+  const currentSpeech = format?.speeches[currentSpeechIndex];
+  const isUserTurn = currentSpeech ? isUserSpeech(currentSpeech) : false;
+  const isDebateComplete = format ? currentSpeechIndex >= format.speeches.length : false;
 
   useEffect(() => {
     if (!opponent || !topic || !format) {
@@ -90,14 +109,61 @@ export default function Debate() {
   }, [messages]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isTimerRunning && timeRemaining > 0) {
-      interval = setInterval(() => {
-        setTimeRemaining((prev) => Math.max(0, prev - 1));
-      }, 1000);
+    if (format && currentSpeech) {
+      setSpeechTimeRemaining(getSpeechTime(currentSpeech));
     }
-    return () => clearInterval(interval);
-  }, [isTimerRunning, timeRemaining]);
+  }, [currentSpeechIndex, format]);
+
+  useEffect(() => {
+    if (customPrepTime > 0) {
+      setPrepTimeRemaining(customPrepTime * 60);
+    }
+  }, [customPrepTime]);
+
+  useEffect(() => {
+    if (!isInitializing && !isLoading && format && currentSpeech && !isUserTurn && !isDebateComplete) {
+      const triggerOpponentSpeech = async () => {
+        setIsLoading(true);
+        const speechToDeliver = currentSpeech;
+        const indexToAdvance = currentSpeechIndex;
+        
+        try {
+          const response = await apiRequest("POST", "/api/debate/message", {
+            message: null,
+            debateId,
+            opponentId: opponent?.id,
+            opponentTier: opponent?.tier,
+            opponentPersonality: opponent?.personality,
+            topic: topic?.title,
+            side,
+            speechId: speechToDeliver.id,
+            speechName: speechToDeliver.name,
+            speechType: speechToDeliver.type,
+            previousMessages: messages,
+          });
+
+          const data = await response.json();
+          
+          const opponentMessage: DebateMessage = {
+            id: `opponent-${Date.now()}`,
+            role: "opponent",
+            content: data.response,
+            speechId: speechToDeliver.id,
+            speechName: speechToDeliver.name,
+          };
+
+          setMessages((prev) => [...prev, opponentMessage]);
+          setCurrentSpeechIndex(indexToAdvance + 1);
+        } catch (error) {
+          console.error("Error getting opponent speech:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      triggerOpponentSpeech();
+    }
+  }, [isInitializing, isUserTurn, currentSpeechIndex, isDebateComplete]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -105,45 +171,62 @@ export default function Debate() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
+  const advanceToNextSpeech = () => {
+    if (format && currentSpeechIndex < format.speeches.length) {
+      setCurrentSpeechIndex(prev => prev + 1);
+    }
+  };
+
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+    if (!inputValue.trim() || isLoading || !currentSpeech || !format) return;
 
     const userMessage: DebateMessage = {
       id: `user-${Date.now()}`,
       role: "user",
       content: inputValue.trim(),
-      turnNumber,
+      speechId: currentSpeech.id,
+      speechName: currentSpeech.name,
     };
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
-    setIsTimerRunning(true);
+    
+    const newSpeechIndex = currentSpeechIndex + 1;
+    setCurrentSpeechIndex(newSpeechIndex);
+
+    const nextSpeech = format.speeches[newSpeechIndex];
+    const shouldAIRespond = nextSpeech && !isUserSpeech(nextSpeech);
 
     try {
-      const response = await apiRequest("POST", "/api/debate/message", {
-        message: userMessage.content,
-        debateId,
-        opponentId: opponent?.id,
-        opponentTier: opponent?.tier,
-        opponentPersonality: opponent?.personality,
-        topic: topic?.title,
-        side,
-        turnNumber,
-        previousMessages: messages,
-      });
+      if (shouldAIRespond && nextSpeech) {
+        const response = await apiRequest("POST", "/api/debate/message", {
+          message: userMessage.content,
+          debateId,
+          opponentId: opponent?.id,
+          opponentTier: opponent?.tier,
+          opponentPersonality: opponent?.personality,
+          topic: topic?.title,
+          side,
+          speechId: nextSpeech.id,
+          speechName: nextSpeech.name,
+          speechType: nextSpeech.type,
+          previousMessages: messages.concat(userMessage),
+        });
 
-      const data = await response.json();
-      
-      const opponentMessage: DebateMessage = {
-        id: `opponent-${Date.now()}`,
-        role: "opponent",
-        content: data.response,
-        turnNumber,
-      };
+        const data = await response.json();
+        
+        const opponentMessage: DebateMessage = {
+          id: `opponent-${Date.now()}`,
+          role: "opponent",
+          content: data.response,
+          speechId: nextSpeech.id,
+          speechName: nextSpeech.name,
+        };
 
-      setMessages((prev) => [...prev, opponentMessage]);
-      setTurnNumber((prev) => prev + 1);
+        setMessages((prev) => [...prev, opponentMessage]);
+        setCurrentSpeechIndex(newSpeechIndex + 1);
+      }
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
@@ -239,8 +322,7 @@ export default function Debate() {
     );
   }
 
-  const progressPercent = (turnNumber / maxTurns) * 100;
-  const isDebateComplete = turnNumber > maxTurns || timeRemaining === 0;
+  const progressPercent = format ? (currentSpeechIndex / format.speeches.length) * 100 : 0;
 
   return (
     <div className="h-[calc(100vh-3.5rem)] flex flex-col">
@@ -273,17 +355,29 @@ export default function Debate() {
 
             <div className="flex items-center gap-4">
               <div className="text-center">
-                <p className="text-xs text-muted-foreground mb-1">Turn</p>
-                <p className="font-mono font-bold">{Math.min(turnNumber, maxTurns)}/{maxTurns}</p>
+                <p className="text-xs text-muted-foreground mb-1">Speech</p>
+                <p className="font-mono font-bold">{Math.min(currentSpeechIndex + 1, format.speeches.length)}/{format.speeches.length}</p>
               </div>
               
-              <div className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg",
-                timeRemaining < 60 ? "bg-destructive/10 text-destructive" : "bg-muted"
-              )}>
-                <Clock className="h-4 w-4" />
-                <span className="font-mono font-bold text-lg">{formatTime(timeRemaining)}</span>
-              </div>
+              {currentSpeech && (
+                <div className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg",
+                  speechTimeRemaining < 1 ? "bg-destructive/10 text-destructive" : "bg-muted"
+                )}>
+                  <Clock className="h-4 w-4" />
+                  <span className="font-mono font-bold text-lg">{speechTimeRemaining} min</span>
+                </div>
+              )}
+              
+              {prepTimeRemaining > 0 && (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-tier-intermediate/10 border border-tier-intermediate/30">
+                  <Timer className="h-4 w-4 text-tier-intermediate" />
+                  <div className="text-center">
+                    <span className="font-mono font-bold text-sm">{formatTime(prepTimeRemaining)}</span>
+                    <p className="text-xs text-muted-foreground">Prep</p>
+                  </div>
+                </div>
+              )}
 
               {!isDebateComplete && messages.length >= 2 && (
                 <Button 
@@ -311,19 +405,22 @@ export default function Debate() {
       <div className="flex-1 overflow-hidden">
         <div className="container mx-auto px-4 h-full max-w-4xl">
           <ScrollArea className="h-full py-6">
-            {messages.length === 0 && (
+            {messages.length === 0 && currentSpeech && (
               <Card className="mb-6 border-dashed">
                 <CardContent className="py-8 text-center">
-                  <Bot className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-semibold mb-2">Ready to Debate</h3>
                   <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                    You are arguing <strong>{side === "pro" ? "FOR" : "AGAINST"}</strong> the topic: 
+                    You are arguing <strong>{side === "pro" ? "FOR (Affirmative)" : "AGAINST (Negative)"}</strong> the topic: 
                     <br />
                     <em>"{topic.title}"</em>
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    Make your opening argument to begin the debate.
-                  </p>
+                  <div className="mt-4 p-3 bg-muted/50 rounded-lg inline-block">
+                    <p className="text-sm font-medium mb-1">First Speech: {currentSpeech.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {isUserTurn ? "You speak first - present your opening argument below" : `${opponent?.name} will speak first`}
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -355,7 +452,7 @@ export default function Debate() {
                       <span className="text-xs font-medium opacity-70">
                         {message.role === "user" ? "You" : opponent.name}
                       </span>
-                      <span className="text-xs opacity-50">Turn {message.turnNumber}</span>
+                      <span className="text-xs opacity-50">{message.speechName}</span>
                     </div>
                     <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                   </div>
@@ -388,33 +485,70 @@ export default function Debate() {
         </div>
       </div>
 
-      {!isDebateComplete && (
-        <div className="border-t bg-background p-4">
-          <div className="container mx-auto max-w-4xl">
-            <div className="flex gap-3">
-              <Textarea
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Type your argument..."
-                className="min-h-[80px] resize-none"
-                disabled={isLoading}
-                data-testid="input-message"
-              />
-              <Button 
-                onClick={handleSendMessage} 
-                disabled={!inputValue.trim() || isLoading}
-                className="h-auto"
-                data-testid="button-send"
-              >
-                <Send className="h-5 w-5" />
-              </Button>
+      {!isDebateComplete && currentSpeech && (
+        <div className="border-t bg-background">
+          {isUserTurn ? (
+            <div className="p-4">
+              <div className="container mx-auto max-w-4xl">
+                <div className={cn(
+                  "mb-3 p-3 rounded-lg flex items-center justify-between gap-4",
+                  isUserSpeech(currentSpeech) ? "bg-tier-beginner/10 border border-tier-beginner/30" : "bg-destructive/10 border border-destructive/30"
+                )}>
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
+                      "bg-tier-beginner text-white"
+                    )}>
+                      {currentSpeechIndex + 1}
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{currentSpeech.name}</p>
+                      <p className="text-xs text-muted-foreground">{currentSpeech.description}</p>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="gap-1">
+                    <Clock className="h-3 w-3" />
+                    {getSpeechTime(currentSpeech)} min
+                  </Badge>
+                </div>
+                <div className="flex gap-3">
+                  <Textarea
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={`Your ${currentSpeech.name}...`}
+                    className="min-h-[80px] resize-none"
+                    disabled={isLoading}
+                    data-testid="input-message"
+                  />
+                  <Button 
+                    onClick={handleSendMessage} 
+                    disabled={!inputValue.trim() || isLoading}
+                    className="h-auto"
+                    data-testid="button-send"
+                  >
+                    <Send className="h-5 w-5" />
+                  </Button>
+                </div>
+                <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                  <span>Press Enter to send, Shift+Enter for new line</span>
+                  <span>{inputValue.length} characters</span>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-              <span>Press Enter to send, Shift+Enter for new line</span>
-              <span>{inputValue.length} characters</span>
+          ) : (
+            <div className="p-4">
+              <div className="container mx-auto max-w-4xl">
+                <div className="p-4 rounded-lg bg-muted/50 border border-dashed flex items-center justify-center gap-3">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                  <div className="text-center">
+                    <p className="font-medium text-sm">Waiting for {opponent?.name}'s {currentSpeech.name}</p>
+                    <p className="text-xs text-muted-foreground">{currentSpeech.description}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
