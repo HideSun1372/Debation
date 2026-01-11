@@ -541,6 +541,18 @@ export default function Debate() {
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading || !currentSpeech || !format) return;
 
+    // Block sending in crossfire mode when it's not user's turn
+    if (isCrossfire && isCxMode) {
+      const canSend = 
+        (crossfirePhase === "asking" && crossfireQuestionAsker === "user") ||
+        (crossfirePhase === "answering" && crossfireQuestionAsker === "opponent");
+      
+      if (!canSend) {
+        console.log("Cannot send: not user's turn in crossfire");
+        return;
+      }
+    }
+
     const userMessage: DebateMessage = {
       id: `user-${Date.now()}`,
       role: "user",
@@ -559,7 +571,7 @@ export default function Debate() {
         if (cxQuestioner === null && isCrossfire) {
           // Crossfire mode with race system
           
-          if (crossfireQuestionAsker === "user" && crossfirePhase === "asking") {
+          if (crossfirePhase === "asking" && crossfireQuestionAsker === "user") {
             // User is asking their question - clear the timeout
             if (crossfireQuestionTimeoutRef.current) {
               clearTimeout(crossfireQuestionTimeoutRef.current);
