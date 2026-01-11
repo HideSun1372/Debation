@@ -2,6 +2,9 @@ import { sql } from "drizzle-orm";
 import { pgTable, text, varchar, integer, timestamp, boolean, index, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { CURRICULUM_UNITS, CurriculumUnit, CurriculumSection, CurriculumLesson, getAllCurriculumLessons } from "./curriculum";
+export type { CurriculumUnit, CurriculumSection, CurriculumLesson } from "./curriculum";
+export type CurriculumTier = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "EXPERT" | "MASTER";
 
 // Session storage table (required for Replit Auth)
 export const sessions = pgTable(
@@ -14,18 +17,20 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)]
 );
 
-// Skill Tiers
+// Skill Tiers - matching 5 curriculum sections
 export const SKILL_TIERS = {
-  BEGINNER: { name: "Beginner", minPoints: 0, maxPoints: 999 },
-  INTERMEDIATE: { name: "Intermediate", minPoints: 1000, maxPoints: 1999 },
-  ADVANCED: { name: "Advanced", minPoints: 2000, maxPoints: 2999 },
-  MASTER: { name: "Master", minPoints: 3000, maxPoints: Infinity },
+  BEGINNER: { name: "Beginner", minPoints: 0, maxPoints: 699 },
+  INTERMEDIATE: { name: "Intermediate", minPoints: 700, maxPoints: 1399 },
+  ADVANCED: { name: "Advanced", minPoints: 1400, maxPoints: 2099 },
+  EXPERT: { name: "Expert", minPoints: 2100, maxPoints: 2799 },
+  MASTER: { name: "Master", minPoints: 2800, maxPoints: Infinity },
 } as const;
 
 export function getSkillTier(points: number): keyof typeof SKILL_TIERS {
-  if (points >= 3000) return "MASTER";
-  if (points >= 2000) return "ADVANCED";
-  if (points >= 1000) return "INTERMEDIATE";
+  if (points >= 2800) return "MASTER";
+  if (points >= 2100) return "EXPERT";
+  if (points >= 1400) return "ADVANCED";
+  if (points >= 700) return "INTERMEDIATE";
   return "BEGINNER";
 }
 
@@ -384,294 +389,17 @@ export const ASSESSMENT_QUESTIONS = [
 export type AssessmentQuestion = typeof ASSESSMENT_QUESTIONS[number];
 
 // Lesson Structure: Units > Sections > Lessons
-export const LESSON_UNITS = [
-  {
-    id: "unit-1",
-    title: "Foundations of Debate",
-    description: "Master the fundamental concepts every debater needs to know",
-    recommendedLevel: "none" as ExperienceLevel,
-    order: 1,
-    sections: [
-      {
-        id: "s1-1",
-        title: "Understanding Debate",
-        order: 1,
-        lessons: [
-          {
-            id: "l1-1-1",
-            title: "What is Debate?",
-            order: 1,
-            estimatedMinutes: 5,
-            content: "Debate is a formal discussion on a particular topic where opposing arguments are presented. It develops critical thinking, research skills, and the ability to articulate complex ideas clearly. Unlike casual arguments, debate follows structured rules and focuses on logical reasoning rather than emotional appeals.",
-            keyPoints: ["Structured argumentation", "Evidence-based reasoning", "Respectful disagreement", "Logical analysis"],
-            exercise: "Think of a topic you feel strongly about. Write down one argument for each side of the issue.",
-          },
-          {
-            id: "l1-1-2",
-            title: "Debate Formats Overview",
-            order: 2,
-            estimatedMinutes: 8,
-            content: "There are several major debate formats, each with unique rules and structures. Lincoln-Douglas focuses on value debates between two individuals. Public Forum is team-based and designed for general audiences. Policy Debate involves in-depth research on year-long resolutions. Parliamentary debate emphasizes quick thinking with limited preparation time.",
-            keyPoints: ["Lincoln-Douglas: One-on-one value debate", "Public Forum: Team-based current events", "Policy: Research-intensive year-long topics", "Parliamentary: Impromptu and adaptive"],
-            exercise: "Research one debate format and write a brief summary of its rules.",
-          },
-        ],
-      },
-      {
-        id: "s1-2",
-        title: "Building Arguments",
-        order: 2,
-        lessons: [
-          {
-            id: "l1-2-1",
-            title: "The Claim-Warrant-Impact Framework",
-            order: 1,
-            estimatedMinutes: 10,
-            content: "Every strong argument follows the CWI structure. The CLAIM is your assertion—what you believe to be true. The WARRANT is your reasoning or evidence that supports the claim. The IMPACT explains why your claim matters and what consequences follow from it being true.",
-            keyPoints: ["Claim: Your main assertion", "Warrant: Evidence and reasoning", "Impact: Why it matters"],
-            exercise: "Take a simple claim like 'Exercise is good for you' and build a complete CWI argument around it.",
-          },
-          {
-            id: "l1-2-2",
-            title: "Types of Arguments",
-            order: 2,
-            estimatedMinutes: 8,
-            content: "Arguments can be categorized into four main types. Definitional arguments establish what terms mean. Factual arguments claim something is true or false. Value arguments assess whether something is good or bad. Policy arguments propose what should be done.",
-            keyPoints: ["Definitional: What terms mean", "Factual: What is true", "Value: What is good/bad", "Policy: What should be done"],
-            exercise: "Identify which type each of these arguments is: 'Democracy is the best form of government', 'Climate change is real', 'We should ban plastic bags'.",
-          },
-          {
-            id: "l1-2-3",
-            title: "Burden of Proof",
-            order: 3,
-            estimatedMinutes: 7,
-            content: "The side proposing change (affirmative) typically bears the burden of proof. They must demonstrate why the current situation is problematic and why their solution is better. The negative side can defend the status quo or propose alternatives. Understanding burden of proof helps you know what you need to prove to win.",
-            keyPoints: ["Affirmative must prove change is needed", "Negative can defend status quo", "Burden shifts when new claims are made"],
-            exercise: "For the topic 'Schools should start later', identify what the affirmative side needs to prove.",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "unit-2",
-    title: "Debate Techniques",
-    description: "Learn the skills that separate good debaters from great ones",
-    recommendedLevel: "casual" as ExperienceLevel,
-    order: 2,
-    sections: [
-      {
-        id: "s2-1",
-        title: "Listening and Note-Taking",
-        order: 1,
-        lessons: [
-          {
-            id: "l2-1-1",
-            title: "Active Listening",
-            order: 1,
-            estimatedMinutes: 8,
-            content: "Great debaters listen carefully to their opponents. Rather than just waiting for your turn to speak, actively engage with what's being said. Take notes on key claims, identify weaknesses in reasoning, and prepare targeted responses. Acknowledge valid points—it shows intellectual honesty.",
-            keyPoints: ["Note opponent's main claims", "Identify logical gaps", "Prepare specific rebuttals", "Acknowledge valid points"],
-            exercise: "Watch a debate video and take notes on one speaker's main arguments and potential weaknesses.",
-          },
-          {
-            id: "l2-1-2",
-            title: "Flowing (Note-Taking System)",
-            order: 2,
-            estimatedMinutes: 12,
-            content: "Flowing is a systematic way to track arguments across a debate. Create columns for each speech, use abbreviations for common terms, and symbols for dropped arguments. Good flowing helps you see the entire debate structure and identify which arguments have gone unanswered.",
-            keyPoints: ["Create consistent abbreviations", "Track argument responses", "Note dropped arguments", "Organize by contention"],
-            exercise: "Create your own flowing abbreviation system for 10 common debate terms.",
-          },
-        ],
-      },
-      {
-        id: "s2-2",
-        title: "Speaking Skills",
-        order: 2,
-        lessons: [
-          {
-            id: "l2-2-1",
-            title: "Signposting",
-            order: 1,
-            estimatedMinutes: 6,
-            content: "Guide your audience through your arguments with clear verbal signposts. Use phrases like 'My first point is...', 'Furthermore...', 'In response to my opponent's claim...' Signposting helps judges follow your reasoning and shows organization.",
-            keyPoints: ["Number your arguments", "Use transition phrases", "Summarize before moving on", "Reference opponent's points clearly"],
-            exercise: "Rewrite a paragraph of an essay using signposting techniques.",
-          },
-          {
-            id: "l2-2-2",
-            title: "Time Management",
-            order: 2,
-            estimatedMinutes: 8,
-            content: "Allocate your speaking time wisely. Spend roughly 70% on your strongest arguments and 30% on rebuttals. Don't try to address every minor point—focus on what matters most. Practice within time limits to develop a natural sense of pacing.",
-            keyPoints: ["Prioritize key arguments", "Don't over-extend on weak points", "Save time for summary", "Practice within time limits"],
-            exercise: "Time yourself giving a 2-minute speech on any topic. Did you finish early, late, or right on time?",
-          },
-        ],
-      },
-      {
-        id: "s2-3",
-        title: "Rebuttals",
-        order: 3,
-        lessons: [
-          {
-            id: "l2-3-1",
-            title: "Rebuttal Techniques",
-            order: 1,
-            estimatedMinutes: 10,
-            content: "Effective rebuttals directly address and dismantle opponent arguments. Don't just restate your position—explain specifically why their reasoning is flawed. Attack the warrant (their evidence or reasoning) rather than just denying the claim.",
-            keyPoints: ["Attack the warrant, not just the claim", "Provide counter-evidence", "Show logical fallacies", "Explain why your argument prevails"],
-            exercise: "Take an argument you disagree with and write a rebuttal that attacks the warrant.",
-          },
-          {
-            id: "l2-3-2",
-            title: "Cross-Examination Strategies",
-            order: 2,
-            estimatedMinutes: 10,
-            content: "Cross-examination is your chance to expose weaknesses in your opponent's case. Ask questions that clarify their position, then use closed questions to pin down commitments and open questions to reveal inconsistencies. Don't argue during cross-ex—just gather information.",
-            keyPoints: ["Ask clarifying questions", "Expose contradictions", "Don't argue during cross-ex", "Keep questions short and clear"],
-            exercise: "Write 5 cross-examination questions for a topic of your choice.",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "unit-3",
-    title: "Advanced Strategy",
-    description: "Master strategic thinking to win competitive debates",
-    recommendedLevel: "some" as ExperienceLevel,
-    order: 3,
-    sections: [
-      {
-        id: "s3-1",
-        title: "Framework and Weighing",
-        order: 1,
-        lessons: [
-          {
-            id: "l3-1-1",
-            title: "Framework Debates",
-            order: 1,
-            estimatedMinutes: 12,
-            content: "Establish the criteria by which arguments should be judged. If you control the framework, you control how the debate is evaluated. Define key terms early, establish clear evaluation criteria, and consistently apply your framework to all arguments in the round.",
-            keyPoints: ["Define key terms early", "Establish evaluation criteria", "Argue why your framework matters", "Apply framework to all arguments"],
-            exercise: "For the topic 'Privacy is more important than security', propose a framework and explain how it should be used to evaluate arguments.",
-          },
-          {
-            id: "l3-1-2",
-            title: "Weighing Arguments",
-            order: 2,
-            estimatedMinutes: 10,
-            content: "Not all arguments are equal. Learn to weigh competing claims by magnitude (how big is the impact?), probability (how likely is it?), timeframe (when does it happen?), and reversibility (can it be undone?). Judges need to know why your argument outweighs your opponent's.",
-            keyPoints: ["Magnitude: Size of impact", "Probability: Likelihood of occurrence", "Timeframe: When it happens", "Reversibility: Can it be undone"],
-            exercise: "Compare two arguments on opposite sides of an issue and explain which outweighs and why.",
-          },
-        ],
-      },
-      {
-        id: "s3-2",
-        title: "Closing Strong",
-        order: 2,
-        lessons: [
-          {
-            id: "l3-2-1",
-            title: "Crystallization",
-            order: 1,
-            estimatedMinutes: 8,
-            content: "In final speeches, focus on the 2-3 most important voting issues. Explain why you've won these key points and why they should determine the outcome. Tell the story of the debate and guide the judge to your conclusion.",
-            keyPoints: ["Identify voting issues", "Weigh competing arguments", "Summarize key wins", "Tell the story of the debate"],
-            exercise: "After a practice debate, identify the 2 most important voting issues and explain why you won them.",
-          },
-          {
-            id: "l3-2-2",
-            title: "Judge Adaptation",
-            order: 2,
-            estimatedMinutes: 8,
-            content: "Different judges value different things. Lay judges (non-experts) prefer clear, simple arguments. Flow judges (experts) expect technical precision. Learn to read your judge and adapt your style accordingly without compromising your arguments.",
-            keyPoints: ["Know your judge's background", "Adapt complexity level", "Maintain core arguments", "Adjust speaking speed and style"],
-            exercise: "How would you explain the same argument to a parent vs. a debate coach?",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "unit-4",
-    title: "Competition Mastery",
-    description: "Prepare for tournament-level competition",
-    recommendedLevel: "competitive" as ExperienceLevel,
-    order: 4,
-    sections: [
-      {
-        id: "s4-1",
-        title: "Research and Preparation",
-        order: 1,
-        lessons: [
-          {
-            id: "l4-1-1",
-            title: "Building a Research File",
-            order: 1,
-            estimatedMinutes: 15,
-            content: "Competitive debaters maintain organized research files. Collect evidence from credible sources, cite properly, and organize by topic and argument type. Include both affirmative and negative evidence so you're prepared for any side.",
-            keyPoints: ["Use credible sources", "Organize by argument type", "Maintain both sides", "Update regularly"],
-            exercise: "Start a research file for one debate topic with at least 5 sources.",
-          },
-          {
-            id: "l4-1-2",
-            title: "Pre-Round Preparation",
-            order: 2,
-            estimatedMinutes: 10,
-            content: "Before each round, review your case, anticipate opponent arguments, and prepare responses. If you know your opponent, study their tendencies. Check the topic wording carefully and ensure your arguments directly address it.",
-            keyPoints: ["Review your case", "Anticipate opposition", "Research opponents if possible", "Check topic wording"],
-            exercise: "Create a pre-round checklist of everything you should do before a debate.",
-          },
-        ],
-      },
-      {
-        id: "s4-2",
-        title: "Tournament Psychology",
-        order: 2,
-        lessons: [
-          {
-            id: "l4-2-1",
-            title: "Managing Nerves",
-            order: 1,
-            estimatedMinutes: 8,
-            content: "Even experienced debaters get nervous. Use breathing techniques, positive visualization, and physical warm-ups to manage anxiety. Remember that some nervousness is good—it keeps you sharp. Focus on your preparation, not the outcome.",
-            keyPoints: ["Practice breathing techniques", "Visualize success", "Physical warm-ups help", "Focus on process, not outcome"],
-            exercise: "Try a 4-7-8 breathing exercise: inhale for 4 seconds, hold for 7, exhale for 8. Do this 3 times.",
-          },
-          {
-            id: "l4-2-2",
-            title: "Learning from Losses",
-            order: 2,
-            estimatedMinutes: 8,
-            content: "Losses are learning opportunities. After each round, reflect on what worked and what didn't. Ask judges for feedback. Don't make excuses—identify specific improvements. The best debaters analyze their losses more carefully than their wins.",
-            keyPoints: ["Seek judge feedback", "Identify specific improvements", "No excuses", "Track patterns over time"],
-            exercise: "After your next debate (win or lose), write down 3 things you could have done better.",
-          },
-        ],
-      },
-    ],
-  },
-] as const;
+// Re-export from curriculum.ts for compatibility
+export const LESSON_UNITS = CURRICULUM_UNITS;
 
-export type LessonUnit = typeof LESSON_UNITS[number];
-export type LessonSection = LessonUnit["sections"][number];
-export type Lesson = LessonSection["lessons"][number];
+// Legacy unit format type for backward compatibility
+export type LessonUnit = CurriculumUnit;
+export type LessonSection = CurriculumSection;
+export type Lesson = CurriculumLesson;
 
 // Helper to get all lessons flattened
 export function getAllLessons(): Array<{ unitId: string; sectionId: string; lesson: Lesson }> {
-  const lessons: Array<{ unitId: string; sectionId: string; lesson: Lesson }> = [];
-  for (const unit of LESSON_UNITS) {
-    for (const section of unit.sections) {
-      for (const lesson of section.lessons) {
-        lessons.push({ unitId: unit.id, sectionId: section.id, lesson });
-      }
-    }
-  }
-  return lessons;
+  return getAllCurriculumLessons();
 }
 
 // Get placement unit based on experience and assessment score
@@ -680,15 +408,15 @@ export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: n
   const scorePercent = assessmentScore / maxScore;
   
   if (experience === "competitive" && scorePercent >= 0.6) {
-    return "unit-4";
+    return "unit-30"; // Advanced section
   }
   if (experience === "some" || (experience === "competitive" && scorePercent < 0.6)) {
-    return scorePercent >= 0.6 ? "unit-3" : "unit-2";
+    return scorePercent >= 0.6 ? "unit-21" : "unit-11"; // Advanced or Intermediate
   }
   if (experience === "casual") {
-    return scorePercent >= 0.8 ? "unit-2" : "unit-1";
+    return scorePercent >= 0.8 ? "unit-11" : "unit-01"; // Intermediate or Beginner
   }
-  return "unit-1";
+  return "unit-01"; // Start at beginning
 }
 
 // Multi-page lesson structure with inline questions
@@ -729,10 +457,10 @@ export interface LessonExercise {
 
 export const LESSON_EXERCISES: LessonExercise[] = [
   {
-    lessonId: "l1-1-1",
+    lessonId: "l01-01",
     questions: [
       {
-        id: "l1-1-1-q1",
+        id: "l01-01-q1",
         question: "What is the primary focus of formal debate compared to casual arguments?",
         options: [
           { id: "a", text: "Winning at all costs" },
@@ -744,7 +472,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Formal debate focuses on structured, logical reasoning rather than emotional appeals or personal attacks.",
       },
       {
-        id: "l1-1-1-q2",
+        id: "l01-01-q2",
         question: "Which skill does debate NOT primarily develop?",
         options: [
           { id: "a", text: "Critical thinking" },
@@ -758,10 +486,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l1-1-2",
+    lessonId: "l01-02",
     questions: [
       {
-        id: "l1-1-2-q1",
+        id: "l01-02-q1",
         question: "Which debate format is best known for one-on-one value debates?",
         options: [
           { id: "a", text: "Public Forum" },
@@ -773,7 +501,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Lincoln-Douglas (LD) debate is a one-on-one format that focuses on value-based arguments.",
       },
       {
-        id: "l1-1-2-q2",
+        id: "l01-02-q2",
         question: "Which format emphasizes quick thinking with limited preparation time?",
         options: [
           { id: "a", text: "Policy Debate" },
@@ -787,10 +515,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l1-2-1",
+    lessonId: "l01-03",
     questions: [
       {
-        id: "l1-2-1-q1",
+        id: "l01-03-q1",
         question: "In the Claim-Warrant-Impact framework, what does the 'warrant' provide?",
         options: [
           { id: "a", text: "Your main assertion" },
@@ -802,7 +530,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "The warrant provides the evidence, reasoning, or logic that supports and justifies your claim.",
       },
       {
-        id: "l1-2-1-q2",
+        id: "l01-03-q2",
         question: "What does the 'impact' explain in an argument?",
         options: [
           { id: "a", text: "What you believe to be true" },
@@ -816,10 +544,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l1-2-2",
+    lessonId: "l01-04",
     questions: [
       {
-        id: "l1-2-2-q1",
+        id: "l01-04-q1",
         question: "'We should increase funding for public schools' is what type of argument?",
         options: [
           { id: "a", text: "Definitional" },
@@ -831,7 +559,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Policy arguments propose what should be done - in this case, increasing school funding is a proposed action.",
       },
       {
-        id: "l1-2-2-q2",
+        id: "l01-04-q2",
         question: "'Justice means treating everyone equally' is what type of argument?",
         options: [
           { id: "a", text: "Definitional" },
@@ -845,10 +573,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l1-2-3",
+    lessonId: "l01-05",
     questions: [
       {
-        id: "l1-2-3-q1",
+        id: "l01-05-q1",
         question: "Which side typically bears the burden of proof in a debate?",
         options: [
           { id: "a", text: "The negative (defending status quo)" },
@@ -860,7 +588,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "The affirmative side, which proposes change, must prove that change is needed and beneficial.",
       },
       {
-        id: "l1-2-3-q2",
+        id: "l01-05-q2",
         question: "What can the negative side do in response to the affirmative's case?",
         options: [
           { id: "a", text: "Only attack the affirmative's evidence" },
@@ -874,10 +602,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l2-1-1",
+    lessonId: "l02-01",
     questions: [
       {
-        id: "l2-1-1-q1",
+        id: "l02-01-q1",
         question: "What should you do while your opponent is speaking?",
         options: [
           { id: "a", text: "Plan your entire speech in your head" },
@@ -889,7 +617,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Active listening means engaging with what's being said, noting key claims, and preparing targeted responses.",
       },
       {
-        id: "l2-1-1-q2",
+        id: "l02-01-q2",
         question: "Why should you acknowledge valid points made by your opponent?",
         options: [
           { id: "a", text: "It makes you lose the debate" },
@@ -903,10 +631,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l2-1-2",
+    lessonId: "l02-02",
     questions: [
       {
-        id: "l2-1-2-q1",
+        id: "l02-02-q1",
         question: "What is 'flowing' in debate?",
         options: [
           { id: "a", text: "Speaking smoothly without pauses" },
@@ -918,7 +646,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Flowing is a systematic way to track arguments across a debate using columns and abbreviations.",
       },
       {
-        id: "l2-1-2-q2",
+        id: "l02-02-q2",
         question: "What should you note when an argument goes unanswered?",
         options: [
           { id: "a", text: "Ignore it - it wasn't important" },
@@ -932,10 +660,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l2-2-1",
+    lessonId: "l02-03",
     questions: [
       {
-        id: "l2-2-1-q1",
+        id: "l02-03-q1",
         question: "What is signposting in debate?",
         options: [
           { id: "a", text: "Holding up physical signs" },
@@ -947,7 +675,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Signposting uses phrases like 'My first point is...' to help the audience follow your argument structure.",
       },
       {
-        id: "l2-2-1-q2",
+        id: "l02-03-q2",
         question: "Which phrase is an example of signposting?",
         options: [
           { id: "a", text: "I think..." },
@@ -961,10 +689,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l2-2-2",
+    lessonId: "l02-04",
     questions: [
       {
-        id: "l2-2-2-q1",
+        id: "l02-04-q1",
         question: "How should you allocate your speaking time?",
         options: [
           { id: "a", text: "50% introduction, 50% conclusion" },
@@ -976,7 +704,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Focus most time on your strongest arguments while reserving time for rebuttals and summary.",
       },
       {
-        id: "l2-2-2-q2",
+        id: "l02-04-q2",
         question: "What's the best way to develop good time management?",
         options: [
           { id: "a", text: "Never practice with a timer" },
@@ -990,10 +718,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l2-3-1",
+    lessonId: "l02-05",
     questions: [
       {
-        id: "l2-3-1-q1",
+        id: "l02-05-q1",
         question: "What's the most effective target for a rebuttal?",
         options: [
           { id: "a", text: "Your opponent's appearance" },
@@ -1005,7 +733,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Attacking the warrant - the evidence and reasoning - undermines the foundation of their argument.",
       },
       {
-        id: "l2-3-1-q2",
+        id: "l02-05-q2",
         question: "What should you explain when making a rebuttal?",
         options: [
           { id: "a", text: "Only why you're right" },
@@ -1019,10 +747,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l2-3-2",
+    lessonId: "l02-06",
     questions: [
       {
-        id: "l2-3-2-q1",
+        id: "l02-06-q1",
         question: "What is the main purpose of cross-examination?",
         options: [
           { id: "a", text: "To argue with your opponent" },
@@ -1034,7 +762,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Cross-examination is your opportunity to ask questions that reveal weaknesses in their case.",
       },
       {
-        id: "l2-3-2-q2",
+        id: "l02-06-q2",
         question: "What type of questions should you avoid during cross-ex?",
         options: [
           { id: "a", text: "Clarifying questions" },
@@ -1048,10 +776,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l3-1-1",
+    lessonId: "l03-01",
     questions: [
       {
-        id: "l3-1-1-q1",
+        id: "l03-01-q1",
         question: "Why is controlling the framework important?",
         options: [
           { id: "a", text: "It makes your speech longer" },
@@ -1063,7 +791,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "The framework sets the criteria for judging arguments - whoever controls it controls how the debate is evaluated.",
       },
       {
-        id: "l3-1-1-q2",
+        id: "l03-01-q2",
         question: "When should you define key terms in a debate?",
         options: [
           { id: "a", text: "At the very end" },
@@ -1077,10 +805,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l3-1-2",
+    lessonId: "l03-02",
     questions: [
       {
-        id: "l3-1-2-q1",
+        id: "l03-02-q1",
         question: "Which is NOT a standard way to weigh arguments?",
         options: [
           { id: "a", text: "Magnitude (how big is the impact)" },
@@ -1092,7 +820,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Arguments are weighed by substance (magnitude, probability, timeframe, reversibility), not delivery style.",
       },
       {
-        id: "l3-1-2-q2",
+        id: "l03-02-q2",
         question: "Why do judges need weighing analysis?",
         options: [
           { id: "a", text: "They don't need it" },
@@ -1106,10 +834,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l3-2-1",
+    lessonId: "l03-03",
     questions: [
       {
-        id: "l3-2-1-q1",
+        id: "l03-03-q1",
         question: "What is crystallization?",
         options: [
           { id: "a", text: "Making your arguments complicated" },
@@ -1121,7 +849,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Crystallization means distilling the debate to the most important issues that should decide the outcome.",
       },
       {
-        id: "l3-2-1-q2",
+        id: "l03-03-q2",
         question: "What should you do in your final speech?",
         options: [
           { id: "a", text: "Introduce new arguments" },
@@ -1135,10 +863,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l3-2-2",
+    lessonId: "l03-04",
     questions: [
       {
-        id: "l3-2-2-q1",
+        id: "l03-04-q1",
         question: "How should you adapt for a lay (non-expert) judge?",
         options: [
           { id: "a", text: "Use as much technical jargon as possible" },
@@ -1150,7 +878,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Lay judges respond better to clear, accessible arguments rather than technical debate terminology.",
       },
       {
-        id: "l3-2-2-q2",
+        id: "l03-04-q2",
         question: "Should adapting to your judge mean changing your core arguments?",
         options: [
           { id: "a", text: "Yes, completely change everything" },
@@ -1164,10 +892,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l4-1-1",
+    lessonId: "l04-01",
     questions: [
       {
-        id: "l4-1-1-q1",
+        id: "l04-01-q1",
         question: "What should a good research file include?",
         options: [
           { id: "a", text: "Only evidence supporting your side" },
@@ -1179,7 +907,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Prepare both sides so you're ready regardless of which position you're assigned.",
       },
       {
-        id: "l4-1-1-q2",
+        id: "l04-01-q2",
         question: "How should you organize your evidence?",
         options: [
           { id: "a", text: "Randomly in one big folder" },
@@ -1193,10 +921,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l4-1-2",
+    lessonId: "l04-02",
     questions: [
       {
-        id: "l4-1-2-q1",
+        id: "l04-02-q1",
         question: "What should you do before each debate round?",
         options: [
           { id: "a", text: "Only review your opening statement" },
@@ -1208,7 +936,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Pre-round prep includes reviewing your case, anticipating opposition, and checking topic wording.",
       },
       {
-        id: "l4-1-2-q2",
+        id: "l04-02-q2",
         question: "Why should you check the topic wording carefully?",
         options: [
           { id: "a", text: "It doesn't matter" },
@@ -1222,10 +950,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l4-2-1",
+    lessonId: "l04-03",
     questions: [
       {
-        id: "l4-2-1-q1",
+        id: "l04-03-q1",
         question: "How should you view some nervousness before a debate?",
         options: [
           { id: "a", text: "As a sign you should quit" },
@@ -1237,7 +965,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Some nervousness is beneficial - it keeps you alert and focused during competition.",
       },
       {
-        id: "l4-2-1-q2",
+        id: "l04-03-q2",
         question: "What should you focus on to manage debate anxiety?",
         options: [
           { id: "a", text: "Winning at all costs" },
@@ -1251,10 +979,10 @@ export const LESSON_EXERCISES: LessonExercise[] = [
     ],
   },
   {
-    lessonId: "l4-2-2",
+    lessonId: "l04-04",
     questions: [
       {
-        id: "l4-2-2-q1",
+        id: "l04-04-q1",
         question: "How should you approach losing a debate round?",
         options: [
           { id: "a", text: "Make excuses about the judge" },
@@ -1266,7 +994,7 @@ export const LESSON_EXERCISES: LessonExercise[] = [
         explanation: "Losses are valuable learning opportunities - seek feedback and identify specific improvements.",
       },
       {
-        id: "l4-2-2-q2",
+        id: "l04-04-q2",
         question: "What do the best debaters do differently with their losses?",
         options: [
           { id: "a", text: "Forget about them quickly" },
@@ -1288,7 +1016,7 @@ export function getLessonExercise(lessonId: string): LessonExercise | undefined 
 // Multi-page lesson content with intro/explain/conclude format and inline questions
 export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
   {
-    lessonId: "l1-1-1",
+    lessonId: "l01-01",
     pages: [
       {
         type: "content",
@@ -1307,7 +1035,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-1-1-q1",
+        id: "l01-01-q1",
         question: "What distinguishes formal debate from a casual argument?",
         options: [
           { id: "a", text: "The person who speaks loudest wins" },
@@ -1337,7 +1065,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-1-1-q2",
+        id: "l01-01-q2",
         question: "Which skill does debate NOT primarily develop?",
         options: [
           { id: "a", text: "Critical thinking and logical analysis" },
@@ -1355,7 +1083,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-1-1-q3",
+        id: "l01-01-q3",
         question: "In a debate about 'Voting should be mandatory,' which side would the Affirmative take?",
         options: [
           { id: "a", text: "Against mandatory voting" },
@@ -1384,7 +1112,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-1-1-q4",
+        id: "l01-01-q4",
         question: "What is a common misconception about debate?",
         options: [
           { id: "a", text: "Debate develops critical thinking skills" },
@@ -1408,7 +1136,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
     ],
   },
   {
-    lessonId: "l1-1-2",
+    lessonId: "l01-02",
     pages: [
       {
         type: "content",
@@ -1428,7 +1156,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-1-2-q1",
+        id: "l01-02-q1",
         question: "What is the primary focus of Lincoln-Douglas debate?",
         options: [
           { id: "a", text: "Specific government policies and legislation" },
@@ -1452,7 +1180,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-1-2-q2",
+        id: "l01-02-q2",
         question: "How often do topics typically change in Public Forum debate?",
         options: [
           { id: "a", text: "Once per year" },
@@ -1487,7 +1215,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-1-2-q3",
+        id: "l01-02-q3",
         question: "Which debate format emphasizes quick thinking with minimal preparation time?",
         options: [
           { id: "a", text: "Lincoln-Douglas" },
@@ -1505,7 +1233,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-1-2-q4",
+        id: "l01-02-q4",
         question: "Which format uses the same topic for an entire school year?",
         options: [
           { id: "a", text: "Lincoln-Douglas" },
@@ -1541,7 +1269,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
     ],
   },
   {
-    lessonId: "l1-2-1",
+    lessonId: "l01-03",
     pages: [
       {
         type: "content",
@@ -1560,7 +1288,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-2-1-q1",
+        id: "l01-03-q1",
         question: "Which of these is the best example of a clear, debatable claim?",
         options: [
           { id: "a", text: "Things should be better" },
@@ -1594,7 +1322,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-2-1-q2",
+        id: "l01-03-q2",
         question: "A debater says 'Studies show that coffee is healthy.' What makes this warrant weak?",
         options: [
           { id: "a", text: "It mentions coffee" },
@@ -1617,7 +1345,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-2-1-q3",
+        id: "l01-03-q3",
         question: "When evaluating two competing impacts, which factor would typically make one impact outweigh another?",
         options: [
           { id: "a", text: "The impact that sounds more dramatic" },
@@ -1651,7 +1379,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-2-1-q4",
+        id: "l01-03-q4",
         question: "A debater says: 'This policy will hurt poor people the most. Crime rates went up in 2019. Therefore, we should reject this proposal.' What's wrong with this argument?",
         options: [
           { id: "a", text: "It has too many claims" },
@@ -1686,7 +1414,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
     ],
   },
   {
-    lessonId: "l1-2-2",
+    lessonId: "l01-04",
     pages: [
       {
         type: "content",
@@ -1705,7 +1433,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-2-2-q1",
+        id: "l01-04-q1",
         question: "'Justice means treating everyone equally regardless of outcome' is what type of argument?",
         options: [
           { id: "a", text: "Factual" },
@@ -1738,7 +1466,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-2-2-q2",
+        id: "l01-04-q2",
         question: "'Capital punishment is morally wrong because it violates human dignity' is what type of argument?",
         options: [
           { id: "a", text: "Definitional" },
@@ -1761,7 +1489,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-2-2-q3",
+        id: "l01-04-q3",
         question: "'The city should invest $50 million in public transportation to reduce traffic congestion' is what type of argument?",
         options: [
           { id: "a", text: "Definitional" },
@@ -1794,7 +1522,7 @@ export const MULTI_PAGE_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l1-2-2-q4",
+        id: "l01-04-q4",
         question: "Which signal phrase most likely indicates a factual argument?",
         options: [
           { id: "a", text: "'We should implement...'" },
