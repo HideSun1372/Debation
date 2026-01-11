@@ -14,7 +14,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUser } from "@/lib/user-context";
 import { AI_OPPONENTS, DEBATE_TOPICS, DEBATE_FORMATS, getSkillTier, type AIOpponent, type DebateFormatConfig, type DebateSpeech } from "@shared/schema";
-import { Swords, User, Target, ArrowRight, Clock, Circle, Hexagon, Star, Crown, Settings, ChevronDown, Users, Timer, MessageSquare } from "lucide-react";
+import { Swords, User, Target, ArrowRight, Clock, Circle, Hexagon, Star, Crown, Settings, ChevronDown, Users, Timer, MessageSquare, Shuffle, Gavel } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tierIcons = {
@@ -54,7 +54,8 @@ export default function Practice() {
   const [selectedOpponent, setSelectedOpponent] = useState<AIOpponent | null>(null);
   const [selectedFormat, setSelectedFormat] = useState<string>("");
   const [selectedTopic, setSelectedTopic] = useState<string>("");
-  const [selectedSide, setSelectedSide] = useState<"pro" | "con">("pro");
+  const [selectedSide, setSelectedSide] = useState<"pro" | "con" | "random">("pro");
+  const [selectedJudgeType, setSelectedJudgeType] = useState<"lay" | "traditional" | "circuit" | "random">("traditional");
   const [filterTier, setFilterTier] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   
@@ -101,11 +102,20 @@ export default function Practice() {
   const handleStartDebate = () => {
     if (!selectedOpponent || !selectedFormat || !selectedTopic) return;
     
+    const actualSide = selectedSide === "random" 
+      ? (Math.random() > 0.5 ? "pro" : "con") 
+      : selectedSide;
+    
+    const actualJudgeType = selectedJudgeType === "random"
+      ? (["lay", "traditional", "circuit"][Math.floor(Math.random() * 3)] as "lay" | "traditional" | "circuit")
+      : selectedJudgeType;
+    
     const params = new URLSearchParams({
       opponent: selectedOpponent.id,
       format: selectedFormat,
       topic: selectedTopic,
-      side: selectedSide,
+      side: actualSide,
+      judgeType: actualJudgeType,
       prepTime: prepTime.toString(),
       speechTimes: JSON.stringify(speechTimes),
     });
@@ -523,14 +533,14 @@ export default function Practice() {
             <CardHeader>
               <CardTitle className="text-lg">Choose Your Side</CardTitle>
               <CardDescription>
-                Will you argue for (Pro) or against (Con) the topic?
+                Will you argue for (Pro), against (Con), or let it be randomly assigned?
               </CardDescription>
             </CardHeader>
             <CardContent>
               <RadioGroup
                 value={selectedSide}
-                onValueChange={(v) => setSelectedSide(v as "pro" | "con")}
-                className="grid sm:grid-cols-2 gap-4"
+                onValueChange={(v) => setSelectedSide(v as "pro" | "con" | "random")}
+                className="grid sm:grid-cols-3 gap-4"
               >
                 <Label
                   htmlFor="pro"
@@ -540,6 +550,7 @@ export default function Practice() {
                       ? "border-tier-beginner bg-tier-beginner/5" 
                       : "border-border hover:border-tier-beginner/50"
                   )}
+                  data-testid="label-side-pro"
                 >
                   <RadioGroupItem value="pro" id="pro" />
                   <div>
@@ -555,11 +566,118 @@ export default function Practice() {
                       ? "border-destructive bg-destructive/5" 
                       : "border-border hover:border-destructive/50"
                   )}
+                  data-testid="label-side-con"
                 >
                   <RadioGroupItem value="con" id="con" />
                   <div>
                     <p className="font-semibold text-lg">Con (Against)</p>
                     <p className="text-sm text-muted-foreground">Argue against the resolution</p>
+                  </div>
+                </Label>
+                <Label
+                  htmlFor="random"
+                  className={cn(
+                    "flex items-center gap-4 p-6 rounded-lg border-2 cursor-pointer transition-all",
+                    selectedSide === "random" 
+                      ? "border-purple-500 bg-purple-500/5" 
+                      : "border-border hover:border-purple-500/50"
+                  )}
+                  data-testid="label-side-random"
+                >
+                  <RadioGroupItem value="random" id="random" />
+                  <div className="flex items-center gap-2">
+                    <Shuffle className="h-5 w-5 text-purple-500" />
+                    <div>
+                      <p className="font-semibold text-lg">Random</p>
+                      <p className="text-sm text-muted-foreground">Side assigned randomly</p>
+                    </div>
+                  </div>
+                </Label>
+              </RadioGroup>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Gavel className="h-5 w-5" />
+                Judge Type
+              </CardTitle>
+              <CardDescription>
+                Select the type of judge evaluating your debate
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RadioGroup
+                value={selectedJudgeType}
+                onValueChange={(v) => setSelectedJudgeType(v as "lay" | "traditional" | "circuit" | "random")}
+                className="grid sm:grid-cols-2 gap-4"
+              >
+                <Label
+                  htmlFor="lay"
+                  className={cn(
+                    "flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all",
+                    selectedJudgeType === "lay" 
+                      ? "border-tier-beginner bg-tier-beginner/5" 
+                      : "border-border hover:border-tier-beginner/50"
+                  )}
+                  data-testid="label-judge-lay"
+                >
+                  <RadioGroupItem value="lay" id="lay" className="mt-1" />
+                  <div>
+                    <p className="font-semibold">Lay Judge</p>
+                    <p className="text-xs text-muted-foreground">Values clear explanations, relatable examples, and persuasive speaking. Less focused on technical debate skills.</p>
+                  </div>
+                </Label>
+                <Label
+                  htmlFor="traditional"
+                  className={cn(
+                    "flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all",
+                    selectedJudgeType === "traditional" 
+                      ? "border-tier-intermediate bg-tier-intermediate/5" 
+                      : "border-border hover:border-tier-intermediate/50"
+                  )}
+                  data-testid="label-judge-traditional"
+                >
+                  <RadioGroupItem value="traditional" id="traditional" className="mt-1" />
+                  <div>
+                    <p className="font-semibold">Traditional Judge</p>
+                    <p className="text-xs text-muted-foreground">Emphasizes stock issues, clear clash, and proper debate structure. Moderate speed preferred.</p>
+                  </div>
+                </Label>
+                <Label
+                  htmlFor="circuit"
+                  className={cn(
+                    "flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all",
+                    selectedJudgeType === "circuit" 
+                      ? "border-tier-advanced bg-tier-advanced/5" 
+                      : "border-border hover:border-tier-advanced/50"
+                  )}
+                  data-testid="label-judge-circuit"
+                >
+                  <RadioGroupItem value="circuit" id="circuit" className="mt-1" />
+                  <div>
+                    <p className="font-semibold">Circuit Judge</p>
+                    <p className="text-xs text-muted-foreground">Technical debate expert. Values spreading, kritiks, theory arguments, and technical execution.</p>
+                  </div>
+                </Label>
+                <Label
+                  htmlFor="random-judge"
+                  className={cn(
+                    "flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all",
+                    selectedJudgeType === "random" 
+                      ? "border-purple-500 bg-purple-500/5" 
+                      : "border-border hover:border-purple-500/50"
+                  )}
+                  data-testid="label-judge-random"
+                >
+                  <RadioGroupItem value="random" id="random-judge" className="mt-1" />
+                  <div className="flex items-center gap-2">
+                    <Shuffle className="h-4 w-4 text-purple-500" />
+                    <div>
+                      <p className="font-semibold">Random Judge</p>
+                      <p className="text-xs text-muted-foreground">Judge type assigned randomly. Prepare for any style!</p>
+                    </div>
                   </div>
                 </Label>
               </RadioGroup>
@@ -590,8 +708,28 @@ export default function Practice() {
                 </div>
                 <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">Your Side</span>
-                  <Badge className={selectedSide === "pro" ? "bg-tier-beginner" : "bg-destructive"}>
-                    {selectedSide === "pro" ? "Pro (Affirmative)" : "Con (Negative)"}
+                  <Badge className={
+                    selectedSide === "pro" ? "bg-tier-beginner" : 
+                    selectedSide === "con" ? "bg-destructive" : 
+                    "bg-purple-500"
+                  }>
+                    {selectedSide === "pro" ? "Pro (Affirmative)" : 
+                     selectedSide === "con" ? "Con (Negative)" : 
+                     "Random"}
+                  </Badge>
+                </div>
+                <div className="flex justify-between py-2 border-b">
+                  <span className="text-muted-foreground">Judge Type</span>
+                  <Badge variant="outline" className={
+                    selectedJudgeType === "lay" ? "border-tier-beginner text-tier-beginner" :
+                    selectedJudgeType === "traditional" ? "border-tier-intermediate text-tier-intermediate" :
+                    selectedJudgeType === "circuit" ? "border-tier-advanced text-tier-advanced" :
+                    "border-purple-500 text-purple-500"
+                  }>
+                    {selectedJudgeType === "lay" ? "Lay" :
+                     selectedJudgeType === "traditional" ? "Traditional" :
+                     selectedJudgeType === "circuit" ? "Circuit" :
+                     "Random"}
                   </Badge>
                 </div>
                 <div className="flex justify-between py-2 border-b">

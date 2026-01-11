@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useUser } from "@/lib/user-context";
 import { AI_OPPONENTS, DEBATE_TOPICS, DEBATE_FORMATS, getSkillTier, type DebateSpeech } from "@shared/schema";
-import { Send, Clock, User, Bot, Trophy, TrendingUp, TrendingDown, ArrowLeft, Loader2, Play, MessageSquare, Timer, ChevronRight } from "lucide-react";
+import { Send, Clock, User, Bot, Trophy, TrendingUp, TrendingDown, ArrowLeft, Loader2, Play, MessageSquare, Timer, ChevronRight, FileText, Gavel, PanelRightOpen, PanelRightClose } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -40,6 +40,7 @@ export default function Debate() {
   const formatId = params.get("format");
   const topicId = params.get("topic");
   const side = params.get("side") as "pro" | "con";
+  const judgeType = params.get("judgeType") as "lay" | "traditional" | "circuit" || "traditional";
   const customPrepTime = parseInt(params.get("prepTime") || "0");
   const customSpeechTimes: Record<string, number> = (() => {
     try { return JSON.parse(params.get("speechTimes") || "{}"); } 
@@ -72,6 +73,27 @@ export default function Debate() {
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [showSpeechPanel, setShowSpeechPanel] = useState(true);
+  
+  // Flow sheet state
+  const [showFlowSheet, setShowFlowSheet] = useState(true);
+  const [flowEntries, setFlowEntries] = useState<Array<{
+    id: string;
+    speechName: string;
+    speaker: "user" | "opponent";
+    notes: string;
+  }>>([]);
+  
+  // AI typing simulation state
+  const [typingMessage, setTypingMessage] = useState<{
+    fullContent: string;
+    displayedWordCount: number;
+    isTyping: boolean;
+    messageId: string;
+    mode: "regular" | "cx" | "crossfire";
+  } | null>(null);
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const thinkingDelayRef = useRef<NodeJS.Timeout | null>(null);
+  const [isThinking, setIsThinking] = useState(false);
   
   // Cross-examination (CX) state
   const [isCxMode, setIsCxMode] = useState(false);
@@ -163,6 +185,19 @@ export default function Debate() {
     }
   }, [customPrepTime]);
 
+  // Initialize flow entries from format speeches (seeded once)
+  useEffect(() => {
+    if (format && flowEntries.length === 0) {
+      const initialEntries = format.speeches.map(speech => ({
+        id: speech.id,
+        speechName: speech.name,
+        speaker: isUserSpeech(speech) ? "user" as const : "opponent" as const,
+        notes: "",
+      }));
+      setFlowEntries(initialEntries);
+    }
+  }, [format]);
+
   useEffect(() => {
     // Timer runs when: it's user's turn, OR we're in CX mode (regardless of questioner role)
     const shouldRun = isTimerRunning && !isLoading && !isDebateComplete && (isUserTurn || isCxMode);
@@ -196,6 +231,123 @@ export default function Debate() {
       setCxTimedOut(true);
     }
   }, [isCxMode, speechTimeRemaining, cxTimedOut, isLoading]);
+
+  // Typing simulation effect - simulates AI typing at realistic speed
+  useEffect(() => {
+    if (typingMessage && typingMessage.isTyping) {
+      const words = typingMessage.fullContent.split(/\s+/);
+      const totalWords = words.length;
+      
+      if (typingMessage.displayedWordCount >= totalWords) {
+        // Typing complete
+        setTypingMessage(prev => prev ? { ...prev, isTyping: false } : null);
+        return;
+      }
+      
+      // Calculate typing speed based on opponent tier (words per second)
+      // Beginner: 1-2 wps, Intermediate: 2-3 wps, Advanced: 3-4 wps, Master: 4-5 wps
+      const tierSpeeds: Record<string, [number, number]> = {
+        BEGINNER: [1, 2],
+        INTERMEDIATE: [2, 3],
+        ADVANCED: [3, 4],
+        MASTER: [4, 5],
+      };
+      const [minWps, maxWps] = tierSpeeds[opponent?.tier || "BEGINNER"] || [1, 2];
+      let wps = minWps + Math.random() * (maxWps - minWps);
+      
+      // Mode-specific speed multiplier: CX/crossfire 2x faster
+      if (typingMessage.mode !== "regular") {
+        wps *= 2;
+      }
+      
+      const interval = 1000 / wps;
+      
+      typingIntervalRef.current = setTimeout(() => {
+        setTypingMessage(prev => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            displayedWordCount: prev.displayedWordCount + 1,
+          };
+        });
+      }, interval);
+      
+      return () => {
+        if (typingIntervalRef.current) {
+          clearTimeout(typingIntervalRef.current);
+        }
+      };
+    }
+  }, [typingMessage, opponent?.tier]);
+
+  // Get visible text for AI message (shows words, hides 2 words behind current)
+  const getVisibleAiText = (fullContent: string, displayedWordCount: number, isCurrentlyTyping: boolean) => {
+    const words = fullContent.split(/\s+/);
+    if (!isCurrentlyTyping) {
+      // When done typing, show nothing (all text fades away)
+      return "";
+    }
+    // Show from (current - visible window) to current word
+    const visibleWindowSize = 8; // Show 8 words at a time
+    const fadeStartIndex = Math.max(0, displayedWordCount - visibleWindowSize);
+    const visibleWords = words.slice(fadeStartIndex, displayedWordCount);
+    return visibleWords.join(" ");
+  };
+
+  // Shared helper to add opponent message with mode-specific typing simulation
+  // mode: "regular" (full delay), "cx" (fast), "crossfire" (fast)
+  const enqueueAiMessage = (message: DebateMessage, mode: "regular" | "cx" | "crossfire" = "regular") => {
+    // Clear any pending typing animation and thinking delay
+    if (typingIntervalRef.current) {
+      clearTimeout(typingIntervalRef.current);
+      typingIntervalRef.current = null;
+    }
+    if (thinkingDelayRef.current) {
+      clearTimeout(thinkingDelayRef.current);
+      thinkingDelayRef.current = null;
+    }
+    
+    // Clear any existing typing state
+    setTypingMessage(null);
+    
+    // Add the message to the list
+    setMessages((prev) => [...prev, message]);
+    
+    // Calculate mode-specific "thinking" delay before typing starts
+    const wordCount = message.content.split(/\s+/).length;
+    let thinkTime: number;
+    
+    if (mode === "regular") {
+      // Regular speeches: 3-15 seconds based on content length
+      const baseThinkTime = 3000;
+      const perWordThinkTime = 100;
+      thinkTime = Math.min(baseThinkTime + wordCount * perWordThinkTime, 15000);
+      thinkTime *= (0.8 + Math.random() * 0.4); // Add randomness
+    } else {
+      // CX/crossfire: 300-700ms for quick back-and-forth
+      thinkTime = 300 + Math.random() * 400;
+    }
+    
+    // Show thinking state
+    setIsThinking(true);
+    
+    // After thinking delay, start typing animation
+    thinkingDelayRef.current = setTimeout(() => {
+      setIsThinking(false);
+      
+      // Start typing animation with mode-specific parameters
+      // For CX/crossfire, we start faster (higher initial word count)
+      const initialWordCount = mode === "regular" ? 0 : Math.min(3, message.content.split(/\s+/).length);
+      
+      setTypingMessage({
+        fullContent: message.content,
+        displayedWordCount: initialWordCount,
+        isTyping: true,
+        messageId: message.id,
+        mode,
+      });
+    }, thinkTime);
+  };
 
   // Handle crossfire race result
   useEffect(() => {
@@ -243,7 +395,7 @@ export default function Debate() {
               speechName: currentSpeech.name,
             };
 
-            setMessages((prev) => [...prev, opponentMessage]);
+            enqueueAiMessage(opponentMessage, "crossfire");
             setCrossfireCurrentQuestion(data.response);
             setCrossfirePhase("answering"); // AI asked, now user answers
             setCxExchangeCount(prev => prev + 1);
@@ -290,7 +442,7 @@ export default function Debate() {
                 speechName: currentSpeech.name,
               };
 
-              setMessages((prev) => [...prev, opponentMessage]);
+              enqueueAiMessage(opponentMessage, "crossfire");
               setCrossfireCurrentQuestion(data.response);
               setCrossfirePhase("answering");
               setCxExchangeCount(prev => prev + 1);
@@ -468,7 +620,7 @@ export default function Debate() {
               speechName: speechToDeliver.name,
             };
 
-            setMessages((prev) => [...prev, opponentMessage]);
+            enqueueAiMessage(opponentMessage, "cx");
             setCxAwaitingResponse(true);
             setCxExchangeCount(1);
           } catch (error) {
@@ -512,7 +664,10 @@ export default function Debate() {
               speechName: speechToDeliver.name,
             };
 
-            setMessages((prev) => [...prev, opponentMessage]);
+            // Add message and start typing simulation (non-blocking)
+            enqueueAiMessage(opponentMessage, "regular");
+            
+            // Advance to next speech immediately (don't block on typing animation)
             setCurrentSpeechIndex(indexToAdvance + 1);
           } catch (error) {
             console.error("Error getting opponent speech:", error);
@@ -597,7 +752,7 @@ export default function Debate() {
               speechName: currentSpeech.name,
             };
 
-            setMessages((prev) => [...prev, opponentMessage]);
+            enqueueAiMessage(opponentMessage, "crossfire");
             setCxExchangeCount(prev => prev + 1);
             
             // Evaluate if answer is complete, then start new race
@@ -644,7 +799,7 @@ export default function Debate() {
                 speechId: currentSpeech.id,
                 speechName: currentSpeech.name,
               };
-              setMessages((prev) => [...prev, calloutMessage]);
+              enqueueAiMessage(calloutMessage, "crossfire");
               // Stay in answering phase - user still needs to answer the original question
             }
           }
@@ -698,7 +853,7 @@ export default function Debate() {
               speechName: currentSpeech.name,
             };
 
-            setMessages((prev) => [...prev, opponentMessage]);
+            enqueueAiMessage(opponentMessage, "cx");
             setCxAwaitingResponse(true);
             setCxExchangeCount(prev => prev + 1);
           } else {
@@ -710,7 +865,7 @@ export default function Debate() {
               speechId: currentSpeech.id,
               speechName: currentSpeech.name,
             };
-            setMessages((prev) => [...prev, calloutMessage]);
+            enqueueAiMessage(calloutMessage, "cx");
             setCxAwaitingResponse(true);
             // Stay in answering mode - user still needs to answer
           }
@@ -741,7 +896,7 @@ export default function Debate() {
             speechName: currentSpeech.name,
           };
 
-          setMessages((prev) => [...prev, opponentMessage]);
+          enqueueAiMessage(opponentMessage, "cx");
           setCxExchangeCount(prev => prev + 1);
           // User can ask another question (no awaiting state change needed)
         }
@@ -780,7 +935,7 @@ export default function Debate() {
             speechName: nextSpeech.name,
           };
 
-          setMessages((prev) => [...prev, opponentMessage]);
+          enqueueAiMessage(opponentMessage, "regular");
           setCurrentSpeechIndex(newSpeechIndex + 1);
         }
       }
@@ -1028,87 +1183,204 @@ export default function Debate() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden">
-        <div className="container mx-auto px-4 h-full max-w-4xl">
-          <ScrollArea className="h-full py-6">
-            {messages.length === 0 && currentSpeech && (
-              <Card className="mb-6 border-dashed">
-                <CardContent className="py-8 text-center">
-                  <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Ready to Debate</h3>
-                  <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                    You are arguing <strong>{side === "pro" ? "FOR (Affirmative)" : "AGAINST (Negative)"}</strong> the topic: 
-                    <br />
-                    <em>"{topic.title}"</em>
-                  </p>
-                  <div className="mt-4 p-3 bg-muted/50 rounded-lg inline-block">
-                    <p className="text-sm font-medium mb-1">First Speech: {currentSpeech.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {isUserTurn ? "You speak first - present your opening argument below" : `${opponent?.name} will speak first`}
+      <div className="flex-1 overflow-hidden flex">
+        <div className={cn(
+          "flex-1 overflow-hidden transition-all duration-300",
+          showFlowSheet ? "pr-0" : ""
+        )}>
+          <div className="container mx-auto px-4 h-full max-w-4xl">
+            <ScrollArea className="h-full py-6">
+              {messages.length === 0 && currentSpeech && (
+                <Card className="mb-6 border-dashed">
+                  <CardContent className="py-8 text-center">
+                    <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">Ready to Debate</h3>
+                    <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                      You are arguing <strong>{side === "pro" ? "FOR (Affirmative)" : "AGAINST (Negative)"}</strong> the topic: 
+                      <br />
+                      <em>"{topic.title}"</em>
                     </p>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            <div className="space-y-4 pb-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={cn(
-                    "flex gap-3",
-                    message.role === "user" ? "justify-end" : "justify-start"
-                  )}
-                >
-                  {message.role === "opponent" && (
-                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
-                      <Bot className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <Badge variant="outline" className={cn(
+                        "gap-1",
+                        judgeType === "lay" ? "border-tier-beginner text-tier-beginner" :
+                        judgeType === "traditional" ? "border-tier-intermediate text-tier-intermediate" :
+                        "border-tier-advanced text-tier-advanced"
+                      )}>
+                        <Gavel className="h-3 w-3" />
+                        {judgeType === "lay" ? "Lay Judge" :
+                         judgeType === "traditional" ? "Traditional Judge" :
+                         "Circuit Judge"}
+                      </Badge>
                     </div>
-                  )}
-                  
-                  <div
-                    className={cn(
-                      "max-w-[80%] rounded-lg px-4 py-3",
-                      message.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
-                    )}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-medium opacity-70">
-                        {message.role === "user" ? "You" : opponent.name}
-                      </span>
-                      <span className="text-xs opacity-50">{message.speechName}</span>
+                    <div className="mt-4 p-3 bg-muted/50 rounded-lg inline-block">
+                      <p className="text-sm font-medium mb-1">First Speech: {currentSpeech.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {isUserTurn ? "You speak first - present your opening argument below" : `${opponent?.name} will speak first`}
+                      </p>
                     </div>
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                  </div>
-
-                  {message.role === "user" && (
-                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                      <User className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              {isLoading && (
-                <div className="flex gap-3 justify-start">
-                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-                    <Bot className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <div className="bg-muted rounded-lg px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm text-muted-foreground">{opponent.name} is responding...</span>
-                    </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               )}
 
-              <div ref={messagesEndRef} />
-            </div>
-          </ScrollArea>
+              <div className="space-y-4 pb-4">
+                {messages.map((message) => {
+                  const isTypingThisMessage = typingMessage?.messageId === message.id && typingMessage?.isTyping;
+                  const visibleContent = message.role === "opponent" && isTypingThisMessage
+                    ? getVisibleAiText(message.content, typingMessage!.displayedWordCount, true)
+                    : message.content;
+                  
+                  return (
+                    <div
+                      key={message.id}
+                      className={cn(
+                        "flex gap-3",
+                        message.role === "user" ? "justify-end" : "justify-start"
+                      )}
+                    >
+                      {message.role === "opponent" && (
+                        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+                          <Bot className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                      )}
+                      
+                      <div
+                        className={cn(
+                          "max-w-[80%] rounded-lg px-4 py-3",
+                          message.role === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted"
+                        )}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-medium opacity-70">
+                            {message.role === "user" ? "You" : opponent.name}
+                          </span>
+                          <span className="text-xs opacity-50">{message.speechName}</span>
+                          {isTypingThisMessage && (
+                            <span className="text-xs text-purple-500 animate-pulse">typing...</span>
+                          )}
+                        </div>
+                        {message.role === "opponent" && isTypingThisMessage ? (
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap min-h-[1.5rem] font-medium text-foreground">
+                            {visibleContent || <span className="opacity-50">...</span>}
+                          </p>
+                        ) : (
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap">{visibleContent}</p>
+                        )}
+                      </div>
+
+                      {message.role === "user" && (
+                        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                          <User className="h-5 w-5 text-primary-foreground" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {isLoading && !typingMessage && (
+                  <div className="flex gap-3 justify-start">
+                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                      <Bot className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <div className="bg-muted rounded-lg px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-sm text-muted-foreground">{opponent.name} is thinking...</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+            </ScrollArea>
+          </div>
         </div>
+        
+        {showFlowSheet && (
+          <div className="w-80 border-l bg-background/95 backdrop-blur-sm flex flex-col flex-shrink-0">
+            <div className="p-3 border-b flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium text-sm">Flow Sheet</span>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-7 w-7"
+                onClick={() => setShowFlowSheet(false)}
+                data-testid="button-hide-flow"
+              >
+                <PanelRightClose className="h-4 w-4" />
+              </Button>
+            </div>
+            <ScrollArea className="flex-1 p-3">
+              <div className="space-y-3">
+                {format?.speeches.slice(0, currentSpeechIndex + 1).map((speech, idx) => (
+                  <div 
+                    key={speech.id}
+                    className={cn(
+                      "p-2 rounded-lg border text-xs",
+                      speech.speaker === "aff" 
+                        ? "bg-tier-beginner/5 border-tier-beginner/20" 
+                        : "bg-destructive/5 border-destructive/20"
+                    )}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium">{speech.name}</span>
+                      <Badge variant="outline" className="text-xs h-5">
+                        {speech.speaker === "aff" ? "AFF" : "NEG"}
+                      </Badge>
+                    </div>
+                    <Textarea
+                      placeholder="Take notes..."
+                      className="min-h-[60px] text-xs resize-none border-0 bg-transparent p-0 focus-visible:ring-0"
+                      value={flowEntries.find(e => e.id === speech.id)?.notes || ""}
+                      onChange={(e) => {
+                        const existing = flowEntries.find(entry => entry.id === speech.id);
+                        if (existing) {
+                          setFlowEntries(prev => prev.map(entry => 
+                            entry.id === speech.id 
+                              ? { ...entry, notes: e.target.value }
+                              : entry
+                          ));
+                        } else {
+                          setFlowEntries(prev => [...prev, {
+                            id: speech.id,
+                            speechName: speech.name,
+                            speaker: isUserSpeech(speech) ? "user" : "opponent",
+                            notes: e.target.value,
+                          }]);
+                        }
+                      }}
+                      data-testid={`flow-notes-${speech.id}`}
+                    />
+                  </div>
+                ))}
+                {(!format || currentSpeechIndex === 0) && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p className="text-xs">Flow notes will appear here as the debate progresses</p>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+        )}
+        
+        {!showFlowSheet && (
+          <Button
+            variant="outline"
+            size="icon"
+            className="fixed right-4 top-1/2 -translate-y-1/2 z-10"
+            onClick={() => setShowFlowSheet(true)}
+            data-testid="button-show-flow"
+          >
+            <PanelRightOpen className="h-4 w-4" />
+          </Button>
+        )}
       </div>
 
       {!isDebateComplete && currentSpeech && (
