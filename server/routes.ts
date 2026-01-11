@@ -525,18 +525,20 @@ DEBATE CONTEXT:
 - Your position: ${side === "pro" ? "PRO/AFFIRMATIVE" : "CON/NEGATIVE"}
 - This is CROSSFIRE - both sides can ask AND answer questions
 
-Your opponent just said something. Respond appropriately:
-- If they asked a question, answer it briefly
-- If they made a statement, you can respond and/or ask your own question
-- Keep the exchange conversational but competitive
+Your opponent just said something. You MUST:
+1. First, respond to what they said (answer their question or counter their point) in 1-2 sentences
+2. Then, ALWAYS ask them a challenging follow-up question to keep the exchange going
+
+FORMAT YOUR RESPONSE LIKE THIS:
+[Your answer/response to their point]. [Your follow-up question to them?]
 
 CRITICAL RULES:
-1. Keep your response brief (1-3 sentences)
-2. You can answer AND ask a question in the same response
-3. Be direct and focused
-4. Maintain your position while engaging with their points
+1. Keep your total response to 2-4 sentences
+2. ALWAYS end with a question directed at them
+3. Be direct and competitive
+4. Your question should probe a weakness in their position
 
-Respond now:`;
+Respond now (remember to end with a question):`;
     }
     
     if (cxIntent === "cx-timeout") {
