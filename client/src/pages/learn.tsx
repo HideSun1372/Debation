@@ -107,46 +107,53 @@ export default function Learn() {
   const isLessonUnlocked = (lessonId: string): boolean => {
     if (isAdmin) return true;
     
-    const lessonIndex = allLessonIds.indexOf(lessonId);
     const lessonUnitIndex = getLessonUnitIndex(lessonId);
     const placementUnitIndex = getPlacementUnitIndex();
     
+    // If lesson or placement unit not found, default to unlocking first unit lessons
+    if (lessonUnitIndex < 0 || placementUnitIndex < 0) {
+      return lessonUnitIndex === 0;
+    }
+    
+    // Lessons before placement are always unlocked
     if (lessonUnitIndex < placementUnitIndex) {
       return true;
     }
     
-    if (lessonUnitIndex === placementUnitIndex) {
-      const unitLessons: string[] = [];
-      for (const section of LESSON_UNITS[lessonUnitIndex].sections) {
+    // Get lessons for the current unit safely
+    const getUnitLessons = (unitIndex: number): string[] => {
+      if (unitIndex < 0 || unitIndex >= LESSON_UNITS.length) return [];
+      const unit = LESSON_UNITS[unitIndex];
+      if (!unit?.sections) return [];
+      const lessons: string[] = [];
+      for (const section of unit.sections) {
         for (const lesson of section.lessons) {
-          unitLessons.push(lesson.id);
+          lessons.push(lesson.id);
         }
       }
+      return lessons;
+    };
+    
+    if (lessonUnitIndex === placementUnitIndex) {
+      const unitLessons = getUnitLessons(lessonUnitIndex);
       const lessonPositionInUnit = unitLessons.indexOf(lessonId);
       if (lessonPositionInUnit === 0) return true;
+      if (lessonPositionInUnit < 0) return false;
       const previousLessonId = unitLessons[lessonPositionInUnit - 1];
       return user.lessonProgress.completedLessonIds.includes(previousLessonId);
     }
     
-    const previousUnitLessons: string[] = [];
-    for (const section of LESSON_UNITS[lessonUnitIndex - 1].sections) {
-      for (const lesson of section.lessons) {
-        previousUnitLessons.push(lesson.id);
-      }
-    }
-    const allPreviousCompleted = previousUnitLessons.every(id => 
+    // For lessons beyond placement unit, check if previous unit is completed
+    const previousUnitLessons = getUnitLessons(lessonUnitIndex - 1);
+    const allPreviousCompleted = previousUnitLessons.length > 0 && previousUnitLessons.every(id => 
       user.lessonProgress.completedLessonIds.includes(id)
     );
     if (!allPreviousCompleted) return false;
     
-    const unitLessons: string[] = [];
-    for (const section of LESSON_UNITS[lessonUnitIndex].sections) {
-      for (const lesson of section.lessons) {
-        unitLessons.push(lesson.id);
-      }
-    }
+    const unitLessons = getUnitLessons(lessonUnitIndex);
     const lessonPositionInUnit = unitLessons.indexOf(lessonId);
     if (lessonPositionInUnit === 0) return true;
+    if (lessonPositionInUnit < 0) return false;
     const previousLessonId = unitLessons[lessonPositionInUnit - 1];
     return user.lessonProgress.completedLessonIds.includes(previousLessonId);
   };
