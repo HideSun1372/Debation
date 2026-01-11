@@ -94,6 +94,7 @@ export default function Debate() {
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const thinkingDelayRef = useRef<NodeJS.Timeout | null>(null);
   const [isThinking, setIsThinking] = useState(false);
+  const [completedTypingIds, setCompletedTypingIds] = useState<Set<string>>(new Set());
   
   // Cross-examination (CX) state
   const [isCxMode, setIsCxMode] = useState(false);
@@ -239,28 +240,32 @@ export default function Debate() {
       const totalWords = words.length;
       
       if (typingMessage.displayedWordCount >= totalWords) {
-        // Typing complete
-        setTypingMessage(prev => prev ? { ...prev, isTyping: false } : null);
+        // Typing complete - mark this message as completed and clear typing state
+        setCompletedTypingIds(prev => new Set(prev).add(typingMessage.messageId));
+        setTypingMessage(null);
         return;
       }
       
       // Calculate typing speed based on opponent tier (words per second)
-      // Beginner: 1-2 wps, Intermediate: 2-3 wps, Advanced: 3-4 wps, Master: 4-5 wps
+      // Much slower, more realistic: 0.6-1.1 wps base (about 1 word per second)
+      // Tier affects speed slightly: Beginner slowest, Master fastest
       const tierSpeeds: Record<string, [number, number]> = {
-        BEGINNER: [1, 2],
-        INTERMEDIATE: [2, 3],
-        ADVANCED: [3, 4],
-        MASTER: [4, 5],
+        BEGINNER: [0.5, 0.7],
+        INTERMEDIATE: [0.6, 0.8],
+        ADVANCED: [0.7, 0.9],
+        MASTER: [0.8, 1.1],
       };
-      const [minWps, maxWps] = tierSpeeds[opponent?.tier || "BEGINNER"] || [1, 2];
+      const [minWps, maxWps] = tierSpeeds[opponent?.tier || "BEGINNER"] || [0.5, 0.7];
       let wps = minWps + Math.random() * (maxWps - minWps);
       
-      // Mode-specific speed multiplier: CX/crossfire 2x faster
+      // Mode-specific speed multiplier: CX/crossfire 2x faster for quick back-and-forth
       if (typingMessage.mode !== "regular") {
         wps *= 2;
       }
       
-      const interval = 1000 / wps;
+      // Add per-word jitter for more natural feel (±20%)
+      const jitter = 0.8 + Math.random() * 0.4;
+      const interval = (1000 / wps) * jitter;
       
       typingIntervalRef.current = setTimeout(() => {
         setTypingMessage(prev => {
@@ -280,13 +285,9 @@ export default function Debate() {
     }
   }, [typingMessage, opponent?.tier]);
 
-  // Get visible text for AI message (shows words, hides 2 words behind current)
-  const getVisibleAiText = (fullContent: string, displayedWordCount: number, isCurrentlyTyping: boolean) => {
+  // Get visible text for AI message during typing (sliding window effect)
+  const getVisibleAiText = (fullContent: string, displayedWordCount: number) => {
     const words = fullContent.split(/\s+/);
-    if (!isCurrentlyTyping) {
-      // When done typing, show nothing (all text fades away)
-      return "";
-    }
     // Show from (current - visible window) to current word
     const visibleWindowSize = 8; // Show 8 words at a time
     const fadeStartIndex = Math.max(0, displayedWordCount - visibleWindowSize);
@@ -310,9 +311,6 @@ export default function Debate() {
     // Clear any existing typing state
     setTypingMessage(null);
     
-    // Add the message to the list
-    setMessages((prev) => [...prev, message]);
-    
     // Calculate mode-specific "thinking" delay before typing starts
     const wordCount = message.content.split(/\s+/).length;
     let thinkTime: number;
@@ -328,12 +326,15 @@ export default function Debate() {
       thinkTime = 300 + Math.random() * 400;
     }
     
-    // Show thinking state
+    // Show thinking state (message is NOT added to state yet - stays hidden during thinking)
     setIsThinking(true);
     
-    // After thinking delay, start typing animation
+    // After thinking delay, add message to state and start typing animation
     thinkingDelayRef.current = setTimeout(() => {
       setIsThinking(false);
+      
+      // NOW add the message to the list (deferred until thinking is complete)
+      setMessages((prev) => [...prev, message]);
       
       // Start typing animation with mode-specific parameters
       // For CX/crossfire, we start faster (higher initial word count)
@@ -1226,9 +1227,28 @@ export default function Debate() {
               <div className="space-y-4 pb-4">
                 {messages.map((message) => {
                   const isTypingThisMessage = typingMessage?.messageId === message.id && typingMessage?.isTyping;
-                  const visibleContent = message.role === "opponent" && isTypingThisMessage
-                    ? getVisibleAiText(message.content, typingMessage!.displayedWordCount, true)
-                    : message.content;
+                  const hasCompletedTyping = message.role === "opponent" && completedTypingIds.has(message.id);
+                  
+                  // Determine visible content:
+                  // - User messages: always show full content
+                  // - Opponent messages currently typing: show sliding window (disappearing effect)
+                  // - Opponent messages that completed typing: show collapsed preview with "..." 
+                  // - Opponent messages not typed yet: show full content
+                  let visibleContent: string;
+                  let isCollapsed = false;
+                  
+                  if (message.role === "user") {
+                    visibleContent = message.content;
+                  } else if (isTypingThisMessage) {
+                    visibleContent = getVisibleAiText(message.content, typingMessage!.displayedWordCount);
+                  } else if (hasCompletedTyping) {
+                    // Show last 8 words as a collapsed preview
+                    const words = message.content.split(/\s+/);
+                    visibleContent = words.slice(-8).join(" ");
+                    isCollapsed = true;
+                  } else {
+                    visibleContent = message.content;
+                  }
                   
                   return (
                     <div
@@ -1249,7 +1269,8 @@ export default function Debate() {
                           "max-w-[80%] rounded-lg px-4 py-3",
                           message.role === "user"
                             ? "bg-primary text-primary-foreground"
-                            : "bg-muted"
+                            : "bg-muted",
+                          isCollapsed && "opacity-60"
                         )}
                       >
                         <div className="flex items-center gap-2 mb-1">
@@ -1266,7 +1287,9 @@ export default function Debate() {
                             {visibleContent || <span className="opacity-50">...</span>}
                           </p>
                         ) : (
-                          <p className="text-sm leading-relaxed whitespace-pre-wrap">{visibleContent}</p>
+                          <p className={cn("text-sm leading-relaxed whitespace-pre-wrap", isCollapsed && "italic")}>
+                            {isCollapsed ? `...${visibleContent}` : visibleContent}
+                          </p>
                         )}
                       </div>
 
