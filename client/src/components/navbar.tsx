@@ -1,10 +1,12 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/lib/user-context";
+import { useAuth } from "@/hooks/use-auth";
 import { SkillBadge } from "./skill-badge";
 import { ThemeToggle } from "./theme-toggle";
-import { BookOpen, Swords, User, History, Home, Menu, X } from "lucide-react";
+import { BookOpen, Swords, User, History, Home, Menu, X, LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
 
 const navItems = [
@@ -18,7 +20,14 @@ const navItems = [
 export function Navbar() {
   const [location] = useLocation();
   const { user } = useUser();
+  const { user: authUser, isLoading: authLoading, isAuthenticated } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const getInitials = (firstName?: string | null, lastName?: string | null) => {
+    const first = firstName?.charAt(0) || "";
+    const last = lastName?.charAt(0) || "";
+    return (first + last).toUpperCase() || "U";
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -57,6 +66,40 @@ export function Navbar() {
           <SkillBadge points={user.skillPoints} size="sm" />
           <ThemeToggle />
           
+          {!authLoading && (
+            isAuthenticated && authUser ? (
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={authUser.profileImageUrl || undefined} alt={authUser.firstName || "User"} />
+                  <AvatarFallback className="text-xs">
+                    {getInitials(authUser.firstName, authUser.lastName)}
+                  </AvatarFallback>
+                </Avatar>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hidden sm:flex gap-1"
+                  onClick={() => { window.location.href = "/api/logout"; }}
+                  data-testid="button-logout"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="default"
+                size="sm"
+                className="gap-1"
+                onClick={() => { window.location.href = "/api/login"; }}
+                data-testid="button-login"
+              >
+                <LogIn className="h-4 w-4" />
+                Login
+              </Button>
+            )
+          )}
+          
           <Button
             variant="ghost"
             size="icon"
@@ -94,6 +137,30 @@ export function Navbar() {
                 </Link>
               );
             })}
+            
+            {!authLoading && (
+              isAuthenticated ? (
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2"
+                  onClick={() => { window.location.href = "/api/logout"; }}
+                  data-testid="link-mobile-logout"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              ) : (
+                <Button
+                  variant="default"
+                  className="w-full justify-start gap-2 mt-2"
+                  onClick={() => { window.location.href = "/api/login"; }}
+                  data-testid="link-mobile-login"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Login
+                </Button>
+              )
+            )}
           </nav>
         </div>
       )}

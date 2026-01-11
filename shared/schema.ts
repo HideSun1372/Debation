@@ -3,6 +3,9 @@ import { pgTable, text, varchar, integer, timestamp, boolean } from "drizzle-orm
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Re-export auth models
+export * from "./models/auth";
+
 // Skill Tiers
 export const SKILL_TIERS = {
   BEGINNER: { name: "Beginner", minPoints: 0, maxPoints: 999 },

@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import OpenAI from "openai";
+import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -12,6 +13,9 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // Setup authentication (must be before other routes)
+  await setupAuth(app);
+  registerAuthRoutes(app);
 
   app.post("/api/debates", async (req, res) => {
     try {
