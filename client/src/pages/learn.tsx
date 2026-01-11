@@ -14,6 +14,10 @@ import {
   type ExperienceLevel,
   getPlacementUnit,
   getLessonExercise,
+  getMultiPageLesson,
+  type LessonPage,
+  type LessonContentPage,
+  type LessonQuestionPage,
 } from "@shared/schema";
 import { 
   BookOpen, 
@@ -61,6 +65,12 @@ export default function Learn() {
   const [exerciseAnswer, setExerciseAnswer] = useState<string | null>(null);
   const [exerciseAnswered, setExerciseAnswered] = useState(false);
   const [exerciseCorrect, setExerciseCorrect] = useState(false);
+  
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const [pageAnswer, setPageAnswer] = useState<string | null>(null);
+  const [pageAnswered, setPageAnswered] = useState(false);
+  const [pageCorrect, setPageCorrect] = useState(false);
+  const [completedPageQuestions, setCompletedPageQuestions] = useState<Set<number>>(new Set());
 
   const hasCompletedOnboarding = user.lessonProgress.hasCompletedOnboarding;
 
@@ -205,6 +215,11 @@ export default function Learn() {
       setExerciseAnswer(null);
       setExerciseAnswered(false);
       setExerciseCorrect(false);
+      setCurrentPageIndex(0);
+      setPageAnswer(null);
+      setPageAnswered(false);
+      setPageCorrect(false);
+      setCompletedPageQuestions(new Set());
     }
   };
 
@@ -272,6 +287,11 @@ export default function Learn() {
               setExerciseAnswer(null);
               setExerciseAnswered(false);
               setExerciseCorrect(false);
+              setCurrentPageIndex(0);
+              setPageAnswer(null);
+              setPageAnswered(false);
+              setPageCorrect(false);
+              setCompletedPageQuestions(new Set());
               return;
             }
           }
@@ -279,6 +299,57 @@ export default function Learn() {
       }
     } else {
       setActiveLessonId(null);
+    }
+  };
+
+  const handlePageAnswerSelect = (answerId: string) => {
+    if (!pageAnswered && !completedPageQuestions.has(currentPageIndex)) {
+      setPageAnswer(answerId);
+    }
+  };
+
+  const handleCheckPageAnswer = (page: LessonQuestionPage) => {
+    if (!pageAnswer) return;
+    const isCorrect = pageAnswer === page.correctAnswer;
+    setPageAnswered(true);
+    setPageCorrect(isCorrect);
+    if (isCorrect) {
+      setCompletedPageQuestions(prev => new Set(Array.from(prev).concat(currentPageIndex)));
+    }
+  };
+
+  const handleRetryPageQuestion = () => {
+    setPageAnswer(null);
+    setPageAnswered(false);
+    setPageCorrect(false);
+  };
+
+  const handleNextPage = () => {
+    if (!activeLessonId) return;
+    const multiPageLesson = getMultiPageLesson(activeLessonId);
+    if (!multiPageLesson) return;
+    
+    if (currentPageIndex < multiPageLesson.pages.length - 1) {
+      const nextPageIndex = currentPageIndex + 1;
+      setCurrentPageIndex(nextPageIndex);
+      const isNextQuestionCompleted = completedPageQuestions.has(nextPageIndex);
+      setPageAnswer(null);
+      setPageAnswered(isNextQuestionCompleted);
+      setPageCorrect(isNextQuestionCompleted);
+    } else {
+      completeLesson(activeLessonId);
+      goToNextLesson();
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPageIndex > 0) {
+      const prevPageIndex = currentPageIndex - 1;
+      setCurrentPageIndex(prevPageIndex);
+      const isPrevQuestionCompleted = completedPageQuestions.has(prevPageIndex);
+      setPageAnswer(null);
+      setPageAnswered(isPrevQuestionCompleted);
+      setPageCorrect(isPrevQuestionCompleted);
     }
   };
 
@@ -495,6 +566,241 @@ export default function Learn() {
     const { unit, section, lesson } = activeData;
     const isCompleted = isLessonCompleted(lesson.id);
     const exercise = getLessonExercise(lesson.id);
+    const multiPageLesson = getMultiPageLesson(lesson.id);
+
+    if (multiPageLesson) {
+      const totalPages = multiPageLesson.pages.length;
+      const currentPage = multiPageLesson.pages[currentPageIndex];
+      const progressValue = ((currentPageIndex + 1) / totalPages) * 100;
+      const isLastPage = currentPageIndex === totalPages - 1;
+
+      const renderContentPage = (page: LessonContentPage) => (
+        <div className="space-y-6">
+          <div className="prose prose-sm dark:prose-invert max-w-none">
+            {page.content.split('\n\n').map((paragraph, idx) => (
+              <p key={idx} className="text-base leading-relaxed whitespace-pre-line">{paragraph}</p>
+            ))}
+          </div>
+
+          {page.keyPoints && page.keyPoints.length > 0 && (
+            <div className="rounded-lg bg-muted/50 p-4">
+              <h4 className="font-medium mb-3">Key Points</h4>
+              <ul className="space-y-2">
+                {page.keyPoints.map((point, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm">
+                    <Check className="h-4 w-4 text-tier-beginner mt-0.5 flex-shrink-0" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      );
+
+      const isQuestionAlreadyCompleted = completedPageQuestions.has(currentPageIndex);
+      const showAsCompleted = isQuestionAlreadyCompleted || (pageAnswered && pageCorrect);
+      const showAsIncorrect = pageAnswered && !pageCorrect && !isQuestionAlreadyCompleted;
+
+      const renderQuestionPage = (page: LessonQuestionPage) => (
+        <div className="space-y-6">
+          <div className="flex items-center gap-2 mb-4">
+            {isQuestionAlreadyCompleted ? (
+              <Badge className="gap-1 bg-tier-beginner">
+                <CircleCheck className="h-3 w-3" />
+                Previously Answered Correctly
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="gap-1">
+                <HelpCircle className="h-3 w-3" />
+                Check Your Understanding
+              </Badge>
+            )}
+          </div>
+          
+          <h3 className="text-lg font-medium">{page.question}</h3>
+          
+          <div className="space-y-3">
+            {page.options.map((option) => {
+              const isSelected = pageAnswer === option.id;
+              const isCorrectOption = option.id === page.correctAnswer;
+              
+              let optionStyle = "border-muted hover:bg-accent/50";
+              if (showAsCompleted) {
+                if (isCorrectOption) {
+                  optionStyle = "border-tier-beginner bg-tier-beginner/10";
+                }
+              } else if (showAsIncorrect) {
+                if (isCorrectOption) {
+                  optionStyle = "border-tier-beginner bg-tier-beginner/10";
+                } else if (isSelected && !isCorrectOption) {
+                  optionStyle = "border-destructive bg-destructive/10";
+                }
+              } else if (isSelected) {
+                optionStyle = "border-primary bg-primary/5";
+              }
+              
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => handlePageAnswerSelect(option.id)}
+                  disabled={showAsCompleted || showAsIncorrect}
+                  className={cn(
+                    "w-full flex items-center gap-3 rounded-lg border-2 p-4 text-left transition-colors",
+                    optionStyle,
+                    (showAsCompleted || showAsIncorrect) && "cursor-default"
+                  )}
+                  data-testid={`option-page-${option.id}`}
+                >
+                  <span className={cn(
+                    "flex h-6 w-6 items-center justify-center rounded-full border text-sm font-medium",
+                    showAsCompleted && isCorrectOption && "bg-tier-beginner text-white border-tier-beginner",
+                    showAsIncorrect && isCorrectOption && "bg-tier-beginner text-white border-tier-beginner",
+                    showAsIncorrect && isSelected && !isCorrectOption && "bg-destructive text-white border-destructive"
+                  )}>
+                    {(showAsCompleted && isCorrectOption) || (showAsIncorrect && isCorrectOption) ? (
+                      <Check className="h-3 w-3" />
+                    ) : showAsIncorrect && isSelected && !isCorrectOption ? (
+                      <CircleX className="h-3 w-3" />
+                    ) : (
+                      option.id.toUpperCase()
+                    )}
+                  </span>
+                  <span>{option.text}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {showAsCompleted && (
+            <div className="rounded-lg p-4 bg-tier-beginner/10 border border-tier-beginner/30">
+              <div className="flex items-center gap-2 mb-2">
+                <CircleCheck className="h-5 w-5 text-tier-beginner" />
+                <span className="font-medium text-tier-beginner">
+                  {isQuestionAlreadyCompleted ? "You answered this correctly!" : "Correct!"}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">{page.explanation}</p>
+            </div>
+          )}
+          
+          {showAsIncorrect && (
+            <div className="rounded-lg p-4 bg-destructive/10 border border-destructive/30">
+              <div className="flex items-center gap-2 mb-2">
+                <CircleX className="h-5 w-5 text-destructive" />
+                <span className="font-medium text-destructive">Not quite right</span>
+              </div>
+              <p className="text-sm text-muted-foreground">{page.explanation}</p>
+            </div>
+          )}
+        </div>
+      );
+
+      const canProceed = currentPage.type === "content" || isQuestionAlreadyCompleted || (pageAnswered && pageCorrect);
+
+      return (
+        <div className="container mx-auto px-4 py-8 max-w-3xl">
+          <Button 
+            variant="ghost" 
+            className="mb-4"
+            onClick={() => setActiveLessonId(null)}
+            data-testid="button-back-to-lessons"
+          >
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Back to Lessons
+          </Button>
+
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                <span>{unit.title}</span>
+                <ChevronRight className="h-4 w-4" />
+                <span>{section.title}</span>
+              </div>
+              <CardTitle className="text-2xl">
+                {currentPage.type === "content" ? currentPage.title : lesson.title}
+              </CardTitle>
+              <div className="flex flex-wrap items-center gap-3 mt-2">
+                <Badge variant="outline" className="gap-1">
+                  <BookOpen className="h-3 w-3" />
+                  Page {currentPageIndex + 1} of {totalPages}
+                </Badge>
+                <Badge variant="outline" className="gap-1">
+                  <Clock className="h-3 w-3" />
+                  {lesson.estimatedMinutes} min
+                </Badge>
+                {isCompleted && (
+                  <Badge className="bg-tier-beginner gap-1">
+                    <Check className="h-3 w-3" />
+                    Completed
+                  </Badge>
+                )}
+              </div>
+              <Progress value={progressValue} className="h-2 mt-4" />
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {currentPage.type === "content" 
+                ? renderContentPage(currentPage) 
+                : renderQuestionPage(currentPage)
+              }
+            </CardContent>
+            <CardFooter className="justify-between gap-2">
+              <Button 
+                variant="outline" 
+                onClick={handlePrevPage}
+                disabled={currentPageIndex === 0}
+                data-testid="button-prev-page"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                Previous
+              </Button>
+              
+              <div className="flex gap-2">
+                {currentPage.type === "question" && !pageAnswered && !isQuestionAlreadyCompleted && (
+                  <Button 
+                    onClick={() => handleCheckPageAnswer(currentPage)}
+                    disabled={!pageAnswer}
+                    data-testid="button-check-page-answer"
+                  >
+                    Check Answer
+                  </Button>
+                )}
+                
+                {currentPage.type === "question" && pageAnswered && !pageCorrect && !isQuestionAlreadyCompleted && (
+                  <Button 
+                    onClick={handleRetryPageQuestion} 
+                    variant="outline"
+                    data-testid="button-retry-page"
+                  >
+                    <RotateCcw className="h-4 w-4 mr-1" />
+                    Try Again
+                  </Button>
+                )}
+                
+                {canProceed && (
+                  <Button 
+                    onClick={handleNextPage}
+                    data-testid="button-next-page"
+                  >
+                    {isLastPage ? (
+                      <>
+                        Complete Lesson
+                        <Check className="h-4 w-4 ml-1" />
+                      </>
+                    ) : (
+                      <>
+                        Continue
+                        <ChevronRight className="h-4 w-4 ml-1" />
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </CardFooter>
+          </Card>
+        </div>
+      );
+    }
 
     if (lessonStep === "quiz" && exercise) {
       const currentQ = exercise.questions[exerciseQuestionIndex];
