@@ -81,6 +81,11 @@ export default function Debate() {
   const [cxStarted, setCxStarted] = useState(false); // Track if first question has been asked
   const [cxTimedOut, setCxTimedOut] = useState(false); // Track if CX should end due to timeout
   
+  // Crossfire race state - who gets to ask first
+  const [crossfireRacing, setCrossfireRacing] = useState(false);
+  const [crossfireRaceWinner, setCrossfireRaceWinner] = useState<"user" | "opponent" | null>(null);
+  const crossfireRaceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
   const currentSpeech = format?.speeches[currentSpeechIndex];
   const isUserTurn = currentSpeech ? isUserSpeech(currentSpeech) : false;
   const isDebateComplete = format ? currentSpeechIndex >= format.speeches.length : false;
@@ -186,6 +191,70 @@ export default function Debate() {
     }
   }, [isCxMode, speechTimeRemaining, cxTimedOut, isLoading]);
 
+  // Handle crossfire race result
+  useEffect(() => {
+    if (crossfireRaceWinner && crossfireRacing && currentSpeech) {
+      setCrossfireRacing(false);
+      setCxStarted(true);
+      setIsCxMode(true);
+      setCxQuestioner(null); // Crossfire - both can ask after first question
+      
+      if (crossfireRaceWinner === "opponent") {
+        // AI won - trigger AI's first question
+        const triggerAiFirstQuestion = async () => {
+          setIsLoading(true);
+          try {
+            const response = await apiRequest("POST", "/api/debate/message", {
+              message: null,
+              debateId,
+              opponentId: opponent?.id,
+              opponentTier: opponent?.tier,
+              opponentPersonality: opponent?.personality,
+              topic: topic?.title,
+              side,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+              speechType: currentSpeech.type,
+              cxIntent: "crossfire-start",
+              previousMessages: messages,
+            });
+
+            const data = await response.json();
+            
+            const opponentMessage: DebateMessage = {
+              id: `opponent-cf-${Date.now()}`,
+              role: "opponent",
+              content: data.response,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+            };
+
+            setMessages((prev) => [...prev, opponentMessage]);
+            setCxExchangeCount(1);
+          } catch (error) {
+            console.error("Error starting crossfire:", error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        triggerAiFirstQuestion();
+      }
+      // If user won, they just type their question - no AI action needed
+    }
+  }, [crossfireRaceWinner, crossfireRacing]);
+
+  // User claims first question in crossfire race
+  const handleClaimFirstQuestion = () => {
+    if (crossfireRacing && !crossfireRaceWinner) {
+      // Clear AI's pending timeout
+      if (crossfireRaceTimeoutRef.current) {
+        clearTimeout(crossfireRaceTimeoutRef.current);
+        crossfireRaceTimeoutRef.current = null;
+      }
+      setCrossfireRaceWinner("user");
+    }
+  };
+
   const handleRequestPrepTime = () => {
     if (prepTimeRemaining > 0 && !isInPrepTime) {
       setIsInPrepTime(true);
@@ -205,50 +274,32 @@ export default function Debate() {
       const isCfSpeech = speechToDeliver.type === "crossfire";
       const isOpponentSpeech = !isUserSpeech(speechToDeliver);
       
-      // Handle Crossfire: AI asks the first question to start the back-and-forth
-      if (isCfSpeech && !cxStarted) {
-        const triggerCrossfireStart = async () => {
-          setIsLoading(true);
-          setIsTimerRunning(true);
-          setCxStarted(true);
-          setIsCxMode(true);
-          setCxQuestioner(null); // Crossfire - both can ask
-          try {
-            const response = await apiRequest("POST", "/api/debate/message", {
-              message: null,
-              debateId,
-              opponentId: opponent?.id,
-              opponentTier: opponent?.tier,
-              opponentPersonality: opponent?.personality,
-              topic: topic?.title,
-              side,
-              speechId: speechToDeliver.id,
-              speechName: speechToDeliver.name,
-              speechType: speechToDeliver.type,
-              cxIntent: "crossfire-start",
-              previousMessages: messages,
-            });
-
-            const data = await response.json();
-            
-            const opponentMessage: DebateMessage = {
-              id: `opponent-cf-${Date.now()}`,
-              role: "opponent",
-              content: data.response,
-              speechId: speechToDeliver.id,
-              speechName: speechToDeliver.name,
-            };
-
-            setMessages((prev) => [...prev, opponentMessage]);
-            setCxExchangeCount(1);
-          } catch (error) {
-            console.error("Error starting crossfire:", error);
-          } finally {
-            setIsLoading(false);
-          }
-        };
+      // Handle Crossfire: Start a race to see who asks the first question
+      if (isCfSpeech && !cxStarted && !crossfireRacing) {
+        setCrossfireRacing(true);
+        setCrossfireRaceWinner(null);
+        setIsTimerRunning(true);
         
-        triggerCrossfireStart();
+        // Calculate AI reaction time based on skill tier
+        // Beginner: 2-4 seconds, Intermediate: 1.5-3s, Advanced: 1-2s, Expert: 0.5-1.5s, Master: 0.3-1s
+        const tierDelays: Record<string, [number, number]> = {
+          beginner: [2000, 4000],
+          intermediate: [1500, 3000],
+          advanced: [1000, 2000],
+          expert: [500, 1500],
+          master: [300, 1000],
+        };
+        const [minDelay, maxDelay] = tierDelays[opponent?.tier || "beginner"] || [2000, 4000];
+        const aiReactionTime = minDelay + Math.random() * (maxDelay - minDelay);
+        
+        // Set up AI's attempt to claim first question
+        crossfireRaceTimeoutRef.current = setTimeout(() => {
+          // AI wins the race if user hasn't clicked yet
+          if (crossfireRacing && !crossfireRaceWinner) {
+            setCrossfireRaceWinner("opponent");
+          }
+        }, aiReactionTime);
+        
         return;
       }
       
@@ -848,7 +899,37 @@ export default function Debate() {
 
       {!isDebateComplete && currentSpeech && (
         <div className="border-t bg-background">
-          {(isUserTurn || isCxMode) ? (
+          {crossfireRacing ? (
+            <div className="p-4">
+              <div className="container mx-auto max-w-4xl">
+                <div className="p-6 rounded-lg bg-purple-500/10 border border-purple-500/30 text-center">
+                  <p className="font-medium text-lg mb-2">Crossfire Starting!</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Race to ask the first question - click the button before your opponent!
+                  </p>
+                  <div className="flex items-center justify-center gap-4">
+                    <Button
+                      size="lg"
+                      onClick={handleClaimFirstQuestion}
+                      disabled={!!crossfireRaceWinner}
+                      className="bg-purple-500 hover:bg-purple-600 text-white px-8 py-6 text-lg animate-pulse"
+                      data-testid="button-claim-first-question"
+                    >
+                      {crossfireRaceWinner === "user" ? "You got it!" : 
+                       crossfireRaceWinner === "opponent" ? `${opponent?.name} was faster!` :
+                       "Claim First Question!"}
+                    </Button>
+                  </div>
+                  <div className="mt-4 flex items-center justify-center gap-2">
+                    <Badge variant="outline" className="gap-1">
+                      <Clock className="h-3 w-3" />
+                      {formatTime(speechTimeRemaining)}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (isUserTurn || isCxMode) ? (
             <div className="p-4">
               <div className="container mx-auto max-w-4xl">
                 <div className={cn(
