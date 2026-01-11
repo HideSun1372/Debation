@@ -216,6 +216,17 @@ export default function Debate() {
         return;
       }
       
+      // Handle CX mode: user is questioner - set up CX mode and wait for user to ask
+      if (isCxSpeech && !isOpponentSpeech && !cxStarted) {
+        setCxStarted(true);
+        setIsCxMode(true);
+        setCxQuestioner("user");
+        setIsTimerRunning(true);
+        setCxExchangeCount(0);
+        // Don't trigger AI - wait for user to ask first question
+        return;
+      }
+      
       // Handle CX mode: opponent is questioner and needs to ask first question
       // Check directly from speech type to avoid race conditions with state
       if (isCxSpeech && isOpponentSpeech && !cxStarted) {
@@ -801,7 +812,7 @@ export default function Debate() {
 
       {!isDebateComplete && currentSpeech && (
         <div className="border-t bg-background">
-          {(isUserTurn || (isCxMode && cxQuestioner === "opponent" && cxAwaitingResponse)) ? (
+          {(isUserTurn || isCxMode) ? (
             <div className="p-4">
               <div className="container mx-auto max-w-4xl">
                 <div className={cn(
@@ -825,7 +836,9 @@ export default function Debate() {
                       <p className="font-medium text-sm">{currentSpeech.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {isCxMode 
-                          ? (cxQuestioner === "user" 
+                          ? (cxQuestioner === null 
+                              ? "Crossfire - both sides can ask and answer questions"
+                              : cxQuestioner === "user" 
                               ? "You're the questioner - ask one question at a time" 
                               : "Answer the question, then wait for the next one")
                           : isInPrepTime ? "Prep time - speech timer paused" 
@@ -873,7 +886,11 @@ export default function Debate() {
                     onKeyDown={handleKeyDown}
                     placeholder={
                       isCxMode 
-                        ? (cxQuestioner === "user" ? "Ask your question..." : "Type your answer...") 
+                        ? (cxQuestioner === null 
+                            ? "Ask a question or respond..." 
+                            : cxQuestioner === "user" 
+                            ? "Ask your question..." 
+                            : "Type your answer...") 
                         : isInPrepTime ? "Take your time to prepare your argument..." 
                         : `Your ${currentSpeech.name}...`
                     }
