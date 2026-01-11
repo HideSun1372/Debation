@@ -12,6 +12,14 @@ Debation is an educational debate platform where users practice debating against
 - **World Schools**: International format with 8 speeches including reply speeches
 - **Congressional**: Legislative simulation with authorship speech, questioning, and pro/con speeches
 
+### Cross-Examination (CX) System
+- **Turn-based questioning**: AI asks one question at a time, waits for user response, then asks follow-up
+- **Role assignment**: Questioner is determined by speech.speaker field (aff/neg maps to pro/con side)
+- **State management**: isCxMode, cxQuestioner (user/opponent), cxAwaitingResponse, cxStarted, cxExchangeCount
+- **Timer behavior**: Countdown runs during CX regardless of who is asking questions
+- **CX intents**: Backend uses cx-question, cx-answer, cx-followup, cx-timeout prompts for single-turn responses
+- **End CX**: User can manually end CX to advance to next speech
+
 ### Curriculum Structure
 - 365 lessons across 52 units organized into 5 skill-based sections
 - Sections: Fundamentals (Beginner), Core Skills (Beginner-Intermediate), Format Mastery (Intermediate), Advanced Techniques (Advanced), Championship Preparation (Master)
