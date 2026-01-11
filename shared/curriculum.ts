@@ -1455,7 +1455,7 @@ export const EXPERT_UNITS: CurriculumUnit[] = [
   },
 ];
 
-// SECTION 5: MASTER (Lessons 281-364) - Units 41-52
+// SECTION 5: MASTER (Lessons 281-365) - Units 41-52
 export const MASTER_UNITS: CurriculumUnit[] = [
   {
     id: "unit-41",
