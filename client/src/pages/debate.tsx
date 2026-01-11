@@ -541,17 +541,8 @@ export default function Debate() {
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading || !currentSpeech || !format) return;
 
-    // Block sending in crossfire mode when it's not user's turn
-    if (isCrossfire && isCxMode) {
-      const canSend = 
-        (crossfirePhase === "asking" && crossfireQuestionAsker === "user") ||
-        (crossfirePhase === "answering" && crossfireQuestionAsker === "opponent");
-      
-      if (!canSend) {
-        console.log("Cannot send: not user's turn in crossfire");
-        return;
-      }
-    }
+    // In crossfire mode, determine if this is a valid turn or if user should be called out
+    // We allow sending in answering phase so opponent can call them out if needed
 
     const userMessage: DebateMessage = {
       id: `user-${Date.now()}`,
@@ -616,16 +607,45 @@ export default function Debate() {
               setTimeout(() => startCrossfireRace(), 500);
             }
           } else if (crossfireQuestionAsker === "opponent" && crossfirePhase === "answering") {
-            // AI asked a question, user is answering
-            // User's answer is already added to messages - no AI response needed
-            // Just evaluate if complete and start new race
-            setCxExchangeCount(prev => prev + 1);
+            // AI asked a question, user is answering (or asking for clarification/trying to ask own question)
+            // First evaluate if this looks like an answer or a question
+            const response = await apiRequest("POST", "/api/debate/message", {
+              message: userMessage.content,
+              debateId,
+              opponentId: opponent?.id,
+              opponentTier: opponent?.tier,
+              opponentPersonality: opponent?.personality,
+              topic: topic?.title,
+              side,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+              speechType: currentSpeech.type,
+              cxIntent: "crossfire-answer-check", // Check if user is actually answering or asking
+              crossfireQuestion: crossfireCurrentQuestion,
+              previousMessages: messages.concat(userMessage),
+            });
+
+            const data = await response.json();
             
-            // Evaluate if user's answer is complete
-            const isComplete = await evaluateCrossfireAnswer(crossfireCurrentQuestion || "", userMessage.content);
-            if (isComplete && speechTimeRemaining > 0) {
-              // Start new race for next question
-              setTimeout(() => startCrossfireRace(), 500);
+            // If the user asked a question or evaded, AI calls them out and we stay in answering phase
+            // If user properly answered, we move to new race
+            if (data.isProperAnswer) {
+              // User properly answered - count it and start new race
+              setCxExchangeCount(prev => prev + 1);
+              if (speechTimeRemaining > 0) {
+                setTimeout(() => startCrossfireRace(), 500);
+              }
+            } else {
+              // User asked a question or evaded - opponent calls them out
+              const calloutMessage: DebateMessage = {
+                id: `opponent-callout-${Date.now()}`,
+                role: "opponent",
+                content: data.response,
+                speechId: currentSpeech.id,
+                speechName: currentSpeech.name,
+              };
+              setMessages((prev) => [...prev, calloutMessage]);
+              // Stay in answering phase - user still needs to answer the original question
             }
           }
           // Guard at beginning ensures only valid phase/asker combos reach here

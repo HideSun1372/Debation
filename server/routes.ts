@@ -100,6 +100,7 @@ export async function registerRoutes(
         speechName,
         speechType,
         cxIntent,
+        crossfireQuestion,
         previousMessages 
       } = req.body;
 
@@ -123,22 +124,50 @@ export async function registerRoutes(
         cxIntent
       );
 
-      const conversationHistory = previousMessages.map((m: { role: string; content: string }) => ({
+      // For crossfire-answer-check, include the question that was asked
+      let contextMessages = previousMessages.map((m: { role: string; content: string }) => ({
         role: m.role === "user" ? "user" : "assistant",
         content: m.content,
       }));
+      
+      // Add crossfire question context if provided
+      if (cxIntent === "crossfire-answer-check" && crossfireQuestion) {
+        contextMessages = [
+          { role: "system", content: `The question you asked was: "${crossfireQuestion}"` },
+          ...contextMessages,
+        ];
+      }
 
       const response = await openai.chat.completions.create({
         model: "gpt-5.1",
         messages: [
           { role: "system", content: systemPrompt },
-          ...conversationHistory,
+          ...contextMessages,
           ...(message ? [{ role: "user" as const, content: message }] : []),
         ],
         max_completion_tokens: 1024,
       });
 
       const aiResponse = response.choices[0]?.message?.content || "I need a moment to consider my response.";
+
+      // For crossfire-answer-check, parse the JSON response
+      if (cxIntent === "crossfire-answer-check") {
+        try {
+          // Try to parse the JSON response
+          const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            return res.json({
+              isProperAnswer: parsed.isProperAnswer === true,
+              response: parsed.response || "",
+            });
+          }
+        } catch (parseError) {
+          console.error("Failed to parse crossfire-answer-check response:", parseError);
+          // Default to treating it as a proper answer if parsing fails
+          return res.json({ isProperAnswer: true, response: "" });
+        }
+      }
 
       if (debateId) {
         await storage.createDebateMessage({
@@ -619,6 +648,34 @@ CRITICAL RULES:
 4. Your question should probe a weakness in their position
 
 Respond now (remember to end with a question):`;
+    }
+    
+    if (cxIntent === "crossfire-answer-check") {
+      return `You are an AI debate opponent in a CROSSFIRE period.
+Personality: ${personality}
+${skillModifier}
+
+DEBATE CONTEXT:
+- Topic: "${topic}"
+- Your position: ${side === "pro" ? "PRO/AFFIRMATIVE" : "CON/NEGATIVE"}
+- You asked a question and are waiting for an answer
+
+YOUR QUESTION WAS: [The question you asked is in the context]
+
+Your opponent just responded. You need to determine:
+1. Did they actually ANSWER your question? (A direct, substantive response)
+2. Or did they EVADE by asking their own question, deflecting, or not answering?
+
+IF THEY PROPERLY ANSWERED:
+- Respond with ONLY: {"isProperAnswer": true}
+
+IF THEY DID NOT ANSWER (asked a question, evaded, or deflected):
+- Call them out! Be firm but professional.
+- Remind them it's their turn to answer, not ask questions.
+- Examples: "Hold on, I asked you a question first. Please answer it." or "That's not an answer. I'm asking you [repeat question briefly]. Answer directly."
+- Respond with: {"isProperAnswer": false, "response": "[your callout]"}
+
+CRITICAL: Respond ONLY with valid JSON in one of the two formats above.`;
     }
     
     if (cxIntent === "cx-timeout") {
