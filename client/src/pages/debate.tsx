@@ -1188,83 +1188,85 @@ export default function Debate() {
       )}
 
       <Dialog open={showResult} onOpenChange={setShowResult}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-center gap-2 text-2xl">
+        <DialogContent className="sm:max-w-md max-h-[85vh] flex flex-col">
+          <DialogHeader className="flex-shrink-0">
+            <DialogTitle className="flex items-center justify-center gap-2 text-xl">
               {debateResult?.won ? (
                 <>
-                  <Trophy className="h-8 w-8 text-tier-intermediate" />
+                  <Trophy className="h-6 w-6 text-tier-intermediate" />
                   Victory!
                 </>
               ) : (
                 <>
-                  <TrendingDown className="h-8 w-8 text-destructive" />
+                  <TrendingDown className="h-6 w-6 text-destructive" />
                   Defeat
                 </>
               )}
             </DialogTitle>
-            <DialogDescription className="text-center">
-              Debate completed against {opponent?.name}
+            <DialogDescription className="text-center text-xs">
+              vs {opponent?.name}
             </DialogDescription>
           </DialogHeader>
 
           {debateResult && (
-            <div className="space-y-4 py-4">
-              <div className="text-center">
+            <div className="flex-1 overflow-y-auto space-y-3 py-2">
+              <div className="text-center pb-2 border-b">
                 <p className={cn(
-                  "text-4xl font-bold mb-1",
+                  "text-3xl font-bold",
                   debateResult.pointsChange > 0 ? "text-tier-beginner" : "text-destructive"
                 )}>
                   {debateResult.pointsChange > 0 ? "+" : ""}{debateResult.pointsChange}
                 </p>
-                <p className="text-sm text-muted-foreground">Skill Points</p>
+                <p className="text-xs text-muted-foreground">Skill Points</p>
               </div>
 
-              <Card>
-                <CardContent className="p-4">
-                  <p className="text-sm leading-relaxed">{debateResult.feedback}</p>
-                </CardContent>
-              </Card>
+              <div className="bg-muted/50 rounded-md p-3">
+                <p className="text-xs leading-relaxed">{debateResult.feedback}</p>
+              </div>
 
-              {debateResult.strengths.length > 0 && (
-                <div>
-                  <p className="font-medium text-sm mb-2 flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-tier-beginner" />
-                    Strengths
-                  </p>
-                  <ul className="text-sm text-muted-foreground space-y-1 pl-6">
-                    {debateResult.strengths.map((s, i) => (
-                      <li key={i} className="list-disc">{s}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              <div className="grid grid-cols-1 gap-3">
+                {debateResult.strengths.length > 0 && (
+                  <div className="bg-tier-beginner/10 rounded-md p-3">
+                    <p className="font-medium text-xs mb-1.5 flex items-center gap-1.5">
+                      <TrendingUp className="h-3.5 w-3.5 text-tier-beginner" />
+                      Strengths
+                    </p>
+                    <ul className="text-xs text-muted-foreground space-y-0.5 pl-4">
+                      {debateResult.strengths.map((s, i) => (
+                        <li key={i} className="list-disc">{s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-              {debateResult.improvements.length > 0 && (
-                <div>
-                  <p className="font-medium text-sm mb-2 flex items-center gap-2">
-                    <TrendingDown className="h-4 w-4 text-tier-intermediate" />
-                    Areas to Improve
-                  </p>
-                  <ul className="text-sm text-muted-foreground space-y-1 pl-6">
-                    {debateResult.improvements.map((s, i) => (
-                      <li key={i} className="list-disc">{s}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                {debateResult.improvements.length > 0 && (
+                  <div className="bg-tier-intermediate/10 rounded-md p-3">
+                    <p className="font-medium text-xs mb-1.5 flex items-center gap-1.5">
+                      <TrendingDown className="h-3.5 w-3.5 text-tier-intermediate" />
+                      Areas to Improve
+                    </p>
+                    <ul className="text-xs text-muted-foreground space-y-0.5 pl-4">
+                      {debateResult.improvements.map((s, i) => (
+                        <li key={i} className="list-disc">{s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
-          <DialogFooter className="flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex-shrink-0 flex-col sm:flex-row gap-2 pt-2 border-t">
             <Button 
               variant="outline" 
+              size="sm"
               onClick={() => setLocation("/history")}
               data-testid="button-view-history"
             >
               View History
             </Button>
             <Button 
+              size="sm"
               onClick={() => setLocation("/practice")}
               data-testid="button-debate-again"
             >
