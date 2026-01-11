@@ -110,7 +110,11 @@ export default function Debate() {
 
   useEffect(() => {
     if (format && currentSpeech) {
-      setSpeechTimeRemaining(getSpeechTime(currentSpeech));
+      setSpeechTimeRemaining(getSpeechTime(currentSpeech) * 60);
+      setIsInPrepTime(false);
+      if (isUserSpeech(currentSpeech)) {
+        setIsTimerRunning(true);
+      }
     }
   }, [currentSpeechIndex, format]);
 
@@ -119,6 +123,41 @@ export default function Debate() {
       setPrepTimeRemaining(customPrepTime * 60);
     }
   }, [customPrepTime]);
+
+  useEffect(() => {
+    if (!isTimerRunning || isLoading || !isUserTurn || isDebateComplete) return;
+    
+    const interval = setInterval(() => {
+      if (isInPrepTime) {
+        setPrepTimeRemaining(prev => {
+          if (prev <= 1) {
+            setIsInPrepTime(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      } else {
+        setSpeechTimeRemaining(prev => {
+          if (prev <= 1) {
+            return 0;
+          }
+          return prev - 1;
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isTimerRunning, isLoading, isUserTurn, isDebateComplete, isInPrepTime]);
+
+  const handleRequestPrepTime = () => {
+    if (prepTimeRemaining > 0 && !isInPrepTime) {
+      setIsInPrepTime(true);
+    }
+  };
+
+  const handleResumeSpeech = () => {
+    setIsInPrepTime(false);
+  };
 
   useEffect(() => {
     if (!isInitializing && !isLoading && format && currentSpeech && !isUserTurn && !isDebateComplete) {
@@ -359,24 +398,37 @@ export default function Debate() {
                 <p className="font-mono font-bold">{Math.min(currentSpeechIndex + 1, format.speeches.length)}/{format.speeches.length}</p>
               </div>
               
-              {currentSpeech && (
+              {currentSpeech && !isInPrepTime && (
                 <div className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-lg",
-                  speechTimeRemaining < 1 ? "bg-destructive/10 text-destructive" : "bg-muted"
+                  speechTimeRemaining < 60 ? "bg-destructive/10 text-destructive animate-pulse" : 
+                  speechTimeRemaining < 120 ? "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400" : "bg-muted"
                 )}>
                   <Clock className="h-4 w-4" />
-                  <span className="font-mono font-bold text-lg">{speechTimeRemaining} min</span>
+                  <span className="font-mono font-bold text-lg">{formatTime(speechTimeRemaining)}</span>
+                  <span className="text-xs text-muted-foreground">Speech</span>
                 </div>
               )}
               
-              {prepTimeRemaining > 0 && (
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-tier-intermediate/10 border border-tier-intermediate/30">
+              {isInPrepTime && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-tier-intermediate/20 border border-tier-intermediate/40 animate-pulse">
                   <Timer className="h-4 w-4 text-tier-intermediate" />
-                  <div className="text-center">
-                    <span className="font-mono font-bold text-sm">{formatTime(prepTimeRemaining)}</span>
-                    <p className="text-xs text-muted-foreground">Prep</p>
-                  </div>
+                  <span className="font-mono font-bold text-lg text-tier-intermediate">{formatTime(prepTimeRemaining)}</span>
+                  <span className="text-xs text-muted-foreground">Prep</span>
                 </div>
+              )}
+              
+              {!isInPrepTime && prepTimeRemaining > 0 && isUserTurn && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleRequestPrepTime}
+                  className="border-tier-intermediate/50 text-tier-intermediate hover:bg-tier-intermediate/10"
+                  data-testid="button-request-prep"
+                >
+                  <Timer className="h-4 w-4 mr-1" />
+                  Prep ({formatTime(prepTimeRemaining)})
+                </Button>
               )}
 
               {!isDebateComplete && messages.length >= 2 && (
@@ -492,38 +544,61 @@ export default function Debate() {
               <div className="container mx-auto max-w-4xl">
                 <div className={cn(
                   "mb-3 p-3 rounded-lg flex items-center justify-between gap-4",
-                  isUserSpeech(currentSpeech) ? "bg-tier-beginner/10 border border-tier-beginner/30" : "bg-destructive/10 border border-destructive/30"
+                  isInPrepTime ? "bg-tier-intermediate/10 border border-tier-intermediate/30" :
+                  speechTimeRemaining <= 0 ? "bg-destructive/10 border border-destructive/30" :
+                  "bg-tier-beginner/10 border border-tier-beginner/30"
                 )}>
                   <div className="flex items-center gap-3">
                     <div className={cn(
                       "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
+                      isInPrepTime ? "bg-tier-intermediate text-white" :
+                      speechTimeRemaining <= 0 ? "bg-destructive text-white" :
                       "bg-tier-beginner text-white"
                     )}>
                       {currentSpeechIndex + 1}
                     </div>
                     <div>
                       <p className="font-medium text-sm">{currentSpeech.name}</p>
-                      <p className="text-xs text-muted-foreground">{currentSpeech.description}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {isInPrepTime ? "Prep time - speech timer paused" :
+                         speechTimeRemaining <= 0 ? "Time expired! Submit now or use prep time" :
+                         currentSpeech.description}
+                      </p>
                     </div>
                   </div>
-                  <Badge variant="outline" className="gap-1">
-                    <Clock className="h-3 w-3" />
-                    {getSpeechTime(currentSpeech)} min
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    {isInPrepTime && (
+                      <Button 
+                        size="sm" 
+                        onClick={handleResumeSpeech}
+                        className="bg-tier-intermediate hover:bg-tier-intermediate/90"
+                        data-testid="button-resume-speech"
+                      >
+                        Resume Speech
+                      </Button>
+                    )}
+                    <Badge variant="outline" className={cn(
+                      "gap-1",
+                      speechTimeRemaining <= 0 && !isInPrepTime && "border-destructive text-destructive"
+                    )}>
+                      <Clock className="h-3 w-3" />
+                      {formatTime(speechTimeRemaining)}
+                    </Badge>
+                  </div>
                 </div>
                 <div className="flex gap-3">
                   <Textarea
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={`Your ${currentSpeech.name}...`}
+                    placeholder={isInPrepTime ? "Take your time to prepare your argument..." : `Your ${currentSpeech.name}...`}
                     className="min-h-[80px] resize-none"
-                    disabled={isLoading}
+                    disabled={isLoading || (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0)}
                     data-testid="input-message"
                   />
                   <Button 
                     onClick={handleSendMessage} 
-                    disabled={!inputValue.trim() || isLoading}
+                    disabled={!inputValue.trim() || isLoading || (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0)}
                     className="h-auto"
                     data-testid="button-send"
                   >
@@ -531,7 +606,11 @@ export default function Debate() {
                   </Button>
                 </div>
                 <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-                  <span>Press Enter to send, Shift+Enter for new line</span>
+                  <span>
+                    {speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining > 0 
+                      ? "Click 'Prep' button above to get more time" 
+                      : "Press Enter to send, Shift+Enter for new line"}
+                  </span>
                   <span>{inputValue.length} characters</span>
                 </div>
               </div>
