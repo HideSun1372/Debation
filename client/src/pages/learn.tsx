@@ -43,6 +43,7 @@ export default function Learn() {
     setCurrentLesson, 
     isLessonCompleted,
     resetLessonProgress,
+    isAdmin,
   } = useUser();
 
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
@@ -94,6 +95,8 @@ export default function Learn() {
   };
 
   const isLessonUnlocked = (lessonId: string): boolean => {
+    if (isAdmin) return true;
+    
     const lessonIndex = allLessonIds.indexOf(lessonId);
     const lessonUnitIndex = getLessonUnitIndex(lessonId);
     const placementUnitIndex = getPlacementUnitIndex();
@@ -713,16 +716,38 @@ export default function Learn() {
           <p className="text-muted-foreground">
             Progress through structured lessons to master debate skills.
           </p>
+          {isAdmin && (
+            <Badge variant="outline" className="mt-2 gap-1 text-primary border-primary">
+              <Sparkles className="h-3 w-3" />
+              Developer Mode
+            </Badge>
+          )}
         </div>
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={() => setShowResetDialog(true)}
-          data-testid="button-reset-progress"
-        >
-          <RotateCcw className="h-4 w-4 mr-1" />
-          Reset Progress
-        </Button>
+        <div className="flex gap-2">
+          {isAdmin && (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => {
+                setOnboardingStep("welcome");
+                resetLessonProgress();
+              }}
+              data-testid="button-retake-placement"
+            >
+              <GraduationCap className="h-4 w-4 mr-1" />
+              Retake Placement Test
+            </Button>
+          )}
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowResetDialog(true)}
+            data-testid="button-reset-progress"
+          >
+            <RotateCcw className="h-4 w-4 mr-1" />
+            Reset Progress
+          </Button>
+        </div>
       </div>
 
       <Card className="mb-8">

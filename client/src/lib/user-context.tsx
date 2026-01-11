@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import { getSkillTier, getTierProgress, SKILL_TIERS, type ExperienceLevel, getPlacementUnit } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
+import { useAdmin } from "@/hooks/use-admin";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -51,6 +52,7 @@ interface UserContextType {
   isLessonUnlocked: (lessonId: string, allLessonIds: string[]) => boolean;
   resetLessonProgress: () => void;
   isLoadingProgress: boolean;
+  isAdmin: boolean;
 }
 
 const defaultLessonProgress: LessonProgressData = {
@@ -102,6 +104,7 @@ function getLocalStorageUser(): UserState {
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const { user: authUser, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { isAdmin } = useAdmin();
   const queryClient = useQueryClient();
   
   const [localUser, setLocalUser] = useState<UserState>(getLocalStorageUser);
@@ -276,11 +279,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [user.lessonProgress.completedLessonIds]);
 
   const isLessonUnlocked = useCallback((lessonId: string, allLessonIds: string[]) => {
+    if (isAdmin) return true;
     const lessonIndex = allLessonIds.indexOf(lessonId);
     if (lessonIndex === 0) return true;
     const previousLessonId = allLessonIds[lessonIndex - 1];
     return user.lessonProgress.completedLessonIds.includes(previousLessonId);
-  }, [user.lessonProgress.completedLessonIds]);
+  }, [user.lessonProgress.completedLessonIds, isAdmin]);
 
   const resetLessonProgress = useCallback(() => {
     if (isAuthenticated) {
@@ -315,6 +319,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         isLessonUnlocked,
         resetLessonProgress,
         isLoadingProgress,
+        isAdmin,
       }}
     >
       {children}

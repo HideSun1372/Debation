@@ -280,6 +280,19 @@ Be fair but consider the skill level difference. If the user is debating someone
     }
   });
 
+  // Check if user is admin/developer
+  app.get("/api/auth/admin", isAuthenticated, async (req: any, res) => {
+    try {
+      const userEmail = req.user.claims.email;
+      const adminEmail = process.env.ADMIN_EMAIL;
+      const isAdmin = adminEmail && userEmail === adminEmail;
+      res.json({ isAdmin });
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+      res.status(500).json({ error: "Failed to check admin status" });
+    }
+  });
+
   // Get lesson progress for authenticated user
   app.get("/api/progress", isAuthenticated, async (req: any, res) => {
     try {
