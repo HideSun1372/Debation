@@ -67,10 +67,64 @@ export default function Learn() {
 
   const allLessonIds = getAllLessonIds();
 
+  const getPlacementUnitIndex = (): number => {
+    const placementUnitId = user.lessonProgress.currentUnitId;
+    return LESSON_UNITS.findIndex(u => u.id === placementUnitId);
+  };
+
+  const getLessonUnitIndex = (lessonId: string): number => {
+    for (let i = 0; i < LESSON_UNITS.length; i++) {
+      for (const section of LESSON_UNITS[i].sections) {
+        for (const lesson of section.lessons) {
+          if (lesson.id === lessonId) return i;
+        }
+      }
+    }
+    return -1;
+  };
+
   const isLessonUnlocked = (lessonId: string): boolean => {
     const lessonIndex = allLessonIds.indexOf(lessonId);
-    if (lessonIndex === 0) return true;
-    const previousLessonId = allLessonIds[lessonIndex - 1];
+    const lessonUnitIndex = getLessonUnitIndex(lessonId);
+    const placementUnitIndex = getPlacementUnitIndex();
+    
+    if (lessonUnitIndex < placementUnitIndex) {
+      return true;
+    }
+    
+    if (lessonUnitIndex === placementUnitIndex) {
+      const unitLessons: string[] = [];
+      for (const section of LESSON_UNITS[lessonUnitIndex].sections) {
+        for (const lesson of section.lessons) {
+          unitLessons.push(lesson.id);
+        }
+      }
+      const lessonPositionInUnit = unitLessons.indexOf(lessonId);
+      if (lessonPositionInUnit === 0) return true;
+      const previousLessonId = unitLessons[lessonPositionInUnit - 1];
+      return user.lessonProgress.completedLessonIds.includes(previousLessonId);
+    }
+    
+    const previousUnitLessons: string[] = [];
+    for (const section of LESSON_UNITS[lessonUnitIndex - 1].sections) {
+      for (const lesson of section.lessons) {
+        previousUnitLessons.push(lesson.id);
+      }
+    }
+    const allPreviousCompleted = previousUnitLessons.every(id => 
+      user.lessonProgress.completedLessonIds.includes(id)
+    );
+    if (!allPreviousCompleted) return false;
+    
+    const unitLessons: string[] = [];
+    for (const section of LESSON_UNITS[lessonUnitIndex].sections) {
+      for (const lesson of section.lessons) {
+        unitLessons.push(lesson.id);
+      }
+    }
+    const lessonPositionInUnit = unitLessons.indexOf(lessonId);
+    if (lessonPositionInUnit === 0) return true;
+    const previousLessonId = unitLessons[lessonPositionInUnit - 1];
     return user.lessonProgress.completedLessonIds.includes(previousLessonId);
   };
 
