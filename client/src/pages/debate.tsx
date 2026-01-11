@@ -192,13 +192,18 @@ export default function Debate() {
     if (!isInitializing && !isLoading && format && currentSpeech && !isDebateComplete) {
       const speechToDeliver = currentSpeech;
       const indexToAdvance = currentSpeechIndex;
+      const isCxSpeech = speechToDeliver.type === "cross-examination";
+      const isOpponentSpeech = !isUserSpeech(speechToDeliver);
       
       // Handle CX mode: opponent is questioner and needs to ask first question
-      if (isCxMode && cxQuestioner === "opponent" && !cxStarted) {
+      // Check directly from speech type to avoid race conditions with state
+      if (isCxSpeech && isOpponentSpeech && !cxStarted) {
         const triggerCxQuestion = async () => {
           setIsLoading(true);
           setIsTimerRunning(true);
           setCxStarted(true); // Mark CX as started to prevent re-triggering
+          setIsCxMode(true);
+          setCxQuestioner("opponent");
           try {
             const response = await apiRequest("POST", "/api/debate/message", {
               message: null,
@@ -240,7 +245,7 @@ export default function Debate() {
       }
       
       // Handle regular opponent speech (non-CX)
-      if (!isUserTurn && !isCxMode) {
+      if (isOpponentSpeech && !isCxSpeech) {
         const triggerOpponentSpeech = async () => {
           setIsLoading(true);
           
@@ -281,7 +286,7 @@ export default function Debate() {
         triggerOpponentSpeech();
       }
     }
-  }, [isInitializing, isUserTurn, currentSpeechIndex, isDebateComplete, isCxMode, cxQuestioner, cxStarted]);
+  }, [isInitializing, isLoading, currentSpeechIndex, isDebateComplete, cxStarted]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -383,8 +388,10 @@ export default function Debate() {
         setCurrentSpeechIndex(newSpeechIndex);
 
         const nextSpeech = format.speeches[newSpeechIndex];
-        const shouldAIRespond = nextSpeech && !isUserSpeech(nextSpeech);
+        const nextIsCx = nextSpeech?.type === "cross-examination";
+        const shouldAIRespond = nextSpeech && !isUserSpeech(nextSpeech) && !nextIsCx;
 
+        // If next speech is CX, let the useEffect handle it
         if (shouldAIRespond && nextSpeech) {
           const response = await apiRequest("POST", "/api/debate/message", {
             message: userMessage.content,
