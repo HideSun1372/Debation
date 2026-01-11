@@ -1,19 +1,66 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useUser } from "@/lib/user-context";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/hooks/use-auth";
 import { SkillBadge } from "@/components/skill-badge";
 import { SkillProgress } from "@/components/skill-progress";
 import { getSkillTier, SKILL_TIERS } from "@shared/schema";
-import { Trophy, Target, TrendingUp, TrendingDown, Percent, Calendar, Swords, Award } from "lucide-react";
+import { Trophy, Target, TrendingUp, TrendingDown, Percent, Swords, Award, LogIn } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Link } from "wouter";
 
 export default function Profile() {
-  const { user } = useUser();
+  const { user, isLoading, isAuthenticated } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-muted rounded w-48" />
+          <div className="h-48 bg-muted rounded" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 bg-muted rounded" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <Card className="text-center py-12">
+          <CardContent>
+            <LogIn className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h2 className="text-2xl font-bold mb-2">Sign In to View Your Profile</h2>
+            <p className="text-muted-foreground mb-6">
+              Track your debate progress, view your stats, and earn skill points by logging in.
+            </p>
+            <Button asChild size="lg" data-testid="button-login-profile">
+              <a href="/api/login">Sign In with Replit</a>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   const tier = getSkillTier(user.skillPoints);
   const tierInfo = SKILL_TIERS[tier];
   
   const winRate = user.totalDebates > 0 
     ? Math.round((user.wins / user.totalDebates) * 100) 
     : 0;
+
+  const displayName = user.firstName && user.lastName 
+    ? `${user.firstName} ${user.lastName}` 
+    : user.firstName || user.email?.split('@')[0] || 'Debater';
+
+  const initials = user.firstName && user.lastName
+    ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`
+    : displayName.charAt(0).toUpperCase();
 
   const mockProgressData = [
     { debate: 1, points: 500 },
@@ -44,18 +91,22 @@ export default function Profile() {
           <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/5 p-6 md:p-8">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-primary">
-                    {user.username.charAt(0).toUpperCase()}
-                  </span>
-                </div>
+                <Avatar className="w-20 h-20">
+                  <AvatarImage src={user.profileImageUrl || undefined} alt={displayName} />
+                  <AvatarFallback className="text-2xl font-bold bg-primary/20 text-primary">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
                 <div>
-                  <h2 className="text-2xl font-bold">{user.username}</h2>
+                  <h2 className="text-2xl font-bold" data-testid="text-profile-name">{displayName}</h2>
+                  {user.email && (
+                    <p className="text-sm text-muted-foreground" data-testid="text-profile-email">{user.email}</p>
+                  )}
                   <SkillBadge points={user.skillPoints} size="lg" className="mt-2" />
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-4xl font-bold text-primary">{user.skillPoints}</p>
+                <p className="text-4xl font-bold text-primary" data-testid="text-profile-points">{user.skillPoints}</p>
                 <p className="text-muted-foreground">Total Points</p>
               </div>
             </div>
@@ -73,7 +124,7 @@ export default function Profile() {
                   <Swords className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{user.totalDebates}</p>
+                  <p className="text-2xl font-bold" data-testid="text-total-debates">{user.totalDebates}</p>
                   <p className="text-sm text-muted-foreground">Total Debates</p>
                 </div>
               </div>
@@ -87,7 +138,7 @@ export default function Profile() {
                   <TrendingUp className="h-6 w-6 text-tier-beginner" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-tier-beginner">{user.wins}</p>
+                  <p className="text-2xl font-bold text-tier-beginner" data-testid="text-wins">{user.wins}</p>
                   <p className="text-sm text-muted-foreground">Wins</p>
                 </div>
               </div>
@@ -101,7 +152,7 @@ export default function Profile() {
                   <TrendingDown className="h-6 w-6 text-destructive" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-destructive">{user.losses}</p>
+                  <p className="text-2xl font-bold text-destructive" data-testid="text-losses">{user.losses}</p>
                   <p className="text-sm text-muted-foreground">Losses</p>
                 </div>
               </div>
@@ -115,7 +166,7 @@ export default function Profile() {
                   <Percent className="h-6 w-6 text-tier-intermediate" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-tier-intermediate">{winRate}%</p>
+                  <p className="text-2xl font-bold text-tier-intermediate" data-testid="text-win-rate">{winRate}%</p>
                   <p className="text-sm text-muted-foreground">Win Rate</p>
                 </div>
               </div>
@@ -211,6 +262,9 @@ export default function Profile() {
               <p className="text-muted-foreground mb-4">
                 Start practicing to build your debate skills and track your progress!
               </p>
+              <Button asChild data-testid="button-start-practicing">
+                <Link href="/practice">Start Practicing</Link>
+              </Button>
             </CardContent>
           </Card>
         )}
