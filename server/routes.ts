@@ -99,6 +99,7 @@ export async function registerRoutes(
         speechId,
         speechName,
         speechType,
+        cxIntent,
         previousMessages 
       } = req.body;
 
@@ -118,7 +119,8 @@ export async function registerRoutes(
         side === "pro" ? "con" : "pro",
         skillModifier,
         speechName,
-        speechType
+        speechType,
+        cxIntent
       );
 
       const conversationHistory = previousMessages.map((m: { role: string; content: string }) => ({
@@ -436,12 +438,92 @@ function buildDebateSpeechPrompt(
   side: string,
   skillModifier: string,
   speechName: string,
-  speechType: string
+  speechType: string,
+  cxIntent?: string
 ): string {
+  // Handle cross-examination with specific intents
+  if (speechType === "cross-examination" && cxIntent) {
+    if (cxIntent === "cx-question") {
+      return `You are an AI debate opponent conducting cross-examination.
+Personality: ${personality}
+${skillModifier}
+
+DEBATE CONTEXT:
+- Topic: "${topic}"
+- Your position: ${side === "pro" ? "PRO/AFFIRMATIVE" : "CON/NEGATIVE"}
+- You are the QUESTIONER in cross-examination
+
+YOUR TASK:
+Ask ONE single, focused question to probe your opponent's case. The question should:
+- Be specific and targeted at a weakness in their argument
+- Be answerable in 1-2 sentences
+- Aim to expose contradictions or gaps in their reasoning
+
+CRITICAL RULES:
+1. Ask ONLY ONE question - no follow-ups, no multiple questions
+2. Keep it brief (one sentence)
+3. Do not make arguments - only ask a question
+4. End with a question mark
+
+Ask your single question now:`;
+    }
+    
+    if (cxIntent === "cx-answer") {
+      return `You are an AI debate opponent answering cross-examination questions.
+Personality: ${personality}
+${skillModifier}
+
+DEBATE CONTEXT:
+- Topic: "${topic}"
+- Your position: ${side === "pro" ? "PRO/AFFIRMATIVE" : "CON/NEGATIVE"}
+- You are the ANSWERER in cross-examination
+
+YOUR TASK:
+Answer the opponent's question directly and concisely. You should:
+- Give a clear, direct answer
+- Defend your position without being evasive
+- Keep your answer brief (1-3 sentences)
+
+CRITICAL RULES:
+1. Answer ONLY the question asked - do not ask questions back
+2. Be direct - do not dodge or deflect
+3. Keep it brief (1-3 sentences max)
+
+Provide your answer now:`;
+    }
+    
+    if (cxIntent === "cx-followup") {
+      return `You are an AI debate opponent continuing cross-examination.
+Personality: ${personality}
+${skillModifier}
+
+DEBATE CONTEXT:
+- Topic: "${topic}"
+- Your position: ${side === "pro" ? "PRO/AFFIRMATIVE" : "CON/NEGATIVE"}
+- You are the QUESTIONER in cross-examination (continuing)
+
+Based on your opponent's answer, ask ONE follow-up question that:
+- Builds on their previous response
+- Pushes them further on a weakness
+- Is specific and focused
+
+CRITICAL RULES:
+1. Ask ONLY ONE question
+2. Keep it brief (one sentence)
+3. End with a question mark
+
+Ask your follow-up question:`;
+    }
+    
+    if (cxIntent === "cx-timeout") {
+      return `Cross-examination time has expired. Respond with a brief, professional statement acknowledging that time is up (e.g., "Time's up. Let's move on to the next speech."). Keep it to one sentence.`;
+    }
+  }
+
   const speechGuidelines: Record<string, string> = {
     constructive: "Present your main arguments with clear claims, warrants, and impacts. Establish your case structure.",
     rebuttal: "Focus on attacking your opponent's arguments. Identify weaknesses and refute their points directly.",
-    "cross-examination": "Ask probing questions to expose flaws in your opponent's case. Be strategic and pointed.",
+    "cross-examination": "Engage in cross-examination. If you are the questioner, ask probing questions. If answering, respond directly.",
     summary: "Crystallize the key voting issues. Explain why your side has won the most important arguments.",
     "final-focus": "Make your closing appeal. Weigh the debate and explain why judges should vote for your side.",
     poi: "Make brief, strategic interventions. Points of Information should be concise (15 seconds max).",

@@ -73,9 +73,16 @@ export default function Debate() {
   const [isInitializing, setIsInitializing] = useState(true);
   const [showSpeechPanel, setShowSpeechPanel] = useState(true);
   
+  // Cross-examination (CX) state
+  const [isCxMode, setIsCxMode] = useState(false);
+  const [cxQuestioner, setCxQuestioner] = useState<"user" | "opponent" | null>(null);
+  const [cxAwaitingResponse, setCxAwaitingResponse] = useState(false);
+  const [cxExchangeCount, setCxExchangeCount] = useState(0);
+  
   const currentSpeech = format?.speeches[currentSpeechIndex];
   const isUserTurn = currentSpeech ? isUserSpeech(currentSpeech) : false;
   const isDebateComplete = format ? currentSpeechIndex >= format.speeches.length : false;
+  const isCrossExamination = currentSpeech?.type === "cross-examination";
 
   useEffect(() => {
     if (!opponent || !topic || !format) {
@@ -112,6 +119,20 @@ export default function Debate() {
     if (format && currentSpeech) {
       setSpeechTimeRemaining(getSpeechTime(currentSpeech) * 60);
       setIsInPrepTime(false);
+      
+      // Initialize CX mode if this is a cross-examination speech
+      if (currentSpeech.type === "cross-examination") {
+        setIsCxMode(true);
+        setCxExchangeCount(0);
+        // In CX, the speaker listed is the questioner
+        const questioner = isUserSpeech(currentSpeech) ? "user" : "opponent";
+        setCxQuestioner(questioner);
+        setCxAwaitingResponse(false);
+      } else {
+        setIsCxMode(false);
+        setCxQuestioner(null);
+      }
+      
       if (isUserSpeech(currentSpeech)) {
         setIsTimerRunning(true);
       }
@@ -159,50 +180,100 @@ export default function Debate() {
     setIsInPrepTime(false);
   };
 
+  // Trigger opponent's regular speech OR first CX question if opponent is questioner
   useEffect(() => {
-    if (!isInitializing && !isLoading && format && currentSpeech && !isUserTurn && !isDebateComplete) {
-      const triggerOpponentSpeech = async () => {
-        setIsLoading(true);
-        const speechToDeliver = currentSpeech;
-        const indexToAdvance = currentSpeechIndex;
-        
-        try {
-          const response = await apiRequest("POST", "/api/debate/message", {
-            message: null,
-            debateId,
-            opponentId: opponent?.id,
-            opponentTier: opponent?.tier,
-            opponentPersonality: opponent?.personality,
-            topic: topic?.title,
-            side,
-            speechId: speechToDeliver.id,
-            speechName: speechToDeliver.name,
-            speechType: speechToDeliver.type,
-            previousMessages: messages,
-          });
-
-          const data = await response.json();
-          
-          const opponentMessage: DebateMessage = {
-            id: `opponent-${Date.now()}`,
-            role: "opponent",
-            content: data.response,
-            speechId: speechToDeliver.id,
-            speechName: speechToDeliver.name,
-          };
-
-          setMessages((prev) => [...prev, opponentMessage]);
-          setCurrentSpeechIndex(indexToAdvance + 1);
-        } catch (error) {
-          console.error("Error getting opponent speech:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+    if (!isInitializing && !isLoading && format && currentSpeech && !isDebateComplete) {
+      const speechToDeliver = currentSpeech;
+      const indexToAdvance = currentSpeechIndex;
       
-      triggerOpponentSpeech();
+      // Handle CX mode: opponent is questioner and needs to ask first question
+      if (isCxMode && cxQuestioner === "opponent" && !cxAwaitingResponse && cxExchangeCount === 0) {
+        const triggerCxQuestion = async () => {
+          setIsLoading(true);
+          setIsTimerRunning(true);
+          try {
+            const response = await apiRequest("POST", "/api/debate/message", {
+              message: null,
+              debateId,
+              opponentId: opponent?.id,
+              opponentTier: opponent?.tier,
+              opponentPersonality: opponent?.personality,
+              topic: topic?.title,
+              side,
+              speechId: speechToDeliver.id,
+              speechName: speechToDeliver.name,
+              speechType: speechToDeliver.type,
+              cxIntent: "cx-question",
+              previousMessages: messages,
+            });
+
+            const data = await response.json();
+            
+            const opponentMessage: DebateMessage = {
+              id: `opponent-cx-${Date.now()}`,
+              role: "opponent",
+              content: data.response,
+              speechId: speechToDeliver.id,
+              speechName: speechToDeliver.name,
+            };
+
+            setMessages((prev) => [...prev, opponentMessage]);
+            setCxAwaitingResponse(true);
+            setCxExchangeCount(1);
+          } catch (error) {
+            console.error("Error getting CX question:", error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        
+        triggerCxQuestion();
+        return;
+      }
+      
+      // Handle regular opponent speech (non-CX)
+      if (!isUserTurn && !isCxMode) {
+        const triggerOpponentSpeech = async () => {
+          setIsLoading(true);
+          
+          try {
+            const response = await apiRequest("POST", "/api/debate/message", {
+              message: null,
+              debateId,
+              opponentId: opponent?.id,
+              opponentTier: opponent?.tier,
+              opponentPersonality: opponent?.personality,
+              topic: topic?.title,
+              side,
+              speechId: speechToDeliver.id,
+              speechName: speechToDeliver.name,
+              speechType: speechToDeliver.type,
+              previousMessages: messages,
+            });
+
+            const data = await response.json();
+            
+            const opponentMessage: DebateMessage = {
+              id: `opponent-${Date.now()}`,
+              role: "opponent",
+              content: data.response,
+              speechId: speechToDeliver.id,
+              speechName: speechToDeliver.name,
+            };
+
+            setMessages((prev) => [...prev, opponentMessage]);
+            setCurrentSpeechIndex(indexToAdvance + 1);
+          } catch (error) {
+            console.error("Error getting opponent speech:", error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        
+        triggerOpponentSpeech();
+      }
     }
-  }, [isInitializing, isUserTurn, currentSpeechIndex, isDebateComplete]);
+  }, [isInitializing, isUserTurn, currentSpeechIndex, isDebateComplete, isCxMode, cxQuestioner, cxAwaitingResponse, cxExchangeCount]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -230,46 +301,156 @@ export default function Debate() {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
-    
-    const newSpeechIndex = currentSpeechIndex + 1;
-    setCurrentSpeechIndex(newSpeechIndex);
-
-    const nextSpeech = format.speeches[newSpeechIndex];
-    const shouldAIRespond = nextSpeech && !isUserSpeech(nextSpeech);
 
     try {
-      if (shouldAIRespond && nextSpeech) {
-        const response = await apiRequest("POST", "/api/debate/message", {
-          message: userMessage.content,
-          debateId,
-          opponentId: opponent?.id,
-          opponentTier: opponent?.tier,
-          opponentPersonality: opponent?.personality,
-          topic: topic?.title,
-          side,
-          speechId: nextSpeech.id,
-          speechName: nextSpeech.name,
-          speechType: nextSpeech.type,
-          previousMessages: messages.concat(userMessage),
-        });
+      // Handle CX mode interactions
+      if (isCxMode) {
+        if (cxQuestioner === "opponent") {
+          // User is answering opponent's question - no AI response needed, just wait for next question
+          setCxAwaitingResponse(false);
+          
+          // After a short delay, AI asks follow-up question
+          const response = await apiRequest("POST", "/api/debate/message", {
+            message: userMessage.content,
+            debateId,
+            opponentId: opponent?.id,
+            opponentTier: opponent?.tier,
+            opponentPersonality: opponent?.personality,
+            topic: topic?.title,
+            side,
+            speechId: currentSpeech.id,
+            speechName: currentSpeech.name,
+            speechType: currentSpeech.type,
+            cxIntent: "cx-followup",
+            previousMessages: messages.concat(userMessage),
+          });
 
-        const data = await response.json();
-        
-        const opponentMessage: DebateMessage = {
-          id: `opponent-${Date.now()}`,
-          role: "opponent",
-          content: data.response,
-          speechId: nextSpeech.id,
-          speechName: nextSpeech.name,
-        };
+          const data = await response.json();
+          
+          const opponentMessage: DebateMessage = {
+            id: `opponent-cx-${Date.now()}`,
+            role: "opponent",
+            content: data.response,
+            speechId: currentSpeech.id,
+            speechName: currentSpeech.name,
+          };
 
-        setMessages((prev) => [...prev, opponentMessage]);
-        setCurrentSpeechIndex(newSpeechIndex + 1);
+          setMessages((prev) => [...prev, opponentMessage]);
+          setCxAwaitingResponse(true);
+          setCxExchangeCount(prev => prev + 1);
+        } else {
+          // User is the questioner - AI needs to answer
+          const response = await apiRequest("POST", "/api/debate/message", {
+            message: userMessage.content,
+            debateId,
+            opponentId: opponent?.id,
+            opponentTier: opponent?.tier,
+            opponentPersonality: opponent?.personality,
+            topic: topic?.title,
+            side,
+            speechId: currentSpeech.id,
+            speechName: currentSpeech.name,
+            speechType: currentSpeech.type,
+            cxIntent: "cx-answer",
+            previousMessages: messages.concat(userMessage),
+          });
+
+          const data = await response.json();
+          
+          const opponentMessage: DebateMessage = {
+            id: `opponent-cx-${Date.now()}`,
+            role: "opponent",
+            content: data.response,
+            speechId: currentSpeech.id,
+            speechName: currentSpeech.name,
+          };
+
+          setMessages((prev) => [...prev, opponentMessage]);
+          setCxExchangeCount(prev => prev + 1);
+          // User can ask another question (no awaiting state change needed)
+        }
+      } else {
+        // Regular speech flow (non-CX)
+        const newSpeechIndex = currentSpeechIndex + 1;
+        setCurrentSpeechIndex(newSpeechIndex);
+
+        const nextSpeech = format.speeches[newSpeechIndex];
+        const shouldAIRespond = nextSpeech && !isUserSpeech(nextSpeech);
+
+        if (shouldAIRespond && nextSpeech) {
+          const response = await apiRequest("POST", "/api/debate/message", {
+            message: userMessage.content,
+            debateId,
+            opponentId: opponent?.id,
+            opponentTier: opponent?.tier,
+            opponentPersonality: opponent?.personality,
+            topic: topic?.title,
+            side,
+            speechId: nextSpeech.id,
+            speechName: nextSpeech.name,
+            speechType: nextSpeech.type,
+            previousMessages: messages.concat(userMessage),
+          });
+
+          const data = await response.json();
+          
+          const opponentMessage: DebateMessage = {
+            id: `opponent-${Date.now()}`,
+            role: "opponent",
+            content: data.response,
+            speechId: nextSpeech.id,
+            speechName: nextSpeech.name,
+          };
+
+          setMessages((prev) => [...prev, opponentMessage]);
+          setCurrentSpeechIndex(newSpeechIndex + 1);
+        }
       }
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Handle advancing from CX to next speech when time runs out
+  const handleEndCx = async () => {
+    if (!currentSpeech) return;
+    
+    setIsLoading(true);
+    try {
+      const response = await apiRequest("POST", "/api/debate/message", {
+        message: null,
+        debateId,
+        opponentId: opponent?.id,
+        opponentTier: opponent?.tier,
+        opponentPersonality: opponent?.personality,
+        topic: topic?.title,
+        side,
+        speechId: currentSpeech.id,
+        speechName: currentSpeech.name,
+        speechType: currentSpeech.type,
+        cxIntent: "cx-timeout",
+        previousMessages: messages,
+      });
+
+      const data = await response.json();
+      
+      const timeoutMessage: DebateMessage = {
+        id: `system-${Date.now()}`,
+        role: "opponent",
+        content: data.response,
+        speechId: currentSpeech.id,
+        speechName: currentSpeech.name,
+      };
+
+      setMessages((prev) => [...prev, timeoutMessage]);
+    } catch (error) {
+      console.error("Error ending CX:", error);
+    } finally {
+      setIsLoading(false);
+      setIsCxMode(false);
+      setCurrentSpeechIndex(prev => prev + 1);
     }
   };
 
@@ -539,11 +720,12 @@ export default function Debate() {
 
       {!isDebateComplete && currentSpeech && (
         <div className="border-t bg-background">
-          {isUserTurn ? (
+          {(isUserTurn || (isCxMode && cxQuestioner === "opponent" && cxAwaitingResponse)) ? (
             <div className="p-4">
               <div className="container mx-auto max-w-4xl">
                 <div className={cn(
                   "mb-3 p-3 rounded-lg flex items-center justify-between gap-4",
+                  isCxMode ? "bg-purple-500/10 border border-purple-500/30" :
                   isInPrepTime ? "bg-tier-intermediate/10 border border-tier-intermediate/30" :
                   speechTimeRemaining <= 0 ? "bg-destructive/10 border border-destructive/30" :
                   "bg-tier-beginner/10 border border-tier-beginner/30"
@@ -551,6 +733,7 @@ export default function Debate() {
                   <div className="flex items-center gap-3">
                     <div className={cn(
                       "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
+                      isCxMode ? "bg-purple-500 text-white" :
                       isInPrepTime ? "bg-tier-intermediate text-white" :
                       speechTimeRemaining <= 0 ? "bg-destructive text-white" :
                       "bg-tier-beginner text-white"
@@ -560,13 +743,29 @@ export default function Debate() {
                     <div>
                       <p className="font-medium text-sm">{currentSpeech.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {isInPrepTime ? "Prep time - speech timer paused" :
-                         speechTimeRemaining <= 0 ? "Time expired! Submit now or use prep time" :
-                         currentSpeech.description}
+                        {isCxMode 
+                          ? (cxQuestioner === "user" 
+                              ? "You're the questioner - ask one question at a time" 
+                              : "Answer the question, then wait for the next one")
+                          : isInPrepTime ? "Prep time - speech timer paused" 
+                          : speechTimeRemaining <= 0 ? "Time expired! Submit now or use prep time" 
+                          : currentSpeech.description}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    {isCxMode && (
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={handleEndCx}
+                        disabled={isLoading}
+                        data-testid="button-end-cx"
+                      >
+                        <ChevronRight className="h-4 w-4 mr-1" />
+                        End CX
+                      </Button>
+                    )}
                     {isInPrepTime && (
                       <Button 
                         size="sm" 
@@ -591,14 +790,19 @@ export default function Debate() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder={isInPrepTime ? "Take your time to prepare your argument..." : `Your ${currentSpeech.name}...`}
+                    placeholder={
+                      isCxMode 
+                        ? (cxQuestioner === "user" ? "Ask your question..." : "Type your answer...") 
+                        : isInPrepTime ? "Take your time to prepare your argument..." 
+                        : `Your ${currentSpeech.name}...`
+                    }
                     className="min-h-[80px] resize-none"
-                    disabled={isLoading || (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0)}
+                    disabled={isLoading || (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0 && !isCxMode)}
                     data-testid="input-message"
                   />
                   <Button 
                     onClick={handleSendMessage} 
-                    disabled={!inputValue.trim() || isLoading || (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0)}
+                    disabled={!inputValue.trim() || isLoading || (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0 && !isCxMode)}
                     className="h-auto"
                     data-testid="button-send"
                   >
