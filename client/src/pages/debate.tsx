@@ -650,10 +650,11 @@ export default function Debate() {
           }
           // Guard at beginning ensures only valid phase/asker combos reach here
         } else if (cxQuestioner === "opponent") {
-          // User is answering opponent's question - AI asks follow-up
+          // User is answering opponent's question - check if they're actually answering or trying to ask
           setCxAwaitingResponse(false);
           
-          const response = await apiRequest("POST", "/api/debate/message", {
+          // First check if user is trying to ask a question instead of answering
+          const checkResponse = await apiRequest("POST", "/api/debate/message", {
             message: userMessage.content,
             debateId,
             opponentId: opponent?.id,
@@ -664,23 +665,55 @@ export default function Debate() {
             speechId: currentSpeech.id,
             speechName: currentSpeech.name,
             speechType: currentSpeech.type,
-            cxIntent: "cx-followup",
+            cxIntent: "cx-answer-check",
             previousMessages: messages.concat(userMessage),
           });
 
-          const data = await response.json();
+          const checkData = await checkResponse.json();
           
-          const opponentMessage: DebateMessage = {
-            id: `opponent-cx-${Date.now()}`,
-            role: "opponent",
-            content: data.response,
-            speechId: currentSpeech.id,
-            speechName: currentSpeech.name,
-          };
+          if (checkData.isProperAnswer) {
+            // User properly answered - AI asks follow-up
+            const response = await apiRequest("POST", "/api/debate/message", {
+              message: userMessage.content,
+              debateId,
+              opponentId: opponent?.id,
+              opponentTier: opponent?.tier,
+              opponentPersonality: opponent?.personality,
+              topic: topic?.title,
+              side,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+              speechType: currentSpeech.type,
+              cxIntent: "cx-followup",
+              previousMessages: messages.concat(userMessage),
+            });
 
-          setMessages((prev) => [...prev, opponentMessage]);
-          setCxAwaitingResponse(true);
-          setCxExchangeCount(prev => prev + 1);
+            const data = await response.json();
+            
+            const opponentMessage: DebateMessage = {
+              id: `opponent-cx-${Date.now()}`,
+              role: "opponent",
+              content: data.response,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+            };
+
+            setMessages((prev) => [...prev, opponentMessage]);
+            setCxAwaitingResponse(true);
+            setCxExchangeCount(prev => prev + 1);
+          } else {
+            // User asked a question or evaded - opponent calls them out
+            const calloutMessage: DebateMessage = {
+              id: `opponent-callout-${Date.now()}`,
+              role: "opponent",
+              content: checkData.response,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+            };
+            setMessages((prev) => [...prev, calloutMessage]);
+            setCxAwaitingResponse(true);
+            // Stay in answering mode - user still needs to answer
+          }
         } else {
           // User is the questioner (cxQuestioner === "user") - AI needs to answer
           const response = await apiRequest("POST", "/api/debate/message", {

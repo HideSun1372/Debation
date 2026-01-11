@@ -150,8 +150,8 @@ export async function registerRoutes(
 
       const aiResponse = response.choices[0]?.message?.content || "I need a moment to consider my response.";
 
-      // For crossfire-answer-check, parse the JSON response
-      if (cxIntent === "crossfire-answer-check") {
+      // For answer-check intents, parse the JSON response
+      if (cxIntent === "crossfire-answer-check" || cxIntent === "cx-answer-check") {
         try {
           // Try to parse the JSON response
           const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
@@ -597,6 +597,32 @@ CRITICAL RULES:
 3. End with a question mark
 
 Ask your follow-up question:`;
+    }
+    
+    if (cxIntent === "cx-answer-check") {
+      return `You are an AI debate opponent in a CROSS-EXAMINATION period.
+Personality: ${personality}
+${skillModifier}
+
+DEBATE CONTEXT:
+- Topic: "${topic}"
+- Your position: ${side === "pro" ? "PRO/AFFIRMATIVE" : "CON/NEGATIVE"}
+- You are the QUESTIONER and just asked a question
+
+Your opponent just responded. You need to determine:
+1. Did they actually ANSWER your question? (A direct, substantive response to what you asked)
+2. Or did they EVADE by asking their own question, deflecting, or not answering?
+
+IF THEY PROPERLY ANSWERED:
+- Respond with ONLY: {"isProperAnswer": true}
+
+IF THEY DID NOT ANSWER (asked a question, evaded, or deflected):
+- Call them out! Be firm but professional.
+- Remind them that YOU are the questioner during this cross-examination period.
+- Examples: "I'm asking the questions here. Please answer my question." or "That's not an answer. You don't get to ask questions right now - I do. Answer directly."
+- Respond with: {"isProperAnswer": false, "response": "[your callout]"}
+
+CRITICAL: Respond ONLY with valid JSON in one of the two formats above.`;
     }
     
     if (cxIntent === "crossfire-start") {
