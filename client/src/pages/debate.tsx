@@ -88,6 +88,9 @@ export default function Debate() {
   const [crossfireCurrentQuestion, setCrossfireCurrentQuestion] = useState<string | null>(null);
   const [crossfireQuestionAsker, setCrossfireQuestionAsker] = useState<"user" | "opponent" | null>(null);
   const [isEvaluatingAnswer, setIsEvaluatingAnswer] = useState(false);
+  const [crossfirePhase, setCrossfirePhase] = useState<"asking" | "answering" | null>(null);
+  const crossfireQuestionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const QUESTION_TIME_LIMIT = 15; // seconds to ask a question before rights transfer
   
   const currentSpeech = format?.speeches[currentSpeechIndex];
   const isUserTurn = currentSpeech ? isUserSpeech(currentSpeech) : false;
@@ -202,6 +205,13 @@ export default function Debate() {
       setIsCxMode(true);
       setCxQuestioner(null); // Crossfire - both can ask
       setCrossfireQuestionAsker(crossfireRaceWinner);
+      setCrossfirePhase("asking");
+      
+      // Clear any existing question timeout
+      if (crossfireQuestionTimeoutRef.current) {
+        clearTimeout(crossfireQuestionTimeoutRef.current);
+        crossfireQuestionTimeoutRef.current = null;
+      }
       
       if (crossfireRaceWinner === "opponent") {
         // AI won - trigger AI's question
@@ -235,6 +245,7 @@ export default function Debate() {
 
             setMessages((prev) => [...prev, opponentMessage]);
             setCrossfireCurrentQuestion(data.response);
+            setCrossfirePhase("answering"); // AI asked, now user answers
             setCxExchangeCount(prev => prev + 1);
           } catch (error) {
             console.error("Error getting AI crossfire question:", error);
@@ -243,8 +254,55 @@ export default function Debate() {
           }
         };
         triggerAiQuestion();
+      } else {
+        // User won - start timeout for them to ask a question
+        crossfireQuestionTimeoutRef.current = setTimeout(() => {
+          // User didn't ask in time - transfer rights to AI
+          setCrossfireQuestionAsker("opponent");
+          setCrossfirePhase("asking");
+          
+          // AI now asks the question
+          const triggerAiQuestion = async () => {
+            setIsLoading(true);
+            try {
+              const response = await apiRequest("POST", "/api/debate/message", {
+                message: null,
+                debateId,
+                opponentId: opponent?.id,
+                opponentTier: opponent?.tier,
+                opponentPersonality: opponent?.personality,
+                topic: topic?.title,
+                side,
+                speechId: currentSpeech.id,
+                speechName: currentSpeech.name,
+                speechType: currentSpeech.type,
+                cxIntent: "crossfire-start",
+                previousMessages: messages,
+              });
+
+              const data = await response.json();
+              
+              const opponentMessage: DebateMessage = {
+                id: `opponent-cf-${Date.now()}`,
+                role: "opponent",
+                content: data.response,
+                speechId: currentSpeech.id,
+                speechName: currentSpeech.name,
+              };
+
+              setMessages((prev) => [...prev, opponentMessage]);
+              setCrossfireCurrentQuestion(data.response);
+              setCrossfirePhase("answering");
+              setCxExchangeCount(prev => prev + 1);
+            } catch (error) {
+              console.error("Error getting AI crossfire question:", error);
+            } finally {
+              setIsLoading(false);
+            }
+          };
+          triggerAiQuestion();
+        }, QUESTION_TIME_LIMIT * 1000);
       }
-      // If user won, they type their question - track it when they send
     }
   }, [crossfireRaceWinner, crossfireRacing]);
 
@@ -264,10 +322,17 @@ export default function Debate() {
   const startCrossfireRace = () => {
     if (!currentSpeech || speechTimeRemaining <= 0) return;
     
+    // Clear any existing question timeout
+    if (crossfireQuestionTimeoutRef.current) {
+      clearTimeout(crossfireQuestionTimeoutRef.current);
+      crossfireQuestionTimeoutRef.current = null;
+    }
+    
     setCrossfireRacing(true);
     setCrossfireRaceWinner(null);
     setCrossfireCurrentQuestion(null);
     setCrossfireQuestionAsker(null);
+    setCrossfirePhase(null);
     
     // Calculate AI reaction time based on skill tier
     const tierDelays: Record<string, [number, number]> = {
@@ -494,9 +559,15 @@ export default function Debate() {
         if (cxQuestioner === null && isCrossfire) {
           // Crossfire mode with race system
           
-          if (crossfireQuestionAsker === "user") {
-            // User asked a question, this is the AI's answer
+          if (crossfireQuestionAsker === "user" && crossfirePhase === "asking") {
+            // User is asking their question - clear the timeout
+            if (crossfireQuestionTimeoutRef.current) {
+              clearTimeout(crossfireQuestionTimeoutRef.current);
+              crossfireQuestionTimeoutRef.current = null;
+            }
+            
             setCrossfireCurrentQuestion(userMessage.content);
+            setCrossfirePhase("answering"); // Now waiting for AI's answer
             
             const response = await apiRequest("POST", "/api/debate/message", {
               message: userMessage.content,
@@ -532,7 +603,7 @@ export default function Debate() {
               // Small delay then start new race
               setTimeout(() => startCrossfireRace(), 500);
             }
-          } else if (crossfireQuestionAsker === "opponent") {
+          } else if (crossfireQuestionAsker === "opponent" && crossfirePhase === "answering") {
             // AI asked a question, user is answering
             const response = await apiRequest("POST", "/api/debate/message", {
               message: userMessage.content,
@@ -1134,32 +1205,66 @@ export default function Debate() {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Textarea
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder={
-                      isCxMode 
-                        ? (cxQuestioner === null 
-                            ? "Ask a question or respond..." 
-                            : cxQuestioner === "user" 
-                            ? "Ask your question..." 
-                            : "Type your answer...") 
-                        : isInPrepTime ? "Take your time to prepare your argument..." 
-                        : `Your ${currentSpeech.name}...`
-                    }
-                    className="min-h-[80px] resize-none"
-                    disabled={isLoading || (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0 && !isCxMode)}
-                    data-testid="input-message"
-                  />
-                  <Button 
-                    onClick={handleSendMessage} 
-                    disabled={!inputValue.trim() || isLoading || (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0 && !isCxMode)}
-                    className="h-auto"
-                    data-testid="button-send"
-                  >
-                    <Send className="h-5 w-5" />
-                  </Button>
+                  {(() => {
+                    // Determine if input should be disabled in crossfire mode
+                    const isCrossfireInputBlocked = isCrossfire && isCxMode && (
+                      // Block during race
+                      crossfireRacing ||
+                      // Block if opponent is asking (asking phase, opponent has rights)
+                      (crossfirePhase === "asking" && crossfireQuestionAsker === "opponent") ||
+                      // Block if user is asking but in answering phase (waiting for AI response)
+                      (crossfirePhase === "answering" && crossfireQuestionAsker === "user" && isLoading)
+                    );
+                    
+                    const inputDisabled = isLoading || isCrossfireInputBlocked || 
+                      (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0 && !isCxMode);
+                    
+                    const getPlaceholder = () => {
+                      if (isCrossfire && isCxMode) {
+                        if (crossfireRacing) return "Race to ask the next question...";
+                        if (crossfirePhase === "asking" && crossfireQuestionAsker === "user") {
+                          return `Ask your question (${QUESTION_TIME_LIMIT}s limit)...`;
+                        }
+                        if (crossfirePhase === "asking" && crossfireQuestionAsker === "opponent") {
+                          return "Waiting for opponent's question...";
+                        }
+                        if (crossfirePhase === "answering" && crossfireQuestionAsker === "opponent") {
+                          return "Type your answer...";
+                        }
+                        if (crossfirePhase === "answering" && crossfireQuestionAsker === "user") {
+                          return "Waiting for opponent's answer...";
+                        }
+                        return "Ask a question or respond...";
+                      }
+                      if (isCxMode) {
+                        return cxQuestioner === "user" ? "Ask your question..." : "Type your answer...";
+                      }
+                      if (isInPrepTime) return "Take your time to prepare your argument...";
+                      return `Your ${currentSpeech.name}...`;
+                    };
+                    
+                    return (
+                      <>
+                        <Textarea
+                          value={inputValue}
+                          onChange={(e) => setInputValue(e.target.value)}
+                          onKeyDown={handleKeyDown}
+                          placeholder={getPlaceholder()}
+                          className="min-h-[80px] resize-none"
+                          disabled={inputDisabled}
+                          data-testid="input-message"
+                        />
+                        <Button 
+                          onClick={handleSendMessage} 
+                          disabled={!inputValue.trim() || inputDisabled}
+                          className="h-auto"
+                          data-testid="button-send"
+                        >
+                          <Send className="h-5 w-5" />
+                        </Button>
+                      </>
+                    );
+                  })()}
                 </div>
                 <div className="flex justify-between mt-2 text-xs text-muted-foreground">
                   <span>
