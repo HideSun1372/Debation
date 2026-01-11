@@ -2,7 +2,19 @@
 
 ## Overview
 
-Debation is an educational debate platform where users practice debating against AI opponents of varying skill levels. The platform features a skill progression system (Beginner → Intermediate → Advanced → Master), multiple debate formats (Lincoln-Douglas, Public Forum, Policy, Parliamentary), and educational content about debate techniques. Users can track their progress, review debate history, and learn debate fundamentals through structured content.
+Debation is an educational debate platform where users practice debating against AI opponents of varying skill levels. The platform features a skill progression system (Beginner → Intermediate → Advanced → Master), six major debate formats with authentic speech structures, and educational content about debate techniques. Users can track their progress, review debate history, and learn debate fundamentals through 365 structured lessons.
+
+### Debate Formats (with structured speech order)
+- **Lincoln-Douglas (LD)**: 1v1 value debate with AC, CX, NC, CX, 1AR, NR, 2AR speeches
+- **Public Forum (PF)**: 2v2 accessible format with constructives, rebuttals, crossfire, summary, final focus
+- **Policy**: 2v2 evidence-intensive with 8 constructive/rebuttal speeches
+- **Parliamentary**: British-style with POI support, PM/LO/MG/MO/LOR/PMR speeches
+- **World Schools**: International format with 8 speeches including reply speeches
+- **Congressional**: Legislative simulation with authorship speech, questioning, and pro/con speeches
+
+### Curriculum Structure
+- 365 lessons across 52 units organized into 5 skill-based sections
+- Sections: Fundamentals (Beginner), Core Skills (Beginner-Intermediate), Format Mastery (Intermediate), Advanced Techniques (Advanced), Championship Preparation (Master)
 
 ## User Preferences
 
