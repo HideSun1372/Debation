@@ -1455,7 +1455,7 @@ export const EXPERT_UNITS: CurriculumUnit[] = [
   },
 ];
 
-// SECTION 5: MASTER (Lessons 281-350) - Units 41-49
+// SECTION 5: MASTER (Lessons 281-364) - Units 41-52
 export const MASTER_UNITS: CurriculumUnit[] = [
   {
     id: "unit-41",
@@ -1659,7 +1659,77 @@ export const MASTER_UNITS: CurriculumUnit[] = [
           { id: "l49-04", title: "Self-Evaluation", order: 4, estimatedMinutes: 10, content: "Assess your own performance objectively." },
           { id: "l49-05", title: "Practice Debate 4: Impromptu Topic", order: 5, estimatedMinutes: 20, content: "Test impromptu skills with limited preparation." },
           { id: "l49-06", title: "Analyzing Famous Debates", order: 6, estimatedMinutes: 15, content: "Learn from historic debate examples." },
-          { id: "l49-07", title: "Review: Master Section Complete", order: 7, estimatedMinutes: 15, content: "Congratulations! You have completed the entire debate curriculum. Review all master-level skills and continue practicing." },
+          { id: "l49-07", title: "Review: Practice", order: 7, estimatedMinutes: 10, content: "Review all practice debate skills and self-evaluation techniques." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "unit-50",
+    title: "Tournament and Real-World",
+    description: "Tournament preparation and real-world application",
+    tier: "MASTER",
+    order: 50,
+    sections: [
+      {
+        id: "s50-01",
+        title: "Tournament and Real-World",
+        order: 1,
+        lessons: [
+          { id: "l50-01", title: "Practice Debate 5: Current Events Topic", order: 1, estimatedMinutes: 20, content: "Apply skills to a current events practice debate." },
+          { id: "l50-02", title: "Tournament Preparation", order: 2, estimatedMinutes: 15, content: "Comprehensive guide to preparing for debate tournaments." },
+          { id: "l50-03", title: "Pre-Tournament Strategy", order: 3, estimatedMinutes: 12, content: "Develop your strategy before the tournament begins." },
+          { id: "l50-04", title: "Managing Tournament Stress", order: 4, estimatedMinutes: 10, content: "Techniques for staying calm and focused during competitions." },
+          { id: "l50-05", title: "Post-Round Reflection", order: 5, estimatedMinutes: 10, content: "How to learn and improve after each round." },
+          { id: "l50-06", title: "Between-Round Adjustments", order: 6, estimatedMinutes: 10, content: "Adapt your strategy between tournament rounds." },
+          { id: "l50-07", title: "Review: Tournaments", order: 7, estimatedMinutes: 5, content: "Review tournament preparation and competition skills." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "unit-51",
+    title: "Final Applications",
+    description: "Apply debate skills beyond competition",
+    tier: "MASTER",
+    order: 51,
+    sections: [
+      {
+        id: "s51-01",
+        title: "Final Applications",
+        order: 1,
+        lessons: [
+          { id: "l51-01", title: "Tournament Recovery", order: 1, estimatedMinutes: 10, content: "Physical and mental recovery after tournaments." },
+          { id: "l51-02", title: "Debate in Everyday Life (Advanced)", order: 2, estimatedMinutes: 12, content: "Advanced applications of debate skills in daily situations." },
+          { id: "l51-03", title: "Applying Debate Skills to Career", order: 3, estimatedMinutes: 15, content: "Use debate training to advance your professional career." },
+          { id: "l51-04", title: "Public Speaking Beyond Debate", order: 4, estimatedMinutes: 12, content: "Transfer skills to presentations, speeches, and public forums." },
+          { id: "l51-05", title: "Argumentative Writing", order: 5, estimatedMinutes: 15, content: "Apply debate structure to persuasive writing." },
+          { id: "l51-06", title: "Critical Media Consumption", order: 6, estimatedMinutes: 12, content: "Evaluate news, social media, and information critically." },
+          { id: "l51-07", title: "Review: Real-World Skills", order: 7, estimatedMinutes: 5, content: "Review practical applications of debate skills." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "unit-52",
+    title: "Final Mastery",
+    description: "Complete mastery and graduation",
+    tier: "MASTER",
+    order: 52,
+    sections: [
+      {
+        id: "s52-01",
+        title: "Final Mastery",
+        order: 1,
+        lessons: [
+          { id: "l52-01", title: "Civic Engagement Through Debate", order: 1, estimatedMinutes: 12, content: "Use debate skills for community involvement and advocacy." },
+          { id: "l52-02", title: "Review: All Logical Fallacies (Comprehensive)", order: 2, estimatedMinutes: 20, content: "Comprehensive review of all logical fallacies covered in the curriculum." },
+          { id: "l52-03", title: "Review: All Refutation Types (Comprehensive)", order: 3, estimatedMinutes: 15, content: "Comprehensive review of all refutation strategies and techniques." },
+          { id: "l52-04", title: "Review: All Judge Types (Comprehensive)", order: 4, estimatedMinutes: 15, content: "Comprehensive review of judge types and adaptation strategies." },
+          { id: "l52-05", title: "Review: All Debate Formats (Comprehensive)", order: 5, estimatedMinutes: 20, content: "Comprehensive review of all debate formats and their unique requirements." },
+          { id: "l52-06", title: "Final Comprehensive Review: Everything", order: 6, estimatedMinutes: 30, content: "Complete review of all concepts, skills, and techniques from the entire curriculum." },
+          { id: "l52-07", title: "Final Mastery Assessment", order: 7, estimatedMinutes: 25, content: "Comprehensive assessment to demonstrate your mastery of debate." },
+          { id: "l52-08", title: "Graduation: You Are Now a Debate Master!", order: 8, estimatedMinutes: 10, content: "Congratulations! You have completed the entire debate curriculum and achieved mastery. Review your journey and celebrate your achievement." },
         ],
       },
     ],
