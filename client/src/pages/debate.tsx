@@ -79,6 +79,7 @@ export default function Debate() {
   const [cxAwaitingResponse, setCxAwaitingResponse] = useState(false);
   const [cxExchangeCount, setCxExchangeCount] = useState(0);
   const [cxStarted, setCxStarted] = useState(false); // Track if first question has been asked
+  const [cxTimedOut, setCxTimedOut] = useState(false); // Track if CX should end due to timeout
   
   const currentSpeech = format?.speeches[currentSpeechIndex];
   const isUserTurn = currentSpeech ? isUserSpeech(currentSpeech) : false;
@@ -176,6 +177,13 @@ export default function Debate() {
 
     return () => clearInterval(interval);
   }, [isTimerRunning, isLoading, isUserTurn, isDebateComplete, isInPrepTime, isCxMode]);
+
+  // Auto-end CX when timer runs out
+  useEffect(() => {
+    if (isCxMode && speechTimeRemaining <= 0 && !cxTimedOut && !isLoading) {
+      setCxTimedOut(true);
+    }
+  }, [isCxMode, speechTimeRemaining, cxTimedOut, isLoading]);
 
   const handleRequestPrepTime = () => {
     if (prepTimeRemaining > 0 && !isInPrepTime) {
@@ -472,9 +480,17 @@ export default function Debate() {
       setIsCxMode(false);
       setCxStarted(false);
       setCxAwaitingResponse(false);
+      setCxTimedOut(false);
       setCurrentSpeechIndex(prev => prev + 1);
     }
   };
+
+  // Effect to handle CX timeout - calls handleEndCx when timer expires
+  useEffect(() => {
+    if (cxTimedOut && isCxMode && !isLoading) {
+      handleEndCx();
+    }
+  }, [cxTimedOut, isCxMode, isLoading]);
 
   const handleEndDebate = async () => {
     setIsEvaluating(true);
