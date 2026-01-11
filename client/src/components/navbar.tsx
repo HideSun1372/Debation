@@ -25,7 +25,7 @@ export function Navbar() {
       <div className="container mx-auto flex h-14 items-center justify-between gap-4 px-4">
         <Link href="/" className="flex items-center gap-2">
           <Swords className="h-6 w-6 text-primary" />
-          <span className="font-bold text-lg hidden sm:inline">DebateMaster</span>
+          <span className="font-bold text-lg hidden sm:inline">Debation</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
