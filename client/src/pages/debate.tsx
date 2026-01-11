@@ -85,6 +85,9 @@ export default function Debate() {
   const [crossfireRacing, setCrossfireRacing] = useState(false);
   const [crossfireRaceWinner, setCrossfireRaceWinner] = useState<"user" | "opponent" | null>(null);
   const crossfireRaceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [crossfireCurrentQuestion, setCrossfireCurrentQuestion] = useState<string | null>(null);
+  const [crossfireQuestionAsker, setCrossfireQuestionAsker] = useState<"user" | "opponent" | null>(null);
+  const [isEvaluatingAnswer, setIsEvaluatingAnswer] = useState(false);
   
   const currentSpeech = format?.speeches[currentSpeechIndex];
   const isUserTurn = currentSpeech ? isUserSpeech(currentSpeech) : false;
@@ -197,11 +200,12 @@ export default function Debate() {
       setCrossfireRacing(false);
       setCxStarted(true);
       setIsCxMode(true);
-      setCxQuestioner(null); // Crossfire - both can ask after first question
+      setCxQuestioner(null); // Crossfire - both can ask
+      setCrossfireQuestionAsker(crossfireRaceWinner);
       
       if (crossfireRaceWinner === "opponent") {
-        // AI won - trigger AI's first question
-        const triggerAiFirstQuestion = async () => {
+        // AI won - trigger AI's question
+        const triggerAiQuestion = async () => {
           setIsLoading(true);
           try {
             const response = await apiRequest("POST", "/api/debate/message", {
@@ -230,16 +234,17 @@ export default function Debate() {
             };
 
             setMessages((prev) => [...prev, opponentMessage]);
-            setCxExchangeCount(1);
+            setCrossfireCurrentQuestion(data.response);
+            setCxExchangeCount(prev => prev + 1);
           } catch (error) {
-            console.error("Error starting crossfire:", error);
+            console.error("Error getting AI crossfire question:", error);
           } finally {
             setIsLoading(false);
           }
         };
-        triggerAiFirstQuestion();
+        triggerAiQuestion();
       }
-      // If user won, they just type their question - no AI action needed
+      // If user won, they type their question - track it when they send
     }
   }, [crossfireRaceWinner, crossfireRacing]);
 
@@ -252,6 +257,55 @@ export default function Debate() {
         crossfireRaceTimeoutRef.current = null;
       }
       setCrossfireRaceWinner("user");
+    }
+  };
+
+  // Start a new crossfire race (for subsequent questions after the first)
+  const startCrossfireRace = () => {
+    if (!currentSpeech || speechTimeRemaining <= 0) return;
+    
+    setCrossfireRacing(true);
+    setCrossfireRaceWinner(null);
+    setCrossfireCurrentQuestion(null);
+    setCrossfireQuestionAsker(null);
+    
+    // Calculate AI reaction time based on skill tier
+    const tierDelays: Record<string, [number, number]> = {
+      beginner: [2000, 4000],
+      intermediate: [1500, 3000],
+      advanced: [1000, 2000],
+      expert: [500, 1500],
+      master: [300, 1000],
+    };
+    const [minDelay, maxDelay] = tierDelays[opponent?.tier || "beginner"] || [2000, 4000];
+    const aiReactionTime = minDelay + Math.random() * (maxDelay - minDelay);
+    
+    // Set up AI's attempt to claim question
+    crossfireRaceTimeoutRef.current = setTimeout(() => {
+      setCrossfireRaceWinner("opponent");
+    }, aiReactionTime);
+  };
+
+  // Evaluate if a crossfire answer is complete
+  const evaluateCrossfireAnswer = async (question: string, answer: string) => {
+    if (!topic) return true;
+    
+    setIsEvaluatingAnswer(true);
+    try {
+      const response = await apiRequest("POST", "/api/debate/crossfire/evaluate", {
+        question,
+        answer,
+        topic: topic.title,
+        context: messages.slice(-4).map(m => `${m.role}: ${m.content}`).join("\n"),
+      });
+      
+      const result = await response.json();
+      return result.isComplete;
+    } catch (error) {
+      console.error("Error evaluating crossfire answer:", error);
+      return true; // Default to complete on error
+    } finally {
+      setIsEvaluatingAnswer(false);
     }
   };
 
@@ -437,37 +491,120 @@ export default function Debate() {
     try {
       // Handle CX/Crossfire mode interactions
       if (isCxMode) {
-        if (cxQuestioner === null) {
-          // Crossfire mode - both sides can ask/answer
-          // User sends message, AI responds, then AI may ask a follow-up after a delay
-          const response = await apiRequest("POST", "/api/debate/message", {
-            message: userMessage.content,
-            debateId,
-            opponentId: opponent?.id,
-            opponentTier: opponent?.tier,
-            opponentPersonality: opponent?.personality,
-            topic: topic?.title,
-            side,
-            speechId: currentSpeech.id,
-            speechName: currentSpeech.name,
-            speechType: currentSpeech.type,
-            cxIntent: "crossfire-exchange",
-            previousMessages: messages.concat(userMessage),
-          });
-
-          const data = await response.json();
+        if (cxQuestioner === null && isCrossfire) {
+          // Crossfire mode with race system
           
-          const opponentMessage: DebateMessage = {
-            id: `opponent-cf-${Date.now()}`,
-            role: "opponent",
-            content: data.response,
-            speechId: currentSpeech.id,
-            speechName: currentSpeech.name,
-          };
+          if (crossfireQuestionAsker === "user") {
+            // User asked a question, this is the AI's answer
+            setCrossfireCurrentQuestion(userMessage.content);
+            
+            const response = await apiRequest("POST", "/api/debate/message", {
+              message: userMessage.content,
+              debateId,
+              opponentId: opponent?.id,
+              opponentTier: opponent?.tier,
+              opponentPersonality: opponent?.personality,
+              topic: topic?.title,
+              side,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+              speechType: currentSpeech.type,
+              cxIntent: "cx-answer", // AI answers user's question
+              previousMessages: messages.concat(userMessage),
+            });
 
-          setMessages((prev) => [...prev, opponentMessage]);
-          setCxExchangeCount(prev => prev + 1);
-          // User can continue asking or answering
+            const data = await response.json();
+            
+            const opponentMessage: DebateMessage = {
+              id: `opponent-cf-${Date.now()}`,
+              role: "opponent",
+              content: data.response,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+            };
+
+            setMessages((prev) => [...prev, opponentMessage]);
+            setCxExchangeCount(prev => prev + 1);
+            
+            // Evaluate if answer is complete, then start new race
+            const isComplete = await evaluateCrossfireAnswer(userMessage.content, data.response);
+            if (isComplete && speechTimeRemaining > 0) {
+              // Small delay then start new race
+              setTimeout(() => startCrossfireRace(), 500);
+            }
+          } else if (crossfireQuestionAsker === "opponent") {
+            // AI asked a question, user is answering
+            const response = await apiRequest("POST", "/api/debate/message", {
+              message: userMessage.content,
+              debateId,
+              opponentId: opponent?.id,
+              opponentTier: opponent?.tier,
+              opponentPersonality: opponent?.personality,
+              topic: topic?.title,
+              side,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+              speechType: currentSpeech.type,
+              cxIntent: "crossfire-exchange", // AI may respond to user's answer
+              previousMessages: messages.concat(userMessage),
+            });
+
+            const data = await response.json();
+            
+            const opponentMessage: DebateMessage = {
+              id: `opponent-cf-${Date.now()}`,
+              role: "opponent",
+              content: data.response,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+            };
+
+            setMessages((prev) => [...prev, opponentMessage]);
+            setCxExchangeCount(prev => prev + 1);
+            
+            // Evaluate if user's answer is complete
+            const isComplete = await evaluateCrossfireAnswer(crossfireCurrentQuestion || "", userMessage.content);
+            if (isComplete && speechTimeRemaining > 0) {
+              // Start new race for next question
+              setTimeout(() => startCrossfireRace(), 500);
+            }
+          } else {
+            // No question asker set yet (shouldn't happen, but fallback)
+            setCrossfireQuestionAsker("user");
+            setCrossfireCurrentQuestion(userMessage.content);
+            
+            const response = await apiRequest("POST", "/api/debate/message", {
+              message: userMessage.content,
+              debateId,
+              opponentId: opponent?.id,
+              opponentTier: opponent?.tier,
+              opponentPersonality: opponent?.personality,
+              topic: topic?.title,
+              side,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+              speechType: currentSpeech.type,
+              cxIntent: "cx-answer",
+              previousMessages: messages.concat(userMessage),
+            });
+
+            const data = await response.json();
+            
+            const opponentMessage: DebateMessage = {
+              id: `opponent-cf-${Date.now()}`,
+              role: "opponent",
+              content: data.response,
+              speechId: currentSpeech.id,
+              speechName: currentSpeech.name,
+            };
+
+            setMessages((prev) => [...prev, opponentMessage]);
+            setCxExchangeCount(prev => prev + 1);
+            // Start a new race
+            if (speechTimeRemaining > 0) {
+              setTimeout(() => startCrossfireRace(), 500);
+            }
+          }
         } else if (cxQuestioner === "opponent") {
           // User is answering opponent's question - AI asks follow-up
           setCxAwaitingResponse(false);

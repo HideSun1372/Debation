@@ -272,6 +272,61 @@ Be fair but consider the skill level difference. If the user is debating someone
     }
   });
 
+  // Evaluate if a crossfire answer is complete (triggers new race if so)
+  app.post("/api/debate/crossfire/evaluate", async (req, res) => {
+    try {
+      const { question, answer, topic, context } = req.body;
+
+      const evaluationPrompt = `You are evaluating a crossfire exchange in a debate.
+
+Topic: "${topic}"
+
+The question asked was:
+"${question}"
+
+The answer given was:
+"${answer}"
+
+Recent context:
+${context || "No additional context."}
+
+Determine if the answer adequately addresses the question. Consider:
+1. Did they directly respond to what was asked?
+2. Is the answer complete or are they still mid-thought?
+3. Did they dodge or deflect the question?
+
+Respond with a JSON object:
+{
+  "isComplete": boolean (true if the question has been answered, false if they need to continue),
+  "reason": string (brief explanation of your judgment)
+}`;
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-5.1",
+        messages: [
+          { role: "system", content: "You are a debate evaluator. Respond only with valid JSON. Be lenient - if they made any attempt to answer, consider it complete." },
+          { role: "user", content: evaluationPrompt },
+        ],
+        response_format: { type: "json_object" },
+        max_completion_tokens: 256,
+      });
+
+      const evaluation = JSON.parse(response.choices[0]?.message?.content || '{"isComplete": true, "reason": "Default: treating as complete"}');
+      
+      res.json({
+        isComplete: evaluation.isComplete ?? true,
+        reason: evaluation.reason || "Evaluation complete.",
+      });
+    } catch (error) {
+      console.error("Error evaluating crossfire answer:", error);
+      // Default to complete on error to avoid blocking the debate
+      res.json({
+        isComplete: true,
+        reason: "Evaluation error - proceeding as complete.",
+      });
+    }
+  });
+
   app.get("/api/user/:id", async (req, res) => {
     try {
       const user = await storage.getUser(req.params.id);
