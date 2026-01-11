@@ -15,7 +15,7 @@ interface CreateDebateInput {
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUserSkillPoints(id: string, points: number): Promise<User | undefined>;
   
@@ -44,21 +44,28 @@ export class MemStorage implements IStorage {
     return this.users.get(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByEmail(email: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
-      (user) => user.username === username,
+      (user) => user.email === email,
     );
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
+    const now = new Date();
     const user: User = { 
       ...insertUser, 
       id,
-      skillPoints: 500,
-      totalDebates: 0,
-      wins: 0,
-      losses: 0,
+      email: insertUser.email ?? null,
+      firstName: insertUser.firstName ?? null,
+      lastName: insertUser.lastName ?? null,
+      profileImageUrl: insertUser.profileImageUrl ?? null,
+      skillPoints: insertUser.skillPoints ?? 500,
+      totalDebates: insertUser.totalDebates ?? 0,
+      wins: insertUser.wins ?? 0,
+      losses: insertUser.losses ?? 0,
+      createdAt: now,
+      updatedAt: now,
     };
     this.users.set(id, user);
     return user;
