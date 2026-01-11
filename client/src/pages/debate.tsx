@@ -85,6 +85,7 @@ export default function Debate() {
   const isUserTurn = currentSpeech ? isUserSpeech(currentSpeech) : false;
   const isDebateComplete = format ? currentSpeechIndex >= format.speeches.length : false;
   const isCrossExamination = currentSpeech?.type === "cross-examination";
+  const isCrossfire = currentSpeech?.type === "crossfire";
 
   useEffect(() => {
     if (!opponent || !topic || !format) {
@@ -201,7 +202,19 @@ export default function Debate() {
       const speechToDeliver = currentSpeech;
       const indexToAdvance = currentSpeechIndex;
       const isCxSpeech = speechToDeliver.type === "cross-examination";
+      const isCfSpeech = speechToDeliver.type === "crossfire";
       const isOpponentSpeech = !isUserSpeech(speechToDeliver);
+      
+      // Handle Crossfire: both sides can ask, user gets to go first
+      if (isCfSpeech && !cxStarted) {
+        setCxStarted(true);
+        setIsCxMode(true);
+        setCxQuestioner(null); // Neither side is designated - both can ask
+        setIsTimerRunning(true);
+        setCxExchangeCount(0);
+        // Don't trigger AI - wait for user to ask first
+        return;
+      }
       
       // Handle CX mode: opponent is questioner and needs to ask first question
       // Check directly from speech type to avoid race conditions with state
@@ -252,8 +265,8 @@ export default function Debate() {
         return;
       }
       
-      // Handle regular opponent speech (non-CX)
-      if (isOpponentSpeech && !isCxSpeech) {
+      // Handle regular opponent speech (non-CX, non-crossfire)
+      if (isOpponentSpeech && !isCxSpeech && !isCfSpeech) {
         const triggerOpponentSpeech = async () => {
           setIsLoading(true);
           
@@ -324,13 +337,43 @@ export default function Debate() {
     setIsLoading(true);
 
     try {
-      // Handle CX mode interactions
+      // Handle CX/Crossfire mode interactions
       if (isCxMode) {
-        if (cxQuestioner === "opponent") {
-          // User is answering opponent's question - no AI response needed, just wait for next question
+        if (cxQuestioner === null) {
+          // Crossfire mode - both sides can ask/answer
+          // User sends message, AI responds, then AI may ask a follow-up after a delay
+          const response = await apiRequest("POST", "/api/debate/message", {
+            message: userMessage.content,
+            debateId,
+            opponentId: opponent?.id,
+            opponentTier: opponent?.tier,
+            opponentPersonality: opponent?.personality,
+            topic: topic?.title,
+            side,
+            speechId: currentSpeech.id,
+            speechName: currentSpeech.name,
+            speechType: currentSpeech.type,
+            cxIntent: "crossfire-exchange",
+            previousMessages: messages.concat(userMessage),
+          });
+
+          const data = await response.json();
+          
+          const opponentMessage: DebateMessage = {
+            id: `opponent-cf-${Date.now()}`,
+            role: "opponent",
+            content: data.response,
+            speechId: currentSpeech.id,
+            speechName: currentSpeech.name,
+          };
+
+          setMessages((prev) => [...prev, opponentMessage]);
+          setCxExchangeCount(prev => prev + 1);
+          // User can continue asking or answering
+        } else if (cxQuestioner === "opponent") {
+          // User is answering opponent's question - AI asks follow-up
           setCxAwaitingResponse(false);
           
-          // After a short delay, AI asks follow-up question
           const response = await apiRequest("POST", "/api/debate/message", {
             message: userMessage.content,
             debateId,
@@ -360,7 +403,7 @@ export default function Debate() {
           setCxAwaitingResponse(true);
           setCxExchangeCount(prev => prev + 1);
         } else {
-          // User is the questioner - AI needs to answer
+          // User is the questioner (cxQuestioner === "user") - AI needs to answer
           const response = await apiRequest("POST", "/api/debate/message", {
             message: userMessage.content,
             debateId,
@@ -396,8 +439,8 @@ export default function Debate() {
         setCurrentSpeechIndex(newSpeechIndex);
 
         const nextSpeech = format.speeches[newSpeechIndex];
-        const nextIsCx = nextSpeech?.type === "cross-examination";
-        const shouldAIRespond = nextSpeech && !isUserSpeech(nextSpeech) && !nextIsCx;
+        const nextIsCxOrCf = nextSpeech?.type === "cross-examination" || nextSpeech?.type === "crossfire";
+        const shouldAIRespond = nextSpeech && !isUserSpeech(nextSpeech) && !nextIsCxOrCf;
 
         // If next speech is CX, let the useEffect handle it
         if (shouldAIRespond && nextSpeech) {

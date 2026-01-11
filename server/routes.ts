@@ -515,6 +515,30 @@ CRITICAL RULES:
 Ask your follow-up question:`;
     }
     
+    if (cxIntent === "crossfire-exchange") {
+      return `You are an AI debate opponent in a CROSSFIRE period.
+Personality: ${personality}
+${skillModifier}
+
+DEBATE CONTEXT:
+- Topic: "${topic}"
+- Your position: ${side === "pro" ? "PRO/AFFIRMATIVE" : "CON/NEGATIVE"}
+- This is CROSSFIRE - both sides can ask AND answer questions
+
+Your opponent just said something. Respond appropriately:
+- If they asked a question, answer it briefly
+- If they made a statement, you can respond and/or ask your own question
+- Keep the exchange conversational but competitive
+
+CRITICAL RULES:
+1. Keep your response brief (1-3 sentences)
+2. You can answer AND ask a question in the same response
+3. Be direct and focused
+4. Maintain your position while engaging with their points
+
+Respond now:`;
+    }
+    
     if (cxIntent === "cx-timeout") {
       return `Cross-examination time has expired. Respond with a brief, professional statement acknowledging that time is up (e.g., "Time's up. Let's move on to the next speech."). Keep it to one sentence.`;
     }
@@ -524,6 +548,7 @@ Ask your follow-up question:`;
     constructive: "Present your main arguments with clear claims, warrants, and impacts. Establish your case structure.",
     rebuttal: "Focus on attacking your opponent's arguments. Identify weaknesses and refute their points directly.",
     "cross-examination": "Engage in cross-examination. If you are the questioner, ask probing questions. If answering, respond directly.",
+    crossfire: "Engage in crossfire. Both sides can ask and answer questions. Keep exchanges brief and direct.",
     summary: "Crystallize the key voting issues. Explain why your side has won the most important arguments.",
     "final-focus": "Make your closing appeal. Weigh the debate and explain why judges should vote for your side.",
     poi: "Make brief, strategic interventions. Points of Information should be concise (15 seconds max).",

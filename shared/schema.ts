@@ -48,6 +48,7 @@ export type SpeechType =
   | "constructive" 
   | "rebuttal" 
   | "cross-examination" 
+  | "crossfire"
   | "summary" 
   | "final-focus"
   | "reply"
@@ -104,13 +105,13 @@ export const DEBATE_FORMATS: DebateFormatConfig[] = [
     speeches: [
       { id: "pf-con1", name: "First Speaker Constructive (Team A)", speaker: "aff", type: "constructive", defaultMinutes: 4, description: "First team presents their case" },
       { id: "pf-con2", name: "First Speaker Constructive (Team B)", speaker: "neg", type: "constructive", defaultMinutes: 4, description: "Second team presents their case" },
-      { id: "pf-cx1", name: "Crossfire", speaker: "aff", type: "cross-examination", defaultMinutes: 3, description: "Both first speakers question each other" },
+      { id: "pf-cx1", name: "Crossfire", speaker: "aff", type: "crossfire", defaultMinutes: 3, description: "Both first speakers question each other" },
       { id: "pf-reb1", name: "Second Speaker Rebuttal (Team A)", speaker: "aff", type: "rebuttal", defaultMinutes: 4, description: "First team responds to opponent's case" },
       { id: "pf-reb2", name: "Second Speaker Rebuttal (Team B)", speaker: "neg", type: "rebuttal", defaultMinutes: 4, description: "Second team responds to opponent's case" },
-      { id: "pf-cx2", name: "Crossfire", speaker: "neg", type: "cross-examination", defaultMinutes: 3, description: "Both second speakers question each other" },
+      { id: "pf-cx2", name: "Crossfire", speaker: "neg", type: "crossfire", defaultMinutes: 3, description: "Both second speakers question each other" },
       { id: "pf-sum1", name: "First Speaker Summary (Team A)", speaker: "aff", type: "summary", defaultMinutes: 3, description: "Narrow the debate, extend key arguments" },
       { id: "pf-sum2", name: "First Speaker Summary (Team B)", speaker: "neg", type: "summary", defaultMinutes: 3, description: "Narrow the debate, extend key arguments" },
-      { id: "pf-gcx", name: "Grand Crossfire", speaker: "aff", type: "cross-examination", defaultMinutes: 3, description: "All four debaters question each other" },
+      { id: "pf-gcx", name: "Grand Crossfire", speaker: "aff", type: "crossfire", defaultMinutes: 3, description: "All four debaters question each other" },
       { id: "pf-ff1", name: "Second Speaker Final Focus (Team A)", speaker: "aff", type: "final-focus", defaultMinutes: 2, description: "Final persuasive appeal" },
       { id: "pf-ff2", name: "Second Speaker Final Focus (Team B)", speaker: "neg", type: "final-focus", defaultMinutes: 2, description: "Final persuasive appeal" },
     ],
