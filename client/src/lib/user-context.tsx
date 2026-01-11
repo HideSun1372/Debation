@@ -1,5 +1,8 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { getSkillTier, getTierProgress, SKILL_TIERS, type ExperienceLevel, getPlacementUnit } from "@shared/schema";
+import { useAuth } from "@/hooks/use-auth";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 export interface DebateHistoryItem {
   id: string;
@@ -12,7 +15,7 @@ export interface DebateHistoryItem {
   side: "pro" | "con";
 }
 
-export interface LessonProgress {
+export interface LessonProgressData {
   hasCompletedOnboarding: boolean;
   experienceLevel: ExperienceLevel | null;
   assessmentScore: number;
@@ -31,7 +34,7 @@ export interface UserState {
   wins: number;
   losses: number;
   debateHistory: DebateHistoryItem[];
-  lessonProgress: LessonProgress;
+  lessonProgress: LessonProgressData;
 }
 
 interface UserContextType {
@@ -47,9 +50,10 @@ interface UserContextType {
   isLessonCompleted: (lessonId: string) => boolean;
   isLessonUnlocked: (lessonId: string, allLessonIds: string[]) => boolean;
   resetLessonProgress: () => void;
+  isLoadingProgress: boolean;
 }
 
-const defaultLessonProgress: LessonProgress = {
+const defaultLessonProgress: LessonProgressData = {
   hasCompletedOnboarding: false,
   experienceLevel: null,
   assessmentScore: 0,
@@ -73,37 +77,78 @@ const defaultUser: UserState = {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<UserState>(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("debate-user");
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          return {
-            ...defaultUser,
-            ...parsed,
-            debateHistory: parsed.debateHistory || [],
-            lessonProgress: {
-              ...defaultLessonProgress,
-              ...(parsed.lessonProgress || {}),
-            },
-          };
-        } catch {
-          return defaultUser;
-        }
+function getLocalStorageUser(): UserState {
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("debate-user");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        return {
+          ...defaultUser,
+          ...parsed,
+          debateHistory: parsed.debateHistory || [],
+          lessonProgress: {
+            ...defaultLessonProgress,
+            ...(parsed.lessonProgress || {}),
+          },
+        };
+      } catch {
+        return defaultUser;
       }
     }
-    return defaultUser;
+  }
+  return defaultUser;
+}
+
+export function UserProvider({ children }: { children: React.ReactNode }) {
+  const { user: authUser, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const queryClient = useQueryClient();
+  
+  const [localUser, setLocalUser] = useState<UserState>(getLocalStorageUser);
+
+  // Fetch progress from database when authenticated
+  const { data: dbProgress, isLoading: isProgressLoading } = useQuery<LessonProgressData>({
+    queryKey: ["/api/progress"],
+    enabled: isAuthenticated && !isAuthLoading,
+    staleTime: 1000 * 60 * 5,
   });
 
-  const saveUser = useCallback((newUser: UserState) => {
-    setUser(newUser);
+  // Mutation to save progress to database
+  const saveProgressMutation = useMutation({
+    mutationFn: async (progress: Partial<LessonProgressData>) => {
+      const response = await apiRequest("POST", "/api/progress", progress);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
+    },
+  });
+
+  // Merge auth user data with progress
+  const user: UserState = isAuthenticated && authUser ? {
+    id: authUser.id,
+    username: authUser.firstName || authUser.email?.split('@')[0] || 'Debater',
+    skillPoints: authUser.skillPoints,
+    totalDebates: authUser.totalDebates,
+    wins: authUser.wins,
+    losses: authUser.losses,
+    debateHistory: localUser.debateHistory,
+    lessonProgress: dbProgress || localUser.lessonProgress,
+  } : localUser;
+
+  const saveLocalUser = useCallback((newUser: UserState) => {
+    setLocalUser(newUser);
     localStorage.setItem("debate-user", JSON.stringify(newUser));
   }, []);
 
+  const saveProgress = useCallback((progress: Partial<LessonProgressData>) => {
+    if (isAuthenticated) {
+      saveProgressMutation.mutate(progress);
+    }
+  }, [isAuthenticated, saveProgressMutation]);
+
   const updateSkillPoints = useCallback((change: number) => {
-    setUser((prev) => {
+    setLocalUser((prev) => {
       const newUser = {
         ...prev,
         skillPoints: Math.max(0, prev.skillPoints + change),
@@ -114,7 +159,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const recordDebate = useCallback((won: boolean, pointsChange: number) => {
-    setUser((prev) => {
+    setLocalUser((prev) => {
       const newUser = {
         ...prev,
         totalDebates: prev.totalDebates + 1,
@@ -128,7 +173,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const addDebateToHistory = useCallback((debate: DebateHistoryItem) => {
-    setUser((prev) => {
+    setLocalUser((prev) => {
       const newUser = {
         ...prev,
         debateHistory: [debate, ...prev.debateHistory].slice(0, 100),
@@ -149,57 +194,82 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const completeOnboarding = useCallback((experience: ExperienceLevel, score: number) => {
     const placementUnit = getPlacementUnit(experience, score);
-    setUser((prev) => {
+    const currentProgress = user.lessonProgress;
+    const newProgress: LessonProgressData = {
+      ...currentProgress,
+      hasCompletedOnboarding: true,
+      experienceLevel: experience,
+      assessmentScore: score,
+      currentUnitId: placementUnit,
+      lastVisitedAt: new Date().toISOString(),
+    };
+    
+    if (isAuthenticated) {
+      saveProgress(newProgress);
+    }
+    
+    setLocalUser((prev) => {
       const newUser = {
         ...prev,
-        lessonProgress: {
-          ...prev.lessonProgress,
-          hasCompletedOnboarding: true,
-          experienceLevel: experience,
-          assessmentScore: score,
-          currentUnitId: placementUnit,
-          lastVisitedAt: new Date().toISOString(),
-        },
+        lessonProgress: newProgress,
       };
       localStorage.setItem("debate-user", JSON.stringify(newUser));
       return newUser;
     });
-  }, []);
+  }, [isAuthenticated, saveProgress, user.lessonProgress]);
 
   const completeLesson = useCallback((lessonId: string) => {
-    setUser((prev) => {
+    const currentProgress = user.lessonProgress;
+    if (currentProgress.completedLessonIds.includes(lessonId)) {
+      return;
+    }
+    
+    const newProgress: LessonProgressData = {
+      ...currentProgress,
+      completedLessonIds: [...currentProgress.completedLessonIds, lessonId],
+      lastVisitedAt: new Date().toISOString(),
+    };
+    
+    if (isAuthenticated) {
+      saveProgress(newProgress);
+    }
+    
+    setLocalUser((prev) => {
       if (prev.lessonProgress.completedLessonIds.includes(lessonId)) {
         return prev;
       }
       const newUser = {
         ...prev,
-        lessonProgress: {
-          ...prev.lessonProgress,
-          completedLessonIds: [...prev.lessonProgress.completedLessonIds, lessonId],
-          lastVisitedAt: new Date().toISOString(),
-        },
+        lessonProgress: newProgress,
       };
       localStorage.setItem("debate-user", JSON.stringify(newUser));
       return newUser;
     });
-  }, []);
+  }, [user.lessonProgress, isAuthenticated, saveProgress]);
 
   const setCurrentLesson = useCallback((unitId: string, sectionId: string, lessonId: string) => {
-    setUser((prev) => {
+    const currentProgress = user.lessonProgress;
+    const newProgress: LessonProgressData = {
+      ...currentProgress,
+      currentUnitId: unitId,
+      currentSectionId: sectionId,
+      currentLessonId: lessonId,
+      lastVisitedAt: new Date().toISOString(),
+    };
+    
+    if (isAuthenticated) {
+      saveProgress(newProgress);
+    }
+    
+    setLocalUser((prev) => {
       const newUser = {
         ...prev,
-        lessonProgress: {
-          ...prev.lessonProgress,
-          currentUnitId: unitId,
-          currentSectionId: sectionId,
-          currentLessonId: lessonId,
-          lastVisitedAt: new Date().toISOString(),
-        },
+        lessonProgress: newProgress,
       };
       localStorage.setItem("debate-user", JSON.stringify(newUser));
       return newUser;
     });
-  }, []);
+  }, [isAuthenticated, saveProgress, user.lessonProgress]);
 
   const isLessonCompleted = useCallback((lessonId: string) => {
     return user.lessonProgress.completedLessonIds.includes(lessonId);
@@ -213,7 +283,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [user.lessonProgress.completedLessonIds]);
 
   const resetLessonProgress = useCallback(() => {
-    setUser((prev) => {
+    if (isAuthenticated) {
+      saveProgress(defaultLessonProgress);
+    }
+    
+    setLocalUser((prev) => {
       const newUser = {
         ...prev,
         lessonProgress: defaultLessonProgress,
@@ -221,7 +295,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("debate-user", JSON.stringify(newUser));
       return newUser;
     });
-  }, []);
+  }, [isAuthenticated, saveProgress]);
+
+  const isLoadingProgress = isAuthLoading || (isAuthenticated && isProgressLoading);
 
   return (
     <UserContext.Provider
@@ -238,6 +314,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         isLessonCompleted,
         isLessonUnlocked,
         resetLessonProgress,
+        isLoadingProgress,
       }}
     >
       {children}
