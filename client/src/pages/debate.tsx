@@ -617,32 +617,8 @@ export default function Debate() {
             }
           } else if (crossfireQuestionAsker === "opponent" && crossfirePhase === "answering") {
             // AI asked a question, user is answering
-            const response = await apiRequest("POST", "/api/debate/message", {
-              message: userMessage.content,
-              debateId,
-              opponentId: opponent?.id,
-              opponentTier: opponent?.tier,
-              opponentPersonality: opponent?.personality,
-              topic: topic?.title,
-              side,
-              speechId: currentSpeech.id,
-              speechName: currentSpeech.name,
-              speechType: currentSpeech.type,
-              cxIntent: "crossfire-exchange", // AI may respond to user's answer
-              previousMessages: messages.concat(userMessage),
-            });
-
-            const data = await response.json();
-            
-            const opponentMessage: DebateMessage = {
-              id: `opponent-cf-${Date.now()}`,
-              role: "opponent",
-              content: data.response,
-              speechId: currentSpeech.id,
-              speechName: currentSpeech.name,
-            };
-
-            setMessages((prev) => [...prev, opponentMessage]);
+            // User's answer is already added to messages - no AI response needed
+            // Just evaluate if complete and start new race
             setCxExchangeCount(prev => prev + 1);
             
             // Evaluate if user's answer is complete
@@ -651,43 +627,8 @@ export default function Debate() {
               // Start new race for next question
               setTimeout(() => startCrossfireRace(), 500);
             }
-          } else {
-            // No question asker set yet (shouldn't happen, but fallback)
-            setCrossfireQuestionAsker("user");
-            setCrossfireCurrentQuestion(userMessage.content);
-            
-            const response = await apiRequest("POST", "/api/debate/message", {
-              message: userMessage.content,
-              debateId,
-              opponentId: opponent?.id,
-              opponentTier: opponent?.tier,
-              opponentPersonality: opponent?.personality,
-              topic: topic?.title,
-              side,
-              speechId: currentSpeech.id,
-              speechName: currentSpeech.name,
-              speechType: currentSpeech.type,
-              cxIntent: "cx-answer",
-              previousMessages: messages.concat(userMessage),
-            });
-
-            const data = await response.json();
-            
-            const opponentMessage: DebateMessage = {
-              id: `opponent-cf-${Date.now()}`,
-              role: "opponent",
-              content: data.response,
-              speechId: currentSpeech.id,
-              speechName: currentSpeech.name,
-            };
-
-            setMessages((prev) => [...prev, opponentMessage]);
-            setCxExchangeCount(prev => prev + 1);
-            // Start a new race
-            if (speechTimeRemaining > 0) {
-              setTimeout(() => startCrossfireRace(), 500);
-            }
           }
+          // Guard at beginning ensures only valid phase/asker combos reach here
         } else if (cxQuestioner === "opponent") {
           // User is answering opponent's question - AI asks follow-up
           setCxAwaitingResponse(false);
