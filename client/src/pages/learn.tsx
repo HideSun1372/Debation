@@ -13,6 +13,7 @@ import {
   LESSON_UNITS, 
   type ExperienceLevel,
   getPlacementUnit,
+  getLessonExercise,
 } from "@shared/schema";
 import { 
   BookOpen, 
@@ -26,6 +27,9 @@ import {
   ArrowLeft,
   RotateCcw,
   Sparkles,
+  CircleCheck,
+  CircleX,
+  HelpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -50,6 +54,12 @@ export default function Learn() {
   
   const [activeLessonId, setActiveLessonId] = useState<string | null>(null);
   const [showResetDialog, setShowResetDialog] = useState(false);
+  
+  const [lessonStep, setLessonStep] = useState<"content" | "quiz">("content");
+  const [exerciseQuestionIndex, setExerciseQuestionIndex] = useState(0);
+  const [exerciseAnswer, setExerciseAnswer] = useState<string | null>(null);
+  const [exerciseAnswered, setExerciseAnswered] = useState(false);
+  const [exerciseCorrect, setExerciseCorrect] = useState(false);
 
   const hasCompletedOnboarding = user.lessonProgress.hasCompletedOnboarding;
 
@@ -187,30 +197,85 @@ export default function Learn() {
     if (isLessonUnlocked(lessonId) || isLessonCompleted(lessonId)) {
       setActiveLessonId(lessonId);
       setCurrentLesson(unitId, sectionId, lessonId);
+      setLessonStep("content");
+      setExerciseQuestionIndex(0);
+      setExerciseAnswer(null);
+      setExerciseAnswered(false);
+      setExerciseCorrect(false);
     }
   };
 
-  const handleCompleteLesson = () => {
-    if (activeLessonId) {
+  const handleStartQuiz = () => {
+    setLessonStep("quiz");
+    setExerciseQuestionIndex(0);
+    setExerciseAnswer(null);
+    setExerciseAnswered(false);
+    setExerciseCorrect(false);
+  };
+
+  const handleExerciseAnswerSelect = (answerId: string) => {
+    if (!exerciseAnswered) {
+      setExerciseAnswer(answerId);
+    }
+  };
+
+  const handleCheckAnswer = () => {
+    if (!activeLessonId || !exerciseAnswer) return;
+    const exercise = getLessonExercise(activeLessonId);
+    if (!exercise) return;
+    
+    const currentQ = exercise.questions[exerciseQuestionIndex];
+    const isCorrect = exerciseAnswer === currentQ.correctAnswer;
+    setExerciseAnswered(true);
+    setExerciseCorrect(isCorrect);
+  };
+
+  const handleNextExerciseQuestion = () => {
+    if (!activeLessonId) return;
+    const exercise = getLessonExercise(activeLessonId);
+    if (!exercise) return;
+    
+    if (exerciseQuestionIndex < exercise.questions.length - 1) {
+      setExerciseQuestionIndex(exerciseQuestionIndex + 1);
+      setExerciseAnswer(null);
+      setExerciseAnswered(false);
+      setExerciseCorrect(false);
+    } else {
       completeLesson(activeLessonId);
-      
-      const currentIndex = allLessonIds.indexOf(activeLessonId);
-      if (currentIndex < allLessonIds.length - 1) {
-        const nextLessonId = allLessonIds[currentIndex + 1];
-        for (const unit of LESSON_UNITS) {
-          for (const section of unit.sections) {
-            for (const lesson of section.lessons) {
-              if (lesson.id === nextLessonId) {
-                setActiveLessonId(nextLessonId);
-                setCurrentLesson(unit.id, section.id, nextLessonId);
-                return;
-              }
+      goToNextLesson();
+    }
+  };
+
+  const handleRetryQuestion = () => {
+    setExerciseAnswer(null);
+    setExerciseAnswered(false);
+    setExerciseCorrect(false);
+  };
+
+  const goToNextLesson = () => {
+    if (!activeLessonId) return;
+    
+    const currentIndex = allLessonIds.indexOf(activeLessonId);
+    if (currentIndex < allLessonIds.length - 1) {
+      const nextLessonId = allLessonIds[currentIndex + 1];
+      for (const unit of LESSON_UNITS) {
+        for (const section of unit.sections) {
+          for (const lesson of section.lessons) {
+            if (lesson.id === nextLessonId) {
+              setActiveLessonId(nextLessonId);
+              setCurrentLesson(unit.id, section.id, nextLessonId);
+              setLessonStep("content");
+              setExerciseQuestionIndex(0);
+              setExerciseAnswer(null);
+              setExerciseAnswered(false);
+              setExerciseCorrect(false);
+              return;
             }
           }
         }
-      } else {
-        setActiveLessonId(null);
       }
+    } else {
+      setActiveLessonId(null);
     }
   };
 
@@ -426,6 +491,134 @@ export default function Learn() {
     if (!activeData) return null;
     const { unit, section, lesson } = activeData;
     const isCompleted = isLessonCompleted(lesson.id);
+    const exercise = getLessonExercise(lesson.id);
+
+    if (lessonStep === "quiz" && exercise) {
+      const currentQ = exercise.questions[exerciseQuestionIndex];
+      
+      return (
+        <div className="container mx-auto px-4 py-8 max-w-3xl">
+          <Button 
+            variant="ghost" 
+            className="mb-4"
+            onClick={() => setLessonStep("content")}
+            data-testid="button-back-to-content"
+          >
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Back to Lesson
+          </Button>
+
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between mb-2">
+                <Badge variant="outline" className="gap-1">
+                  <HelpCircle className="h-3 w-3" />
+                  Question {exerciseQuestionIndex + 1} of {exercise.questions.length}
+                </Badge>
+                <span className="text-sm text-muted-foreground">{lesson.title}</span>
+              </div>
+              <Progress 
+                value={((exerciseQuestionIndex + (exerciseAnswered && exerciseCorrect ? 1 : 0)) / exercise.questions.length) * 100} 
+                className="h-2"
+              />
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <h3 className="text-lg font-medium">{currentQ.question}</h3>
+              
+              <div className="space-y-3">
+                {currentQ.options.map((option) => {
+                  const isSelected = exerciseAnswer === option.id;
+                  const isCorrectOption = option.id === currentQ.correctAnswer;
+                  
+                  let optionStyle = "border-muted hover:bg-accent/50";
+                  if (exerciseAnswered) {
+                    if (isCorrectOption) {
+                      optionStyle = "border-tier-beginner bg-tier-beginner/10";
+                    } else if (isSelected && !isCorrectOption) {
+                      optionStyle = "border-destructive bg-destructive/10";
+                    }
+                  } else if (isSelected) {
+                    optionStyle = "border-primary bg-primary/5";
+                  }
+                  
+                  return (
+                    <button
+                      key={option.id}
+                      onClick={() => handleExerciseAnswerSelect(option.id)}
+                      disabled={exerciseAnswered}
+                      className={cn(
+                        "w-full flex items-center gap-3 rounded-lg border-2 p-4 text-left transition-colors",
+                        optionStyle,
+                        exerciseAnswered && "cursor-default"
+                      )}
+                      data-testid={`option-exercise-${option.id}`}
+                    >
+                      <span className={cn(
+                        "flex h-6 w-6 items-center justify-center rounded-full border text-sm font-medium",
+                        exerciseAnswered && isCorrectOption && "bg-tier-beginner text-white border-tier-beginner",
+                        exerciseAnswered && isSelected && !isCorrectOption && "bg-destructive text-white border-destructive"
+                      )}>
+                        {exerciseAnswered && isCorrectOption ? (
+                          <Check className="h-3 w-3" />
+                        ) : exerciseAnswered && isSelected && !isCorrectOption ? (
+                          <CircleX className="h-3 w-3" />
+                        ) : (
+                          option.id.toUpperCase()
+                        )}
+                      </span>
+                      <span>{option.text}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {exerciseAnswered && (
+                <div className={cn(
+                  "rounded-lg p-4",
+                  exerciseCorrect ? "bg-tier-beginner/10 border border-tier-beginner/30" : "bg-destructive/10 border border-destructive/30"
+                )}>
+                  <div className="flex items-center gap-2 mb-2">
+                    {exerciseCorrect ? (
+                      <>
+                        <CircleCheck className="h-5 w-5 text-tier-beginner" />
+                        <span className="font-medium text-tier-beginner">Correct!</span>
+                      </>
+                    ) : (
+                      <>
+                        <CircleX className="h-5 w-5 text-destructive" />
+                        <span className="font-medium text-destructive">Not quite right</span>
+                      </>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground">{currentQ.explanation}</p>
+                </div>
+              )}
+            </CardContent>
+            <CardFooter className="justify-end gap-2">
+              {!exerciseAnswered ? (
+                <Button 
+                  onClick={handleCheckAnswer} 
+                  disabled={!exerciseAnswer}
+                  data-testid="button-check-answer"
+                >
+                  Check Answer
+                </Button>
+              ) : exerciseCorrect ? (
+                <Button onClick={handleNextExerciseQuestion} data-testid="button-continue-quiz">
+                  {exerciseQuestionIndex < exercise.questions.length - 1 ? "Next Question" : "Complete Lesson"}
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              ) : (
+                <Button onClick={handleRetryQuestion} variant="outline" data-testid="button-retry-question">
+                  <RotateCcw className="h-4 w-4 mr-1" />
+                  Try Again
+                </Button>
+              )}
+            </CardFooter>
+          </Card>
+        </div>
+      );
+    }
 
     return (
       <div className="container mx-auto px-4 py-8 max-w-3xl">
@@ -490,15 +683,20 @@ export default function Learn() {
             )}
           </CardContent>
           <CardFooter className="justify-end gap-2">
-            {!isCompleted ? (
-              <Button onClick={handleCompleteLesson} data-testid="button-complete-lesson">
-                <Check className="h-4 w-4 mr-1" />
-                Mark Complete & Continue
-              </Button>
-            ) : (
-              <Button onClick={handleCompleteLesson} variant="outline" data-testid="button-next-lesson">
+            {isCompleted ? (
+              <Button onClick={goToNextLesson} variant="outline" data-testid="button-next-lesson">
                 Next Lesson
                 <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            ) : exercise ? (
+              <Button onClick={handleStartQuiz} data-testid="button-start-quiz">
+                <HelpCircle className="h-4 w-4 mr-1" />
+                Take Quiz to Complete
+              </Button>
+            ) : (
+              <Button onClick={() => { completeLesson(lesson.id); goToNextLesson(); }} data-testid="button-complete-lesson">
+                <Check className="h-4 w-4 mr-1" />
+                Mark Complete & Continue
               </Button>
             )}
           </CardFooter>

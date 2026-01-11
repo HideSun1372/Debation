@@ -648,3 +648,573 @@ export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: n
   }
   return "unit-1";
 }
+
+// Exercise questions for each lesson
+export interface LessonExercise {
+  lessonId: string;
+  questions: Array<{
+    id: string;
+    question: string;
+    options: Array<{ id: string; text: string }>;
+    correctAnswer: string;
+    explanation: string;
+  }>;
+}
+
+export const LESSON_EXERCISES: LessonExercise[] = [
+  {
+    lessonId: "l1-1-1",
+    questions: [
+      {
+        id: "l1-1-1-q1",
+        question: "What is the primary focus of formal debate compared to casual arguments?",
+        options: [
+          { id: "a", text: "Winning at all costs" },
+          { id: "b", text: "Logical reasoning rather than emotional appeals" },
+          { id: "c", text: "Speaking louder than your opponent" },
+          { id: "d", text: "Having more friends in the audience" },
+        ],
+        correctAnswer: "b",
+        explanation: "Formal debate focuses on structured, logical reasoning rather than emotional appeals or personal attacks.",
+      },
+      {
+        id: "l1-1-1-q2",
+        question: "Which skill does debate NOT primarily develop?",
+        options: [
+          { id: "a", text: "Critical thinking" },
+          { id: "b", text: "Research skills" },
+          { id: "c", text: "Memorizing facts" },
+          { id: "d", text: "Clear articulation of ideas" },
+        ],
+        correctAnswer: "c",
+        explanation: "While knowledge helps, debate primarily develops critical thinking, research, and communication skills rather than memorization.",
+      },
+    ],
+  },
+  {
+    lessonId: "l1-1-2",
+    questions: [
+      {
+        id: "l1-1-2-q1",
+        question: "Which debate format is best known for one-on-one value debates?",
+        options: [
+          { id: "a", text: "Public Forum" },
+          { id: "b", text: "Policy Debate" },
+          { id: "c", text: "Lincoln-Douglas" },
+          { id: "d", text: "Parliamentary" },
+        ],
+        correctAnswer: "c",
+        explanation: "Lincoln-Douglas (LD) debate is a one-on-one format that focuses on value-based arguments.",
+      },
+      {
+        id: "l1-1-2-q2",
+        question: "Which format emphasizes quick thinking with limited preparation time?",
+        options: [
+          { id: "a", text: "Policy Debate" },
+          { id: "b", text: "Parliamentary" },
+          { id: "c", text: "Lincoln-Douglas" },
+          { id: "d", text: "Public Forum" },
+        ],
+        correctAnswer: "b",
+        explanation: "Parliamentary debate is known for impromptu topics and limited preparation time, requiring quick thinking.",
+      },
+    ],
+  },
+  {
+    lessonId: "l1-2-1",
+    questions: [
+      {
+        id: "l1-2-1-q1",
+        question: "In the Claim-Warrant-Impact framework, what does the 'warrant' provide?",
+        options: [
+          { id: "a", text: "Your main assertion" },
+          { id: "b", text: "Evidence or reasoning supporting your claim" },
+          { id: "c", text: "The consequences of your argument" },
+          { id: "d", text: "A summary of your speech" },
+        ],
+        correctAnswer: "b",
+        explanation: "The warrant provides the evidence, reasoning, or logic that supports and justifies your claim.",
+      },
+      {
+        id: "l1-2-1-q2",
+        question: "What does the 'impact' explain in an argument?",
+        options: [
+          { id: "a", text: "What you believe to be true" },
+          { id: "b", text: "Your sources and citations" },
+          { id: "c", text: "Why your claim matters and its consequences" },
+          { id: "d", text: "How to refute your opponent" },
+        ],
+        correctAnswer: "c",
+        explanation: "The impact explains why your claim matters and what consequences follow from it being true.",
+      },
+    ],
+  },
+  {
+    lessonId: "l1-2-2",
+    questions: [
+      {
+        id: "l1-2-2-q1",
+        question: "'We should increase funding for public schools' is what type of argument?",
+        options: [
+          { id: "a", text: "Definitional" },
+          { id: "b", text: "Factual" },
+          { id: "c", text: "Value" },
+          { id: "d", text: "Policy" },
+        ],
+        correctAnswer: "d",
+        explanation: "Policy arguments propose what should be done - in this case, increasing school funding is a proposed action.",
+      },
+      {
+        id: "l1-2-2-q2",
+        question: "'Justice means treating everyone equally' is what type of argument?",
+        options: [
+          { id: "a", text: "Definitional" },
+          { id: "b", text: "Factual" },
+          { id: "c", text: "Value" },
+          { id: "d", text: "Policy" },
+        ],
+        correctAnswer: "a",
+        explanation: "Definitional arguments establish what terms mean - here, defining what 'justice' means.",
+      },
+    ],
+  },
+  {
+    lessonId: "l1-2-3",
+    questions: [
+      {
+        id: "l1-2-3-q1",
+        question: "Which side typically bears the burden of proof in a debate?",
+        options: [
+          { id: "a", text: "The negative (defending status quo)" },
+          { id: "b", text: "The affirmative (proposing change)" },
+          { id: "c", text: "Both sides equally" },
+          { id: "d", text: "Neither side" },
+        ],
+        correctAnswer: "b",
+        explanation: "The affirmative side, which proposes change, must prove that change is needed and beneficial.",
+      },
+      {
+        id: "l1-2-3-q2",
+        question: "What can the negative side do in response to the affirmative's case?",
+        options: [
+          { id: "a", text: "Only attack the affirmative's evidence" },
+          { id: "b", text: "Defend the status quo or propose alternatives" },
+          { id: "c", text: "Ignore the affirmative's arguments" },
+          { id: "d", text: "Only agree with the affirmative" },
+        ],
+        correctAnswer: "b",
+        explanation: "The negative can defend why the current situation is acceptable or propose different solutions.",
+      },
+    ],
+  },
+  {
+    lessonId: "l2-1-1",
+    questions: [
+      {
+        id: "l2-1-1-q1",
+        question: "What should you do while your opponent is speaking?",
+        options: [
+          { id: "a", text: "Plan your entire speech in your head" },
+          { id: "b", text: "Take notes on their claims and identify weaknesses" },
+          { id: "c", text: "Practice your opening statement" },
+          { id: "d", text: "Rest until it's your turn" },
+        ],
+        correctAnswer: "b",
+        explanation: "Active listening means engaging with what's being said, noting key claims, and preparing targeted responses.",
+      },
+      {
+        id: "l2-1-1-q2",
+        question: "Why should you acknowledge valid points made by your opponent?",
+        options: [
+          { id: "a", text: "It makes you lose the debate" },
+          { id: "b", text: "It shows intellectual honesty" },
+          { id: "c", text: "It's required by debate rules" },
+          { id: "d", text: "It confuses the judges" },
+        ],
+        correctAnswer: "b",
+        explanation: "Acknowledging valid points shows intellectual honesty and can actually strengthen your credibility.",
+      },
+    ],
+  },
+  {
+    lessonId: "l2-1-2",
+    questions: [
+      {
+        id: "l2-1-2-q1",
+        question: "What is 'flowing' in debate?",
+        options: [
+          { id: "a", text: "Speaking smoothly without pauses" },
+          { id: "b", text: "A systematic note-taking method" },
+          { id: "c", text: "Moving around the stage" },
+          { id: "d", text: "Writing your speech beforehand" },
+        ],
+        correctAnswer: "b",
+        explanation: "Flowing is a systematic way to track arguments across a debate using columns and abbreviations.",
+      },
+      {
+        id: "l2-1-2-q2",
+        question: "What should you note when an argument goes unanswered?",
+        options: [
+          { id: "a", text: "Ignore it - it wasn't important" },
+          { id: "b", text: "Mark it as a 'dropped' argument" },
+          { id: "c", text: "Assume it was addressed" },
+          { id: "d", text: "Delete it from your notes" },
+        ],
+        correctAnswer: "b",
+        explanation: "Dropped arguments are important to track because they can be used against your opponent later.",
+      },
+    ],
+  },
+  {
+    lessonId: "l2-2-1",
+    questions: [
+      {
+        id: "l2-2-1-q1",
+        question: "What is signposting in debate?",
+        options: [
+          { id: "a", text: "Holding up physical signs" },
+          { id: "b", text: "Using verbal cues to guide listeners through your arguments" },
+          { id: "c", text: "Writing on a whiteboard" },
+          { id: "d", text: "Pointing at your notes" },
+        ],
+        correctAnswer: "b",
+        explanation: "Signposting uses phrases like 'My first point is...' to help the audience follow your argument structure.",
+      },
+      {
+        id: "l2-2-1-q2",
+        question: "Which phrase is an example of signposting?",
+        options: [
+          { id: "a", text: "I think..." },
+          { id: "b", text: "In response to my opponent's claim about..." },
+          { id: "c", text: "Maybe..." },
+          { id: "d", text: "I guess..." },
+        ],
+        correctAnswer: "b",
+        explanation: "This phrase clearly signals you're responding to a specific opponent argument, helping the audience follow.",
+      },
+    ],
+  },
+  {
+    lessonId: "l2-2-2",
+    questions: [
+      {
+        id: "l2-2-2-q1",
+        question: "How should you allocate your speaking time?",
+        options: [
+          { id: "a", text: "50% introduction, 50% conclusion" },
+          { id: "b", text: "70% strongest arguments, 30% rebuttals" },
+          { id: "c", text: "Address every minor point equally" },
+          { id: "d", text: "Spend all time on one argument" },
+        ],
+        correctAnswer: "b",
+        explanation: "Focus most time on your strongest arguments while reserving time for rebuttals and summary.",
+      },
+      {
+        id: "l2-2-2-q2",
+        question: "What's the best way to develop good time management?",
+        options: [
+          { id: "a", text: "Never practice with a timer" },
+          { id: "b", text: "Always speak as fast as possible" },
+          { id: "c", text: "Practice within time limits regularly" },
+          { id: "d", text: "Ignore time limits during debates" },
+        ],
+        correctAnswer: "c",
+        explanation: "Regular practice within time limits develops a natural sense of pacing and helps you prioritize.",
+      },
+    ],
+  },
+  {
+    lessonId: "l2-3-1",
+    questions: [
+      {
+        id: "l2-3-1-q1",
+        question: "What's the most effective target for a rebuttal?",
+        options: [
+          { id: "a", text: "Your opponent's appearance" },
+          { id: "b", text: "The warrant (evidence/reasoning) of their argument" },
+          { id: "c", text: "Simply denying their claim without explanation" },
+          { id: "d", text: "Ignoring their argument completely" },
+        ],
+        correctAnswer: "b",
+        explanation: "Attacking the warrant - the evidence and reasoning - undermines the foundation of their argument.",
+      },
+      {
+        id: "l2-3-1-q2",
+        question: "What should you explain when making a rebuttal?",
+        options: [
+          { id: "a", text: "Only why you're right" },
+          { id: "b", text: "Why their reasoning is flawed AND why your argument prevails" },
+          { id: "c", text: "Personal opinions about the topic" },
+          { id: "d", text: "Unrelated facts" },
+        ],
+        correctAnswer: "b",
+        explanation: "Effective rebuttals explain why the opponent's logic fails and why your argument is stronger.",
+      },
+    ],
+  },
+  {
+    lessonId: "l2-3-2",
+    questions: [
+      {
+        id: "l2-3-2-q1",
+        question: "What is the main purpose of cross-examination?",
+        options: [
+          { id: "a", text: "To argue with your opponent" },
+          { id: "b", text: "To expose weaknesses in your opponent's case" },
+          { id: "c", text: "To give a speech" },
+          { id: "d", text: "To make friends with your opponent" },
+        ],
+        correctAnswer: "b",
+        explanation: "Cross-examination is your opportunity to ask questions that reveal weaknesses in their case.",
+      },
+      {
+        id: "l2-3-2-q2",
+        question: "What type of questions should you avoid during cross-ex?",
+        options: [
+          { id: "a", text: "Clarifying questions" },
+          { id: "b", text: "Short, clear questions" },
+          { id: "c", text: "Long, argumentative speeches disguised as questions" },
+          { id: "d", text: "Questions about their evidence" },
+        ],
+        correctAnswer: "c",
+        explanation: "Cross-ex is for asking questions, not making arguments. Keep questions short and don't argue.",
+      },
+    ],
+  },
+  {
+    lessonId: "l3-1-1",
+    questions: [
+      {
+        id: "l3-1-1-q1",
+        question: "Why is controlling the framework important?",
+        options: [
+          { id: "a", text: "It makes your speech longer" },
+          { id: "b", text: "It determines how arguments are evaluated" },
+          { id: "c", text: "It makes you speak first" },
+          { id: "d", text: "It's not actually important" },
+        ],
+        correctAnswer: "b",
+        explanation: "The framework sets the criteria for judging arguments - whoever controls it controls how the debate is evaluated.",
+      },
+      {
+        id: "l3-1-1-q2",
+        question: "When should you define key terms in a debate?",
+        options: [
+          { id: "a", text: "At the very end" },
+          { id: "b", text: "Early in your case" },
+          { id: "c", text: "Never" },
+          { id: "d", text: "Only if asked" },
+        ],
+        correctAnswer: "b",
+        explanation: "Defining terms early establishes the ground rules and prevents your opponent from reframing the debate.",
+      },
+    ],
+  },
+  {
+    lessonId: "l3-1-2",
+    questions: [
+      {
+        id: "l3-1-2-q1",
+        question: "Which is NOT a standard way to weigh arguments?",
+        options: [
+          { id: "a", text: "Magnitude (how big is the impact)" },
+          { id: "b", text: "Probability (how likely is it)" },
+          { id: "c", text: "How loudly it was stated" },
+          { id: "d", text: "Reversibility (can it be undone)" },
+        ],
+        correctAnswer: "c",
+        explanation: "Arguments are weighed by substance (magnitude, probability, timeframe, reversibility), not delivery style.",
+      },
+      {
+        id: "l3-1-2-q2",
+        question: "Why do judges need weighing analysis?",
+        options: [
+          { id: "a", text: "They don't need it" },
+          { id: "b", text: "To understand why your argument outweighs the opponent's" },
+          { id: "c", text: "To fill time" },
+          { id: "d", text: "To confuse them" },
+        ],
+        correctAnswer: "b",
+        explanation: "Weighing tells judges why your argument matters more when comparing to the opponent's claims.",
+      },
+    ],
+  },
+  {
+    lessonId: "l3-2-1",
+    questions: [
+      {
+        id: "l3-2-1-q1",
+        question: "What is crystallization?",
+        options: [
+          { id: "a", text: "Making your arguments complicated" },
+          { id: "b", text: "Focusing on 2-3 key voting issues in final speeches" },
+          { id: "c", text: "Freezing during your speech" },
+          { id: "d", text: "Using technical jargon" },
+        ],
+        correctAnswer: "b",
+        explanation: "Crystallization means distilling the debate to the most important issues that should decide the outcome.",
+      },
+      {
+        id: "l3-2-1-q2",
+        question: "What should you do in your final speech?",
+        options: [
+          { id: "a", text: "Introduce new arguments" },
+          { id: "b", text: "Tell the story of the debate and why you've won" },
+          { id: "c", text: "Repeat everything from your first speech" },
+          { id: "d", text: "Apologize for your mistakes" },
+        ],
+        correctAnswer: "b",
+        explanation: "Final speeches should summarize the key issues and explain why you've won those critical points.",
+      },
+    ],
+  },
+  {
+    lessonId: "l3-2-2",
+    questions: [
+      {
+        id: "l3-2-2-q1",
+        question: "How should you adapt for a lay (non-expert) judge?",
+        options: [
+          { id: "a", text: "Use as much technical jargon as possible" },
+          { id: "b", text: "Prefer clear, simple arguments" },
+          { id: "c", text: "Speak very quickly" },
+          { id: "d", text: "Ignore the judge's background" },
+        ],
+        correctAnswer: "b",
+        explanation: "Lay judges respond better to clear, accessible arguments rather than technical debate terminology.",
+      },
+      {
+        id: "l3-2-2-q2",
+        question: "Should adapting to your judge mean changing your core arguments?",
+        options: [
+          { id: "a", text: "Yes, completely change everything" },
+          { id: "b", text: "No, maintain core arguments while adjusting style and complexity" },
+          { id: "c", text: "Never adapt to judges" },
+          { id: "d", text: "Only speak about what judges want to hear" },
+        ],
+        correctAnswer: "b",
+        explanation: "Adapt your presentation style and complexity level while keeping your core arguments intact.",
+      },
+    ],
+  },
+  {
+    lessonId: "l4-1-1",
+    questions: [
+      {
+        id: "l4-1-1-q1",
+        question: "What should a good research file include?",
+        options: [
+          { id: "a", text: "Only evidence supporting your side" },
+          { id: "b", text: "Evidence from both affirmative and negative perspectives" },
+          { id: "c", text: "Random articles from any source" },
+          { id: "d", text: "Only your own opinions" },
+        ],
+        correctAnswer: "b",
+        explanation: "Prepare both sides so you're ready regardless of which position you're assigned.",
+      },
+      {
+        id: "l4-1-1-q2",
+        question: "How should you organize your evidence?",
+        options: [
+          { id: "a", text: "Randomly in one big folder" },
+          { id: "b", text: "By argument type and topic with proper citations" },
+          { id: "c", text: "Don't organize - just memorize everything" },
+          { id: "d", text: "Only by date collected" },
+        ],
+        correctAnswer: "b",
+        explanation: "Organize by topic and argument type so you can quickly find evidence during a debate.",
+      },
+    ],
+  },
+  {
+    lessonId: "l4-1-2",
+    questions: [
+      {
+        id: "l4-1-2-q1",
+        question: "What should you do before each debate round?",
+        options: [
+          { id: "a", text: "Only review your opening statement" },
+          { id: "b", text: "Review your case, anticipate opponent arguments, and prepare responses" },
+          { id: "c", text: "Sleep until the round starts" },
+          { id: "d", text: "Ignore your preparation" },
+        ],
+        correctAnswer: "b",
+        explanation: "Pre-round prep includes reviewing your case, anticipating opposition, and checking topic wording.",
+      },
+      {
+        id: "l4-1-2-q2",
+        question: "Why should you check the topic wording carefully?",
+        options: [
+          { id: "a", text: "It doesn't matter" },
+          { id: "b", text: "To ensure your arguments directly address the resolution" },
+          { id: "c", text: "To memorize it word for word" },
+          { id: "d", text: "Topics never change" },
+        ],
+        correctAnswer: "b",
+        explanation: "Your arguments must directly address the topic - missing key words can make your case irrelevant.",
+      },
+    ],
+  },
+  {
+    lessonId: "l4-2-1",
+    questions: [
+      {
+        id: "l4-2-1-q1",
+        question: "How should you view some nervousness before a debate?",
+        options: [
+          { id: "a", text: "As a sign you should quit" },
+          { id: "b", text: "As something good that keeps you sharp" },
+          { id: "c", text: "As a major problem" },
+          { id: "d", text: "As a reason to skip the round" },
+        ],
+        correctAnswer: "b",
+        explanation: "Some nervousness is beneficial - it keeps you alert and focused during competition.",
+      },
+      {
+        id: "l4-2-1-q2",
+        question: "What should you focus on to manage debate anxiety?",
+        options: [
+          { id: "a", text: "Winning at all costs" },
+          { id: "b", text: "The outcome and trophies" },
+          { id: "c", text: "Your preparation and the process" },
+          { id: "d", text: "What others think of you" },
+        ],
+        correctAnswer: "c",
+        explanation: "Focusing on preparation and process (what you can control) reduces anxiety about outcomes.",
+      },
+    ],
+  },
+  {
+    lessonId: "l4-2-2",
+    questions: [
+      {
+        id: "l4-2-2-q1",
+        question: "How should you approach losing a debate round?",
+        options: [
+          { id: "a", text: "Make excuses about the judge" },
+          { id: "b", text: "View it as a learning opportunity and seek feedback" },
+          { id: "c", text: "Give up on debate" },
+          { id: "d", text: "Blame your partner" },
+        ],
+        correctAnswer: "b",
+        explanation: "Losses are valuable learning opportunities - seek feedback and identify specific improvements.",
+      },
+      {
+        id: "l4-2-2-q2",
+        question: "What do the best debaters do differently with their losses?",
+        options: [
+          { id: "a", text: "Forget about them quickly" },
+          { id: "b", text: "Analyze them more carefully than their wins" },
+          { id: "c", text: "Never lose" },
+          { id: "d", text: "Blame external factors" },
+        ],
+        correctAnswer: "b",
+        explanation: "Top debaters learn more from analyzing losses than celebrating wins - they identify patterns and fix weaknesses.",
+      },
+    ],
+  },
+];
+
+export function getLessonExercise(lessonId: string): LessonExercise | undefined {
+  return LESSON_EXERCISES.find(e => e.lessonId === lessonId);
+}
