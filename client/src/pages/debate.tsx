@@ -78,6 +78,7 @@ export default function Debate() {
   const [cxQuestioner, setCxQuestioner] = useState<"user" | "opponent" | null>(null);
   const [cxAwaitingResponse, setCxAwaitingResponse] = useState(false);
   const [cxExchangeCount, setCxExchangeCount] = useState(0);
+  const [cxStarted, setCxStarted] = useState(false); // Track if first question has been asked
   
   const currentSpeech = format?.speeches[currentSpeechIndex];
   const isUserTurn = currentSpeech ? isUserSpeech(currentSpeech) : false;
@@ -124,17 +125,21 @@ export default function Debate() {
       if (currentSpeech.type === "cross-examination") {
         setIsCxMode(true);
         setCxExchangeCount(0);
-        // In CX, the speaker listed is the questioner
+        // In CX, the speaker listed is the questioner (who asks questions)
         const questioner = isUserSpeech(currentSpeech) ? "user" : "opponent";
         setCxQuestioner(questioner);
         setCxAwaitingResponse(false);
+        // If user is questioner, CX starts immediately; otherwise wait for opponent's first question
+        setCxStarted(questioner === "user");
+        setIsTimerRunning(true); // Timer always runs during CX
       } else {
         setIsCxMode(false);
         setCxQuestioner(null);
-      }
-      
-      if (isUserSpeech(currentSpeech)) {
-        setIsTimerRunning(true);
+        setCxStarted(false);
+        
+        if (isUserSpeech(currentSpeech)) {
+          setIsTimerRunning(true);
+        }
       }
     }
   }, [currentSpeechIndex, format]);
@@ -146,7 +151,9 @@ export default function Debate() {
   }, [customPrepTime]);
 
   useEffect(() => {
-    if (!isTimerRunning || isLoading || !isUserTurn || isDebateComplete) return;
+    // Timer runs when: it's user's turn, OR we're in CX mode (regardless of questioner role)
+    const shouldRun = isTimerRunning && !isLoading && !isDebateComplete && (isUserTurn || isCxMode);
+    if (!shouldRun) return;
     
     const interval = setInterval(() => {
       if (isInPrepTime) {
@@ -168,7 +175,7 @@ export default function Debate() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isTimerRunning, isLoading, isUserTurn, isDebateComplete, isInPrepTime]);
+  }, [isTimerRunning, isLoading, isUserTurn, isDebateComplete, isInPrepTime, isCxMode]);
 
   const handleRequestPrepTime = () => {
     if (prepTimeRemaining > 0 && !isInPrepTime) {
@@ -187,10 +194,11 @@ export default function Debate() {
       const indexToAdvance = currentSpeechIndex;
       
       // Handle CX mode: opponent is questioner and needs to ask first question
-      if (isCxMode && cxQuestioner === "opponent" && !cxAwaitingResponse && cxExchangeCount === 0) {
+      if (isCxMode && cxQuestioner === "opponent" && !cxStarted) {
         const triggerCxQuestion = async () => {
           setIsLoading(true);
           setIsTimerRunning(true);
+          setCxStarted(true); // Mark CX as started to prevent re-triggering
           try {
             const response = await apiRequest("POST", "/api/debate/message", {
               message: null,
@@ -273,7 +281,7 @@ export default function Debate() {
         triggerOpponentSpeech();
       }
     }
-  }, [isInitializing, isUserTurn, currentSpeechIndex, isDebateComplete, isCxMode, cxQuestioner, cxAwaitingResponse, cxExchangeCount]);
+  }, [isInitializing, isUserTurn, currentSpeechIndex, isDebateComplete, isCxMode, cxQuestioner, cxStarted]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -413,12 +421,15 @@ export default function Debate() {
     }
   };
 
-  // Handle advancing from CX to next speech when time runs out
+  // Handle advancing from CX to next speech when user clicks End CX
   const handleEndCx = async () => {
     if (!currentSpeech) return;
     
+    setIsTimerRunning(false);
     setIsLoading(true);
+    
     try {
+      // Generate a brief CX summary/transition message
       const response = await apiRequest("POST", "/api/debate/message", {
         message: null,
         debateId,
@@ -431,25 +442,29 @@ export default function Debate() {
         speechName: currentSpeech.name,
         speechType: currentSpeech.type,
         cxIntent: "cx-timeout",
+        cxExchangeCount,
         previousMessages: messages,
       });
 
       const data = await response.json();
       
-      const timeoutMessage: DebateMessage = {
-        id: `system-${Date.now()}`,
-        role: "opponent",
-        content: data.response,
-        speechId: currentSpeech.id,
-        speechName: currentSpeech.name,
-      };
-
-      setMessages((prev) => [...prev, timeoutMessage]);
+      if (data.response) {
+        const transitionMessage: DebateMessage = {
+          id: `system-${Date.now()}`,
+          role: "opponent",
+          content: data.response,
+          speechId: currentSpeech.id,
+          speechName: currentSpeech.name,
+        };
+        setMessages((prev) => [...prev, transitionMessage]);
+      }
     } catch (error) {
       console.error("Error ending CX:", error);
     } finally {
       setIsLoading(false);
       setIsCxMode(false);
+      setCxStarted(false);
+      setCxAwaitingResponse(false);
       setCurrentSpeechIndex(prev => prev + 1);
     }
   };
