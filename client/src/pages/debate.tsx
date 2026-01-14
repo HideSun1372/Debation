@@ -382,14 +382,14 @@ export default function Debate() {
     
     // Voice mode: Skip typing simulation, play TTS, then show full text after audio finishes
     if (voiceMode) {
-      setIsThinking(true);
+      // Immediately show the message text while generating audio
+      setMessages((prev) => [...prev, message]);
+      setCompletedTypingIds((prev) => new Set([...prev, message.id]));
       pendingOpponentMessageRef.current = message;
+      setVoiceState("opponent_speaking");
       
       playTTS(message.content, () => {
-        // After TTS finishes (or immediately if muted), show the full message
-        setIsThinking(false);
-        setMessages((prev) => [...prev, message]);
-        setCompletedTypingIds((prev) => new Set([...prev, message.id]));
+        // After TTS finishes (or immediately if muted)
         pendingOpponentMessageRef.current = null;
         
         // Set to idle - the auto-start useEffect will handle starting listening if it's user's turn

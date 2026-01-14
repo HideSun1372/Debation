@@ -794,6 +794,19 @@ CRITICAL: Respond ONLY with valid JSON in one of the two formats above.`;
     "final-focus": "Make your closing appeal. Weigh the debate and explain why judges should vote for your side.",
     poi: "Make brief, strategic interventions. Points of Information should be concise (15 seconds max).",
   };
+  
+  // Add variety with different strategic approaches
+  const approaches = [
+    "Focus on practical, real-world impacts and concrete examples.",
+    "Emphasize ethical and moral dimensions of the issue.",
+    "Use economic and cost-benefit analysis.",
+    "Highlight precedents and historical comparisons.",
+    "Focus on rights, freedoms, and individual impacts.",
+    "Emphasize systemic effects and long-term consequences.",
+    "Use expert opinions and academic research.",
+    "Focus on stakeholder perspectives and who is affected.",
+  ];
+  const randomApproach = approaches[Math.floor(Math.random() * approaches.length)];
 
   return `You are an AI debate opponent with the following characteristics:
 Personality: ${personality}
@@ -809,6 +822,9 @@ DEBATE CONTEXT:
 SPEECH-SPECIFIC GUIDANCE:
 ${speechGuidelines[speechType] || "Present your arguments clearly and persuasively."}
 
+STRATEGIC APPROACH FOR THIS DEBATE:
+${randomApproach}
+
 RULES:
 1. Stay in character based on your personality and skill level
 2. Make arguments appropriate for your side and the speech type
@@ -817,6 +833,7 @@ RULES:
 5. Use the claim-warrant-impact framework when making arguments
 6. Be respectful but competitive
 7. Adapt your approach based on the specific speech type
+8. IMPORTANT: Make your arguments unique and creative - do not use generic or repetitive points
 
 Respond as your debate character would, making your best ${speechType} speech for your side.`;
 }
