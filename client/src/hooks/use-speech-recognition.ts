@@ -164,10 +164,29 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
     recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
       console.error("Speech recognition error:", event.error);
+      clearSilenceTimer();
+      
+      // Network errors are often transient - auto-retry after a brief delay
+      if (event.error === "network" || event.error === "aborted") {
+        setIsListening(false);
+        setIsSpeaking(false);
+        // Auto-retry after 500ms for transient errors
+        setTimeout(() => {
+          if (recognitionRef.current) {
+            try {
+              recognitionRef.current.start();
+            } catch (e) {
+              console.error("Failed to restart after network error:", e);
+              setError("network");
+            }
+          }
+        }, 500);
+        return;
+      }
+      
       if (event.error !== "no-speech") {
         setError(event.error);
       }
-      clearSilenceTimer();
       setIsListening(false);
       setIsSpeaking(false);
     };
