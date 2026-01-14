@@ -76,6 +76,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   const transcriptRef = useRef("");
   const interimTranscriptRef = useRef("");
   const hasSpokenRef = useRef(false);
+  const retryCountRef = useRef(0);
+  const maxRetries = 2;
 
   const isSupported = typeof window !== "undefined" && 
     ("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
@@ -123,6 +125,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       setIsListening(true);
       setError(null);
       hasSpokenRef.current = false;
+      retryCountRef.current = 0; // Reset retry count on successful start
     };
 
     recognition.onresult = (event: ISpeechRecognitionEvent) => {
@@ -166,26 +169,32 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       console.error("Speech recognition error:", event.error);
       clearSilenceTimer();
       
-      // Network errors are often transient - auto-retry after a brief delay
-      if (event.error === "network" || event.error === "aborted") {
+      // Network errors are often transient - auto-retry with limit
+      if ((event.error === "network" || event.error === "aborted") && retryCountRef.current < maxRetries) {
+        retryCountRef.current++;
         setIsListening(false);
         setIsSpeaking(false);
-        // Auto-retry after 500ms for transient errors
+        // Auto-retry after 1s for transient errors
         setTimeout(() => {
           if (recognitionRef.current) {
             try {
               recognitionRef.current.start();
             } catch (e) {
               console.error("Failed to restart after network error:", e);
-              setError("network");
+              setError("Microphone connection failed. Click 'Start Speaking' to retry.");
             }
           }
-        }, 500);
+        }, 1000);
         return;
       }
       
       if (event.error !== "no-speech") {
-        setError(event.error);
+        // Provide user-friendly error messages
+        if (event.error === "network") {
+          setError("Microphone connection lost. Click 'Start Speaking' to retry.");
+        } else {
+          setError(event.error);
+        }
       }
       setIsListening(false);
       setIsSpeaking(false);
