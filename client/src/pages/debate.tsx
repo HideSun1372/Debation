@@ -392,13 +392,8 @@ export default function Debate() {
         setCompletedTypingIds((prev) => new Set([...prev, message.id]));
         pendingOpponentMessageRef.current = null;
         
-        // Transition to user's turn - start listening
-        if (isUserTurn && !isDebateComplete) {
-          setVoiceState("listening");
-          speechRecognition.startListening();
-        } else {
-          setVoiceState("idle");
-        }
+        // Set to idle - the auto-start useEffect will handle starting listening if it's user's turn
+        setVoiceState("idle");
       });
       return;
     }
@@ -1185,11 +1180,15 @@ export default function Debate() {
   
   // Auto-start listening when it's user's turn in voice mode
   useEffect(() => {
-    if (voiceMode && isUserTurn && !isLoading && !isDebateComplete && !speechRecognition.isListening && voiceState === "idle") {
-      setVoiceState("listening");
-      speechRecognition.startListening();
+    if (voiceMode && isUserTurn && !isLoading && !isInitializing && !isDebateComplete && !speechRecognition.isListening && voiceState === "idle") {
+      // Small delay to ensure recognition is ready after potential recreation
+      const timer = setTimeout(() => {
+        setVoiceState("listening");
+        speechRecognition.startListening();
+      }, 100);
+      return () => clearTimeout(timer);
     }
-  }, [voiceMode, isUserTurn, isLoading, isDebateComplete, speechRecognition.isListening, voiceState]);
+  }, [voiceMode, isUserTurn, isLoading, isInitializing, isDebateComplete, speechRecognition.isListening, voiceState]);
   
   // Ensure flow sheet is always visible in voice mode
   useEffect(() => {
@@ -1201,11 +1200,15 @@ export default function Debate() {
   // Reset voice state when loading finishes (after sending)
   useEffect(() => {
     if (!isLoading && voiceState === "sending") {
+      // Determine next state based on whose turn it is
       if (isUserTurn && !isDebateComplete) {
-        setVoiceState("listening");
-        speechRecognition.startListening();
-      } else {
+        // Still user's turn (e.g., during CX), go back to idle so auto-start can trigger
+        setVoiceState("idle");
+      } else if (!isDebateComplete) {
+        // Opponent's turn - will transition to opponent_speaking when they respond
         setVoiceState("opponent_speaking");
+      } else {
+        setVoiceState("idle");
       }
     }
   }, [isLoading, voiceState, isUserTurn, isDebateComplete]);
@@ -1697,8 +1700,20 @@ export default function Debate() {
                             <>
                               <div className="flex items-center gap-3">
                                 <div className="w-4 h-4 rounded-full bg-primary animate-pulse" />
-                                <p className="text-lg font-medium text-primary">Listening...</p>
+                                <p className="text-lg font-medium text-primary">
+                                  {speechRecognition.isListening ? "Listening..." : "Starting microphone..."}
+                                </p>
                               </div>
+                              {speechRecognition.error && (
+                                <p className="text-sm text-destructive text-center">
+                                  Microphone error: {speechRecognition.error}
+                                </p>
+                              )}
+                              {!speechRecognition.isSupported && (
+                                <p className="text-sm text-destructive text-center">
+                                  Speech recognition not supported in this browser. Try Chrome.
+                                </p>
+                              )}
                               <p className="text-sm text-muted-foreground text-center max-w-md">
                                 {speechRecognition.transcript || speechRecognition.interimTranscript 
                                   ? (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim()
@@ -1761,7 +1776,25 @@ export default function Debate() {
                           )}
                           {voiceState === "idle" && !isLoading && (
                             <>
-                              <p className="text-muted-foreground">Waiting for your turn...</p>
+                              {isUserTurn ? (
+                                <>
+                                  <p className="text-muted-foreground">Ready to listen...</p>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                      setVoiceState("listening");
+                                      speechRecognition.startListening();
+                                    }}
+                                    data-testid="button-start-listening"
+                                  >
+                                    <Mic className="h-4 w-4 mr-2" />
+                                    Start Speaking
+                                  </Button>
+                                </>
+                              ) : (
+                                <p className="text-muted-foreground">Waiting for your turn...</p>
+                              )}
                             </>
                           )}
                         </div>
