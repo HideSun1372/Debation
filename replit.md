@@ -20,6 +20,14 @@ Debation is an educational debate platform where users practice debating against
 - **CX intents**: Backend uses cx-question, cx-answer, cx-followup, cx-timeout prompts for single-turn responses
 - **End CX**: User can manually end CX to advance to next speech
 
+### Voice Debate Mode
+- **Hybrid approach**: Browser Web Speech API for user speech-to-text (free), OpenAI gpt-audio-mini for AI text-to-speech
+- **Opt-in toggle**: Enabled via Voice Mode switch on practice page setup screen
+- **Speech recognition**: Custom useSpeechRecognition hook wrapping Web Speech API with TypeScript types
+- **TTS endpoint**: /api/tts uses gpt-audio-mini with typed content array format, returns MP3 audio buffer
+- **Voice controls**: Mic button toggles speech recognition, mute button for AI audio, live transcript in textarea
+- **Transcript sync**: useEffect syncs transcript to input when recognition stops, hook finalizes interim transcript on end
+
 ### Curriculum Structure
 - 365 lessons across 52 units organized into 5 skill-based sections
 - Sections: Fundamentals (Beginner), Core Skills (Beginner-Intermediate), Format Mastery (Intermediate), Advanced Techniques (Advanced), Championship Preparation (Master)

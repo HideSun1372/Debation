@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation, useSearch } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,9 +9,10 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useUser } from "@/lib/user-context";
 import { AI_OPPONENTS, DEBATE_TOPICS, DEBATE_FORMATS, getSkillTier, type DebateSpeech } from "@shared/schema";
-import { Send, Clock, User, Bot, Trophy, TrendingUp, TrendingDown, ArrowLeft, Loader2, Play, MessageSquare, Timer, ChevronRight, FileText, Gavel, PanelRightOpen, PanelRightClose } from "lucide-react";
+import { Send, Clock, User, Bot, Trophy, TrendingUp, TrendingDown, ArrowLeft, Loader2, Play, MessageSquare, Timer, ChevronRight, FileText, Gavel, PanelRightOpen, PanelRightClose, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
+import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
 
 interface DebateMessage {
   id: string;
@@ -46,6 +47,7 @@ export default function Debate() {
     try { return JSON.parse(params.get("speechTimes") || "{}"); } 
     catch { return {}; }
   })();
+  const voiceMode = params.get("voiceMode") === "true";
 
   const opponent = AI_OPPONENTS.find((o) => o.id === opponentId);
   const topic = DEBATE_TOPICS.find((t) => t.id === topicId);
@@ -95,6 +97,26 @@ export default function Debate() {
   const thinkingDelayRef = useRef<NodeJS.Timeout | null>(null);
   const [isThinking, setIsThinking] = useState(false);
   const [completedTypingIds, setCompletedTypingIds] = useState<Set<string>>(new Set());
+  
+  // Voice mode state
+  const speechRecognition = useSpeechRecognition();
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [audioMuted, setAudioMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const wasListeningRef = useRef(false);
+  
+  // Sync transcript to inputValue when speech recognition stops
+  useEffect(() => {
+    // Detect when listening transitions from true to false
+    if (wasListeningRef.current && !speechRecognition.isListening && voiceMode) {
+      // Merge both transcript and interimTranscript to capture all spoken content
+      const fullTranscript = (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim();
+      if (fullTranscript) {
+        setInputValue(fullTranscript);
+      }
+    }
+    wasListeningRef.current = speechRecognition.isListening;
+  }, [speechRecognition.isListening, speechRecognition.transcript, speechRecognition.interimTranscript, voiceMode]);
   
   // Cross-examination (CX) state
   const [isCxMode, setIsCxMode] = useState(false);
@@ -295,6 +317,48 @@ export default function Debate() {
     return visibleWords.join(" ");
   };
 
+  // Play TTS audio for AI opponent's message
+  const playTTS = useCallback(async (text: string) => {
+    if (audioMuted || !voiceMode) return;
+    
+    try {
+      setIsAudioPlaying(true);
+      const response = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, voice: "onyx" }),
+      });
+      
+      if (!response.ok) {
+        console.error("TTS failed:", await response.text());
+        setIsAudioPlaying(false);
+        return;
+      }
+      
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      audio.onended = () => {
+        setIsAudioPlaying(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+      audio.onerror = () => {
+        setIsAudioPlaying(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+      audio.play();
+    } catch (error) {
+      console.error("TTS error:", error);
+      setIsAudioPlaying(false);
+    }
+  }, [audioMuted, voiceMode]);
+
   // Shared helper to add opponent message with mode-specific typing simulation
   // mode: "regular" (full delay), "cx" (fast), "crossfire" (fast)
   const enqueueAiMessage = (message: DebateMessage, mode: "regular" | "cx" | "crossfire" = "regular") => {
@@ -347,6 +411,11 @@ export default function Debate() {
         messageId: message.id,
         mode,
       });
+      
+      // Play TTS audio for AI response in voice mode
+      if (voiceMode) {
+        playTTS(message.content);
+      }
     }, thinkTime);
   };
 
@@ -694,8 +763,9 @@ export default function Debate() {
     }
   };
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading || !currentSpeech || !format) return;
+  const handleSendMessage = async (messageOverride?: string) => {
+    const messageText = messageOverride ?? inputValue;
+    if (!messageText.trim() || isLoading || !currentSpeech || !format) return;
 
     // In crossfire mode, determine if this is a valid turn or if user should be called out
     // We allow sending in answering phase so opponent can call them out if needed
@@ -703,13 +773,14 @@ export default function Debate() {
     const userMessage: DebateMessage = {
       id: `user-${Date.now()}`,
       role: "user",
-      content: inputValue.trim(),
+      content: messageText.trim(),
       speechId: currentSpeech.id,
       speechName: currentSpeech.name,
     };
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
+    speechRecognition.resetTranscript();
     setIsLoading(true);
 
     try {
@@ -1072,7 +1143,16 @@ export default function Debate() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      // If in voice mode and was listening, grab transcript synchronously
+      if (voiceMode && speechRecognition.isListening) {
+        const fullTranscript = (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim();
+        speechRecognition.stopListening();
+        if (fullTranscript) {
+          handleSendMessage(fullTranscript);
+        }
+      } else {
+        handleSendMessage();
+      }
     }
   };
 
@@ -1546,18 +1626,87 @@ export default function Debate() {
                     
                     return (
                       <>
-                        <Textarea
-                          value={inputValue}
-                          onChange={(e) => setInputValue(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          placeholder={getPlaceholder()}
-                          className="min-h-[80px] resize-none"
-                          disabled={inputDisabled}
-                          data-testid="input-message"
-                        />
+                        {voiceMode && (
+                          <div className="flex flex-col gap-2 mr-2">
+                            <Button
+                              size="icon"
+                              variant={speechRecognition.isListening ? "default" : "outline"}
+                              onClick={() => {
+                                if (speechRecognition.isListening) {
+                                  speechRecognition.stopListening();
+                                  // Transfer transcript to input
+                                  const fullTranscript = speechRecognition.transcript + speechRecognition.interimTranscript;
+                                  if (fullTranscript.trim()) {
+                                    setInputValue(fullTranscript.trim());
+                                  }
+                                } else {
+                                  speechRecognition.resetTranscript();
+                                  speechRecognition.startListening();
+                                }
+                              }}
+                              disabled={inputDisabled || !speechRecognition.isSupported}
+                              data-testid="button-voice-input"
+                              className={cn(speechRecognition.isListening && "animate-pulse")}
+                            >
+                              {speechRecognition.isListening ? (
+                                <Mic className="h-5 w-5" />
+                              ) : (
+                                <MicOff className="h-5 w-5" />
+                              )}
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => setAudioMuted(!audioMuted)}
+                              data-testid="button-mute-audio"
+                            >
+                              {audioMuted ? (
+                                <VolumeX className="h-4 w-4" />
+                              ) : (
+                                <Volume2 className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                        )}
+                        <div className="flex-1 flex flex-col gap-1">
+                          <Textarea
+                            value={speechRecognition.isListening 
+                              ? speechRecognition.transcript + speechRecognition.interimTranscript 
+                              : inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            placeholder={voiceMode && speechRecognition.isListening 
+                              ? "Listening... speak now" 
+                              : getPlaceholder()}
+                            className="min-h-[80px] resize-none"
+                            disabled={inputDisabled || speechRecognition.isListening}
+                            data-testid="input-message"
+                          />
+                          {voiceMode && speechRecognition.isListening && (
+                            <p className="text-xs text-primary animate-pulse">
+                              Listening... click mic again when done
+                            </p>
+                          )}
+                          {voiceMode && isAudioPlaying && (
+                            <p className="text-xs text-muted-foreground">
+                              AI is speaking...
+                            </p>
+                          )}
+                        </div>
                         <Button 
-                          onClick={handleSendMessage} 
-                          disabled={!inputValue.trim() || inputDisabled}
+                          onClick={() => {
+                            // If listening, stop and pass transcript directly to send handler
+                            if (speechRecognition.isListening) {
+                              const fullTranscript = (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim();
+                              speechRecognition.stopListening();
+                              if (fullTranscript) {
+                                handleSendMessage(fullTranscript);
+                                return;
+                              }
+                            }
+                            handleSendMessage();
+                          }} 
+                          disabled={(!inputValue.trim() && !speechRecognition.transcript.trim()) || inputDisabled}
                           className="h-auto"
                           data-testid="button-send"
                         >

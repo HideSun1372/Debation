@@ -14,7 +14,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUser } from "@/lib/user-context";
 import { AI_OPPONENTS, DEBATE_TOPICS, DEBATE_FORMATS, getSkillTier, type AIOpponent, type DebateFormatConfig, type DebateSpeech } from "@shared/schema";
-import { Swords, User, Target, ArrowRight, Clock, Circle, Hexagon, Star, Crown, Settings, ChevronDown, Users, Timer, MessageSquare, Shuffle, Gavel } from "lucide-react";
+import { Swords, User, Target, ArrowRight, Clock, Circle, Hexagon, Star, Crown, Settings, ChevronDown, Users, Timer, MessageSquare, Shuffle, Gavel, Mic, MicOff } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 const tierIcons = {
@@ -56,6 +57,7 @@ export default function Practice() {
   const [selectedTopic, setSelectedTopic] = useState<string>("");
   const [selectedSide, setSelectedSide] = useState<"pro" | "con" | "random">("pro");
   const [selectedJudgeType, setSelectedJudgeType] = useState<"lay" | "traditional" | "circuit" | "random">("traditional");
+  const [voiceMode, setVoiceMode] = useState(false);
   const [filterTier, setFilterTier] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   
@@ -118,6 +120,7 @@ export default function Practice() {
       judgeType: actualJudgeType,
       prepTime: prepTime.toString(),
       speechTimes: JSON.stringify(speechTimes),
+      voiceMode: voiceMode.toString(),
     });
     
     setLocation(`/debate?${params.toString()}`);
@@ -686,6 +689,47 @@ export default function Practice() {
 
           <Card>
             <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Mic className="h-5 w-5" />
+                Voice Mode
+              </CardTitle>
+              <CardDescription>
+                Debate using your voice instead of typing
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between p-4 rounded-lg border-2 border-border">
+                <div className="flex items-center gap-4">
+                  {voiceMode ? (
+                    <Mic className="h-6 w-6 text-primary" />
+                  ) : (
+                    <MicOff className="h-6 w-6 text-muted-foreground" />
+                  )}
+                  <div>
+                    <p className="font-semibold">{voiceMode ? "Voice Debate Enabled" : "Text Debate (Default)"}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {voiceMode 
+                        ? "Speak your arguments - AI opponent will speak back" 
+                        : "Type your arguments in the text box"}
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={voiceMode}
+                  onCheckedChange={setVoiceMode}
+                  data-testid="switch-voice-mode"
+                />
+              </div>
+              {voiceMode && (
+                <p className="text-xs text-muted-foreground mt-3">
+                  Voice mode uses your microphone and speakers. Make sure they're connected and your browser allows microphone access.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle className="text-lg">Debate Summary</CardTitle>
             </CardHeader>
             <CardContent>
@@ -730,6 +774,12 @@ export default function Practice() {
                      selectedJudgeType === "traditional" ? "Traditional" :
                      selectedJudgeType === "circuit" ? "Circuit" :
                      "Random"}
+                  </Badge>
+                </div>
+                <div className="flex justify-between py-2 border-b">
+                  <span className="text-muted-foreground">Voice Mode</span>
+                  <Badge variant="outline" className={voiceMode ? "border-primary text-primary" : ""}>
+                    {voiceMode ? "Enabled" : "Disabled"}
                   </Badge>
                 </div>
                 <div className="flex justify-between py-2 border-b">

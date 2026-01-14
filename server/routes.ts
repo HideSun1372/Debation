@@ -467,6 +467,82 @@ Respond with a JSON object:
     }
   });
 
+  // Text-to-Speech endpoint for AI opponent voice
+  app.post("/api/tts", async (req, res) => {
+    try {
+      const { text, voice = "alloy" } = req.body;
+      
+      if (!text || typeof text !== "string") {
+        return res.status(400).json({ error: "Text is required" });
+      }
+
+      // Truncate to 4096 characters (OpenAI TTS limit)
+      const truncatedText = text.slice(0, 4096);
+
+      // Use chat-completions with audio output via gpt-audio-mini
+      // Using typed content array format as required by Replit AI Integrations
+      const response = await openai.chat.completions.create({
+        model: "gpt-audio-mini",
+        modalities: ["text", "audio"],
+        audio: {
+          voice: voice as "alloy" | "ash" | "coral" | "echo" | "fable" | "onyx" | "nova" | "sage" | "shimmer",
+          format: "mp3",
+        },
+        messages: [
+          {
+            role: "system",
+            content: [
+              {
+                type: "text",
+                text: "You are a text-to-speech converter. Speak the user's message exactly as given, with natural speech patterns. Do not add any commentary or changes."
+              }
+            ]
+          },
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: truncatedText
+              }
+            ]
+          }
+        ],
+      } as any);
+
+      // Extract audio from response content parts
+      const message = response.choices[0]?.message;
+      let audioData: string | undefined;
+      
+      // Check for audio in content array
+      if (Array.isArray((message as any)?.content)) {
+        const audioPart = (message as any).content.find((part: any) => part.type === "audio");
+        audioData = audioPart?.data || audioPart?.audio;
+      }
+      
+      // Fallback: check message.audio property
+      if (!audioData && (message as any)?.audio?.data) {
+        audioData = (message as any).audio.data;
+      }
+      
+      if (!audioData) {
+        console.error("TTS response structure:", JSON.stringify(response.choices[0], null, 2));
+        return res.status(500).json({ error: "No audio generated" });
+      }
+
+      // Convert base64 to buffer and send as audio
+      const audioBuffer = Buffer.from(audioData, "base64");
+      res.set({
+        "Content-Type": "audio/mpeg",
+        "Content-Length": audioBuffer.length,
+      });
+      res.send(audioBuffer);
+    } catch (error) {
+      console.error("Error generating TTS:", error);
+      res.status(500).json({ error: "Failed to generate speech" });
+    }
+  });
+
   return httpServer;
 }
 
