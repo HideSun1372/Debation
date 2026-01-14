@@ -71,13 +71,13 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   const [transcript, setTranscript] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [instanceKey, setInstanceKey] = useState(0); // Trigger recreation
+  
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const transcriptRef = useRef("");
   const interimTranscriptRef = useRef("");
   const hasSpokenRef = useRef(false);
-  const retryCountRef = useRef(0);
-  const maxRetries = 2;
 
   const isSupported = typeof window !== "undefined" && 
     ("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
@@ -91,7 +91,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
   const handleSilenceTimeout = useCallback(() => {
     if (autoMode && hasSpokenRef.current) {
-      // Include both finalized transcript and any interim text that hasn't been finalized yet
       const fullTranscript = (transcriptRef.current + " " + interimTranscriptRef.current).trim();
       if (fullTranscript) {
         if (recognitionRef.current) {
@@ -111,6 +110,21 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     }
   }, [autoMode, silenceTimeout, clearSilenceTimer, handleSilenceTimeout]);
 
+  // Recreate recognition instance - called after network errors
+  const recreateInstance = useCallback(() => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (e) {
+        // Ignore abort errors
+      }
+      recognitionRef.current = null;
+    }
+    // Trigger useEffect to create new instance
+    setInstanceKey(k => k + 1);
+  }, []);
+
+  // Create/recreate the recognition instance
   useEffect(() => {
     if (!isSupported) return;
 
@@ -125,7 +139,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       setIsListening(true);
       setError(null);
       hasSpokenRef.current = false;
-      retryCountRef.current = 0; // Reset retry count on successful start
     };
 
     recognition.onresult = (event: ISpeechRecognitionEvent) => {
@@ -154,7 +167,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
           transcriptRef.current = newTranscript;
           return newTranscript;
         });
-        // Clear interim ref when text is finalized
         interimTranscriptRef.current = "";
       }
       setInterimTranscript(interim);
@@ -168,36 +180,19 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
       console.error("Speech recognition error:", event.error);
       clearSilenceTimer();
+      setIsListening(false);
+      setIsSpeaking(false);
       
-      // Network errors are often transient - auto-retry with limit
-      if ((event.error === "network" || event.error === "aborted") && retryCountRef.current < maxRetries) {
-        retryCountRef.current++;
-        setIsListening(false);
-        setIsSpeaking(false);
-        // Auto-retry after 1s for transient errors
-        setTimeout(() => {
-          if (recognitionRef.current) {
-            try {
-              recognitionRef.current.start();
-            } catch (e) {
-              console.error("Failed to restart after network error:", e);
-              setError("Microphone connection failed. Click 'Start Speaking' to retry.");
-            }
-          }
-        }, 1000);
+      // For network/aborted errors, recreate the instance (it's dead)
+      if (event.error === "network" || event.error === "aborted") {
+        // Don't set error - just recreate silently, user can click to retry
+        recreateInstance();
         return;
       }
       
       if (event.error !== "no-speech") {
-        // Provide user-friendly error messages
-        if (event.error === "network") {
-          setError("Microphone connection lost. Click 'Start Speaking' to retry.");
-        } else {
-          setError(event.error);
-        }
+        setError(event.error);
       }
-      setIsListening(false);
-      setIsSpeaking(false);
     };
 
     recognition.onend = () => {
@@ -220,24 +215,37 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
     return () => {
       clearSilenceTimer();
-      recognition.abort();
+      try {
+        recognition.abort();
+      } catch (e) {
+        // Ignore
+      }
     };
-  }, [isSupported, autoMode, resetSilenceTimer, clearSilenceTimer]);
+  }, [isSupported, autoMode, instanceKey, resetSilenceTimer, clearSilenceTimer, recreateInstance]);
 
   const startListening = useCallback(() => {
-    if (recognitionRef.current && !isListening) {
+    if (!recognitionRef.current) {
+      // Instance doesn't exist yet, recreate
+      recreateInstance();
+      return;
+    }
+    
+    if (!isListening) {
       setTranscript("");
       setInterimTranscript("");
       transcriptRef.current = "";
+      interimTranscriptRef.current = "";
       hasSpokenRef.current = false;
       setError(null);
       try {
         recognitionRef.current.start();
       } catch (e) {
         console.error("Failed to start speech recognition:", e);
+        // Instance might be in bad state, recreate it
+        recreateInstance();
       }
     }
-  }, [isListening]);
+  }, [isListening, recreateInstance]);
 
   const stopListening = useCallback(() => {
     clearSilenceTimer();
