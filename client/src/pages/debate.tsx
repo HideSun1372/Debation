@@ -1188,6 +1188,17 @@ export default function Debate() {
     }
   }, [voiceMode, isUserTurn, isLoading, isInitializing, isDebateComplete, speechRecognition.isListening, voiceState]);
   
+  // Detect when recognition unexpectedly stops (e.g., network error) and reset state
+  useEffect(() => {
+    if (voiceMode && voiceState === "listening" && !speechRecognition.isListening) {
+      // Recognition stopped while we expected it to be listening - reset to idle after a delay
+      const timer = setTimeout(() => {
+        setVoiceState("idle");
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [voiceMode, voiceState, speechRecognition.isListening]);
+  
   // Ensure flow sheet is always visible in voice mode
   useEffect(() => {
     if (voiceMode && !showFlowSheet) {

@@ -225,8 +225,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current) {
-      // Instance doesn't exist yet, recreate
-      recreateInstance();
+      // Instance doesn't exist - this shouldn't normally happen
+      console.warn("Recognition instance not ready");
       return;
     }
     
@@ -239,9 +239,14 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       setError(null);
       try {
         recognitionRef.current.start();
-      } catch (e) {
-        console.error("Failed to start speech recognition:", e);
-        // Instance might be in bad state, recreate it
+      } catch (e: unknown) {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        console.error("Failed to start speech recognition:", errorMessage);
+        // If it's an "already started" error, ignore it
+        if (errorMessage.includes("already started")) {
+          return;
+        }
+        // For other errors, recreate the instance for next attempt
         recreateInstance();
       }
     }
