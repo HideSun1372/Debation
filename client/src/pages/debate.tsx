@@ -380,16 +380,14 @@ export default function Debate() {
     // Clear any existing typing state
     setTypingMessage(null);
     
-    // Voice mode: Play TTS first, then show text ONLY AFTER audio finishes
-    // This forces users to flow (take notes) by ear, simulating real debate conditions
+    // Voice mode: Play TTS only - text NEVER appears for opponent messages
+    // User must rely entirely on their flow notes, simulating real debate conditions
     if (voiceMode) {
       pendingOpponentMessageRef.current = message;
       setVoiceState("opponent_speaking");
       
       playTTS(message.content, () => {
-        // ONLY after TTS finishes, show the full message text
-        setMessages((prev) => [...prev, message]);
-        setCompletedTypingIds((prev) => new Set([...prev, message.id]));
+        // DO NOT add message to visible messages - user must flow by ear only
         pendingOpponentMessageRef.current = null;
         
         // Set to idle - the auto-start useEffect will handle starting listening if it's user's turn
