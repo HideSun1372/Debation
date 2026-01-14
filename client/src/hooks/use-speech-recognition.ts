@@ -1,5 +1,11 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
+interface UseSpeechRecognitionOptions {
+  silenceTimeout?: number;
+  onSpeechEnd?: (transcript: string) => void;
+  autoMode?: boolean;
+}
+
 interface UseSpeechRecognitionReturn {
   isListening: boolean;
   transcript: string;
@@ -9,6 +15,7 @@ interface UseSpeechRecognitionReturn {
   resetTranscript: () => void;
   isSupported: boolean;
   error: string | null;
+  isSpeaking: boolean;
 }
 
 interface ISpeechRecognition extends EventTarget {
@@ -19,6 +26,7 @@ interface ISpeechRecognition extends EventTarget {
   onresult: ((event: ISpeechRecognitionEvent) => void) | null;
   onerror: ((event: ISpeechRecognitionErrorEvent) => void) | null;
   onend: (() => void) | null;
+  onspeechend: (() => void) | null;
   start: () => void;
   stop: () => void;
   abort: () => void;
@@ -55,15 +63,51 @@ declare global {
   }
 }
 
-export function useSpeechRecognition(): UseSpeechRecognitionReturn {
+export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}): UseSpeechRecognitionReturn {
+  const { silenceTimeout = 1500, onSpeechEnd, autoMode = false } = options;
+  
   const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const transcriptRef = useRef("");
+  const interimTranscriptRef = useRef("");
+  const hasSpokenRef = useRef(false);
 
   const isSupported = typeof window !== "undefined" && 
     ("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
+
+  const clearSilenceTimer = useCallback(() => {
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+  }, []);
+
+  const handleSilenceTimeout = useCallback(() => {
+    if (autoMode && hasSpokenRef.current) {
+      // Include both finalized transcript and any interim text that hasn't been finalized yet
+      const fullTranscript = (transcriptRef.current + " " + interimTranscriptRef.current).trim();
+      if (fullTranscript) {
+        if (recognitionRef.current) {
+          recognitionRef.current.stop();
+        }
+        if (onSpeechEnd) {
+          onSpeechEnd(fullTranscript);
+        }
+      }
+    }
+  }, [autoMode, onSpeechEnd]);
+
+  const resetSilenceTimer = useCallback(() => {
+    clearSilenceTimer();
+    if (autoMode && hasSpokenRef.current) {
+      silenceTimerRef.current = setTimeout(handleSilenceTimeout, silenceTimeout);
+    }
+  }, [autoMode, silenceTimeout, clearSilenceTimer, handleSilenceTimeout]);
 
   useEffect(() => {
     if (!isSupported) return;
@@ -78,6 +122,7 @@ export function useSpeechRecognition(): UseSpeechRecognitionReturn {
     recognition.onstart = () => {
       setIsListening(true);
       setError(null);
+      hasSpokenRef.current = false;
     };
 
     recognition.onresult = (event: ISpeechRecognitionEvent) => {
@@ -95,40 +140,68 @@ export function useSpeechRecognition(): UseSpeechRecognitionReturn {
         }
       }
 
+      if (final || interim) {
+        hasSpokenRef.current = true;
+        setIsSpeaking(true);
+      }
+
       if (final) {
-        setTranscript((prev) => prev + final);
+        setTranscript((prev) => {
+          const newTranscript = prev + final;
+          transcriptRef.current = newTranscript;
+          return newTranscript;
+        });
+        // Clear interim ref when text is finalized
+        interimTranscriptRef.current = "";
       }
       setInterimTranscript(interim);
+      interimTranscriptRef.current = interim;
+      
+      if (autoMode) {
+        resetSilenceTimer();
+      }
     };
 
     recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
       console.error("Speech recognition error:", event.error);
-      setError(event.error);
+      if (event.error !== "no-speech") {
+        setError(event.error);
+      }
+      clearSilenceTimer();
       setIsListening(false);
+      setIsSpeaking(false);
     };
 
     recognition.onend = () => {
-      // Finalize any remaining interim transcript before clearing
+      clearSilenceTimer();
       setInterimTranscript((prevInterim) => {
         if (prevInterim.trim()) {
-          setTranscript((prevTranscript) => (prevTranscript + " " + prevInterim).trim());
+          setTranscript((prevTranscript) => {
+            const newTranscript = (prevTranscript + " " + prevInterim).trim();
+            transcriptRef.current = newTranscript;
+            return newTranscript;
+          });
         }
         return "";
       });
       setIsListening(false);
+      setIsSpeaking(false);
     };
 
     recognitionRef.current = recognition;
 
     return () => {
+      clearSilenceTimer();
       recognition.abort();
     };
-  }, [isSupported]);
+  }, [isSupported, autoMode, resetSilenceTimer, clearSilenceTimer]);
 
   const startListening = useCallback(() => {
     if (recognitionRef.current && !isListening) {
       setTranscript("");
       setInterimTranscript("");
+      transcriptRef.current = "";
+      hasSpokenRef.current = false;
       setError(null);
       try {
         recognitionRef.current.start();
@@ -139,18 +212,23 @@ export function useSpeechRecognition(): UseSpeechRecognitionReturn {
   }, [isListening]);
 
   const stopListening = useCallback(() => {
+    clearSilenceTimer();
     if (recognitionRef.current && isListening) {
       recognitionRef.current.stop();
     }
-  }, [isListening]);
+  }, [isListening, clearSilenceTimer]);
 
   const resetTranscript = useCallback(() => {
     setTranscript("");
     setInterimTranscript("");
+    transcriptRef.current = "";
+    interimTranscriptRef.current = "";
+    hasSpokenRef.current = false;
   }, []);
 
   return {
     isListening,
+    isSpeaking,
     transcript,
     interimTranscript,
     startListening,

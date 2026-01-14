@@ -98,25 +98,22 @@ export default function Debate() {
   const [isThinking, setIsThinking] = useState(false);
   const [completedTypingIds, setCompletedTypingIds] = useState<Set<string>>(new Set());
   
-  // Voice mode state
-  const speechRecognition = useSpeechRecognition();
+  // Voice mode state - voice-first debate flow
+  const [voiceState, setVoiceState] = useState<"idle" | "listening" | "sending" | "opponent_speaking">("idle");
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [audioMuted, setAudioMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const wasListeningRef = useRef(false);
+  const pendingOpponentMessageRef = useRef<DebateMessage | null>(null);
+  const voiceSendRef = useRef<(transcript: string) => void>(() => {});
   
-  // Sync transcript to inputValue when speech recognition stops
-  useEffect(() => {
-    // Detect when listening transitions from true to false
-    if (wasListeningRef.current && !speechRecognition.isListening && voiceMode) {
-      // Merge both transcript and interimTranscript to capture all spoken content
-      const fullTranscript = (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim();
-      if (fullTranscript) {
-        setInputValue(fullTranscript);
-      }
-    }
-    wasListeningRef.current = speechRecognition.isListening;
-  }, [speechRecognition.isListening, speechRecognition.transcript, speechRecognition.interimTranscript, voiceMode]);
+  // Speech recognition with auto-mode for voice debates
+  const speechRecognition = useSpeechRecognition({
+    autoMode: voiceMode,
+    silenceTimeout: 1500,
+    onSpeechEnd: useCallback((transcript: string) => {
+      voiceSendRef.current(transcript);
+    }, []),
+  });
   
   // Cross-examination (CX) state
   const [isCxMode, setIsCxMode] = useState(false);
@@ -318,11 +315,15 @@ export default function Debate() {
   };
 
   // Play TTS audio for AI opponent's message
-  const playTTS = useCallback(async (text: string) => {
-    if (audioMuted || !voiceMode) return;
+  const playTTS = useCallback(async (text: string, onComplete?: () => void): Promise<void> => {
+    if (audioMuted) {
+      onComplete?.();
+      return;
+    }
     
     try {
       setIsAudioPlaying(true);
+      setVoiceState("opponent_speaking");
       const response = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -332,6 +333,7 @@ export default function Debate() {
       if (!response.ok) {
         console.error("TTS failed:", await response.text());
         setIsAudioPlaying(false);
+        onComplete?.();
         return;
       }
       
@@ -347,17 +349,20 @@ export default function Debate() {
       audio.onended = () => {
         setIsAudioPlaying(false);
         URL.revokeObjectURL(audioUrl);
+        onComplete?.();
       };
       audio.onerror = () => {
         setIsAudioPlaying(false);
         URL.revokeObjectURL(audioUrl);
+        onComplete?.();
       };
       audio.play();
     } catch (error) {
       console.error("TTS error:", error);
       setIsAudioPlaying(false);
+      onComplete?.();
     }
-  }, [audioMuted, voiceMode]);
+  }, [audioMuted]);
 
   // Shared helper to add opponent message with mode-specific typing simulation
   // mode: "regular" (full delay), "cx" (fast), "crossfire" (fast)
@@ -375,6 +380,30 @@ export default function Debate() {
     // Clear any existing typing state
     setTypingMessage(null);
     
+    // Voice mode: Skip typing simulation, play TTS, then show full text after audio finishes
+    if (voiceMode) {
+      setIsThinking(true);
+      pendingOpponentMessageRef.current = message;
+      
+      playTTS(message.content, () => {
+        // After TTS finishes (or immediately if muted), show the full message
+        setIsThinking(false);
+        setMessages((prev) => [...prev, message]);
+        setCompletedTypingIds((prev) => new Set([...prev, message.id]));
+        pendingOpponentMessageRef.current = null;
+        
+        // Transition to user's turn - start listening
+        if (isUserTurn && !isDebateComplete) {
+          setVoiceState("listening");
+          speechRecognition.startListening();
+        } else {
+          setVoiceState("idle");
+        }
+      });
+      return;
+    }
+    
+    // Non-voice mode: Use typing simulation
     // Calculate mode-specific "thinking" delay before typing starts
     const wordCount = message.content.split(/\s+/).length;
     let thinkTime: number;
@@ -411,11 +440,6 @@ export default function Debate() {
         messageId: message.id,
         mode,
       });
-      
-      // Play TTS audio for AI response in voice mode
-      if (voiceMode) {
-        playTTS(message.content);
-      }
     }, thinkTime);
   };
 
@@ -1143,18 +1167,48 @@ export default function Debate() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      // If in voice mode and was listening, grab transcript synchronously
-      if (voiceMode && speechRecognition.isListening) {
-        const fullTranscript = (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim();
-        speechRecognition.stopListening();
-        if (fullTranscript) {
-          handleSendMessage(fullTranscript);
-        }
-      } else {
-        handleSendMessage();
-      }
+      // In voice mode, manual send is disabled - speech auto-sends
+      if (voiceMode) return;
+      handleSendMessage();
     }
   };
+  
+  // Wire up voice send ref after handleSendMessage is defined
+  useEffect(() => {
+    voiceSendRef.current = (transcript: string) => {
+      if (transcript.trim() && voiceMode && voiceState === "listening") {
+        setVoiceState("sending");
+        handleSendMessage(transcript);
+      }
+    };
+  }, [voiceMode, voiceState]);
+  
+  // Auto-start listening when it's user's turn in voice mode
+  useEffect(() => {
+    if (voiceMode && isUserTurn && !isLoading && !isDebateComplete && !speechRecognition.isListening && voiceState === "idle") {
+      setVoiceState("listening");
+      speechRecognition.startListening();
+    }
+  }, [voiceMode, isUserTurn, isLoading, isDebateComplete, speechRecognition.isListening, voiceState]);
+  
+  // Ensure flow sheet is always visible in voice mode
+  useEffect(() => {
+    if (voiceMode && !showFlowSheet) {
+      setShowFlowSheet(true);
+    }
+  }, [voiceMode, showFlowSheet]);
+  
+  // Reset voice state when loading finishes (after sending)
+  useEffect(() => {
+    if (!isLoading && voiceState === "sending") {
+      if (isUserTurn && !isDebateComplete) {
+        setVoiceState("listening");
+        speechRecognition.startListening();
+      } else {
+        setVoiceState("opponent_speaking");
+      }
+    }
+  }, [isLoading, voiceState, isUserTurn, isDebateComplete]);
 
   if (!opponent || !topic || !format) {
     return null;
@@ -1403,11 +1457,19 @@ export default function Debate() {
         </div>
         
         {showFlowSheet && (
-          <div className="w-80 border-l bg-background/95 backdrop-blur-sm flex flex-col flex-shrink-0">
+          <div className={cn(
+            "border-l bg-background/95 backdrop-blur-sm flex flex-col flex-shrink-0",
+            voiceMode ? "w-96" : "w-80"
+          )}>
             <div className="p-3 border-b flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-muted-foreground" />
                 <span className="font-medium text-sm">Flow Sheet</span>
+                {voiceMode && (
+                  <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">
+                    Voice Mode
+                  </Badge>
+                )}
               </div>
               <Button 
                 variant="ghost" 
@@ -1465,7 +1527,11 @@ export default function Debate() {
                 {(!format || currentSpeechIndex === 0) && (
                   <div className="text-center py-8 text-muted-foreground">
                     <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <p className="text-xs">Flow notes will appear here as the debate progresses</p>
+                    <p className="text-xs">
+                      {voiceMode 
+                        ? "Take notes while your opponent speaks - you won't see their text until they finish!" 
+                        : "Flow notes will appear here as the debate progresses"}
+                    </p>
                   </div>
                 )}
               </div>
@@ -1625,105 +1691,116 @@ export default function Debate() {
                     };
                     
                     return (
-                      <>
-                        {voiceMode && (
-                          <div className="flex flex-col gap-2 mr-2">
-                            <Button
-                              size="icon"
-                              variant={speechRecognition.isListening ? "default" : "outline"}
-                              onClick={() => {
-                                if (speechRecognition.isListening) {
-                                  speechRecognition.stopListening();
-                                  // Transfer transcript to input
-                                  const fullTranscript = speechRecognition.transcript + speechRecognition.interimTranscript;
-                                  if (fullTranscript.trim()) {
-                                    setInputValue(fullTranscript.trim());
-                                  }
-                                } else {
-                                  speechRecognition.resetTranscript();
-                                  speechRecognition.startListening();
-                                }
-                              }}
-                              disabled={inputDisabled || !speechRecognition.isSupported}
-                              data-testid="button-voice-input"
-                              className={cn(speechRecognition.isListening && "animate-pulse")}
-                            >
-                              {speechRecognition.isListening ? (
-                                <Mic className="h-5 w-5" />
-                              ) : (
-                                <MicOff className="h-5 w-5" />
-                              )}
-                            </Button>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              onClick={() => setAudioMuted(!audioMuted)}
-                              data-testid="button-mute-audio"
-                            >
-                              {audioMuted ? (
-                                <VolumeX className="h-4 w-4" />
-                              ) : (
-                                <Volume2 className="h-4 w-4" />
-                              )}
-                            </Button>
-                          </div>
-                        )}
-                        <div className="flex-1 flex flex-col gap-1">
-                          <Textarea
-                            value={speechRecognition.isListening 
-                              ? speechRecognition.transcript + speechRecognition.interimTranscript 
-                              : inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder={voiceMode && speechRecognition.isListening 
-                              ? "Listening... speak now" 
-                              : getPlaceholder()}
-                            className="min-h-[80px] resize-none"
-                            disabled={inputDisabled || speechRecognition.isListening}
-                            data-testid="input-message"
-                          />
-                          {voiceMode && speechRecognition.isListening && (
-                            <p className="text-xs text-primary animate-pulse">
-                              Listening... click mic again when done
-                            </p>
+                      voiceMode ? (
+                        <div className="flex-1 flex flex-col items-center justify-center gap-4 py-4">
+                          {voiceState === "listening" && (
+                            <>
+                              <div className="flex items-center gap-3">
+                                <div className="w-4 h-4 rounded-full bg-primary animate-pulse" />
+                                <p className="text-lg font-medium text-primary">Listening...</p>
+                              </div>
+                              <p className="text-sm text-muted-foreground text-center max-w-md">
+                                {speechRecognition.transcript || speechRecognition.interimTranscript 
+                                  ? (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim()
+                                  : "Speak your argument. It will send automatically when you pause."}
+                              </p>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    const fullTranscript = (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim();
+                                    speechRecognition.stopListening();
+                                    if (fullTranscript) {
+                                      setVoiceState("sending");
+                                      handleSendMessage(fullTranscript);
+                                    }
+                                  }}
+                                  disabled={!speechRecognition.transcript.trim() && !speechRecognition.interimTranscript.trim()}
+                                  data-testid="button-voice-send"
+                                >
+                                  <Send className="h-4 w-4 mr-2" />
+                                  Send Now
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setAudioMuted(!audioMuted)}
+                                  data-testid="button-mute-audio"
+                                >
+                                  {audioMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                                </Button>
+                              </div>
+                            </>
                           )}
-                          {voiceMode && isAudioPlaying && (
-                            <p className="text-xs text-muted-foreground">
-                              AI is speaking...
-                            </p>
+                          {voiceState === "sending" && (
+                            <>
+                              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                              <p className="text-lg font-medium">Sending your argument...</p>
+                            </>
+                          )}
+                          {voiceState === "opponent_speaking" && (
+                            <>
+                              <div className="flex items-center gap-3">
+                                <Volume2 className="h-6 w-6 text-muted-foreground animate-pulse" />
+                                <p className="text-lg font-medium">{opponent?.name} is speaking...</p>
+                              </div>
+                              <p className="text-sm text-muted-foreground text-center">
+                                Take notes on the flow sheet - the text will appear after they finish
+                              </p>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setAudioMuted(!audioMuted)}
+                                data-testid="button-mute-audio"
+                              >
+                                {audioMuted ? <VolumeX className="h-4 w-4 mr-2" /> : <Volume2 className="h-4 w-4 mr-2" />}
+                                {audioMuted ? "Unmute" : "Mute"}
+                              </Button>
+                            </>
+                          )}
+                          {voiceState === "idle" && !isLoading && (
+                            <>
+                              <p className="text-muted-foreground">Waiting for your turn...</p>
+                            </>
                           )}
                         </div>
-                        <Button 
-                          onClick={() => {
-                            // If listening, stop and pass transcript directly to send handler
-                            if (speechRecognition.isListening) {
-                              const fullTranscript = (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim();
-                              speechRecognition.stopListening();
-                              if (fullTranscript) {
-                                handleSendMessage(fullTranscript);
-                                return;
-                              }
-                            }
-                            handleSendMessage();
-                          }} 
-                          disabled={(!inputValue.trim() && !speechRecognition.transcript.trim()) || inputDisabled}
-                          className="h-auto"
-                          data-testid="button-send"
-                        >
-                          <Send className="h-5 w-5" />
-                        </Button>
-                      </>
+                      ) : (
+                        <>
+                          <div className="flex-1 flex flex-col gap-1">
+                            <Textarea
+                              value={inputValue}
+                              onChange={(e) => setInputValue(e.target.value)}
+                              onKeyDown={handleKeyDown}
+                              placeholder={getPlaceholder()}
+                              className="min-h-[80px] resize-none"
+                              disabled={inputDisabled}
+                              data-testid="input-message"
+                            />
+                          </div>
+                          <Button 
+                            onClick={() => handleSendMessage()} 
+                            disabled={!inputValue.trim() || inputDisabled}
+                            className="h-auto"
+                            data-testid="button-send"
+                          >
+                            <Send className="h-5 w-5" />
+                          </Button>
+                        </>
+                      )
                     );
                   })()}
                 </div>
-                <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-                  <span>
-                    {speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining > 0 
-                      ? "Click 'Prep' button above to get more time" 
-                      : "Press Enter to send, Shift+Enter for new line"}
-                  </span>
-                  <span>{inputValue.length} characters</span>
-                </div>
+                {!voiceMode && (
+                  <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                    <span>
+                      {speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining > 0 
+                        ? "Click 'Prep' button above to get more time" 
+                        : "Press Enter to send, Shift+Enter for new line"}
+                    </span>
+                    <span>{inputValue.length} characters</span>
+                  </div>
+                )}
               </div>
             </div>
           ) : (

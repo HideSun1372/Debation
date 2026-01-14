@@ -21,12 +21,14 @@ Debation is an educational debate platform where users practice debating against
 - **End CX**: User can manually end CX to advance to next speech
 
 ### Voice Debate Mode
-- **Hybrid approach**: Browser Web Speech API for user speech-to-text (free), OpenAI gpt-audio-mini for AI text-to-speech
-- **Opt-in toggle**: Enabled via Voice Mode switch on practice page setup screen
-- **Speech recognition**: Custom useSpeechRecognition hook wrapping Web Speech API with TypeScript types
-- **TTS endpoint**: /api/tts uses gpt-audio-mini with typed content array format, returns MP3 audio buffer
-- **Voice controls**: Mic button toggles speech recognition, mute button for AI audio, live transcript in textarea
-- **Transcript sync**: useEffect syncs transcript to input when recognition stops, hook finalizes interim transcript on end
+- **Voice-first design**: Speak and your argument automatically sends when you pause (no manual Enter/send button needed)
+- **Silence detection**: Speech recognition auto-detects 1.5s of silence and triggers submission via onSpeechEnd callback
+- **Voice state machine**: States are "idle" | "listening" | "sending" | "opponent_speaking" for clear UI feedback
+- **No typing simulation**: In voice mode, opponent's text appears all at once only AFTER TTS audio finishes playing
+- **Flow sheet emphasis**: Flow sheet auto-expands in voice mode with larger width (w-96) and "Voice Mode" badge
+- **Hybrid TTS**: OpenAI gpt-audio-mini for AI text-to-speech via /api/tts endpoint
+- **Auto-start listening**: When it's user's turn, listening starts automatically
+- **Visual indicators**: "Listening...", "Sending your argument...", "Opponent is speaking..." states with animations
 
 ### Curriculum Structure
 - 365 lessons across 52 units organized into 5 skill-based sections
