@@ -144,6 +144,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     recognition.lang = "en-US";
 
     recognition.onstart = () => {
+      console.log("Speech recognition started");
       setIsListening(true);
       isStartingRef.current = false;
       setError(null);
