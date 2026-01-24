@@ -206,12 +206,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
     recognition.onend = () => {
       console.log("Speech recognition onend event");
-      const wasStarting = isStartingRef.current;
       isStartingRef.current = false;
       clearSilenceTimer();
-      
-      // If autoMode is on, we often want to restart if it ended without us explicitly stopping it
-      // but we'll let the consuming component handle state management to avoid loops.
       
       setInterimTranscript((prevInterim) => {
         if (prevInterim.trim()) {
@@ -225,10 +221,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       });
       setIsListening(false);
       setIsSpeaking(false);
-      
-      if (wasStarting) {
-        console.warn("Speech recognition ended immediately after starting - possible permission or hardware issue");
-      }
     };
 
     recognitionRef.current = recognition;

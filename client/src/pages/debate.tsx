@@ -1198,30 +1198,22 @@ export default function Debate() {
   
   // Auto-start listening when it's user's turn in voice mode
   useEffect(() => {
-    if (voiceMode && isUserTurn && !isLoading && !isInitializing && !isDebateComplete && !speechRecognition.isListening && voiceState === "idle") {
-      // Small delay to ensure recognition is ready after potential recreation
-      const timer = setTimeout(() => {
-        setVoiceState("listening");
-        speechRecognition.startListening();
-      }, 100);
-      return () => clearTimeout(timer);
+    if (voiceMode && isUserTurn && !isLoading && !isInitializing && !isDebateComplete && voiceState === "idle") {
+      setVoiceState("listening");
+      speechRecognition.startListening();
     }
-  }, [voiceMode, isUserTurn, isLoading, isInitializing, isDebateComplete, speechRecognition.isListening, voiceState]);
+  }, [voiceMode, isUserTurn, isLoading, isInitializing, isDebateComplete, voiceState]);
   
-  // Detect when recognition unexpectedly stops (e.g., network error) and reset state
+  // Reset voice state when recognition stops normally or errors out
   useEffect(() => {
-    if (voiceMode && voiceState === "listening" && !speechRecognition.isListening && !isLoading && !isInitializing) {
-      // If it's not listening, it might just be starting up. 
-      // We only want to reset to idle if it REALLY fails to start or ends unexpectedly.
-      const timer = setTimeout(() => {
-        if (!speechRecognition.isListening && voiceState === "listening") {
-          console.log("Recognition failed to stay active, resetting voice state");
-          setVoiceState("idle");
-        }
-      }, 5000); // Give it a generous 5 seconds to initialize/stay active
-      return () => clearTimeout(timer);
+    if (voiceMode && voiceState === "listening" && !speechRecognition.isListening) {
+      // If we are in "listening" voiceState but the hook is no longer listening,
+      // it means it stopped (silence timeout or error).
+      // We check for transcript presence to see if we should have sent something,
+      // but usually the onSpeechEnd callback handles the sending.
+      setVoiceState("idle");
     }
-  }, [voiceMode, voiceState, speechRecognition.isListening, isLoading, isInitializing]);
+  }, [voiceMode, voiceState, speechRecognition.isListening]);
   
   // Ensure flow sheet is always visible in voice mode
   useEffect(() => {
