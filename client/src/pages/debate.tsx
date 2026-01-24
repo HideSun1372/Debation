@@ -775,26 +775,46 @@ export default function Debate() {
   };
 
   // Voice mode auto-listening - start immediately when it's user's turn
-  // Don't auto-start if there's an error - let user manually retry
+  // Uses state machine for reliable state management
   useEffect(() => {
     if (voiceMode) {
-      console.log("Voice mode auto-start check:", {
+      console.log("[VoiceDebate] Auto-start check:", {
         voiceMode,
         isReady: speechRecognition.isReady,
         voiceState,
+        recognitionState: speechRecognition.state,
         isUserTurn,
         isLoading,
         isDebateComplete,
         isAudioPlaying,
-        isListening: speechRecognition.isListening,
         error: speechRecognition.error
       });
     }
-    if (voiceMode && speechRecognition.isReady && voiceState === "idle" && isUserTurn && !isLoading && !isDebateComplete && !isAudioPlaying && !speechRecognition.isListening && !speechRecognition.error) {
-      console.log("Auto-starting speech recognition");
+    
+    // Only auto-start when:
+    // 1. Voice mode is enabled
+    // 2. Speech recognition is ready
+    // 3. Voice state is idle (not sending, not opponent speaking)
+    // 4. Recognition state is idle (not starting, listening, or in error)
+    // 5. It's the user's turn
+    // 6. Not loading/complete/audio playing
+    // 7. No error present
+    const shouldAutoStart = 
+      voiceMode && 
+      speechRecognition.isReady && 
+      voiceState === "idle" && 
+      speechRecognition.state === "idle" &&
+      isUserTurn && 
+      !isLoading && 
+      !isDebateComplete && 
+      !isAudioPlaying && 
+      !speechRecognition.error;
+    
+    if (shouldAutoStart) {
+      console.log("[VoiceDebate] Auto-starting speech recognition");
       speechRecognition.startListening();
     }
-  }, [voiceMode, speechRecognition.isReady, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening, speechRecognition.error]);
+  }, [voiceMode, speechRecognition.isReady, voiceState, speechRecognition.state, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.error]);
 
   const advanceToNextSpeech = () => {
     if (format && currentSpeechIndex < format.speeches.length) {
@@ -1198,16 +1218,29 @@ export default function Debate() {
     };
   }, [voiceMode, voiceState]);
 
-  // Sync voice state with recognition state
+  // Sync voice state with recognition state machine
+  // This ensures the UI reflects the actual recognition state
   useEffect(() => {
     if (voiceMode) {
-      if (speechRecognition.isListening && voiceState === "idle") {
+      const recognitionState = speechRecognition.state;
+      
+      // When recognition is actively listening, set voice state to listening
+      if (recognitionState === "listening" && voiceState === "idle") {
+        console.log("[VoiceDebate] Recognition started listening, updating voice state");
         setVoiceState("listening");
-      } else if (!speechRecognition.isListening && voiceState === "listening") {
+      } 
+      // When recognition stops (idle) and we were listening, go back to idle
+      else if (recognitionState === "idle" && voiceState === "listening") {
+        console.log("[VoiceDebate] Recognition stopped, updating voice state to idle");
+        setVoiceState("idle");
+      }
+      // When recognition is in error state, ensure voice state is idle (not stuck in listening)
+      else if (recognitionState === "error" && voiceState === "listening") {
+        console.log("[VoiceDebate] Recognition error, resetting voice state to idle");
         setVoiceState("idle");
       }
     }
-  }, [voiceMode, speechRecognition.isListening, voiceState]);
+  }, [voiceMode, speechRecognition.state, voiceState]);
   
   // Ensure flow sheet is always visible in voice mode
   useEffect(() => {
@@ -1819,11 +1852,11 @@ export default function Debate() {
                                     Switch to Text Mode
                                   </Button>
                                 </div>
-                              ) : speechRecognition.error ? (
+                              ) : speechRecognition.error || speechRecognition.state === "error" ? (
                                 <div className="flex flex-col items-center gap-3">
                                   <div className="flex items-center gap-2 text-destructive">
                                     <Mic className="h-5 w-5" />
-                                    <p className="font-medium">
+                                    <p className="font-medium" data-testid="text-microphone-error">
                                       {speechRecognition.error === "microphone-timeout" 
                                         ? "Microphone failed to start" 
                                         : speechRecognition.error === "not-allowed"
@@ -1832,6 +1865,10 @@ export default function Debate() {
                                         ? "Connection error"
                                         : speechRecognition.error === "start-failed"
                                         ? "Failed to start microphone"
+                                        : speechRecognition.error === "no-microphone"
+                                        ? "No microphone found"
+                                        : speechRecognition.error === "service-not-allowed"
+                                        ? "Speech service unavailable"
                                         : "Microphone error"}
                                     </p>
                                   </div>
@@ -1844,17 +1881,39 @@ export default function Debate() {
                                       ? "The microphone didn't respond in time. Please check your browser's microphone permissions and try again."
                                       : speechRecognition.error === "start-failed"
                                       ? "Something went wrong starting the microphone. Please try again."
+                                      : speechRecognition.error === "no-microphone"
+                                      ? "No microphone was detected. Please connect a microphone and try again."
+                                      : speechRecognition.error === "service-not-allowed"
+                                      ? "The speech recognition service is not available. Try using Chrome or Edge browser."
                                       : "There was a problem accessing your microphone. Please check your browser permissions."}
                                   </p>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => speechRecognition.startListening()}
-                                    data-testid="button-retry-microphone"
-                                  >
-                                    <Mic className="h-4 w-4 mr-2" />
-                                    Try Again
-                                  </Button>
+                                  <div className="flex gap-2">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        speechRecognition.resetError();
+                                        // Small delay to allow state reset before starting
+                                        setTimeout(() => speechRecognition.startListening(), 100);
+                                      }}
+                                      data-testid="button-retry-microphone"
+                                    >
+                                      <Mic className="h-4 w-4 mr-2" />
+                                      Try Again
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => {
+                                        const newParams = new URLSearchParams(params.toString());
+                                        newParams.delete("voiceMode");
+                                        setLocation(`/debate?${newParams.toString()}`);
+                                      }}
+                                      data-testid="button-switch-text-mode-error"
+                                    >
+                                      Use Text Mode
+                                    </Button>
+                                  </div>
                                 </div>
                               ) : !speechRecognition.isReady ? (
                                 <div className="flex flex-col items-center gap-2">
@@ -1863,15 +1922,22 @@ export default function Debate() {
                                     <p className="text-muted-foreground">Initializing voice...</p>
                                   </div>
                                 </div>
-                              ) : isUserTurn ? (
+                              ) : speechRecognition.state === "starting" ? (
                                 <div className="flex flex-col items-center gap-2">
                                   <div className="flex items-center gap-2">
                                     <Loader2 className="h-4 w-4 animate-spin" />
-                                    <p className="text-muted-foreground">Starting microphone...</p>
+                                    <p className="text-muted-foreground" data-testid="text-starting-microphone">Starting microphone...</p>
                                   </div>
                                   <p className="text-xs text-muted-foreground">
                                     If this takes too long, check your browser's microphone permissions
                                   </p>
+                                </div>
+                              ) : isUserTurn ? (
+                                <div className="flex flex-col items-center gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    <p className="text-muted-foreground">Preparing microphone...</p>
+                                  </div>
                                 </div>
                               ) : (
                                 <p className="text-muted-foreground">Waiting for your turn...</p>

@@ -1,9 +1,18 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
+// State machine states for speech recognition
+type RecognitionState = 
+  | "idle"           // Not listening, ready to start
+  | "starting"       // Called start(), waiting for onstart
+  | "listening"      // Active and listening
+  | "stopping"       // Called stop(), waiting for onend
+  | "error";         // Error state, needs reset
+
 interface UseSpeechRecognitionOptions {
   silenceTimeout?: number;
   onSpeechEnd?: (transcript: string) => void;
   autoMode?: boolean;
+  startupTimeout?: number; // How long to wait for microphone to start
 }
 
 interface UseSpeechRecognitionReturn {
@@ -13,10 +22,12 @@ interface UseSpeechRecognitionReturn {
   startListening: () => void;
   stopListening: () => void;
   resetTranscript: () => void;
+  resetError: () => void;
   isSupported: boolean;
   isReady: boolean;
   error: string | null;
   isSpeaking: boolean;
+  state: RecognitionState;
 }
 
 interface ISpeechRecognition extends EventTarget {
@@ -28,6 +39,7 @@ interface ISpeechRecognition extends EventTarget {
   onerror: ((event: ISpeechRecognitionErrorEvent) => void) | null;
   onend: (() => void) | null;
   onspeechend: (() => void) | null;
+  onaudiostart: (() => void) | null;
   start: () => void;
   stop: () => void;
   abort: () => void;
@@ -55,6 +67,7 @@ interface ISpeechRecognitionAlternative {
 
 interface ISpeechRecognitionErrorEvent {
   error: string;
+  message?: string;
 }
 
 declare global {
@@ -65,50 +78,66 @@ declare global {
 }
 
 export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}): UseSpeechRecognitionReturn {
-  const { silenceTimeout = 1500, onSpeechEnd, autoMode = false } = options;
+  const { 
+    silenceTimeout = 1500, 
+    onSpeechEnd, 
+    autoMode = false,
+    startupTimeout = 3000 // 3 second timeout for microphone to start
+  } = options;
   
-  const [isListening, setIsListening] = useState(false);
+  // Core state
+  const [state, setState] = useState<RecognitionState>("idle");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [instanceKey, setInstanceKey] = useState(0); // Trigger recreation
   const [isReady, setIsReady] = useState(false);
   
+  // Refs for mutable state
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const startupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const startupTimerRef = useRef<NodeJS.Timeout | null>(null);
   const transcriptRef = useRef("");
   const interimTranscriptRef = useRef("");
   const hasSpokenRef = useRef(false);
-  const isStartingRef = useRef(false);
+  const stateRef = useRef<RecognitionState>("idle");
+  const instanceIdRef = useRef(0);
   const lastStartAttemptRef = useRef(0);
-  
-  // Clear startup timeout
-  const clearStartupTimeout = useCallback(() => {
-    if (startupTimeoutRef.current) {
-      clearTimeout(startupTimeoutRef.current);
-      startupTimeoutRef.current = null;
-    }
-  }, []);
+
+  // Keep stateRef in sync
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   const isSupported = typeof window !== "undefined" && 
     ("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
 
-  const clearSilenceTimer = useCallback(() => {
+  // Cleanup all timers
+  const clearAllTimers = useCallback(() => {
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
       silenceTimerRef.current = null;
     }
+    if (startupTimerRef.current) {
+      clearTimeout(startupTimerRef.current);
+      startupTimerRef.current = null;
+    }
   }, []);
 
+  // Handle silence timeout - user stopped speaking
   const handleSilenceTimeout = useCallback(() => {
-    if (autoMode && hasSpokenRef.current) {
+    if (autoMode && hasSpokenRef.current && stateRef.current === "listening") {
       const fullTranscript = (transcriptRef.current + " " + interimTranscriptRef.current).trim();
       if (fullTranscript) {
+        console.log("[SpeechRecognition] Silence timeout - submitting transcript");
         if (recognitionRef.current) {
-          recognitionRef.current.stop();
+          try {
+            recognitionRef.current.stop();
+          } catch (e) {
+            // Ignore
+          }
         }
+        setState("stopping");
         if (onSpeechEnd) {
           onSpeechEnd(fullTranscript);
         }
@@ -116,36 +145,42 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     }
   }, [autoMode, onSpeechEnd]);
 
+  // Reset silence timer when user speaks
   const resetSilenceTimer = useCallback(() => {
-    clearSilenceTimer();
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
     if (autoMode && hasSpokenRef.current) {
       silenceTimerRef.current = setTimeout(handleSilenceTimeout, silenceTimeout);
     }
-  }, [autoMode, silenceTimeout, clearSilenceTimer, handleSilenceTimeout]);
+  }, [autoMode, silenceTimeout, handleSilenceTimeout]);
 
-  // Recreate recognition instance - called after network errors
-  const recreateInstance = useCallback(() => {
-    console.log("Recreating recognition instance");
-    if (recognitionRef.current) {
-      try {
-        recognitionRef.current.onstart = null;
-        recognitionRef.current.onresult = null;
-        recognitionRef.current.onerror = null;
-        recognitionRef.current.onend = null;
-        recognitionRef.current.onspeechend = null;
-        recognitionRef.current.abort();
-      } catch (e) {
-        // Ignore abort errors
+  // Handle startup timeout - microphone didn't start in time
+  const handleStartupTimeout = useCallback(() => {
+    if (stateRef.current === "starting") {
+      console.error("[SpeechRecognition] Startup timeout - microphone failed to start within", startupTimeout, "ms");
+      
+      // Abort any pending recognition
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch (e) {
+          // Ignore abort errors
+        }
       }
-      recognitionRef.current = null;
+      
+      setError("microphone-timeout");
+      setState("error");
     }
-    // Trigger useEffect to create new instance
-    setInstanceKey(k => k + 1);
-  }, []);
+  }, [startupTimeout]);
 
-  // Create/recreate the recognition instance
-  useEffect(() => {
-    if (!isSupported) return;
+  // Create a fresh recognition instance
+  const createRecognitionInstance = useCallback(() => {
+    if (!isSupported) return null;
+
+    const currentInstanceId = ++instanceIdRef.current;
+    console.log("[SpeechRecognition] Creating instance", currentInstanceId);
 
     const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognitionClass();
@@ -155,15 +190,32 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     recognition.lang = "en-US";
 
     recognition.onstart = () => {
-      console.log("Speech recognition started");
-      clearStartupTimeout();
-      setIsListening(true);
-      isStartingRef.current = false;
+      // Only process if this is still the current instance
+      if (instanceIdRef.current !== currentInstanceId) {
+        console.log("[SpeechRecognition] Ignoring onstart from old instance");
+        return;
+      }
+      
+      console.log("[SpeechRecognition] Started successfully");
+      
+      // Clear startup timeout - we started successfully
+      if (startupTimerRef.current) {
+        clearTimeout(startupTimerRef.current);
+        startupTimerRef.current = null;
+      }
+      
+      setState("listening");
       setError(null);
       hasSpokenRef.current = false;
     };
 
+    recognition.onaudiostart = () => {
+      console.log("[SpeechRecognition] Audio started - microphone is active");
+    };
+
     recognition.onresult = (event: ISpeechRecognitionEvent) => {
+      if (instanceIdRef.current !== currentInstanceId) return;
+      
       let finalTranscript = "";
       let currentInterim = "";
 
@@ -200,39 +252,67 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     };
 
     recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
-      console.error("Speech recognition error:", event.error);
-      clearSilenceTimer();
-      clearStartupTimeout();
+      if (instanceIdRef.current !== currentInstanceId) {
+        console.log("[SpeechRecognition] Ignoring error from old instance:", event.error);
+        return;
+      }
       
+      console.error("[SpeechRecognition] Error:", event.error, event.message || "");
+      
+      // Clear all timers on error
+      clearAllTimers();
+      
+      // Handle "no-speech" - this is not a real error, just continue
       if (event.error === "no-speech") {
-        // Just continue listening if no speech detected
         return;
       }
-
-      setIsListening(false);
-      setIsSpeaking(false);
-      isStartingRef.current = false;
       
-      // Handle all error types - only skip "aborted" which we trigger ourselves
+      // Handle "aborted" - this is usually triggered by us, don't overwrite existing errors
       if (event.error === "aborted") {
-        // Don't overwrite any error we may have set (like microphone-timeout)
+        // Only set error state if we don't already have one
+        if (!error) {
+          setState("idle");
+        }
         return;
       }
       
-      // Map network errors to a user-friendly error
-      if (event.error === "network") {
-        setError("network-error");
-      } else {
-        setError(event.error);
+      // Map error types to user-friendly errors
+      let errorType: string;
+      switch (event.error) {
+        case "not-allowed":
+        case "permission-denied":
+          errorType = "not-allowed";
+          break;
+        case "network":
+          errorType = "network-error";
+          break;
+        case "audio-capture":
+          errorType = "no-microphone";
+          break;
+        case "service-not-allowed":
+          errorType = "service-not-allowed";
+          break;
+        default:
+          errorType = event.error || "unknown-error";
       }
+      
+      setError(errorType);
+      setState("error");
+      setIsSpeaking(false);
     };
 
     recognition.onend = () => {
-      console.log("Speech recognition onend event");
-      isStartingRef.current = false;
-      clearSilenceTimer();
-      clearStartupTimeout();
+      if (instanceIdRef.current !== currentInstanceId) {
+        console.log("[SpeechRecognition] Ignoring onend from old instance");
+        return;
+      }
       
+      console.log("[SpeechRecognition] Ended");
+      
+      // Clear all timers
+      clearAllTimers();
+      
+      // Finalize any interim transcript
       setInterimTranscript((prevInterim) => {
         if (prevInterim.trim()) {
           setTranscript((prevTranscript) => {
@@ -243,94 +323,126 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
         }
         return "";
       });
-      setIsListening(false);
+      
       setIsSpeaking(false);
+      
+      // Only transition to idle if we're not already in error state
+      if (stateRef.current !== "error") {
+        setState("idle");
+      }
     };
 
-    recognitionRef.current = recognition;
+    return recognition;
+  }, [isSupported, autoMode, resetSilenceTimer, clearAllTimers, error]);
+
+  // Initialize recognition on mount
+  useEffect(() => {
+    if (!isSupported) return;
+
+    recognitionRef.current = createRecognitionInstance();
     setIsReady(true);
 
     return () => {
-      setIsReady(false);
-      clearSilenceTimer();
-      clearStartupTimeout();
-      try {
-        recognition.abort();
-      } catch (e) {
-        // Ignore
+      clearAllTimers();
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch (e) {
+          // Ignore
+        }
+        recognitionRef.current = null;
       }
     };
-  }, [isSupported, autoMode, instanceKey, resetSilenceTimer, clearSilenceTimer, clearStartupTimeout, recreateInstance]);
+  }, [isSupported, createRecognitionInstance, clearAllTimers]);
 
+  // Start listening
   const startListening = useCallback(() => {
+    // Debounce rapid start attempts
     const now = Date.now();
-    if (now - lastStartAttemptRef.current < 500) return;
-    lastStartAttemptRef.current = now;
-
-    if (!recognitionRef.current) {
-      // Recreate instance if it doesn't exist
-      const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SpeechRecognitionClass) {
-        setInstanceKey(k => k + 1);
-      }
+    if (now - lastStartAttemptRef.current < 300) {
+      console.log("[SpeechRecognition] Debouncing start attempt");
       return;
     }
+    lastStartAttemptRef.current = now;
+
+    // Only start from idle or error states
+    if (stateRef.current !== "idle" && stateRef.current !== "error") {
+      console.log("[SpeechRecognition] Cannot start - current state:", stateRef.current);
+      return;
+    }
+
+    console.log("[SpeechRecognition] Starting...");
+
+    // Clear any previous error
+    setError(null);
     
-    if (!isListening && !isStartingRef.current) {
-      console.log("Starting speech recognition...");
-      isStartingRef.current = true;
-      setTranscript("");
-      setInterimTranscript("");
-      transcriptRef.current = "";
-      interimTranscriptRef.current = "";
-      hasSpokenRef.current = false;
-      setError(null);
+    // Reset transcript
+    setTranscript("");
+    setInterimTranscript("");
+    transcriptRef.current = "";
+    interimTranscriptRef.current = "";
+    hasSpokenRef.current = false;
+
+    // Create fresh instance if needed (after errors, the old one might be broken)
+    if (!recognitionRef.current || stateRef.current === "error") {
+      recognitionRef.current = createRecognitionInstance();
+    }
+
+    if (!recognitionRef.current) {
+      setError("not-supported");
+      setState("error");
+      return;
+    }
+
+    // Set starting state
+    setState("starting");
+
+    // Set startup timeout - if onstart doesn't fire within this time, fail
+    clearAllTimers();
+    startupTimerRef.current = setTimeout(handleStartupTimeout, startupTimeout);
+
+    try {
+      recognitionRef.current.start();
+    } catch (e: unknown) {
+      console.error("[SpeechRecognition] Failed to start:", e);
+      clearAllTimers();
       
-      // Set a timeout to detect if microphone fails to start (onstart never fires)
-      // Using 3 seconds for faster feedback
-      clearStartupTimeout();
-      startupTimeoutRef.current = setTimeout(() => {
-        if (isStartingRef.current) {
-          console.error("Microphone startup timeout (3s) - onstart never fired");
-          isStartingRef.current = false;
-          setError("microphone-timeout");
-          try {
-            recognitionRef.current?.abort();
-          } catch (e) {
-            // Ignore abort errors
-          }
-          // Don't recreate instance - let user manually retry
-        }
-      }, 3000);
+      const errorMessage = e instanceof Error ? e.message : String(e);
       
-      try {
-        recognitionRef.current.start();
-      } catch (e: unknown) {
-        clearStartupTimeout();
-        isStartingRef.current = false;
-        const errorMessage = e instanceof Error ? e.message : String(e);
-        console.error("Failed to start speech recognition:", errorMessage);
-        // If it's an "already started" error, we're actually listening
-        if (errorMessage.includes("already started")) {
-          isStartingRef.current = false;
-          setIsListening(true);
-          return;
-        }
-        // For other errors, recreate the instance for next attempt
-        setError("start-failed");
-        recreateInstance();
+      // Handle "already started" case
+      if (errorMessage.includes("already started")) {
+        console.log("[SpeechRecognition] Already started, treating as listening");
+        setState("listening");
+        return;
       }
+      
+      // Create fresh instance for next attempt
+      recognitionRef.current = createRecognitionInstance();
+      setError("start-failed");
+      setState("error");
     }
-  }, [isListening, recreateInstance, clearStartupTimeout]);
+  }, [createRecognitionInstance, clearAllTimers, handleStartupTimeout, startupTimeout]);
 
+  // Stop listening
   const stopListening = useCallback(() => {
-    clearSilenceTimer();
-    clearStartupTimeout();
-    if (recognitionRef.current && isListening) {
-      recognitionRef.current.stop();
+    console.log("[SpeechRecognition] Stopping...");
+    
+    clearAllTimers();
+    
+    if (recognitionRef.current && (stateRef.current === "listening" || stateRef.current === "starting")) {
+      setState("stopping");
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        console.error("[SpeechRecognition] Error stopping:", e);
+        setState("idle");
+      }
+    } else {
+      setState("idle");
     }
-  }, [isListening, clearSilenceTimer, clearStartupTimeout]);
+  }, [clearAllTimers]);
 
+  // Reset transcript
   const resetTranscript = useCallback(() => {
     setTranscript("");
     setInterimTranscript("");
@@ -338,6 +450,19 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     interimTranscriptRef.current = "";
     hasSpokenRef.current = false;
   }, []);
+
+  // Reset error state - allows retry
+  const resetError = useCallback(() => {
+    if (stateRef.current === "error") {
+      setError(null);
+      setState("idle");
+      // Create fresh instance
+      recognitionRef.current = createRecognitionInstance();
+    }
+  }, [createRecognitionInstance]);
+
+  // Derived state for backward compatibility
+  const isListening = state === "listening";
 
   return {
     isListening,
@@ -347,8 +472,10 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     startListening,
     stopListening,
     resetTranscript,
+    resetError,
     isSupported,
     isReady,
     error,
+    state,
   };
 }
