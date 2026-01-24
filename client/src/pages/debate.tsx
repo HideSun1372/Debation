@@ -109,7 +109,7 @@ export default function Debate() {
   // Speech recognition with auto-mode for voice debates
   const speechRecognition = useSpeechRecognition({
     autoMode: voiceMode,
-    silenceTimeout: 1500,
+    silenceTimeout: 15000,
     onSpeechEnd: useCallback((transcript: string) => {
       voiceSendRef.current(transcript);
     }, []),
@@ -774,23 +774,11 @@ export default function Debate() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  // Voice mode auto-listening
+  // Voice mode auto-listening - start immediately when it's user's turn
   useEffect(() => {
     if (voiceMode && voiceState === "idle" && isUserTurn && !isLoading && !isDebateComplete && !isAudioPlaying && !speechRecognition.isListening) {
-      // Check if we already tried to start recently to avoid loops
-      const lastStart = (window as any).lastMicStart || 0;
-      const now = Date.now();
-      if (now - lastStart < 5000) return;
-      
-      (window as any).lastMicStart = now;
-      const timer = setTimeout(() => {
-        // Double check state before calling start
-        if (voiceState === "idle" && isUserTurn && !isAudioPlaying && !speechRecognition.isListening) {
-          console.log("Auto-starting speech recognition");
-          speechRecognition.startListening();
-        }
-      }, 500);
-      return () => clearTimeout(timer);
+      console.log("Auto-starting speech recognition");
+      speechRecognition.startListening();
     }
   }, [voiceMode, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening]);
 
@@ -1795,20 +1783,7 @@ export default function Debate() {
                           {voiceState === "idle" && !isLoading && (
                             <>
                               {isUserTurn ? (
-                                <>
-                                  <p className="text-muted-foreground">Ready to listen...</p>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => {
-                                      speechRecognition.startListening();
-                                    }}
-                                    data-testid="button-start-listening"
-                                  >
-                                    <Mic className="h-4 w-4 mr-2" />
-                                    Start Speaking
-                                  </Button>
-                                </>
+                                <p className="text-muted-foreground">Starting microphone...</p>
                               ) : (
                                 <p className="text-muted-foreground">Waiting for your turn...</p>
                               )}
