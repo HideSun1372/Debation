@@ -204,7 +204,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     };
 
     recognition.onend = () => {
-      console.log("Speech recognition ended");
+      console.log("Speech recognition onend event");
+      const wasStarting = isStartingRef.current;
       isStartingRef.current = false;
       clearSilenceTimer();
       setInterimTranscript((prevInterim) => {
@@ -219,6 +220,10 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       });
       setIsListening(false);
       setIsSpeaking(false);
+      
+      if (wasStarting) {
+        console.warn("Speech recognition ended immediately after starting - possible permission or hardware issue");
+      }
     };
 
     recognitionRef.current = recognition;
