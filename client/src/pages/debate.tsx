@@ -1210,18 +1210,15 @@ export default function Debate() {
   
   // Detect when recognition unexpectedly stops (e.g., network error) and reset state
   useEffect(() => {
-    // Only reset if we've been in listening state for a while and it's still not actually listening
-    // or if it was listening and then stopped.
-    // We add a check for isInitializing and isLoading to avoid race conditions during transitions.
     if (voiceMode && voiceState === "listening" && !speechRecognition.isListening && !isLoading && !isInitializing) {
-      // Recognition stopped while we expected it to be listening - reset to idle after a longer delay
-      // to allow for the startListening() call to actually update isListening state.
+      // If it's not listening, it might just be starting up. 
+      // We only want to reset to idle if it REALLY fails to start or ends unexpectedly.
       const timer = setTimeout(() => {
-        // Double check it's still not listening before resetting
-        if (!speechRecognition.isListening) {
+        if (!speechRecognition.isListening && voiceState === "listening") {
+          console.log("Recognition failed to stay active, resetting voice state");
           setVoiceState("idle");
         }
-      }, 2000); // Increased from 500ms to 2s to handle slow hardware/permissions
+      }, 5000); // Give it a generous 5 seconds to initialize/stay active
       return () => clearTimeout(timer);
     }
   }, [voiceMode, voiceState, speechRecognition.isListening, isLoading, isInitializing]);

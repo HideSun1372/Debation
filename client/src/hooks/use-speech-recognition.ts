@@ -209,6 +209,10 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       const wasStarting = isStartingRef.current;
       isStartingRef.current = false;
       clearSilenceTimer();
+      
+      // If autoMode is on, we often want to restart if it ended without us explicitly stopping it
+      // but we'll let the consuming component handle state management to avoid loops.
+      
       setInterimTranscript((prevInterim) => {
         if (prevInterim.trim()) {
           setTranscript((prevTranscript) => {
