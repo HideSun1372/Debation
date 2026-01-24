@@ -78,6 +78,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   const transcriptRef = useRef("");
   const interimTranscriptRef = useRef("");
   const hasSpokenRef = useRef(false);
+  const isStartingRef = useRef(false);
+  const lastStartAttemptRef = useRef(0);
 
   const isSupported = typeof window !== "undefined" && 
     ("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
@@ -143,6 +145,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
     recognition.onstart = () => {
       setIsListening(true);
+      isStartingRef.current = false;
       setError(null);
       hasSpokenRef.current = false;
     };
@@ -202,6 +205,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
     recognition.onend = () => {
       console.log("Speech recognition ended");
+      isStartingRef.current = false;
       clearSilenceTimer();
       setInterimTranscript((prevInterim) => {
         if (prevInterim.trim()) {
@@ -233,6 +237,10 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   }, [isSupported, autoMode, instanceKey, resetSilenceTimer, clearSilenceTimer, recreateInstance]);
 
   const startListening = useCallback(() => {
+    const now = Date.now();
+    if (now - lastStartAttemptRef.current < 2000) return;
+    lastStartAttemptRef.current = now;
+
     if (!recognitionRef.current) {
       // Recreate instance if it doesn't exist
       const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -242,7 +250,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       return;
     }
     
-    if (!isListening) {
+    if (!isListening && !isStartingRef.current) {
+      isStartingRef.current = true;
       setTranscript("");
       setInterimTranscript("");
       transcriptRef.current = "";
@@ -252,10 +261,12 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       try {
         recognitionRef.current.start();
       } catch (e: unknown) {
+        isStartingRef.current = false;
         const errorMessage = e instanceof Error ? e.message : String(e);
         console.error("Failed to start speech recognition:", errorMessage);
         // If it's an "already started" error, ignore it
         if (errorMessage.includes("already started")) {
+          setIsListening(true);
           return;
         }
         // For other errors, recreate the instance for next attempt

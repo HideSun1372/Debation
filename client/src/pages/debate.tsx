@@ -777,22 +777,16 @@ export default function Debate() {
   // Voice mode auto-listening
   useEffect(() => {
     if (voiceMode && voiceState === "idle" && isUserTurn && !isLoading && !isDebateComplete && !isAudioPlaying && !speechRecognition.isListening) {
-      // Check if we already tried to start recently to avoid loops
-      const lastStart = (window as any).lastMicStart || 0;
-      const now = Date.now();
-      if (now - lastStart < 10000) return; // Increased to 10s for maximum safety
-      
-      (window as any).lastMicStart = now;
       const timer = setTimeout(() => {
         // Double check state before calling start
         if (voiceState === "idle" && isUserTurn && !isAudioPlaying && !speechRecognition.isListening) {
           console.log("Auto-starting speech recognition");
           speechRecognition.startListening();
         }
-      }, 2000); // Increased to 2s
+      }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [voiceMode, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening]);
+  }, [voiceMode, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening, speechRecognition.startListening]);
 
   const advanceToNextSpeech = () => {
     if (format && currentSpeechIndex < format.speeches.length) {
