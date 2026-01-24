@@ -14,6 +14,7 @@ interface UseSpeechRecognitionReturn {
   stopListening: () => void;
   resetTranscript: () => void;
   isSupported: boolean;
+  isReady: boolean;
   error: string | null;
   isSpeaking: boolean;
 }
@@ -72,6 +73,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [instanceKey, setInstanceKey] = useState(0); // Trigger recreation
+  const [isReady, setIsReady] = useState(false);
   
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -225,8 +227,10 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     };
 
     recognitionRef.current = recognition;
+    setIsReady(true);
 
     return () => {
+      setIsReady(false);
       clearSilenceTimer();
       try {
         recognition.abort();
@@ -299,6 +303,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     stopListening,
     resetTranscript,
     isSupported,
+    isReady,
     error,
   };
 }
