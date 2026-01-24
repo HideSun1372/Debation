@@ -780,12 +780,14 @@ export default function Debate() {
       // Check if we already tried to start recently to avoid loops
       const lastStart = (window as any).lastMicStart || 0;
       const now = Date.now();
-      if (now - lastStart < 2000) return;
+      if (now - lastStart < 5000) return; // Increased to 5s
       
       (window as any).lastMicStart = now;
       const timer = setTimeout(() => {
-        speechRecognition.startListening();
-      }, 500);
+        if (!speechRecognition.isListening) {
+          speechRecognition.startListening();
+        }
+      }, 1000); // Increased to 1s
       return () => clearTimeout(timer);
     }
   }, [voiceMode, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening]);

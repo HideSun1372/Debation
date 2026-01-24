@@ -180,15 +180,16 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
       console.error("Speech recognition error:", event.error);
       clearSilenceTimer();
+      
+      if (event.error === "no-speech") {
+        // Just continue listening if no speech detected
+        return;
+      }
+
       setIsListening(false);
       setIsSpeaking(false);
       
-      // For network/aborted errors, recreate the instance (it's dead)
-      if (event.error === "network" || event.error === "aborted") {
-        return;
-      }
-      
-      if (event.error !== "no-speech") {
+      if (event.error !== "aborted" && event.error !== "network") {
         setError(event.error);
       }
     };
@@ -208,8 +209,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       });
       setIsListening(false);
       setIsSpeaking(false);
-      
-      // Removed automatic recreateInstance() to prevent switching loops
     };
 
     recognitionRef.current = recognition;
