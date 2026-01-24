@@ -208,6 +208,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       });
       setIsListening(false);
       setIsSpeaking(false);
+      
+      // Removed automatic recreateInstance() to prevent switching loops
     };
 
     recognitionRef.current = recognition;

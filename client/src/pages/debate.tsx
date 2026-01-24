@@ -777,7 +777,12 @@ export default function Debate() {
   // Voice mode auto-listening
   useEffect(() => {
     if (voiceMode && voiceState === "idle" && isUserTurn && !isLoading && !isDebateComplete && !isAudioPlaying && !speechRecognition.isListening) {
-      // Small delay to ensure everything is ready
+      // Check if we already tried to start recently to avoid loops
+      const lastStart = (window as any).lastMicStart || 0;
+      const now = Date.now();
+      if (now - lastStart < 2000) return;
+      
+      (window as any).lastMicStart = now;
       const timer = setTimeout(() => {
         speechRecognition.startListening();
       }, 500);
