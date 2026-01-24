@@ -775,12 +775,13 @@ export default function Debate() {
   };
 
   // Voice mode auto-listening - start immediately when it's user's turn
+  // Don't auto-start if there's an error - let user manually retry
   useEffect(() => {
-    if (voiceMode && speechRecognition.isReady && voiceState === "idle" && isUserTurn && !isLoading && !isDebateComplete && !isAudioPlaying && !speechRecognition.isListening) {
+    if (voiceMode && speechRecognition.isReady && voiceState === "idle" && isUserTurn && !isLoading && !isDebateComplete && !isAudioPlaying && !speechRecognition.isListening && !speechRecognition.error) {
       console.log("Auto-starting speech recognition");
       speechRecognition.startListening();
     }
-  }, [voiceMode, speechRecognition.isReady, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening]);
+  }, [voiceMode, speechRecognition.isReady, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening, speechRecognition.error]);
 
   const advanceToNextSpeech = () => {
     if (format && currentSpeechIndex < format.speeches.length) {

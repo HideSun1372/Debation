@@ -268,6 +268,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     }
     
     if (!isListening && !isStartingRef.current) {
+      console.log("Starting speech recognition...");
       isStartingRef.current = true;
       setTranscript("");
       setInterimTranscript("");
@@ -277,10 +278,11 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       setError(null);
       
       // Set a timeout to detect if microphone fails to start (onstart never fires)
+      // Using 3 seconds for faster feedback
       clearStartupTimeout();
       startupTimeoutRef.current = setTimeout(() => {
         if (isStartingRef.current) {
-          console.error("Microphone startup timeout - onstart never fired");
+          console.error("Microphone startup timeout (3s) - onstart never fired");
           isStartingRef.current = false;
           setError("microphone-timeout");
           try {
@@ -288,9 +290,9 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
           } catch (e) {
             // Ignore abort errors
           }
-          recreateInstance();
+          // Don't recreate instance - let user manually retry
         }
-      }, 5000);
+      }, 3000);
       
       try {
         recognitionRef.current.start();
