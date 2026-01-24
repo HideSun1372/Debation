@@ -151,42 +151,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       hasSpokenRef.current = false;
     };
 
-    recognition.onresult = (event: ISpeechRecognitionEvent) => {
-      let interim = "";
-      let final = "";
-
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const result = event.results[i];
-        const transcriptText = result[0].transcript;
-
-        if (result.isFinal) {
-          final += transcriptText + " ";
-        } else {
-          interim += transcriptText;
-        }
-      }
-
-      if (final || interim) {
-        hasSpokenRef.current = true;
-        setIsSpeaking(true);
-      }
-
-      if (final) {
-        setTranscript((prev) => {
-          const newTranscript = prev + final;
-          transcriptRef.current = newTranscript;
-          return newTranscript;
-        });
-        interimTranscriptRef.current = "";
-      }
-      setInterimTranscript(interim);
-      interimTranscriptRef.current = interim;
-      
-      if (autoMode) {
-        resetSilenceTimer();
-      }
-    };
-
     recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
       console.error("Speech recognition error:", event.error);
       clearSilenceTimer();
@@ -198,6 +162,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
       setIsListening(false);
       setIsSpeaking(false);
+      isStartingRef.current = false;
       
       if (event.error !== "aborted" && event.error !== "network") {
         setError(event.error);

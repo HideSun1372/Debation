@@ -1199,21 +1199,20 @@ export default function Debate() {
   // Auto-start listening when it's user's turn in voice mode
   useEffect(() => {
     if (voiceMode && isUserTurn && !isLoading && !isInitializing && !isDebateComplete && voiceState === "idle") {
-      setVoiceState("listening");
       speechRecognition.startListening();
     }
   }, [voiceMode, isUserTurn, isLoading, isInitializing, isDebateComplete, voiceState]);
-  
-  // Reset voice state when recognition stops normally or errors out
+
+  // Sync voice state with recognition state
   useEffect(() => {
-    if (voiceMode && voiceState === "listening" && !speechRecognition.isListening) {
-      // If we are in "listening" voiceState but the hook is no longer listening,
-      // it means it stopped (silence timeout or error).
-      // We check for transcript presence to see if we should have sent something,
-      // but usually the onSpeechEnd callback handles the sending.
-      setVoiceState("idle");
+    if (voiceMode) {
+      if (speechRecognition.isListening && voiceState === "idle") {
+        setVoiceState("listening");
+      } else if (!speechRecognition.isListening && voiceState === "listening") {
+        setVoiceState("idle");
+      }
     }
-  }, [voiceMode, voiceState, speechRecognition.isListening]);
+  }, [voiceMode, speechRecognition.isListening, voiceState]);
   
   // Ensure flow sheet is always visible in voice mode
   useEffect(() => {
