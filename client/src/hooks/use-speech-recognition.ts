@@ -219,13 +219,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       });
       setIsListening(false);
       setIsSpeaking(false);
-      
-      // Auto-restart if we're in autoMode and wasn't manually stopped
-      if (autoMode && !isStartingRef.current) {
-        setTimeout(() => {
-          startListening();
-        }, 300);
-      }
     };
 
     recognitionRef.current = recognition;
