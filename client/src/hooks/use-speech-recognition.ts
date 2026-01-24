@@ -77,11 +77,20 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const startupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const transcriptRef = useRef("");
   const interimTranscriptRef = useRef("");
   const hasSpokenRef = useRef(false);
   const isStartingRef = useRef(false);
   const lastStartAttemptRef = useRef(0);
+  
+  // Clear startup timeout
+  const clearStartupTimeout = useCallback(() => {
+    if (startupTimeoutRef.current) {
+      clearTimeout(startupTimeoutRef.current);
+      startupTimeoutRef.current = null;
+    }
+  }, []);
 
   const isSupported = typeof window !== "undefined" && 
     ("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
@@ -147,6 +156,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
     recognition.onstart = () => {
       console.log("Speech recognition started");
+      clearStartupTimeout();
       setIsListening(true);
       isStartingRef.current = false;
       setError(null);
@@ -192,6 +202,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
       console.error("Speech recognition error:", event.error);
       clearSilenceTimer();
+      clearStartupTimeout();
       
       if (event.error === "no-speech") {
         // Just continue listening if no speech detected
@@ -211,6 +222,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       console.log("Speech recognition onend event");
       isStartingRef.current = false;
       clearSilenceTimer();
+      clearStartupTimeout();
       
       setInterimTranscript((prevInterim) => {
         if (prevInterim.trim()) {
@@ -232,13 +244,14 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     return () => {
       setIsReady(false);
       clearSilenceTimer();
+      clearStartupTimeout();
       try {
         recognition.abort();
       } catch (e) {
         // Ignore
       }
     };
-  }, [isSupported, autoMode, instanceKey, resetSilenceTimer, clearSilenceTimer, recreateInstance]);
+  }, [isSupported, autoMode, instanceKey, resetSilenceTimer, clearSilenceTimer, clearStartupTimeout, recreateInstance]);
 
   const startListening = useCallback(() => {
     const now = Date.now();
@@ -262,29 +275,50 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       interimTranscriptRef.current = "";
       hasSpokenRef.current = false;
       setError(null);
+      
+      // Set a timeout to detect if microphone fails to start (onstart never fires)
+      clearStartupTimeout();
+      startupTimeoutRef.current = setTimeout(() => {
+        if (isStartingRef.current) {
+          console.error("Microphone startup timeout - onstart never fired");
+          isStartingRef.current = false;
+          setError("microphone-timeout");
+          try {
+            recognitionRef.current?.abort();
+          } catch (e) {
+            // Ignore abort errors
+          }
+          recreateInstance();
+        }
+      }, 5000);
+      
       try {
         recognitionRef.current.start();
       } catch (e: unknown) {
+        clearStartupTimeout();
         isStartingRef.current = false;
         const errorMessage = e instanceof Error ? e.message : String(e);
         console.error("Failed to start speech recognition:", errorMessage);
-        // If it's an "already started" error, ignore it
+        // If it's an "already started" error, we're actually listening
         if (errorMessage.includes("already started")) {
+          isStartingRef.current = false;
           setIsListening(true);
           return;
         }
         // For other errors, recreate the instance for next attempt
+        setError("start-failed");
         recreateInstance();
       }
     }
-  }, [isListening, recreateInstance]);
+  }, [isListening, recreateInstance, clearStartupTimeout]);
 
   const stopListening = useCallback(() => {
     clearSilenceTimer();
+    clearStartupTimeout();
     if (recognitionRef.current && isListening) {
       recognitionRef.current.stop();
     }
-  }, [isListening, clearSilenceTimer]);
+  }, [isListening, clearSilenceTimer, clearStartupTimeout]);
 
   const resetTranscript = useCallback(() => {
     setTranscript("");

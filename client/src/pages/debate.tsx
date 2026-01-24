@@ -1782,8 +1782,43 @@ export default function Debate() {
                           )}
                           {voiceState === "idle" && !isLoading && (
                             <>
-                              {isUserTurn ? (
-                                <p className="text-muted-foreground">Starting microphone...</p>
+                              {speechRecognition.error ? (
+                                <div className="flex flex-col items-center gap-3">
+                                  <div className="flex items-center gap-2 text-destructive">
+                                    <Mic className="h-5 w-5" />
+                                    <p className="font-medium">
+                                      {speechRecognition.error === "microphone-timeout" 
+                                        ? "Microphone failed to start" 
+                                        : speechRecognition.error === "not-allowed"
+                                        ? "Microphone access denied"
+                                        : "Microphone error"}
+                                    </p>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground text-center max-w-sm">
+                                    {speechRecognition.error === "not-allowed"
+                                      ? "Please allow microphone access in your browser settings and try again."
+                                      : "There was a problem accessing your microphone. Please check your browser permissions."}
+                                  </p>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => speechRecognition.startListening()}
+                                    data-testid="button-retry-microphone"
+                                  >
+                                    <Mic className="h-4 w-4 mr-2" />
+                                    Try Again
+                                  </Button>
+                                </div>
+                              ) : isUserTurn ? (
+                                <div className="flex flex-col items-center gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    <p className="text-muted-foreground">Starting microphone...</p>
+                                  </div>
+                                  <p className="text-xs text-muted-foreground">
+                                    If this takes too long, check your browser's microphone permissions
+                                  </p>
+                                </div>
                               ) : (
                                 <p className="text-muted-foreground">Waiting for your turn...</p>
                               )}
