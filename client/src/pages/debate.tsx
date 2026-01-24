@@ -783,10 +783,10 @@ export default function Debate() {
           console.log("Auto-starting speech recognition");
           speechRecognition.startListening();
         }
-      }, 1000);
+      }, 500); // Back to 500ms
       return () => clearTimeout(timer);
     }
-  }, [voiceMode, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening, speechRecognition.startListening]);
+  }, [voiceMode, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening]);
 
   const advanceToNextSpeech = () => {
     if (format && currentSpeechIndex < format.speeches.length) {

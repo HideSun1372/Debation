@@ -220,8 +220,12 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       setIsListening(false);
       setIsSpeaking(false);
       
-      // Attempt silent restart only if explicitly requested or in a state that expects continuous listening
-      // But for now, let's keep it strictly manual to avoid the switching loop
+      // Auto-restart if we're in autoMode and wasn't manually stopped
+      if (autoMode && !isStartingRef.current) {
+        setTimeout(() => {
+          startListening();
+        }, 300);
+      }
     };
 
     recognitionRef.current = recognition;
