@@ -185,8 +185,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       
       // For network/aborted errors, recreate the instance (it's dead)
       if (event.error === "network" || event.error === "aborted") {
-        // Don't set error - just recreate silently, user can click to retry
-        recreateInstance();
         return;
       }
       
@@ -196,6 +194,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     };
 
     recognition.onend = () => {
+      console.log("Speech recognition ended");
       clearSilenceTimer();
       setInterimTranscript((prevInterim) => {
         if (prevInterim.trim()) {

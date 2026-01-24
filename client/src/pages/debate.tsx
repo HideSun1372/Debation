@@ -774,6 +774,17 @@ export default function Debate() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
+  // Voice mode auto-listening
+  useEffect(() => {
+    if (voiceMode && voiceState === "idle" && isUserTurn && !isLoading && !isDebateComplete && !isAudioPlaying && !speechRecognition.isListening) {
+      // Small delay to ensure everything is ready
+      const timer = setTimeout(() => {
+        speechRecognition.startListening();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [voiceMode, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening]);
+
   const advanceToNextSpeech = () => {
     if (format && currentSpeechIndex < format.speeches.length) {
       setCurrentSpeechIndex(prev => prev + 1);
