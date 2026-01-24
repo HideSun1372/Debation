@@ -238,7 +238,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
   const startListening = useCallback(() => {
     const now = Date.now();
-    if (now - lastStartAttemptRef.current < 2000) return;
+    if (now - lastStartAttemptRef.current < 500) return;
     lastStartAttemptRef.current = now;
 
     if (!recognitionRef.current) {

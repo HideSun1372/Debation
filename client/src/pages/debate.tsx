@@ -1801,7 +1801,6 @@ export default function Debate() {
                                     variant="outline"
                                     size="sm"
                                     onClick={() => {
-                                      setVoiceState("listening");
                                       speechRecognition.startListening();
                                     }}
                                     data-testid="button-start-listening"
