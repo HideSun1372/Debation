@@ -777,6 +777,19 @@ export default function Debate() {
   // Voice mode auto-listening - start immediately when it's user's turn
   // Don't auto-start if there's an error - let user manually retry
   useEffect(() => {
+    if (voiceMode) {
+      console.log("Voice mode auto-start check:", {
+        voiceMode,
+        isReady: speechRecognition.isReady,
+        voiceState,
+        isUserTurn,
+        isLoading,
+        isDebateComplete,
+        isAudioPlaying,
+        isListening: speechRecognition.isListening,
+        error: speechRecognition.error
+      });
+    }
     if (voiceMode && speechRecognition.isReady && voiceState === "idle" && isUserTurn && !isLoading && !isDebateComplete && !isAudioPlaying && !speechRecognition.isListening && !speechRecognition.error) {
       console.log("Auto-starting speech recognition");
       speechRecognition.startListening();
@@ -1783,7 +1796,30 @@ export default function Debate() {
                           )}
                           {voiceState === "idle" && !isLoading && (
                             <>
-                              {speechRecognition.error ? (
+                              {!speechRecognition.isSupported ? (
+                                <div className="flex flex-col items-center gap-3">
+                                  <div className="flex items-center gap-2 text-destructive">
+                                    <MicOff className="h-5 w-5" />
+                                    <p className="font-medium">Voice not supported</p>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground text-center max-w-sm">
+                                    Speech recognition is not available in this browser. Please use Chrome or Edge for voice debates.
+                                  </p>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                      // Remove voiceMode from URL params and reload
+                                      const newParams = new URLSearchParams(params.toString());
+                                      newParams.delete("voiceMode");
+                                      setLocation(`/debate?${newParams.toString()}`);
+                                    }}
+                                    data-testid="button-switch-text-mode"
+                                  >
+                                    Switch to Text Mode
+                                  </Button>
+                                </div>
+                              ) : speechRecognition.error ? (
                                 <div className="flex flex-col items-center gap-3">
                                   <div className="flex items-center gap-2 text-destructive">
                                     <Mic className="h-5 w-5" />
@@ -1809,6 +1845,13 @@ export default function Debate() {
                                     <Mic className="h-4 w-4 mr-2" />
                                     Try Again
                                   </Button>
+                                </div>
+                              ) : !speechRecognition.isReady ? (
+                                <div className="flex flex-col items-center gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    <p className="text-muted-foreground">Initializing voice...</p>
+                                  </div>
                                 </div>
                               ) : isUserTurn ? (
                                 <div className="flex flex-col items-center gap-2">
