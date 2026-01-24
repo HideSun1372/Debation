@@ -112,8 +112,14 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
   // Recreate recognition instance - called after network errors
   const recreateInstance = useCallback(() => {
+    console.log("Recreating recognition instance");
     if (recognitionRef.current) {
       try {
+        recognitionRef.current.onstart = null;
+        recognitionRef.current.onresult = null;
+        recognitionRef.current.onerror = null;
+        recognitionRef.current.onend = null;
+        recognitionRef.current.onspeechend = null;
         recognitionRef.current.abort();
       } catch (e) {
         // Ignore abort errors
@@ -209,6 +215,9 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       });
       setIsListening(false);
       setIsSpeaking(false);
+      
+      // Attempt silent restart only if explicitly requested or in a state that expects continuous listening
+      // But for now, let's keep it strictly manual to avoid the switching loop
     };
 
     recognitionRef.current = recognition;
@@ -225,8 +234,11 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current) {
-      // Instance doesn't exist - this shouldn't normally happen
-      console.warn("Recognition instance not ready");
+      // Recreate instance if it doesn't exist
+      const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognitionClass) {
+        setInstanceKey(k => k + 1);
+      }
       return;
     }
     

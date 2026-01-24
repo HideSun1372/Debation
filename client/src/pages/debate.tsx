@@ -780,14 +780,16 @@ export default function Debate() {
       // Check if we already tried to start recently to avoid loops
       const lastStart = (window as any).lastMicStart || 0;
       const now = Date.now();
-      if (now - lastStart < 5000) return; // Increased to 5s
+      if (now - lastStart < 10000) return; // Increased to 10s for maximum safety
       
       (window as any).lastMicStart = now;
       const timer = setTimeout(() => {
-        if (!speechRecognition.isListening) {
+        // Double check state before calling start
+        if (voiceState === "idle" && isUserTurn && !isAudioPlaying && !speechRecognition.isListening) {
+          console.log("Auto-starting speech recognition");
           speechRecognition.startListening();
         }
-      }, 1000); // Increased to 1s
+      }, 2000); // Increased to 2s
       return () => clearTimeout(timer);
     }
   }, [voiceMode, voiceState, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.isListening]);
@@ -1728,7 +1730,7 @@ export default function Debate() {
                               <div className="flex items-center gap-3">
                                 <div className="w-4 h-4 rounded-full bg-primary animate-pulse" />
                                 <p className="text-lg font-medium text-primary">
-                                  {speechRecognition.isListening ? "Listening..." : "Starting microphone..."}
+                                  {speechRecognition.isListening ? "Listening..." : "Preparing Microphone..."}
                                 </p>
                               </div>
                               {speechRecognition.error && (
