@@ -1828,12 +1828,22 @@ export default function Debate() {
                                         ? "Microphone failed to start" 
                                         : speechRecognition.error === "not-allowed"
                                         ? "Microphone access denied"
+                                        : speechRecognition.error === "network-error"
+                                        ? "Connection error"
+                                        : speechRecognition.error === "start-failed"
+                                        ? "Failed to start microphone"
                                         : "Microphone error"}
                                     </p>
                                   </div>
                                   <p className="text-sm text-muted-foreground text-center max-w-sm">
                                     {speechRecognition.error === "not-allowed"
                                       ? "Please allow microphone access in your browser settings and try again."
+                                      : speechRecognition.error === "network-error"
+                                      ? "Speech recognition requires an internet connection. Please check your network and try again."
+                                      : speechRecognition.error === "microphone-timeout"
+                                      ? "The microphone didn't respond in time. Please check your browser's microphone permissions and try again."
+                                      : speechRecognition.error === "start-failed"
+                                      ? "Something went wrong starting the microphone. Please try again."
                                       : "There was a problem accessing your microphone. Please check your browser permissions."}
                                   </p>
                                   <Button

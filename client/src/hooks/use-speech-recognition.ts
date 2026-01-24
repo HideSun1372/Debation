@@ -213,7 +213,16 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       setIsSpeaking(false);
       isStartingRef.current = false;
       
-      if (event.error !== "aborted" && event.error !== "network") {
+      // Handle all error types - only skip "aborted" which we trigger ourselves
+      if (event.error === "aborted") {
+        // Don't overwrite any error we may have set (like microphone-timeout)
+        return;
+      }
+      
+      // Map network errors to a user-friendly error
+      if (event.error === "network") {
+        setError("network-error");
+      } else {
         setError(event.error);
       }
     };
