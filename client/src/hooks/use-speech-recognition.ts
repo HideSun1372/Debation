@@ -151,6 +151,42 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
       hasSpokenRef.current = false;
     };
 
+    recognition.onresult = (event: ISpeechRecognitionEvent) => {
+      let finalTranscript = "";
+      let currentInterim = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        if (result.isFinal) {
+          finalTranscript += result[0].transcript;
+        } else {
+          currentInterim += result[0].transcript;
+        }
+      }
+
+      if (finalTranscript) {
+        hasSpokenRef.current = true;
+        setIsSpeaking(true);
+        setTranscript((prev) => {
+          const newTranscript = (prev + " " + finalTranscript).trim();
+          transcriptRef.current = newTranscript;
+          return newTranscript;
+        });
+        resetSilenceTimer();
+      }
+
+      if (currentInterim) {
+        hasSpokenRef.current = true;
+        setIsSpeaking(true);
+        setInterimTranscript(currentInterim);
+        interimTranscriptRef.current = currentInterim;
+        resetSilenceTimer();
+      } else {
+        setInterimTranscript("");
+        interimTranscriptRef.current = "";
+      }
+    };
+
     recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
       console.error("Speech recognition error:", event.error);
       clearSilenceTimer();

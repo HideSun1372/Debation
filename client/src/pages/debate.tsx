@@ -1195,13 +1195,6 @@ export default function Debate() {
       }
     };
   }, [voiceMode, voiceState]);
-  
-  // Auto-start listening when it's user's turn in voice mode
-  useEffect(() => {
-    if (voiceMode && isUserTurn && !isLoading && !isInitializing && !isDebateComplete && voiceState === "idle") {
-      speechRecognition.startListening();
-    }
-  }, [voiceMode, isUserTurn, isLoading, isInitializing, isDebateComplete, voiceState]);
 
   // Sync voice state with recognition state
   useEffect(() => {
