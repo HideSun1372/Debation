@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useUser } from "@/lib/user-context";
+import { useUser, calculateLessonXp, getXpForNextLevel } from "@/lib/user-context";
 import { 
   EXPERIENCE_LEVELS, 
   ASSESSMENT_QUESTIONS, 
@@ -74,6 +74,19 @@ export default function Learn() {
   const [pageCorrect, setPageCorrect] = useState(false);
   const [completedPageQuestions, setCompletedPageQuestions] = useState<Set<number>>(new Set());
   const [activeSection, setActiveSection] = useState<CurriculumTier>("BEGINNER");
+  
+  // Lesson completion tracking
+  const [lessonStartTime, setLessonStartTime] = useState<number | null>(null);
+  const [questionsAttempted, setQuestionsAttempted] = useState(0);
+  const [questionsCorrect, setQuestionsCorrect] = useState(0);
+  const [attemptedExerciseQuestions, setAttemptedExerciseQuestions] = useState<Set<number>>(new Set());
+  const [showCompletionSummary, setShowCompletionSummary] = useState(false);
+  const [completionStats, setCompletionStats] = useState<{
+    timeSpent: number;
+    accuracy: number;
+    xpEarned: number;
+    lessonTitle: string;
+  } | null>(null);
 
   const hasCompletedOnboarding = user.lessonProgress.hasCompletedOnboarding;
 
@@ -234,6 +247,11 @@ export default function Learn() {
       setPageAnswered(false);
       setPageCorrect(false);
       setCompletedPageQuestions(new Set());
+      // Start tracking lesson time and reset question counters
+      setLessonStartTime(Date.now());
+      setQuestionsAttempted(0);
+      setQuestionsCorrect(0);
+      setAttemptedExerciseQuestions(new Set());
     }
   };
 
@@ -260,6 +278,14 @@ export default function Learn() {
     const isCorrect = exerciseAnswer === currentQ.correctAnswer;
     setExerciseAnswered(true);
     setExerciseCorrect(isCorrect);
+    // Track exercise question attempt (only first attempt per question counts)
+    if (!attemptedExerciseQuestions.has(exerciseQuestionIndex)) {
+      setAttemptedExerciseQuestions(prev => new Set(Array.from(prev).concat(exerciseQuestionIndex)));
+      setQuestionsAttempted(prev => prev + 1);
+      if (isCorrect) {
+        setQuestionsCorrect(prev => prev + 1);
+      }
+    }
   };
 
   const handleNextExerciseQuestion = () => {
@@ -273,8 +299,19 @@ export default function Learn() {
       setExerciseAnswered(false);
       setExerciseCorrect(false);
     } else {
-      completeLesson(activeLessonId);
-      goToNextLesson();
+      // Show completion summary for quiz-based lessons
+      const timeSpent = lessonStartTime ? Math.floor((Date.now() - lessonStartTime) / 1000) : 0;
+      const accuracy = questionsAttempted > 0 ? Math.round((questionsCorrect / questionsAttempted) * 100) : 100;
+      const xpEarned = calculateLessonXp(timeSpent, questionsCorrect, questionsAttempted);
+      const lessonTitle = getLessonTitle(activeLessonId);
+      
+      setCompletionStats({
+        timeSpent,
+        accuracy,
+        xpEarned,
+        lessonTitle,
+      });
+      setShowCompletionSummary(true);
     }
   };
 
@@ -306,6 +343,11 @@ export default function Learn() {
               setPageAnswered(false);
               setPageCorrect(false);
               setCompletedPageQuestions(new Set());
+              // Reset tracking for new lesson
+              setLessonStartTime(Date.now());
+              setQuestionsAttempted(0);
+              setQuestionsCorrect(0);
+              setAttemptedExerciseQuestions(new Set());
               return;
             }
           }
@@ -327,8 +369,13 @@ export default function Learn() {
     const isCorrect = pageAnswer === page.correctAnswer;
     setPageAnswered(true);
     setPageCorrect(isCorrect);
-    if (isCorrect) {
-      setCompletedPageQuestions(prev => new Set(Array.from(prev).concat(currentPageIndex)));
+    // Track question attempt (only first attempt per question counts)
+    if (!completedPageQuestions.has(currentPageIndex)) {
+      setQuestionsAttempted(prev => prev + 1);
+      if (isCorrect) {
+        setQuestionsCorrect(prev => prev + 1);
+        setCompletedPageQuestions(prev => new Set(Array.from(prev).concat(currentPageIndex)));
+      }
     }
   };
 
@@ -336,6 +383,19 @@ export default function Learn() {
     setPageAnswer(null);
     setPageAnswered(false);
     setPageCorrect(false);
+  };
+
+  const getLessonTitle = (lessonId: string): string => {
+    for (const unit of LESSON_UNITS) {
+      for (const section of unit.sections) {
+        for (const lesson of section.lessons) {
+          if (lesson.id === lessonId) {
+            return lesson.title;
+          }
+        }
+      }
+    }
+    return "Lesson";
   };
 
   const handleNextPage = () => {
@@ -351,9 +411,34 @@ export default function Learn() {
       setPageAnswered(isNextQuestionCompleted);
       setPageCorrect(isNextQuestionCompleted);
     } else {
-      completeLesson(activeLessonId);
-      goToNextLesson();
+      // Calculate stats and show completion summary
+      const timeSpent = lessonStartTime ? Math.floor((Date.now() - lessonStartTime) / 1000) : 0;
+      const accuracy = questionsAttempted > 0 ? Math.round((questionsCorrect / questionsAttempted) * 100) : 100;
+      const xpEarned = calculateLessonXp(timeSpent, questionsCorrect, questionsAttempted);
+      const lessonTitle = getLessonTitle(activeLessonId);
+      
+      setCompletionStats({
+        timeSpent,
+        accuracy,
+        xpEarned,
+        lessonTitle,
+      });
+      setShowCompletionSummary(true);
     }
+  };
+
+  const handleCompletionContinue = () => {
+    if (!activeLessonId || !completionStats) return;
+    
+    // Complete the lesson with XP
+    completeLesson(activeLessonId, completionStats.xpEarned);
+    
+    // Reset completion state
+    setShowCompletionSummary(false);
+    setCompletionStats(null);
+    
+    // Go to next lesson
+    goToNextLesson();
   };
 
   const handlePrevPage = () => {
@@ -1294,6 +1379,79 @@ export default function Learn() {
             </Button>
             <Button variant="destructive" onClick={handleResetProgress} data-testid="button-confirm-reset">
               Reset Progress
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showCompletionSummary} onOpenChange={setShowCompletionSummary}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto mb-2 h-16 w-16 rounded-full bg-green-500/10 flex items-center justify-center">
+              <Trophy className="h-8 w-8 text-green-500" />
+            </div>
+            <DialogTitle className="text-center text-xl">Lesson Complete!</DialogTitle>
+            <DialogDescription className="text-center">
+              {completionStats?.lessonTitle}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {completionStats && (
+            <div className="space-y-4 py-4">
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div className="text-2xl font-bold">
+                    {completionStats.timeSpent < 60 
+                      ? `${completionStats.timeSpent}s`
+                      : `${Math.floor(completionStats.timeSpent / 60)}m ${completionStats.timeSpent % 60}s`
+                    }
+                  </div>
+                  <div className="text-xs text-muted-foreground">Time Spent</div>
+                </div>
+                
+                <div className="space-y-1">
+                  <div className="flex items-center justify-center">
+                    <CircleCheck className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div className="text-2xl font-bold">
+                    {completionStats.accuracy}%
+                  </div>
+                  <div className="text-xs text-muted-foreground">Accuracy</div>
+                </div>
+                
+                <div className="space-y-1">
+                  <div className="flex items-center justify-center">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="text-2xl font-bold text-primary">
+                    +{completionStats.xpEarned}
+                  </div>
+                  <div className="text-xs text-muted-foreground">XP Earned</div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Level {user.lessonProgress.learnLevel}</span>
+                  <span className="text-muted-foreground">
+                    {getXpForNextLevel(user.lessonProgress.learnXp + completionStats.xpEarned).current} / {getXpForNextLevel(user.lessonProgress.learnXp + completionStats.xpEarned).required} XP
+                  </span>
+                </div>
+                <Progress 
+                  value={getXpForNextLevel(user.lessonProgress.learnXp + completionStats.xpEarned).progress} 
+                  className="h-2"
+                />
+              </div>
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button onClick={handleCompletionContinue} className="w-full" data-testid="button-continue-lesson">
+              Continue
+              <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
           </DialogFooter>
         </DialogContent>

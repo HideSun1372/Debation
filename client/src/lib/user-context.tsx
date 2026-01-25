@@ -25,6 +25,71 @@ export interface LessonProgressData {
   currentLessonId: string | null;
   completedLessonIds: string[];
   lastVisitedAt: string | null;
+  learnXp: number;
+  learnLevel: number;
+}
+
+// XP required for each level (cumulative thresholds)
+export const LEARN_LEVEL_THRESHOLDS = [
+  0,      // Level 1: 0 XP
+  100,    // Level 2: 100 XP
+  250,    // Level 3: 250 XP
+  450,    // Level 4: 450 XP
+  700,    // Level 5: 700 XP
+  1000,   // Level 6: 1000 XP
+  1400,   // Level 7: 1400 XP
+  1900,   // Level 8: 1900 XP
+  2500,   // Level 9: 2500 XP
+  3200,   // Level 10: 3200 XP
+  4000,   // Level 11+: continues
+];
+
+export function getLearnLevel(xp: number): number {
+  for (let i = LEARN_LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
+    if (xp >= LEARN_LEVEL_THRESHOLDS[i]) {
+      return i + 1;
+    }
+  }
+  return 1;
+}
+
+export function getXpForNextLevel(currentXp: number): { current: number; required: number; progress: number } {
+  const level = getLearnLevel(currentXp);
+  const currentThreshold = LEARN_LEVEL_THRESHOLDS[level - 1] || 0;
+  const nextThreshold = LEARN_LEVEL_THRESHOLDS[level] || currentThreshold + 1000;
+  const xpInLevel = currentXp - currentThreshold;
+  const xpRequired = nextThreshold - currentThreshold;
+  return {
+    current: xpInLevel,
+    required: xpRequired,
+    progress: (xpInLevel / xpRequired) * 100,
+  };
+}
+
+export function calculateLessonXp(
+  timeSpentSeconds: number,
+  questionsCorrect: number,
+  questionsTotal: number
+): number {
+  // Base XP for completing a lesson
+  let xp = 50;
+  
+  // Accuracy bonus (up to 50 XP for 100% accuracy)
+  if (questionsTotal > 0) {
+    const accuracy = questionsCorrect / questionsTotal;
+    xp += Math.round(accuracy * 50);
+  }
+  
+  // Time bonus (faster completion = more XP, max 25 XP if under 3 minutes)
+  if (timeSpentSeconds < 180) {
+    xp += 25;
+  } else if (timeSpentSeconds < 300) {
+    xp += 15;
+  } else if (timeSpentSeconds < 600) {
+    xp += 5;
+  }
+  
+  return xp;
 }
 
 export interface UserState {
@@ -46,7 +111,8 @@ interface UserContextType {
   getSkillTierName: () => string;
   getProgress: () => number;
   completeOnboarding: (experience: ExperienceLevel, score: number) => void;
-  completeLesson: (lessonId: string) => void;
+  completeLesson: (lessonId: string, xpEarned?: number) => void;
+  addLearnXp: (xp: number) => void;
   setCurrentLesson: (unitId: string, sectionId: string, lessonId: string) => void;
   isLessonCompleted: (lessonId: string) => boolean;
   isLessonUnlocked: (lessonId: string, allLessonIds: string[]) => boolean;
@@ -64,6 +130,8 @@ const defaultLessonProgress: LessonProgressData = {
   currentLessonId: null,
   completedLessonIds: [],
   lastVisitedAt: null,
+  learnXp: 0,
+  learnLevel: 1,
 };
 
 const defaultUser: UserState = {
@@ -242,16 +310,21 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     });
   }, [isAuthenticated, saveProgress, user.lessonProgress]);
 
-  const completeLesson = useCallback((lessonId: string) => {
+  const completeLesson = useCallback((lessonId: string, xpEarned: number = 0) => {
     const currentProgress = user.lessonProgress;
     if (currentProgress.completedLessonIds.includes(lessonId)) {
       return;
     }
     
+    const newXp = currentProgress.learnXp + xpEarned;
+    const newLevel = getLearnLevel(newXp);
+    
     const newProgress: LessonProgressData = {
       ...currentProgress,
       completedLessonIds: [...currentProgress.completedLessonIds, lessonId],
       lastVisitedAt: new Date().toISOString(),
+      learnXp: newXp,
+      learnLevel: newLevel,
     };
     
     if (isAuthenticated) {
@@ -262,6 +335,32 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       if (prev.lessonProgress.completedLessonIds.includes(lessonId)) {
         return prev;
       }
+      const newUser = {
+        ...prev,
+        lessonProgress: newProgress,
+      };
+      localStorage.setItem("debate-user", JSON.stringify(newUser));
+      return newUser;
+    });
+  }, [user.lessonProgress, isAuthenticated, saveProgress]);
+
+  const addLearnXp = useCallback((xp: number) => {
+    const currentProgress = user.lessonProgress;
+    const newXp = currentProgress.learnXp + xp;
+    const newLevel = getLearnLevel(newXp);
+    
+    const newProgress: LessonProgressData = {
+      ...currentProgress,
+      learnXp: newXp,
+      learnLevel: newLevel,
+      lastVisitedAt: new Date().toISOString(),
+    };
+    
+    if (isAuthenticated) {
+      saveProgress(newProgress);
+    }
+    
+    setLocalUser((prev) => {
       const newUser = {
         ...prev,
         lessonProgress: newProgress,
@@ -335,6 +434,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         getProgress,
         completeOnboarding,
         completeLesson,
+        addLearnXp,
         setCurrentLesson,
         isLessonCompleted,
         isLessonUnlocked,
