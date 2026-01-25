@@ -195,7 +195,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  // Merge auth user data with progress
+  // Merge auth user data with progress (ensure new fields have defaults)
+  const mergedProgress: LessonProgressData = dbProgress ? {
+    ...defaultLessonProgress,
+    ...dbProgress,
+    learnXp: dbProgress.learnXp ?? 0,
+    learnLevel: dbProgress.learnLevel ?? 1,
+  } : localUser.lessonProgress;
+
   const user: UserState = isAuthenticated && authUser ? {
     id: authUser.id,
     username: authUser.firstName || authUser.email?.split('@')[0] || 'Debater',
@@ -204,7 +211,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     wins: authUser.wins,
     losses: authUser.losses,
     debateHistory: localUser.debateHistory,
-    lessonProgress: dbProgress || localUser.lessonProgress,
+    lessonProgress: mergedProgress,
   } : localUser;
 
   const saveLocalUser = useCallback((newUser: UserState) => {

@@ -263,6 +263,23 @@ export default function Learn() {
     setExerciseCorrect(false);
   };
 
+  const handleSimpleLessonComplete = () => {
+    if (!activeLessonId) return;
+    // Show completion summary for simple lessons (no quiz, no multi-page)
+    const timeSpent = lessonStartTime ? Math.floor((Date.now() - lessonStartTime) / 1000) : 0;
+    const accuracy = questionsAttempted > 0 ? Math.round((questionsCorrect / questionsAttempted) * 100) : 100;
+    const xpEarned = calculateLessonXp(timeSpent, questionsCorrect, questionsAttempted);
+    const lessonTitle = getLessonTitle(activeLessonId);
+    
+    setCompletionStats({
+      timeSpent,
+      accuracy,
+      xpEarned,
+      lessonTitle,
+    });
+    setShowCompletionSummary(true);
+  };
+
   const handleExerciseAnswerSelect = (answerId: string) => {
     if (!exerciseAnswered) {
       setExerciseAnswer(answerId);
@@ -1127,7 +1144,7 @@ export default function Learn() {
                 Take Quiz to Complete
               </Button>
             ) : (
-              <Button onClick={() => { completeLesson(lesson.id); goToNextLesson(); }} data-testid="button-complete-lesson">
+              <Button onClick={handleSimpleLessonComplete} data-testid="button-complete-lesson">
                 <Check className="h-4 w-4 mr-1" />
                 Mark Complete & Continue
               </Button>
