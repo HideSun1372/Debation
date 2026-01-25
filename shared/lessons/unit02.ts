@@ -1,4 +1,4 @@
-import { MultiPageLesson } from "./types";
+import { MultiPageLesson, LessonPracticePage } from "./types";
 
 export const UNIT_02_LESSONS: MultiPageLesson[] = [
   {
@@ -568,6 +568,25 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         type: "content",
         title: "The Complete Argument Structure",
         content: "Let's see how all three components work together:\n\n**Claim:**\n'Schools should start no earlier than 8:30 AM for adolescents.'\n\n**Evidence:**\n'Research from the American Academy of Pediatrics shows that teenagers' natural circadian rhythms shift during puberty, making it biologically difficult to fall asleep before 11 PM. A 2022 study of 30,000 students across 100 schools found that later start times correlated with a 13% improvement in grades and 20% reduction in car accidents among teen drivers.'\n\n**Reasoning:**\n'Because adolescent biology literally prevents early sleep, forcing early school starts creates chronic sleep deprivation. Sleep deprivation impairs cognitive function, emotional regulation, and physical health. The evidence shows that when we align school schedules with biological reality, students perform better academically and make fewer dangerous mistakes behind the wheel. This isn't just correlation—the mechanism is clear: more sleep equals better brains.'\n\n**Notice:**\n• The claim is specific and debatable\n• The evidence is varied (scientific, statistical)\n• The reasoning explains the mechanism and significance",
+      },
+      {
+        type: "practice",
+        id: "l02-06-p1",
+        title: "Build Your Own Argument",
+        description: "Now it's your turn to practice building a complete Claim-Evidence-Reasoning argument.",
+        practice: {
+          type: "argument-builder",
+          topic: "Schools should require students to take financial literacy courses",
+          targetSkill: "Constructing complete CER arguments",
+          instructions: "Build a complete argument with a clear CLAIM, supporting EVIDENCE, and logical REASONING that connects them. Make sure to explain HOW your evidence proves your point.",
+          exampleResponse: "Use the CER framework: State your claim clearly, provide specific evidence, and explain the logical connection.",
+          successCriteria: [
+            "Includes a clear, debatable claim",
+            "Provides specific supporting evidence",
+            "Explains HOW the evidence supports the claim",
+            "Uses logical reasoning to connect evidence to claim"
+          ]
+        }
       },
       {
         type: "question",

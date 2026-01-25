@@ -4,8 +4,9 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { CURRICULUM_UNITS, CurriculumUnit, CurriculumSection, CurriculumLesson, getAllCurriculumLessons } from "./curriculum";
 export type { CurriculumUnit, CurriculumSection, CurriculumLesson } from "./curriculum";
-import { ALL_MULTI_PAGE_LESSONS, LessonContentPage, LessonQuestionPage, LessonPage, MultiPageLesson } from "./lessons";
-export type { LessonContentPage, LessonQuestionPage, LessonPage, MultiPageLesson } from "./lessons";
+import { ALL_MULTI_PAGE_LESSONS, LessonContentPage, LessonQuestionPage, LessonPage, MultiPageLesson, LessonPracticePage, PracticeType, PracticeConfig, DifficultyLevel, getDifficultyFromXp, getDifficultyFromLevel } from "./lessons";
+export type { LessonContentPage, LessonQuestionPage, LessonPage, MultiPageLesson, LessonPracticePage, PracticeType, PracticeConfig, DifficultyLevel } from "./lessons";
+export { getDifficultyFromXp, getDifficultyFromLevel } from "./lessons";
 export type CurriculumTier = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "EXPERT" | "MASTER";
 
 // Session storage table (required for Replit Auth)

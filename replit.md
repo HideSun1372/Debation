@@ -35,6 +35,20 @@ Debation is an educational debate platform where users practice debating against
 - Sections: Fundamentals (Beginner), Core Skills (Beginner-Intermediate), Format Mastery (Intermediate), Advanced Techniques (Advanced), Championship Preparation (Master)
 - Lesson content files in `shared/lessons/` with multi-page structure (6-10 pages per lesson)
 
+### Interactive AI Practice System
+- **Practice Types**: 6 types of AI-powered interactive exercises embedded in lessons
+  - `argument-builder`: Build complete Claim-Evidence-Reasoning arguments
+  - `refutation`: Refute an AI argument using debate techniques
+  - `claim-classifier`: Identify claim types (fact, value, policy)
+  - `evidence-defense`: Present/defend evidence against AI challenges
+  - `fallacy-spotter`: Identify logical fallacies in AI arguments
+  - `warrant-builder`: Build and defend warrants connecting evidence to claims
+- **Difficulty Scaling**: Based on user's learnLevel (beginner/intermediate/advanced/expert)
+- **AI Evaluation**: OpenAI provides scores, strengths, improvements, and example responses
+- **Integration**: Practice pages are embedded throughout lessons (not just at the end)
+- **API Endpoints**: `/api/practice/generate` and `/api/practice/evaluate` with Zod validation
+- **Types Location**: Practice types defined in `shared/lessons/types.ts`
+
 ### Onboarding Assessment System
 - **15 questions** with progressive difficulty: beginner (q1-7), intermediate (q8-10), advanced (q11-13), master (q14-15)
 - Last question is championship-level (kritik theory)

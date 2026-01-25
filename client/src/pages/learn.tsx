@@ -21,7 +21,9 @@ import {
   type LessonPage,
   type LessonContentPage,
   type LessonQuestionPage,
+  type LessonPracticePage,
 } from "@shared/schema";
+import { LessonPractice } from "@/components/lesson-practice";
 import { 
   BookOpen, 
   GraduationCap, 
@@ -79,6 +81,10 @@ export default function Learn() {
   const [pageCorrect, setPageCorrect] = useState(false);
   const [completedPageQuestions, setCompletedPageQuestions] = useState<Set<number>>(new Set());
   const [activeSection, setActiveSection] = useState<CurriculumTier>("BEGINNER");
+  
+  // Practice page state
+  const [practiceCompleted, setPracticeCompleted] = useState(false);
+  const [practiceScore, setPracticeScore] = useState(0);
   
   // Lesson completion tracking
   const [lessonStartTime, setLessonStartTime] = useState<number | null>(null);
@@ -641,6 +647,9 @@ export default function Learn() {
       setPageAnswer(null);
       setPageAnswered(isNextQuestionCompleted);
       setPageCorrect(isNextQuestionCompleted);
+      // Reset practice state for the new page
+      setPracticeCompleted(false);
+      setPracticeScore(0);
     } else {
       // Calculate stats and show completion summary
       const timeSpent = lessonStartTime ? Math.floor((Date.now() - lessonStartTime) / 1000) : 0;
@@ -674,6 +683,8 @@ export default function Learn() {
     setQuestionsAttempted(0);
     setQuestionsCorrect(0);
     setAttemptedExerciseQuestions(new Set());
+    setPracticeCompleted(false);
+    setPracticeScore(0);
   };
 
   // X button handler - completes lesson and returns to curriculum
@@ -794,6 +805,9 @@ export default function Learn() {
       setPageAnswer(null);
       setPageAnswered(isPrevQuestionCompleted);
       setPageCorrect(isPrevQuestionCompleted);
+      // Reset practice state for the previous page
+      setPracticeCompleted(false);
+      setPracticeScore(0);
     }
   };
 
@@ -1263,7 +1277,30 @@ export default function Learn() {
         </div>
       );
 
-      const canProceed = currentPage.type === "content" || isQuestionAlreadyCompleted || (pageAnswered && pageCorrect);
+      const handlePracticeComplete = (score: number) => {
+        setPracticeScore(score);
+        setPracticeCompleted(true);
+      };
+
+      const handlePracticeSkip = () => {
+        setPracticeCompleted(true);
+      };
+
+      const renderPracticePage = (page: LessonPracticePage) => (
+        <LessonPractice
+          practice={page.practice}
+          practiceId={`${lesson.id}-page-${currentPageIndex}`}
+          userLevel={user?.lessonProgress?.learnLevel || 1}
+          onComplete={handlePracticeComplete}
+          onSkip={handlePracticeSkip}
+        />
+      );
+
+      const canProceed = 
+        currentPage.type === "content" || 
+        isQuestionAlreadyCompleted || 
+        (pageAnswered && pageCorrect) ||
+        (currentPage.type === "practice" && practiceCompleted);
 
       return (
         <div className="fixed inset-0 z-50 bg-background flex flex-col">
@@ -1294,9 +1331,9 @@ export default function Learn() {
 
           <main className="flex-1 overflow-y-auto p-4 md:p-8">
             <div className="max-w-3xl mx-auto">
-              {currentPage.type === "content" 
-                ? renderContentPage(currentPage) 
-                : renderQuestionPage(currentPage)}
+              {currentPage.type === "content" && renderContentPage(currentPage)}
+              {currentPage.type === "question" && renderQuestionPage(currentPage)}
+              {currentPage.type === "practice" && renderPracticePage(currentPage)}
             </div>
           </main>
 

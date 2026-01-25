@@ -6,6 +6,9 @@ import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integra
 import { db } from "./db";
 import { lessonProgress } from "@shared/schema";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { generatePracticePrompt, evaluatePracticeResponse } from "./practice";
+import type { PracticeType, DifficultyLevel } from "@shared/lessons/types";
 
 const openai = new OpenAI({
   apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
@@ -540,6 +543,87 @@ Respond with a JSON object:
     } catch (error) {
       console.error("Error generating TTS:", error);
       res.status(500).json({ error: "Failed to generate speech" });
+    }
+  });
+
+  // Practice API routes for interactive lessons
+  const practiceGenerateSchema = z.object({
+    practiceType: z.enum(["argument-builder", "refutation", "claim-classifier", "evidence-defense", "fallacy-spotter", "warrant-builder"]),
+    difficulty: z.enum(["beginner", "intermediate", "advanced", "expert"]),
+    topic: z.string().optional(),
+    targetSkill: z.string().min(1),
+  });
+
+  const practiceEvaluateSchema = z.object({
+    practiceType: z.enum(["argument-builder", "refutation", "claim-classifier", "evidence-defense", "fallacy-spotter", "warrant-builder"]),
+    difficulty: z.enum(["beginner", "intermediate", "advanced", "expert"]),
+    aiPrompt: z.object({
+      argument: z.string().optional(),
+      claim: z.string().optional(),
+      fallacyType: z.string().optional(),
+    }),
+    userResponse: z.string().min(1),
+    targetSkill: z.string().min(1),
+    successCriteria: z.array(z.string()),
+  });
+
+  app.post("/api/practice/generate", async (req, res) => {
+    try {
+      const parseResult = practiceGenerateSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          error: "Invalid request", 
+          details: parseResult.error.errors 
+        });
+      }
+
+      const { practiceType, difficulty, topic, targetSkill } = parseResult.data;
+
+      const prompt = await generatePracticePrompt({
+        practiceType: practiceType as PracticeType,
+        difficulty: difficulty as DifficultyLevel,
+        topic,
+        targetSkill,
+      });
+
+      res.json(prompt);
+    } catch (error) {
+      console.error("Error generating practice prompt:", error);
+      res.status(500).json({ error: "Failed to generate practice prompt" });
+    }
+  });
+
+  app.post("/api/practice/evaluate", async (req, res) => {
+    try {
+      const parseResult = practiceEvaluateSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          error: "Invalid request", 
+          details: parseResult.error.errors 
+        });
+      }
+
+      const { practiceType, difficulty, aiPrompt, userResponse, targetSkill, successCriteria } = parseResult.data;
+
+      const feedback = await evaluatePracticeResponse({
+        practiceType: practiceType as PracticeType,
+        difficulty: difficulty as DifficultyLevel,
+        aiPrompt,
+        userResponse,
+        targetSkill,
+        successCriteria,
+      });
+
+      res.json(feedback);
+    } catch (error) {
+      console.error("Error evaluating practice response:", error);
+      res.status(500).json({ 
+        error: "Failed to evaluate response",
+        score: 50,
+        strengths: ["You attempted the exercise"],
+        improvements: ["Try again with more detail"],
+        encouragement: "Keep practicing!"
+      });
     }
   });
 
