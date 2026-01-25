@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/lib/user-context";
 import { 
   EXPERIENCE_LEVELS, 
@@ -72,6 +73,7 @@ export default function Learn() {
   const [pageAnswered, setPageAnswered] = useState(false);
   const [pageCorrect, setPageCorrect] = useState(false);
   const [completedPageQuestions, setCompletedPageQuestions] = useState<Set<number>>(new Set());
+  const [activeSection, setActiveSection] = useState<CurriculumTier>("BEGINNER");
 
   const hasCompletedOnboarding = user.lessonProgress.hasCompletedOnboarding;
 
@@ -639,9 +641,7 @@ export default function Learn() {
                   optionStyle = "border-tier-beginner bg-tier-beginner/10";
                 }
               } else if (showAsIncorrect) {
-                if (isCorrectOption) {
-                  optionStyle = "border-tier-beginner bg-tier-beginner/10";
-                } else if (isSelected && !isCorrectOption) {
+                if (isSelected && !isCorrectOption) {
                   optionStyle = "border-destructive bg-destructive/10";
                 }
               } else if (isSelected) {
@@ -663,10 +663,9 @@ export default function Learn() {
                   <span className={cn(
                     "flex h-6 w-6 items-center justify-center rounded-full border text-sm font-medium",
                     showAsCompleted && isCorrectOption && "bg-tier-beginner text-white border-tier-beginner",
-                    showAsIncorrect && isCorrectOption && "bg-tier-beginner text-white border-tier-beginner",
                     showAsIncorrect && isSelected && !isCorrectOption && "bg-destructive text-white border-destructive"
                   )}>
-                    {(showAsCompleted && isCorrectOption) || (showAsIncorrect && isCorrectOption) ? (
+                    {showAsCompleted && isCorrectOption ? (
                       <Check className="h-3 w-3" />
                     ) : showAsIncorrect && isSelected && !isCorrectOption ? (
                       <CircleX className="h-3 w-3" />
@@ -698,7 +697,7 @@ export default function Learn() {
                 <CircleX className="h-5 w-5 text-destructive" />
                 <span className="font-medium text-destructive">Not quite right</span>
               </div>
-              <p className="text-sm text-muted-foreground">{page.explanation}</p>
+              <p className="text-sm text-muted-foreground">Try again to find the correct answer.</p>
             </div>
           )}
         </div>
@@ -849,7 +848,7 @@ export default function Learn() {
                   
                   let optionStyle = "border-muted hover:bg-accent/50";
                   if (exerciseAnswered) {
-                    if (isCorrectOption) {
+                    if (exerciseCorrect && isCorrectOption) {
                       optionStyle = "border-tier-beginner bg-tier-beginner/10";
                     } else if (isSelected && !isCorrectOption) {
                       optionStyle = "border-destructive bg-destructive/10";
@@ -872,10 +871,10 @@ export default function Learn() {
                     >
                       <span className={cn(
                         "flex h-6 w-6 items-center justify-center rounded-full border text-sm font-medium",
-                        exerciseAnswered && isCorrectOption && "bg-tier-beginner text-white border-tier-beginner",
+                        exerciseAnswered && exerciseCorrect && isCorrectOption && "bg-tier-beginner text-white border-tier-beginner",
                         exerciseAnswered && isSelected && !isCorrectOption && "bg-destructive text-white border-destructive"
                       )}>
-                        {exerciseAnswered && isCorrectOption ? (
+                        {exerciseAnswered && exerciseCorrect && isCorrectOption ? (
                           <Check className="h-3 w-3" />
                         ) : exerciseAnswered && isSelected && !isCorrectOption ? (
                           <CircleX className="h-3 w-3" />
@@ -907,7 +906,9 @@ export default function Learn() {
                       </>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground">{currentQ.explanation}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {exerciseCorrect ? currentQ.explanation : "Try again to find the correct answer."}
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -1079,8 +1080,49 @@ export default function Learn() {
         </CardContent>
       </Card>
 
-      <div className="space-y-8">
-        {/* Group units by section/tier */}
+      <Tabs value={activeSection} onValueChange={(v) => setActiveSection(v as CurriculumTier)} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-5 h-auto">
+          {(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT", "MASTER"] as CurriculumTier[]).map((tier) => {
+            const tierUnits = LESSON_UNITS.filter(u => u.tier === tier);
+            const tierLessonIds: string[] = [];
+            tierUnits.forEach(unit => {
+              unit.sections.forEach(s => s.lessons.forEach(l => tierLessonIds.push(l.id)));
+            });
+            const completedInTier = tierLessonIds.filter(id => user.lessonProgress.completedLessonIds.includes(id)).length;
+            
+            const tierNames: Record<CurriculumTier, string> = {
+              BEGINNER: "Beginner",
+              INTERMEDIATE: "Intermediate", 
+              ADVANCED: "Advanced",
+              EXPERT: "Expert",
+              MASTER: "Master",
+            };
+            
+            const tierColors: Record<CurriculumTier, string> = {
+              BEGINNER: "bg-tier-beginner",
+              INTERMEDIATE: "bg-tier-intermediate",
+              ADVANCED: "bg-tier-advanced",
+              EXPERT: "bg-tier-expert",
+              MASTER: "bg-tier-master",
+            };
+            
+            return (
+              <TabsTrigger 
+                key={tier} 
+                value={tier}
+                className="flex flex-col gap-1 py-2 px-1 data-[state=active]:bg-accent"
+                data-testid={`tab-section-${tier.toLowerCase()}`}
+              >
+                <div className="flex items-center gap-1.5">
+                  <div className={cn("h-2 w-2 rounded-full", tierColors[tier])} />
+                  <span className="text-xs sm:text-sm font-medium">{tierNames[tier]}</span>
+                </div>
+                <span className="text-[10px] text-muted-foreground">{completedInTier}/{tierLessonIds.length}</span>
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
+        
         {(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT", "MASTER"] as CurriculumTier[]).map((tier) => {
           const tierUnits = LESSON_UNITS.filter(u => u.tier === tier);
           if (tierUnits.length === 0) return null;
@@ -1103,26 +1145,24 @@ export default function Learn() {
           const info = sectionInfo[tier];
           
           return (
-            <div key={tier} className="space-y-4">
-              <div className="sticky top-0 z-10 bg-background/95 backdrop-blur py-3 border-b">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className={cn("h-3 w-3 rounded-full", info.color)} />
-                    <div>
-                      <h2 className="text-xl font-bold">{info.name}</h2>
-                      <p className="text-sm text-muted-foreground">{info.lessonRange}</p>
-                    </div>
+            <TabsContent key={tier} value={tier} className="space-y-4 mt-0">
+              <div className="flex items-center justify-between gap-4 py-3 border-b">
+                <div className="flex items-center gap-3">
+                  <div className={cn("h-3 w-3 rounded-full", info.color)} />
+                  <div>
+                    <h2 className="text-xl font-bold">{info.name}</h2>
+                    <p className="text-sm text-muted-foreground">{info.lessonRange}</p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Badge variant="outline">{completedInTier}/{tierLessonIds.length}</Badge>
-                    <div className="w-24">
-                      <Progress value={tierProgress} className="h-2" />
-                    </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge variant="outline">{completedInTier}/{tierLessonIds.length}</Badge>
+                  <div className="w-24">
+                    <Progress value={tierProgress} className="h-2" />
                   </div>
                 </div>
               </div>
               
-              <div className="space-y-4 pl-2">
+              <div className="space-y-4">
                 {tierUnits.map((unit) => {
                   const unitLessons: string[] = [];
                   unit.sections.forEach(s => s.lessons.forEach(l => unitLessons.push(l.id)));
@@ -1152,6 +1192,7 @@ export default function Learn() {
                               {section.lessons.map((lesson) => {
                                 const completed = isLessonCompleted(lesson.id);
                                 const unlocked = isLessonUnlocked(lesson.id);
+                                const showTitle = completed || unlocked;
                                 
                                 return (
                                   <button
@@ -1181,12 +1222,13 @@ export default function Learn() {
                                     <div className="flex-1 min-w-0">
                                       <p className={cn(
                                         "font-medium truncate",
-                                        completed && "text-tier-beginner"
+                                        completed && "text-tier-beginner",
+                                        !showTitle && "text-muted-foreground italic"
                                       )}>
-                                        {lesson.title}
+                                        {showTitle ? lesson.title : "Locked Lesson"}
                                       </p>
                                       <p className="text-xs text-muted-foreground">
-                                        {lesson.estimatedMinutes} min
+                                        {showTitle ? `${lesson.estimatedMinutes} min` : "Complete previous lessons to unlock"}
                                       </p>
                                     </div>
                                     {(unlocked || completed) && (
@@ -1203,10 +1245,10 @@ export default function Learn() {
                   );
                 })}
               </div>
-            </div>
+            </TabsContent>
           );
         })}
-      </div>
+      </Tabs>
 
       <Dialog open={showResetDialog} onOpenChange={setShowResetDialog}>
         <DialogContent>

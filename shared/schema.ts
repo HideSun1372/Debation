@@ -529,7 +529,127 @@ export const ASSESSMENT_QUESTIONS = [
       { id: "d", text: "Using fancy vocabulary" },
     ],
     correctAnswer: "b",
+    difficulty: "intermediate",
+  },
+  {
+    id: "q6",
+    question: "What is a 'contention' in debate?",
+    options: [
+      { id: "a", text: "A disagreement with your partner" },
+      { id: "b", text: "A main argument or point supporting your case" },
+      { id: "c", text: "The time limit for speeches" },
+      { id: "d", text: "A question asked during cross-examination" },
+    ],
+    correctAnswer: "b",
+    difficulty: "beginner",
+  },
+  {
+    id: "q7",
+    question: "What does it mean to 'extend' an argument?",
+    options: [
+      { id: "a", text: "Make your speech longer" },
+      { id: "b", text: "Carry forward and develop an argument from an earlier speech" },
+      { id: "c", text: "Add more evidence to your folder" },
+      { id: "d", text: "Speak louder so everyone can hear" },
+    ],
+    correctAnswer: "b",
+    difficulty: "beginner",
+  },
+  {
+    id: "q8",
+    question: "What is 'flowing' in debate?",
+    options: [
+      { id: "a", text: "Speaking smoothly without pauses" },
+      { id: "b", text: "A note-taking system to track arguments across speeches" },
+      { id: "c", text: "Moving gracefully to the podium" },
+      { id: "d", text: "Reading your evidence quickly" },
+    ],
+    correctAnswer: "b",
+    difficulty: "intermediate",
+  },
+  {
+    id: "q9",
+    question: "What is 'impact weighing'?",
+    options: [
+      { id: "a", text: "Measuring how heavy your evidence binder is" },
+      { id: "b", text: "Comparing the significance of different arguments to determine which matters most" },
+      { id: "c", text: "Counting how many points you've made" },
+      { id: "d", text: "Deciding how hard to hit the podium for emphasis" },
+    ],
+    correctAnswer: "b",
+    difficulty: "intermediate",
+  },
+  {
+    id: "q10",
+    question: "What is a 'turn' in debate?",
+    options: [
+      { id: "a", text: "When it's your turn to speak" },
+      { id: "b", text: "An argument that uses your opponent's evidence to support your side" },
+      { id: "c", text: "Rotating who speaks first each round" },
+      { id: "d", text: "Physically turning to face the judge" },
+    ],
+    correctAnswer: "b",
+    difficulty: "intermediate",
+  },
+  {
+    id: "q11",
+    question: "What is a 'framework' in Lincoln-Douglas debate?",
+    options: [
+      { id: "a", text: "The physical structure of the podium" },
+      { id: "b", text: "A value criterion that determines how arguments should be evaluated" },
+      { id: "c", text: "The outline format for your speech" },
+      { id: "d", text: "The rules set by the tournament" },
+    ],
+    correctAnswer: "b",
     difficulty: "advanced",
+  },
+  {
+    id: "q12",
+    question: "What is 'spreading' in competitive debate?",
+    options: [
+      { id: "a", text: "Distributing handouts to judges" },
+      { id: "b", text: "Speaking at an extremely rapid pace to present more arguments" },
+      { id: "c", text: "Spreading your notes across the table" },
+      { id: "d", text: "Dividing arguments between partners" },
+    ],
+    correctAnswer: "b",
+    difficulty: "advanced",
+  },
+  {
+    id: "q13",
+    question: "What is a 'theory argument' in policy debate?",
+    options: [
+      { id: "a", text: "A scientific hypothesis presented as evidence" },
+      { id: "b", text: "An argument about the rules of debate itself and what practices should be allowed" },
+      { id: "c", text: "A theoretical example with no real evidence" },
+      { id: "d", text: "An argument based on philosophical theories" },
+    ],
+    correctAnswer: "b",
+    difficulty: "advanced",
+  },
+  {
+    id: "q14",
+    question: "In policy debate, what does 'conditionality' refer to?",
+    options: [
+      { id: "a", text: "Arguments that depend on weather conditions" },
+      { id: "b", text: "The negative's ability to run and later kick out of certain arguments" },
+      { id: "c", text: "Conditions required to win the debate" },
+      { id: "d", text: "The conditional format of if-then arguments" },
+    ],
+    correctAnswer: "b",
+    difficulty: "master",
+  },
+  {
+    id: "q15",
+    question: "What is a 'kritik' (K) in advanced debate, and what distinguishes it from traditional policy arguments?",
+    options: [
+      { id: "a", text: "A German word for criticism; it focuses on grammatical errors" },
+      { id: "b", text: "A philosophical challenge to the assumptions or language of the opponent's advocacy, often questioning systemic issues beyond the resolution" },
+      { id: "c", text: "A critique of the opponent's speaking style and delivery" },
+      { id: "d", text: "A technical argument about tournament rules and procedures" },
+    ],
+    correctAnswer: "b",
+    difficulty: "master",
   },
 ] as const;
 
@@ -550,20 +670,52 @@ export function getAllLessons(): Array<{ unitId: string; sectionId: string; less
 }
 
 // Get placement unit based on experience and assessment score
+// Assessment has 15 questions: 4 beginner, 6 intermediate, 3 advanced, 2 master
 export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: number): string {
-  const maxScore = ASSESSMENT_QUESTIONS.length;
+  const maxScore = ASSESSMENT_QUESTIONS.length; // 15 questions
   const scorePercent = assessmentScore / maxScore;
   
-  if (experience === "competitive" && scorePercent >= 0.6) {
-    return "unit-30"; // Advanced section
+  // For competitive debaters (have competed)
+  if (experience === "competitive") {
+    if (scorePercent >= 0.87) {  // 13+ correct: Expert/Master level
+      return "unit-31"; // Expert section
+    }
+    if (scorePercent >= 0.67) {  // 10+ correct: Advanced level
+      return "unit-21"; // Advanced section
+    }
+    if (scorePercent >= 0.47) {  // 7+ correct: Intermediate level
+      return "unit-11"; // Intermediate section
+    }
+    return "unit-06"; // Still some basics to cover
   }
-  if (experience === "some" || (experience === "competitive" && scorePercent < 0.6)) {
-    return scorePercent >= 0.6 ? "unit-21" : "unit-11"; // Advanced or Intermediate
+  
+  // For users with some debate experience
+  if (experience === "some") {
+    if (scorePercent >= 0.80) {  // 12+ correct
+      return "unit-21"; // Advanced section
+    }
+    if (scorePercent >= 0.53) {  // 8+ correct
+      return "unit-11"; // Intermediate section
+    }
+    if (scorePercent >= 0.33) {  // 5+ correct
+      return "unit-06"; // Later beginner
+    }
+    return "unit-01"; // Start at beginning
   }
+  
+  // For casual argument/discussion experience only
   if (experience === "casual") {
-    return scorePercent >= 0.8 ? "unit-11" : "unit-01"; // Intermediate or Beginner
+    if (scorePercent >= 0.67) {  // 10+ correct - surprisingly knowledgeable
+      return "unit-11"; // Intermediate section
+    }
+    if (scorePercent >= 0.40) {  // 6+ correct
+      return "unit-06"; // Later beginner units
+    }
+    return "unit-01"; // Start at beginning
   }
-  return "unit-01"; // Start at beginning
+  
+  // No experience - start from the very beginning
+  return "unit-01";
 }
 
 // Exercise questions for each lesson (legacy - keeping for backward compatibility)
