@@ -444,12 +444,51 @@ export default function Learn() {
     }
   };
 
+  // Helper to reset lesson UI state for a fresh lesson
+  const resetLessonUIState = () => {
+    setLessonStep("content");
+    setExerciseQuestionIndex(0);
+    setExerciseAnswer(null);
+    setExerciseAnswered(false);
+    setExerciseCorrect(false);
+    setCurrentPageIndex(0);
+    setPageAnswer(null);
+    setPageAnswered(false);
+    setPageCorrect(false);
+    setCompletedPageQuestions(new Set());
+    setLessonStartTime(Date.now());
+    setQuestionsAttempted(0);
+    setQuestionsCorrect(0);
+    setAttemptedExerciseQuestions(new Set());
+  };
+
+  // X button handler - completes lesson and returns to curriculum
+  const handleCompletionClose = () => {
+    if (!activeLessonId || !completionStats) {
+      setShowCompletionSummary(false);
+      setActiveLessonId(null);
+      return;
+    }
+    
+    const completedLessonId = activeLessonId;
+    const xpToAdd = completionStats.xpEarned;
+    
+    // Complete the lesson
+    completeLesson(completedLessonId, xpToAdd);
+    
+    // Reset and go to curriculum
+    setShowCompletionSummary(false);
+    setCompletionStats(null);
+    setActiveLessonId(null);
+    resetLessonUIState();
+  };
+
+  // Continue button handler - completes lesson and goes to next lesson
   const handleCompletionContinue = () => {
     if (!activeLessonId || !completionStats) {
       return;
     }
     
-    // Store the current lesson ID before any state changes
     const completedLessonId = activeLessonId;
     const xpToAdd = completionStats.xpEarned;
     
@@ -468,26 +507,12 @@ export default function Learn() {
     
     // Navigate to next lesson or close lesson view
     if (nextLessonId) {
-      // Just update UI state - don't call setCurrentLesson as it would trigger
-      // another saveProgress with stale completedLessonIds
       setActiveLessonId(nextLessonId);
-      setLessonStep("content");
-      setExerciseQuestionIndex(0);
-      setExerciseAnswer(null);
-      setExerciseAnswered(false);
-      setExerciseCorrect(false);
-      setCurrentPageIndex(0);
-      setPageAnswer(null);
-      setPageAnswered(false);
-      setPageCorrect(false);
-      setCompletedPageQuestions(new Set());
-      setLessonStartTime(Date.now());
-      setQuestionsAttempted(0);
-      setQuestionsCorrect(0);
-      setAttemptedExerciseQuestions(new Set());
+      resetLessonUIState();
     } else {
       // No more lessons, go back to curriculum
       setActiveLessonId(null);
+      resetLessonUIState();
     }
   };
 
@@ -1434,7 +1459,7 @@ export default function Learn() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={showCompletionSummary} onOpenChange={setShowCompletionSummary}>
+      <Dialog open={showCompletionSummary} onOpenChange={(open) => { if (!open) handleCompletionClose(); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <div className="mx-auto mb-2 h-16 w-16 rounded-full bg-green-500/10 flex items-center justify-center">

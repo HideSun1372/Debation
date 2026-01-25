@@ -34,12 +34,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-01-q1",
         question: "Which team is responsible for defining the motion in Parliamentary debate?",
         options: [
-          { id: "a", text: "The Government (Proposition)" },
-          { id: "b", text: "The Opposition" },
-          { id: "c", text: "The judge decides" },
-          { id: "d", text: "Both teams negotiate" },
+          { id: "a", text: "Both teams negotiate" },
+          { id: "b", text: "The Government (Proposition)" },
+          { id: "c", text: "The Opposition" },
+          { id: "d", text: "The judge decides" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "b",
         explanation: "In Parliamentary debate, the Government (also called Proposition) is responsible for defining the motion. The Prime Minister typically sets the terms of the debate in their opening speech, and the Opposition must work within reasonable definitions.",
       },
       {
@@ -62,12 +62,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-01-q2",
         question: "During which parts of a speech are Points of Information NOT allowed?",
         options: [
-          { id: "a", text: "The entire speech" },
-          { id: "b", text: "The middle three minutes only" },
-          { id: "c", text: "There are no restrictions on POIs" },
-          { id: "d", text: "The first and last minute of each speech" },
+          { id: "a", text: "There are no restrictions on POIs" },
+          { id: "b", text: "The first and last minute of each speech" },
+          { id: "c", text: "The entire speech" },
+          { id: "d", text: "The middle three minutes only" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "b",
         explanation: "The first and last minute of each speech is 'protected time' when POIs cannot be offered. This allows speakers to establish their opening and deliver their conclusion without interruption.",
       },
       {
@@ -85,12 +85,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-01-q3",
         question: "What distinguishes British Parliamentary from other Parliamentary formats?",
         options: [
-          { id: "a", text: "It uses four teams of two debaters each" },
+          { id: "a", text: "Only one debater speaks per team" },
           { id: "b", text: "It doesn't allow Points of Information" },
           { id: "c", text: "It requires extensive prepared research" },
-          { id: "d", text: "Only one debater speaks per team" },
+          { id: "d", text: "It uses four teams of two debaters each" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "d",
         explanation: "British Parliamentary uniquely features four teams of two debaters each (8 total), creating Opening and Closing pairs for both Government and Opposition. Teams are ranked 1st through 4th, adding a layer of competition beyond just winning or losing.",
       },
       {
@@ -138,10 +138,10 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-02-q1",
         question: "How much preparation time do teams get for impromptu motions in World Schools?",
         options: [
-          { id: "a", text: "15 minutes" },
-          { id: "b", text: "30 minutes" },
-          { id: "c", text: "No preparation time" },
-          { id: "d", text: "60 minutes" },
+          { id: "a", text: "30 minutes" },
+          { id: "b", text: "No preparation time" },
+          { id: "c", text: "15 minutes" },
+          { id: "d", text: "60 minutes" }
         ],
         correctAnswer: "d",
         explanation: "In World Schools impromptu rounds, teams receive 60 minutes (one hour) to prepare after the motion is announced. This is longer than Parliamentary debate but still requires quick thinking and efficient preparation strategies.",
@@ -166,12 +166,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-02-q2",
         question: "Which speaker delivers the Reply Speech for a team in World Schools?",
         options: [
-          { id: "a", text: "Either the First or Second Speaker" },
-          { id: "b", text: "Only the Third Speaker" },
-          { id: "c", text: "Any of the three speakers" },
-          { id: "d", text: "The team captain" },
+          { id: "a", text: "Only the Third Speaker" },
+          { id: "b", text: "Either the First or Second Speaker" },
+          { id: "c", text: "The team captain" },
+          { id: "d", text: "Any of the three speakers" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "b",
         explanation: "In World Schools, the Reply Speech is delivered by either the First or Second Speaker—never the Third Speaker. This prevents the Third Speaker from speaking twice in quick succession and ensures a different perspective for the final summary.",
       },
       {
@@ -189,12 +189,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-02-q3",
         question: "In World Schools judging, what percentage is allocated to Strategy?",
         options: [
-          { id: "a", text: "20%" },
-          { id: "b", text: "30%" },
-          { id: "c", text: "40%" },
-          { id: "d", text: "50%" },
+          { id: "a", text: "40%" },
+          { id: "b", text: "20%" },
+          { id: "c", text: "50%" },
+          { id: "d", text: "30%" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "b",
         explanation: "World Schools judging allocates 20% to Strategy (case structure, responses, time management), 40% to Content (arguments and reasoning), and 40% to Style (delivery, persuasiveness, engagement).",
       },
       {
@@ -242,12 +242,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-03-q1",
         question: "What is the key difference between a bill and a resolution in Congressional Debate?",
         options: [
-          { id: "a", text: "Bills create laws; resolutions express opinions" },
+          { id: "a", text: "Only bills can be debated in chambers" },
           { id: "b", text: "Bills are longer than resolutions" },
-          { id: "c", text: "Only bills can be debated in chambers" },
-          { id: "d", text: "Resolutions require unanimous votes" },
+          { id: "c", text: "Resolutions require unanimous votes" },
+          { id: "d", text: "Bills create laws; resolutions express opinions" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "d",
         explanation: "Bills propose specific laws that would be enacted ('Be it enacted...'), while resolutions express opinions or positions without creating binding law ('Be it resolved...'). Both can be debated in Congressional chambers.",
       },
       {
@@ -271,9 +271,9 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         question: "What does 'precedence' mean when seeking to speak in Congressional Debate?",
         options: [
           { id: "a", text: "Priority goes to those who have spoken less" },
-          { id: "b", text: "The first person to raise their hand speaks" },
-          { id: "c", text: "Only the bill's author can speak first" },
-          { id: "d", text: "Judges choose who speaks next" },
+          { id: "b", text: "Only the bill's author can speak first" },
+          { id: "c", text: "The first person to raise their hand speaks" },
+          { id: "d", text: "Judges choose who speaks next" }
         ],
         correctAnswer: "a",
         explanation: "Precedence means that students who have spoken fewer times (or not at all) receive priority when the Presiding Officer selects speakers. This ensures all students have fair opportunities to speak.",
@@ -298,12 +298,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-03-q3",
         question: "What motion would you use to end debate and move to a vote on legislation?",
         options: [
-          { id: "a", text: "Previous Question" },
-          { id: "b", text: "Point of Order" },
-          { id: "c", text: "Lay on the Table" },
-          { id: "d", text: "Point of Information" },
+          { id: "a", text: "Point of Order" },
+          { id: "b", text: "Point of Information" },
+          { id: "c", text: "Previous Question" },
+          { id: "d", text: "Lay on the Table" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "c",
         explanation: "The motion for 'Previous Question' ends debate on the current legislation and moves the chamber to a vote. It requires a two-thirds majority to pass and is used when members feel the topic has been sufficiently debated.",
       },
       {
@@ -351,12 +351,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-04-q1",
         question: "What type of questions must attorneys use during direct examination in Mock Trial?",
         options: [
-          { id: "a", text: "Open-ended questions (who, what, when, where, why, how)" },
-          { id: "b", text: "Leading questions that suggest the answer" },
+          { id: "a", text: "Leading questions that suggest the answer" },
+          { id: "b", text: "Rhetorical questions" },
           { id: "c", text: "Yes/no questions only" },
-          { id: "d", text: "Rhetorical questions" },
+          { id: "d", text: "Open-ended questions (who, what, when, where, why, how)" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "d",
         explanation: "During direct examination, attorneys must use open-ended questions (who, what, when, where, why, how) that allow witnesses to explain their testimony. Leading questions that suggest the answer are prohibited on direct but required during cross-examination.",
       },
       {
@@ -379,12 +379,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-04-q2",
         question: "Which skill is more emphasized in Debate than in Mock Trial?",
         options: [
-          { id: "a", text: "Playing a character convincingly" },
+          { id: "a", text: "Researching and gathering evidence on various topics" },
           { id: "b", text: "Making and responding to objections" },
-          { id: "c", text: "Researching and gathering evidence on various topics" },
-          { id: "d", text: "Following rules of evidence like hearsay" },
+          { id: "c", text: "Playing a character convincingly" },
+          { id: "d", text: "Following rules of evidence like hearsay" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "a",
         explanation: "Debate emphasizes researching and gathering evidence on various topics since debaters must build their own cases on changing propositions. Mock Trial uses fixed case materials, so the research is about those specific facts rather than gathering outside evidence.",
       },
       {
@@ -439,10 +439,10 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         options: [
           { id: "a", text: "Spreading your arguments across multiple speeches" },
           { id: "b", text: "Sharing evidence with your opponents" },
-          { id: "c", text: "Spreading misinformation strategically" },
-          { id: "d", text: "Speaking at very rapid rates to present more arguments" },
+          { id: "c", text: "Speaking at very rapid rates to present more arguments" },
+          { id: "d", text: "Spreading misinformation strategically" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "c",
         explanation: "'Spreading' refers to speaking at very rapid rates (often 350+ words per minute) to present more arguments within limited speech time. It's a common practice in circuit debate but rarely used in traditional settings.",
       },
       {
@@ -466,11 +466,11 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         question: "What is a 'kritik' in circuit debate?",
         options: [
           { id: "a", text: "A point of order about rule violations" },
-          { id: "b", text: "A criticism of the judge's decision" },
-          { id: "c", text: "A critical theory argument questioning fundamental assumptions" },
-          { id: "d", text: "A request for more speaking time" },
+          { id: "b", text: "A critical theory argument questioning fundamental assumptions" },
+          { id: "c", text: "A request for more speaking time" },
+          { id: "d", text: "A criticism of the judge's decision" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "b",
         explanation: "A 'kritik' (German spelling of 'critique') is a type of argument in circuit debate that uses critical theory to question fundamental assumptions about the topic, the debate structure, or the opponents' framework. These might draw on philosophy from thinkers like Foucault, Marx, or Butler.",
       },
       {
@@ -493,10 +493,10 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-05-q3",
         question: "Which statement about traditional vs circuit debate is TRUE?",
         options: [
-          { id: "a", text: "Circuit debate is always better for college preparation" },
-          { id: "b", text: "Traditional debate never uses any evidence" },
+          { id: "a", text: "Traditional debate never uses any evidence" },
+          { id: "b", text: "International debates follow circuit norms" },
           { id: "c", text: "Many debaters learn to adapt to both styles" },
-          { id: "d", text: "International debates follow circuit norms" },
+          { id: "d", text: "Circuit debate is always better for college preparation" }
         ],
         correctAnswer: "c",
         explanation: "Many successful debaters learn to 'code-switch' between traditional and circuit styles depending on the tournament and judges. Both styles have value, and versatility is an asset. International debate actually tends toward more traditional, persuasion-focused styles.",
@@ -546,10 +546,10 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-06-q1",
         question: "Which is the strongest type of evidence for arguing that a medical treatment works?",
         options: [
-          { id: "a", text: "A celebrity testimonial" },
-          { id: "b", text: "A single patient's positive experience" },
-          { id: "c", text: "A newspaper opinion article" },
-          { id: "d", text: "A peer-reviewed clinical trial with large sample size" },
+          { id: "a", text: "A newspaper opinion article" },
+          { id: "b", text: "A celebrity testimonial" },
+          { id: "c", text: "A single patient's positive experience" },
+          { id: "d", text: "A peer-reviewed clinical trial with large sample size" }
         ],
         correctAnswer: "d",
         explanation: "A peer-reviewed clinical trial with a large sample size is the strongest evidence for medical claims because it's been vetted by experts, uses scientific methodology, and provides statistically significant results. Personal testimonials and opinion pieces are weaker forms of evidence.",
@@ -574,12 +574,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-06-q2",
         question: "What is the primary function of reasoning in an argument?",
         options: [
-          { id: "a", text: "To restate the claim more forcefully" },
+          { id: "a", text: "To attack the opponent's credibility" },
           { id: "b", text: "To provide additional facts and statistics" },
-          { id: "c", text: "To explain HOW the evidence supports the claim" },
-          { id: "d", text: "To attack the opponent's credibility" },
+          { id: "c", text: "To restate the claim more forcefully" },
+          { id: "d", text: "To explain HOW the evidence supports the claim" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "Reasoning explains the logical connection between your evidence and your claim—the HOW and WHY. It's not about restating the claim or providing more facts, but about making explicit why your evidence actually proves your point.",
       },
       {
@@ -603,9 +603,9 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         question: "Which argument best demonstrates complete Claim-Evidence-Reasoning structure?",
         options: [
           { id: "a", text: "'Electric cars are good because they don't pollute.'" },
-          { id: "b", text: "'Studies show electric cars produce zero tailpipe emissions.'" },
+          { id: "b", text: "'Everyone knows electric cars are the future of transportation.'" },
           { id: "c", text: "'Electric cars reduce urban air pollution. Studies show EVs produce zero tailpipe emissions. Since most respiratory illness in cities is caused by vehicle exhaust, eliminating this pollution source will directly decrease asthma rates and related healthcare costs.'" },
-          { id: "d", text: "'Everyone knows electric cars are the future of transportation.'" },
+          { id: "d", text: "'Studies show electric cars produce zero tailpipe emissions.'" }
         ],
         correctAnswer: "c",
         explanation: "Option C has all three elements: a clear claim (EVs reduce urban air pollution), evidence (zero tailpipe emissions), and reasoning (connecting emissions to respiratory illness and healthcare costs). The other options lack one or more elements.",
@@ -625,12 +625,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-06-q4",
         question: "When attacking an opponent's argument in debate, which strategy is most effective?",
         options: [
-          { id: "a", text: "Simply stating that they're wrong" },
+          { id: "a", text: "Reading more evidence without addressing their points" },
           { id: "b", text: "Ignoring their argument completely" },
-          { id: "c", text: "Reading more evidence without addressing their points" },
-          { id: "d", text: "Identifying which element (claim, evidence, or reasoning) is weakest and attacking it" },
+          { id: "c", text: "Identifying which element (claim, evidence, or reasoning) is weakest and attacking it" },
+          { id: "d", text: "Simply stating that they're wrong" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "c",
         explanation: "Effective refutation identifies which element of your opponent's argument is weakest—then attacks it specifically. This is more strategic than general dismissal or ignoring the argument, and more targeted than just piling on your own evidence.",
       },
       {
@@ -668,10 +668,10 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-07-q1",
         question: "Which format features Points of Information during speeches?",
         options: [
-          { id: "a", text: "Congressional Debate" },
-          { id: "b", text: "Mock Trial" },
+          { id: "a", text: "Mock Trial" },
+          { id: "b", text: "Congressional Debate" },
           { id: "c", text: "Parliamentary and World Schools Debate" },
-          { id: "d", text: "None of the above" },
+          { id: "d", text: "None of the above" }
         ],
         correctAnswer: "c",
         explanation: "Points of Information (POIs) are a feature of Parliamentary and World Schools Debate. Speakers can accept or decline brief interjections from opponents during unprotected time. Congressional uses questioning after speeches, and Mock Trial uses cross-examination of witnesses.",
@@ -696,12 +696,12 @@ export const UNIT_02_LESSONS: MultiPageLesson[] = [
         id: "l02-07-q2",
         question: "In Claim-Evidence-Reasoning, what does reasoning accomplish?",
         options: [
-          { id: "a", text: "States the main point you're trying to prove" },
-          { id: "b", text: "Provides factual support with data and examples" },
-          { id: "c", text: "Explains how the evidence logically supports the claim" },
-          { id: "d", text: "Summarizes your opponent's position" },
+          { id: "a", text: "Summarizes your opponent's position" },
+          { id: "b", text: "States the main point you're trying to prove" },
+          { id: "c", text: "Provides factual support with data and examples" },
+          { id: "d", text: "Explains how the evidence logically supports the claim" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "Reasoning is the logical bridge that explains HOW and WHY your evidence proves your claim. The claim is your main point (A), evidence is the factual support (B), and reasoning connects them together explicitly.",
       },
       {

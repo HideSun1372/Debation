@@ -35,12 +35,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-01-q1",
         question: "What is the correct order of the 4 S's of Refutation?",
         options: [
-          { id: "a", text: "State, Signal, Summarize, Support" },
-          { id: "b", text: "Support, Signal, State, Summarize" },
-          { id: "c", text: "Summarize, State, Signal, Support" },
-          { id: "d", text: "Signal, State, Support, Summarize" },
+          { id: "a", text: "Signal, State, Support, Summarize" },
+          { id: "b", text: "State, Signal, Summarize, Support" },
+          { id: "c", text: "Support, Signal, State, Summarize" },
+          { id: "d", text: "Summarize, State, Signal, Support" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "a",
         explanation: "The correct order is Signal (alert the judge), State (identify the argument), Support (provide your counter), and Summarize (explain the impact). This order creates a logical flow that judges can easily follow.",
       },
       {
@@ -58,12 +58,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-01-q2",
         question: "Why is it important to state your opponent's argument fairly and accurately?",
         options: [
-          { id: "a", text: "So you can make their argument sound weaker than it is" },
-          { id: "b", text: "Because judges don't remember what opponents said" },
-          { id: "c", text: "To use up more of your speaking time" },
-          { id: "d", text: "It shows you understand their point and sets up an effective response" },
+          { id: "a", text: "To use up more of your speaking time" },
+          { id: "b", text: "It shows you understand their point and sets up an effective response" },
+          { id: "c", text: "So you can make their argument sound weaker than it is" },
+          { id: "d", text: "Because judges don't remember what opponents said" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "b",
         explanation: "Stating arguments accurately demonstrates that you've listened and understood, which builds credibility. It also properly sets up your counter-argument. Creating a 'strawman' (distorted version) is considered poor debating and judges will often discount such responses.",
       },
       {
@@ -86,12 +86,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-01-q3",
         question: "What is the purpose of the 'Summarize' step in the 4 S's framework?",
         options: [
-          { id: "a", text: "To repeat everything you said" },
+          { id: "a", text: "To explain why your response matters for the debate outcome" },
           { id: "b", text: "To apologize for being harsh" },
           { id: "c", text: "To transition to an unrelated argument" },
-          { id: "d", text: "To explain why your response matters for the debate outcome" },
+          { id: "d", text: "To repeat everything you said" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "a",
         explanation: "The Summarize step explains the impact of your refutation—why it matters for who wins the debate. It connects your specific response to the broader question of which side has the stronger case.",
       },
       {
@@ -114,12 +114,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-01-q4",
         question: "Which of the following is a complete example of the 4 S's framework?",
         options: [
-          { id: "a", text: "That's wrong. I disagree. We win." },
-          { id: "b", text: "They said taxes hurt the economy. Economic studies show tax cuts don't increase growth. Their argument fails." },
-          { id: "c", text: "They said taxes hurt the economy by reducing investment. But Harvard research shows moderate taxes fund infrastructure that helps businesses. So their economic harm argument actually becomes a benefit for our side." },
-          { id: "d", text: "I think we're right about this issue." },
+          { id: "a", text: "They said taxes hurt the economy. Economic studies show tax cuts don't increase growth. Their argument fails." },
+          { id: "b", text: "They said taxes hurt the economy by reducing investment. But Harvard research shows moderate taxes fund infrastructure that helps businesses. So their economic harm argument actually becomes a benefit for our side." },
+          { id: "c", text: "That's wrong. I disagree. We win." },
+          { id: "d", text: "I think we're right about this issue." }
         ],
-        correctAnswer: "c",
+        correctAnswer: "b",
         explanation: "Option C demonstrates all 4 S's: Signal/State ('They said taxes hurt the economy by reducing investment'), Support ('But Harvard research shows moderate taxes fund infrastructure that helps businesses'), and Summarize ('So their economic harm argument actually becomes a benefit for our side').",
       },
       {
@@ -157,12 +157,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-02-q1",
         question: "What does shifting weight from foot to foot typically convey to an audience?",
         options: [
-          { id: "a", text: "Confidence and authority" },
-          { id: "b", text: "Nervousness and uncertainty" },
-          { id: "c", text: "Enthusiasm and energy" },
-          { id: "d", text: "Thoughtfulness and consideration" },
+          { id: "a", text: "Nervousness and uncertainty" },
+          { id: "b", text: "Confidence and authority" },
+          { id: "c", text: "Thoughtfulness and consideration" },
+          { id: "d", text: "Enthusiasm and energy" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Shifting weight from foot to foot is typically perceived as a sign of nervousness or uncertainty. A stable stance with weight evenly distributed conveys confidence and groundedness.",
       },
       {
@@ -185,12 +185,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-02-q2",
         question: "What is the best way to identify and correct nervous habits in debate?",
         options: [
-          { id: "a", text: "Ignore them and focus only on content" },
-          { id: "b", text: "Record yourself and get feedback from others" },
-          { id: "c", text: "Hold completely still during speeches" },
-          { id: "d", text: "Speak as quickly as possible to finish faster" },
+          { id: "a", text: "Hold completely still during speeches" },
+          { id: "b", text: "Ignore them and focus only on content" },
+          { id: "c", text: "Speak as quickly as possible to finish faster" },
+          { id: "d", text: "Record yourself and get feedback from others" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Recording yourself and getting feedback from coaches or peers is the most effective way to identify nervous habits. You often don't notice what you're doing until you see it on video or have it pointed out.",
       },
       {
@@ -248,10 +248,10 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-03-q1",
         question: "What is the most strategic first step when preparing to refute an opponent's argument?",
         options: [
-          { id: "a", text: "Immediately attack their conclusion" },
+          { id: "a", text: "Ignore their argument and present new ones" },
           { id: "b", text: "Identify the weakest point in their claim, evidence, or reasoning" },
-          { id: "c", text: "Ignore their argument and present new ones" },
-          { id: "d", text: "Agree with everything they said" },
+          { id: "c", text: "Agree with everything they said" },
+          { id: "d", text: "Immediately attack their conclusion" }
         ],
         correctAnswer: "b",
         explanation: "Strategic refutation starts with identifying where the argument is most vulnerable—whether that's the claim itself, the evidence, the reasoning, or the impact. Attacking the weakest link is more effective than a scattered approach.",
@@ -277,11 +277,11 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         question: "An opponent argues: 'States that implemented this policy saw lower crime rates, so the policy reduces crime.' What type of logical flaw might this contain?",
         options: [
           { id: "a", text: "False dichotomy" },
-          { id: "b", text: "Correlation vs. causation" },
-          { id: "c", text: "Ad hominem attack" },
-          { id: "d", text: "Circular reasoning" },
+          { id: "b", text: "Ad hominem attack" },
+          { id: "c", text: "Correlation vs. causation" },
+          { id: "d", text: "Circular reasoning" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "This is a correlation vs. causation error. Just because crime rates were lower in states with the policy doesn't prove the policy caused the reduction. Other factors might explain the difference, or the causation might even run the other direction.",
       },
       {
@@ -304,12 +304,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-03-q3",
         question: "What is impact denial as a refutation strategy?",
         options: [
-          { id: "a", text: "Saying the opponent's argument is a lie" },
-          { id: "b", text: "Arguing that even if the argument is true, it doesn't significantly affect the debate outcome" },
-          { id: "c", text: "Ignoring the opponent's argument entirely" },
-          { id: "d", text: "Agreeing with everything the opponent says" },
+          { id: "a", text: "Arguing that even if the argument is true, it doesn't significantly affect the debate outcome" },
+          { id: "b", text: "Agreeing with everything the opponent says" },
+          { id: "c", text: "Saying the opponent's argument is a lie" },
+          { id: "d", text: "Ignoring the opponent's argument entirely" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Impact denial concedes that an argument might be true but argues that it doesn't significantly change who should win the debate—perhaps because the impact is too small, unlikely, or outweighed by other considerations.",
       },
       {
@@ -352,12 +352,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-04-q1",
         question: "What is one reason gestures are important in public speaking?",
         options: [
-          { id: "a", text: "They distract the audience from weak arguments" },
-          { id: "b", text: "They help emphasize points and keep audiences engaged" },
+          { id: "a", text: "They help emphasize points and keep audiences engaged" },
+          { id: "b", text: "They make you appear nervous" },
           { id: "c", text: "They are required by debate rules" },
-          { id: "d", text: "They make you appear nervous" },
+          { id: "d", text: "They distract the audience from weak arguments" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Gestures help emphasize important points and keep audiences visually engaged. Research shows that appropriate gesturing makes speakers appear more confident and persuasive.",
       },
       {
@@ -385,10 +385,10 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-04-q2",
         question: "Why should you avoid making the same gesture repeatedly throughout a speech?",
         options: [
-          { id: "a", text: "It's against debate rules" },
+          { id: "a", text: "Judges prefer speakers who don't move at all" },
           { id: "b", text: "Repetitive motions become distracting and lose their emphasis" },
-          { id: "c", text: "Judges prefer speakers who don't move at all" },
-          { id: "d", text: "It will make your arms tired" },
+          { id: "c", text: "It's against debate rules" },
+          { id: "d", text: "It will make your arms tired" }
         ],
         correctAnswer: "b",
         explanation: "Repetitive gestures lose their impact and can become distracting to the audience. Varying your gestures keeps them effective for emphasis, while constant repetition turns a communication tool into a distraction.",
@@ -435,10 +435,10 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         options: [
           { id: "a", text: "The death penalty is morally wrong" },
           { id: "b", text: "We should increase the minimum wage" },
-          { id: "c", text: "The unemployment rate fell by 2% last year" },
-          { id: "d", text: "Education is the most important investment a society can make" },
+          { id: "c", text: "Education is the most important investment a society can make" },
+          { id: "d", text: "The unemployment rate fell by 2% last year" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "A factual claim asserts something that can be empirically verified. 'The unemployment rate fell by 2%' is a factual claim that can be checked against data. The others involve value judgments (morally wrong, most important) or policy proposals (should increase).",
       },
       {
@@ -462,11 +462,11 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         question: "What distinguishes a claim of policy from other claim types?",
         options: [
           { id: "a", text: "It asserts something is morally right or wrong" },
-          { id: "b", text: "It proposes that a specific action should be taken" },
-          { id: "c", text: "It claims something is objectively true" },
-          { id: "d", text: "It only relies on emotional appeals" },
+          { id: "b", text: "It claims something is objectively true" },
+          { id: "c", text: "It only relies on emotional appeals" },
+          { id: "d", text: "It proposes that a specific action should be taken" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Policy claims are characterized by proposing action—they argue that something 'should' or 'should not' be done. They require demonstrating that a problem exists, a solution is workable, and benefits outweigh costs.",
       },
       {
@@ -489,12 +489,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-05-q3",
         question: "In an argument chain of Fact → Value → Policy, which level would you attack by saying 'Even if true, economic concerns outweigh environmental concerns'?",
         options: [
-          { id: "a", text: "The factual claim" },
-          { id: "b", text: "The value claim" },
+          { id: "a", text: "The value claim" },
+          { id: "b", text: "None of the above" },
           { id: "c", text: "The policy claim" },
-          { id: "d", text: "None of the above" },
+          { id: "d", text: "The factual claim" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Saying 'economic concerns outweigh environmental concerns' is a value-level attack. You're not disputing the facts about climate change, nor specifically attacking the policy's mechanics—you're arguing that different values should take priority in our evaluation.",
       },
       {
@@ -542,12 +542,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-06-q1",
         question: "Which claim is most effectively specific?",
         options: [
-          { id: "a", text: "Renewable energy is good for the economy" },
-          { id: "b", text: "Solar power creates many jobs" },
-          { id: "c", text: "Solar panel installation created 250,000 jobs in the U.S. in 2023" },
-          { id: "d", text: "Energy is important" },
+          { id: "a", text: "Solar panel installation created 250,000 jobs in the U.S. in 2023" },
+          { id: "b", text: "Renewable energy is good for the economy" },
+          { id: "c", text: "Solar power creates many jobs" },
+          { id: "d", text: "Energy is important" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "a",
         explanation: "Option C is most specific—it names the exact sector (solar panel installation), quantifies the impact (250,000 jobs), specifies the location (U.S.), and gives a timeframe (2023). This precision makes it provable and defensible.",
       },
       {
@@ -570,10 +570,10 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-06-q2",
         question: "What is the main problem with a claim that uses 'always' or 'never'?",
         options: [
-          { id: "a", text: "These words are grammatically incorrect" },
+          { id: "a", text: "They are too specific" },
           { id: "b", text: "A single counterexample can defeat the entire claim" },
-          { id: "c", text: "Judges don't understand absolute terms" },
-          { id: "d", text: "They are too specific" },
+          { id: "c", text: "These words are grammatically incorrect" },
+          { id: "d", text: "Judges don't understand absolute terms" }
         ],
         correctAnswer: "b",
         explanation: "Universal claims using 'always' or 'never' are vulnerable because a single counterexample disproves them. A claim that 'this always works' can be defeated by showing just one case where it didn't work.",
@@ -599,11 +599,11 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         question: "What is 'strategic framing' of a claim?",
         options: [
           { id: "a", text: "Making a claim that isn't true" },
-          { id: "b", text: "Positioning a claim to match your burden of proof and preempt attacks" },
+          { id: "b", text: "Copying your opponent's claims exactly" },
           { id: "c", text: "Using as many words as possible" },
-          { id: "d", text: "Copying your opponent's claims exactly" },
+          { id: "d", text: "Positioning a claim to match your burden of proof and preempt attacks" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Strategic framing means positioning your claim to match what you need to prove, maximize its perceived importance, and anticipate likely counterarguments. The same underlying argument can be framed more or less effectively for your side.",
       },
       {
@@ -651,12 +651,12 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-07-q1",
         question: "You're responding to an opponent's claim that 'raising taxes always hurts economic growth.' Using the 4 S's, which step involves pointing out that 'always' is too absolute since Nordic countries maintain growth with high taxes?",
         options: [
-          { id: "a", text: "Signal" },
+          { id: "a", text: "Support" },
           { id: "b", text: "State" },
-          { id: "c", text: "Support" },
-          { id: "d", text: "Summarize" },
+          { id: "c", text: "Summarize" },
+          { id: "d", text: "Signal" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "a",
         explanation: "The Support step is where you provide your counter-argument and reasoning. Pointing out that Nordic countries maintain growth despite high taxes is your counter-evidence attacking their universal claim. This goes in the Support step.",
       },
       {
@@ -679,10 +679,10 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         id: "l04-07-q2",
         question: "An opponent argues 'We should ban single-use plastics.' What type of claim is this, and what elements would you need to attack it most effectively?",
         options: [
-          { id: "a", text: "Factual claim; challenge with counter-data" },
-          { id: "b", text: "Value claim; challenge the moral framework" },
+          { id: "a", text: "Value claim; challenge the moral framework" },
+          { id: "b", text: "Factual claim; challenge with counter-data" },
           { id: "c", text: "Policy claim; challenge problem, plan, or cost-benefit" },
-          { id: "d", text: "None—this cannot be effectively refuted" },
+          { id: "d", text: "None—this cannot be effectively refuted" }
         ],
         correctAnswer: "c",
         explanation: "This is a policy claim ('We should...') proposing action. Effective refutation could challenge whether there's really a problem, whether the ban is workable, whether it would actually solve the problem, or whether the costs outweigh the benefits.",

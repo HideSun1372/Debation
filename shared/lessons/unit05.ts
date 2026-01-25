@@ -24,12 +24,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-01-q1",
         question: "Which of the following is considered a filler word in debate?",
         options: [
-          { id: "a", text: "Therefore" },
-          { id: "b", text: "However" },
-          { id: "c", text: "Um" },
-          { id: "d", text: "Furthermore" },
+          { id: "a", text: "Furthermore" },
+          { id: "b", text: "Therefore" },
+          { id: "c", text: "However" },
+          { id: "d", text: "Um" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "'Um' is a classic filler word that speakers use as a verbal placeholder while thinking. Words like 'therefore,' 'however,' and 'furthermore' are transition words that add structure and clarity to arguments.",
       },
       {
@@ -52,12 +52,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-01-q2",
         question: "What is the primary benefit of replacing filler words with pauses?",
         options: [
-          { id: "a", text: "It makes your speech shorter" },
-          { id: "b", text: "It conveys confidence and emphasizes key points" },
-          { id: "c", text: "Judges prefer silent speakers" },
-          { id: "d", text: "It allows you to skip difficult arguments" },
+          { id: "a", text: "Judges prefer silent speakers" },
+          { id: "b", text: "It allows you to skip difficult arguments" },
+          { id: "c", text: "It makes your speech shorter" },
+          { id: "d", text: "It conveys confidence and emphasizes key points" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Replacing fillers with pauses makes you appear more confident and in control. Strategic pauses also emphasize important points by giving the audience time to process what you've said.",
       },
       {
@@ -80,10 +80,10 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-01-q3",
         question: "What should you do when you feel an 'um' coming during the pause drill?",
         options: [
-          { id: "a", text: "Say 'um' quickly and move on" },
+          { id: "a", text: "Start your sentence over from the beginning" },
           { id: "b", text: "Stop completely and count silently to two" },
           { id: "c", text: "Speed up your speech to avoid the pause" },
-          { id: "d", text: "Start your sentence over from the beginning" },
+          { id: "d", text: "Say 'um' quickly and move on" }
         ],
         correctAnswer: "b",
         explanation: "The pause drill trains you to stop completely when you feel a filler coming, count silently to two, then continue. This teaches your brain that silence is acceptable and preferable to filler words.",
@@ -123,12 +123,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-02-q1",
         question: "Which piece of evidence would be MOST effective for supporting a claim about current education policy?",
         options: [
-          { id: "a", text: "A celebrity's opinion shared on social media" },
-          { id: "b", text: "A 2023 peer-reviewed study from a university research center" },
-          { id: "c", text: "Your personal experience in school" },
-          { id: "d", text: "A magazine article from 1995" },
+          { id: "a", text: "A 2023 peer-reviewed study from a university research center" },
+          { id: "b", text: "Your personal experience in school" },
+          { id: "c", text: "A celebrity's opinion shared on social media" },
+          { id: "d", text: "A magazine article from 1995" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "A recent peer-reviewed study combines credibility (academic rigor), recency (2023), and typically offers specificity. Personal experience, celebrity opinions, and outdated articles lack one or more of these key characteristics.",
       },
       {
@@ -151,12 +151,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-02-q2",
         question: "Which citation is properly formatted for debate?",
         options: [
-          { id: "a", text: "Studies show that this policy works" },
-          { id: "b", text: "Experts agree this is a good idea" },
-          { id: "c", text: "Dr. James Miller, Harvard Law Professor, 2023, Yale Law Review" },
-          { id: "d", text: "I read somewhere that crime is decreasing" },
+          { id: "a", text: "Experts agree this is a good idea" },
+          { id: "b", text: "Studies show that this policy works" },
+          { id: "c", text: "I read somewhere that crime is decreasing" },
+          { id: "d", text: "Dr. James Miller, Harvard Law Professor, 2023, Yale Law Review" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "Option C provides the key elements of a proper citation: the author's name and qualifications, the date, and the publication. The other options are vague and don't allow judges to evaluate source credibility.",
       },
       {
@@ -179,12 +179,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-02-q3",
         question: "What is a 'warrant' in debate?",
         options: [
-          { id: "a", text: "The source of your evidence" },
-          { id: "b", text: "The explanation of why your evidence proves your claim" },
-          { id: "c", text: "The date your evidence was published" },
-          { id: "d", text: "A legal document authorizing a search" },
+          { id: "a", text: "The date your evidence was published" },
+          { id: "b", text: "The source of your evidence" },
+          { id: "c", text: "A legal document authorizing a search" },
+          { id: "d", text: "The explanation of why your evidence proves your claim" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "A warrant is the logical explanation that connects your evidence to your claim. It's the 'so what?' that explains why the evidence matters and proves what you're arguing.",
       },
       {
@@ -207,12 +207,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-02-q4",
         question: "What is the best way to handle evidence that opponents might attack as outdated?",
         options: [
-          { id: "a", text: "Hope they don't notice" },
+          { id: "a", text: "Pre-emptively explain why it's still relevant" },
           { id: "b", text: "Don't use that evidence at all" },
-          { id: "c", text: "Pre-emptively explain why it's still relevant" },
-          { id: "d", text: "Attack the opponent personally instead" },
+          { id: "c", text: "Attack the opponent personally instead" },
+          { id: "d", text: "Hope they don't notice" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "a",
         explanation: "Pre-emptive defense is the strongest approach. By explaining why the evidence remains relevant despite its age, you take the attack away from opponents and show you've thought critically about your own sources.",
       },
       {
@@ -251,11 +251,11 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         question: "Why are logical fallacies particularly dangerous in debate?",
         options: [
           { id: "a", text: "They are too complicated for judges to understand" },
-          { id: "b", text: "They often sound convincing even though the logic is flawed" },
-          { id: "c", text: "They are allowed under most debate rules" },
-          { id: "d", text: "They require too much research to refute" },
+          { id: "b", text: "They are allowed under most debate rules" },
+          { id: "c", text: "They often sound convincing even though the logic is flawed" },
+          { id: "d", text: "They require too much research to refute" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Fallacies are dangerous because they exploit mental shortcuts and often sound persuasive despite having flawed logic. This means audiences might accept faulty reasoning if no one points out the error.",
       },
       {
@@ -278,12 +278,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-03-q2",
         question: "A debater argues 'We should consider year-round schooling.' Their opponent responds 'My opponent wants to eliminate summer vacation entirely and overwork students!' This is an example of:",
         options: [
-          { id: "a", text: "Ad hominem" },
-          { id: "b", text: "Strawman fallacy" },
-          { id: "c", text: "Strong rebuttal" },
-          { id: "d", text: "Slippery slope" },
+          { id: "a", text: "Strawman fallacy" },
+          { id: "b", text: "Slippery slope" },
+          { id: "c", text: "Ad hominem" },
+          { id: "d", text: "Strong rebuttal" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "This is a strawman fallacy. 'Consider year-round schooling' is distorted into 'eliminate summer vacation entirely and overwork students.' The opponent is attacking an exaggerated version of the argument rather than the actual proposal.",
       },
       {
@@ -306,12 +306,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-03-q3",
         question: "Which statement is an example of a slippery slope fallacy?",
         options: [
-          { id: "a", text: "If we raise the minimum wage, businesses may have to adjust their hiring practices" },
-          { id: "b", text: "If we raise the minimum wage, businesses will close, unemployment will skyrocket, and the economy will collapse" },
+          { id: "a", text: "If we raise the minimum wage, businesses will close, unemployment will skyrocket, and the economy will collapse" },
+          { id: "b", text: "Some economists support minimum wage increases while others oppose them" },
           { id: "c", text: "Minimum wage increases have different effects in different economic contexts" },
-          { id: "d", text: "Some economists support minimum wage increases while others oppose them" },
+          { id: "d", text: "If we raise the minimum wage, businesses may have to adjust their hiring practices" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Option B is a slippery slope because it assumes a chain of catastrophic consequences without providing evidence for each link. Option A is a reasonable, limited prediction without claiming inevitable extreme outcomes.",
       },
       {
@@ -334,12 +334,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-03-q4",
         question: "A debater argues: 'This policy must be good because polls show 70% of people support it.' This is an example of:",
         options: [
-          { id: "a", text: "Ad hominem" },
+          { id: "a", text: "Appeal to popularity (bandwagon)" },
           { id: "b", text: "Strawman" },
-          { id: "c", text: "Appeal to popularity (bandwagon)" },
-          { id: "d", text: "False dichotomy" },
+          { id: "c", text: "Ad hominem" },
+          { id: "d", text: "False dichotomy" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "a",
         explanation: "This is an appeal to popularity (bandwagon fallacy). The argument assumes that because many people support something, it must be correct. Popular support doesn't prove a policy is good—it needs to be evaluated on its merits.",
       },
       {
@@ -389,8 +389,8 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         options: [
           { id: "a", text: "The policy is now universally supported" },
           { id: "b", text: "The percentage increase sounds impressive but represents small absolute numbers" },
-          { id: "c", text: "Statistics cannot be trusted" },
-          { id: "d", text: "The 200% figure must be incorrect" },
+          { id: "c", text: "The 200% figure must be incorrect" },
+          { id: "d", text: "Statistics cannot be trusted" }
         ],
         correctAnswer: "b",
         explanation: "A 200% increase from 2% to 6% is mathematically accurate, but context matters. The actual support remains very low (only 6%), so the impressive-sounding percentage increase is somewhat misleading. Always consider both relative and absolute numbers.",
@@ -416,11 +416,11 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         question: "Which type of study provides the strongest evidence for causation?",
         options: [
           { id: "a", text: "A survey of 100 people's opinions" },
-          { id: "b", text: "A randomized controlled experiment with 1,000 participants" },
-          { id: "c", text: "A case study of one organization" },
-          { id: "d", text: "A news article reporting on trends" },
+          { id: "b", text: "A case study of one organization" },
+          { id: "c", text: "A news article reporting on trends" },
+          { id: "d", text: "A randomized controlled experiment with 1,000 participants" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Randomized controlled experiments provide the strongest evidence for causation because they control variables, use random assignment, and can isolate cause-and-effect relationships. Surveys show opinions, case studies examine single instances, and news articles aren't studies at all.",
       },
       {
@@ -443,12 +443,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-04-q3",
         question: "An economist is cited to support an argument about vaccine safety. What's the problem with this evidence?",
         options: [
-          { id: "a", text: "Economists are never credible" },
-          { id: "b", text: "The expert's credentials are not relevant to the topic" },
+          { id: "a", text: "The expert's credentials are not relevant to the topic" },
+          { id: "b", text: "Economic analysis never applies to health topics" },
           { id: "c", text: "Only doctors can discuss vaccines" },
-          { id: "d", text: "Economic analysis never applies to health topics" },
+          { id: "d", text: "Economists are never credible" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "An economist lacks relevant expertise on vaccine safety—that falls under immunology, epidemiology, or medicine. Expertise in one field doesn't transfer to unrelated fields. While economists might study healthcare costs, vaccine safety is a medical question.",
       },
       {
@@ -471,12 +471,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-04-q4",
         question: "What's the most effective way to use examples in conjunction with statistics?",
         options: [
-          { id: "a", text: "Use only examples, since numbers are boring" },
-          { id: "b", text: "Use the statistic to establish scope, then an example to create human connection" },
-          { id: "c", text: "Never mix different types of evidence" },
-          { id: "d", text: "Replace statistics with examples whenever possible" },
+          { id: "a", text: "Never mix different types of evidence" },
+          { id: "b", text: "Use only examples, since numbers are boring" },
+          { id: "c", text: "Use the statistic to establish scope, then an example to create human connection" },
+          { id: "d", text: "Replace statistics with examples whenever possible" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Statistics and examples complement each other. Statistics establish the scope of an issue (how many, how much), while examples make the abstract concrete and emotionally resonant. Together they create both logical and emotional persuasion.",
       },
       {
@@ -514,12 +514,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-05-q1",
         question: "In the sentence 'This policy will save thousands of lives,' which word would you emphasize to highlight the life-saving impact?",
         options: [
-          { id: "a", text: "This" },
+          { id: "a", text: "Policy" },
           { id: "b", text: "Will" },
-          { id: "c", text: "Thousands" },
-          { id: "d", text: "Policy" },
+          { id: "c", text: "This" },
+          { id: "d", text: "Thousands" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "'Thousands' is the key impact word that conveys the magnitude of lives saved. Emphasizing this word highlights the scale of the positive outcome, making the argument more memorable and impactful.",
       },
       {
@@ -543,9 +543,9 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         question: "Why is it important to vary your pace rather than speaking slowly throughout your entire speech?",
         options: [
           { id: "a", text: "Speaking slowly uses too much time" },
-          { id: "b", text: "Slow speech is always boring" },
+          { id: "b", text: "Judges prefer fast speakers" },
           { id: "c", text: "Contrast makes the slow moments stand out as more important" },
-          { id: "d", text: "Judges prefer fast speakers" },
+          { id: "d", text: "Slow speech is always boring" }
         ],
         correctAnswer: "c",
         explanation: "Slowing down only has impact when it contrasts with normal-paced speech. If everything is slow, nothing stands out. Strategic variation—normal pace for supporting details, slow pace for key points—creates emphasis through contrast.",
@@ -570,10 +570,10 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-05-q3",
         question: "What is 'uptalk' and why should debaters avoid it?",
         options: [
-          { id: "a", text: "Speaking too quickly; it makes you hard to understand" },
+          { id: "a", text: "Speaking too loudly; it seems aggressive" },
           { id: "b", text: "Ending statements with rising pitch, making them sound like questions" },
-          { id: "c", text: "Speaking too loudly; it seems aggressive" },
-          { id: "d", text: "Using too many hand gestures; it's distracting" },
+          { id: "c", text: "Using too many hand gestures; it's distracting" },
+          { id: "d", text: "Speaking too quickly; it makes you hard to understand" }
         ],
         correctAnswer: "b",
         explanation: "Uptalk is ending declarative statements with a rising pitch, making them sound like questions. This undermines confidence and authority, making definitive claims sound uncertain. Statements should end with falling pitch.",
@@ -608,10 +608,10 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-06-q1",
         question: "In the Toulmin model, what is the function of a warrant?",
         options: [
-          { id: "a", text: "To state what you're trying to prove" },
-          { id: "b", text: "To provide facts and data" },
+          { id: "a", text: "To provide facts and data" },
+          { id: "b", text: "To state what you're trying to prove" },
           { id: "c", text: "To explain the logical connection between evidence and claim" },
-          { id: "d", text: "To attack opponent arguments" },
+          { id: "d", text: "To attack opponent arguments" }
         ],
         correctAnswer: "c",
         explanation: "A warrant explains the logical connection between your evidence and your claim. It's the reasoning that shows WHY your evidence actually supports what you're arguing. Claims state your position; evidence provides support; warrants complete the logical chain.",
@@ -636,12 +636,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-06-q2",
         question: "A debater says: 'Experts recommend this policy, therefore we should adopt it.' What type of warrant underlies this argument?",
         options: [
-          { id: "a", text: "Cause and effect warrant" },
-          { id: "b", text: "Comparison warrant" },
-          { id: "c", text: "Authority warrant" },
-          { id: "d", text: "Definition warrant" },
+          { id: "a", text: "Definition warrant" },
+          { id: "b", text: "Cause and effect warrant" },
+          { id: "c", text: "Comparison warrant" },
+          { id: "d", text: "Authority warrant" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "This argument relies on an authority warrant—the assumption that experts' recommendations should be trusted because of their expertise. The unstated warrant is: 'Experts have knowledge and judgment we should defer to in their area of expertise.'",
       },
       {
@@ -665,11 +665,11 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         question: "A debater argues: 'This policy worked in Sweden, so it will work in the United States.' What question would best test this warrant?",
         options: [
           { id: "a", text: "Is Sweden a real country?" },
-          { id: "b", text: "Are Sweden and the United States similar enough for the comparison to be valid?" },
+          { id: "b", text: "Do Americans like Swedish policies?" },
           { id: "c", text: "What is the capital of Sweden?" },
-          { id: "d", text: "Do Americans like Swedish policies?" },
+          { id: "d", text: "Are Sweden and the United States similar enough for the comparison to be valid?" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "This is an analogical warrant—it assumes that success in one context transfers to another. The key test is whether the contexts are sufficiently similar. If Sweden and the US differ in relevant ways (size, culture, existing systems), the warrant may not hold.",
       },
       {
@@ -692,12 +692,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-06-q4",
         question: "What is the most effective way to attack an opponent's argument if you cannot dispute their evidence?",
         options: [
-          { id: "a", text: "Ignore the argument completely" },
-          { id: "b", text: "Attack their warrant—the connection between evidence and claim" },
-          { id: "c", text: "Attack the opponent personally" },
-          { id: "d", text: "Make your voice louder" },
+          { id: "a", text: "Make your voice louder" },
+          { id: "b", text: "Attack the opponent personally" },
+          { id: "c", text: "Attack their warrant—the connection between evidence and claim" },
+          { id: "d", text: "Ignore the argument completely" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "When you can't dispute the evidence, attacking the warrant is highly effective. You can concede that the evidence is accurate while arguing it doesn't actually prove what the opponent claims. This severs the logical connection in their argument.",
       },
       {
@@ -731,10 +731,10 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-07-q1",
         question: "Which type of evidence would be most effective for proving that a policy CAUSES a specific outcome?",
         options: [
-          { id: "a", text: "A personal example from your experience" },
+          { id: "a", text: "A statistic showing percentages" },
           { id: "b", text: "A randomized controlled study" },
-          { id: "c", text: "A statistic showing percentages" },
-          { id: "d", text: "An expert's prediction" },
+          { id: "c", text: "A personal example from your experience" },
+          { id: "d", text: "An expert's prediction" }
         ],
         correctAnswer: "b",
         explanation: "Randomized controlled studies are designed specifically to establish causation by controlling variables and isolating cause-and-effect relationships. Statistics show correlation, examples illustrate, and predictions are speculation—only properly designed studies prove causation.",
@@ -759,12 +759,12 @@ export const UNIT_05_LESSONS: MultiPageLesson[] = [
         id: "l05-07-q2",
         question: "What should you do instead of saying 'um' or 'uh' during a debate speech?",
         options: [
-          { id: "a", text: "Say 'like' instead" },
-          { id: "b", text: "Speak faster to avoid the gap" },
-          { id: "c", text: "Pause silently" },
-          { id: "d", text: "Start your sentence over" },
+          { id: "a", text: "Speak faster to avoid the gap" },
+          { id: "b", text: "Say 'like' instead" },
+          { id: "c", text: "Start your sentence over" },
+          { id: "d", text: "Pause silently" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "A silent pause is far more powerful than any filler word. It conveys confidence, gives the audience time to process, and emphasizes your points. What feels like a long pause to you usually feels natural to listeners.",
       },
       {

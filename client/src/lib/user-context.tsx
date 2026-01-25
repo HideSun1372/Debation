@@ -360,22 +360,22 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [user.lessonProgress, isAuthenticated, saveProgressMutation]);
 
   const addLearnXp = useCallback((xp: number) => {
-    const currentProgress = user.lessonProgress;
-    const newXp = currentProgress.learnXp + xp;
-    const newLevel = getLearnLevel(newXp);
-    
-    const newProgress: LessonProgressData = {
-      ...currentProgress,
-      learnXp: newXp,
-      learnLevel: newLevel,
-      lastVisitedAt: new Date().toISOString(),
-    };
-    
-    if (isAuthenticated) {
-      saveProgress(newProgress);
-    }
-    
+    // Use functional update to get the latest state
     setLocalUser((prev) => {
+      const newXp = prev.lessonProgress.learnXp + xp;
+      const newLevel = getLearnLevel(newXp);
+      
+      const newProgress: LessonProgressData = {
+        ...prev.lessonProgress,
+        learnXp: newXp,
+        learnLevel: newLevel,
+        lastVisitedAt: new Date().toISOString(),
+      };
+      
+      if (isAuthenticated) {
+        saveProgressMutation.mutate(newProgress);
+      }
+      
       const newUser = {
         ...prev,
         lessonProgress: newProgress,
@@ -383,23 +383,24 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("debate-user", JSON.stringify(newUser));
       return newUser;
     });
-  }, [user.lessonProgress, isAuthenticated, saveProgress]);
+  }, [isAuthenticated, saveProgressMutation]);
 
   const setCurrentLesson = useCallback((unitId: string, sectionId: string, lessonId: string) => {
-    const currentProgress = user.lessonProgress;
-    const newProgress: LessonProgressData = {
-      ...currentProgress,
-      currentUnitId: unitId,
-      currentSectionId: sectionId,
-      currentLessonId: lessonId,
-      lastVisitedAt: new Date().toISOString(),
-    };
-    
-    if (isAuthenticated) {
-      saveProgress(newProgress);
-    }
-    
+    // Use functional update to get the latest state and avoid overwriting completedLessonIds
     setLocalUser((prev) => {
+      const newProgress: LessonProgressData = {
+        ...prev.lessonProgress,
+        currentUnitId: unitId,
+        currentSectionId: sectionId,
+        currentLessonId: lessonId,
+        lastVisitedAt: new Date().toISOString(),
+      };
+      
+      // Save to DB with latest state
+      if (isAuthenticated) {
+        saveProgressMutation.mutate(newProgress);
+      }
+      
       const newUser = {
         ...prev,
         lessonProgress: newProgress,
@@ -407,7 +408,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("debate-user", JSON.stringify(newUser));
       return newUser;
     });
-  }, [isAuthenticated, saveProgress, user.lessonProgress]);
+  }, [isAuthenticated, saveProgressMutation]);
 
   const isLessonCompleted = useCallback((lessonId: string) => {
     return user.lessonProgress.completedLessonIds.includes(lessonId);

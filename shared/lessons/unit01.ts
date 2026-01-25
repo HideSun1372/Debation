@@ -24,12 +24,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-01-q1",
         question: "What distinguishes formal debate from a casual argument?",
         options: [
-          { id: "a", text: "Each speaker has designated time and must use evidence" },
-          { id: "b", text: "The person who speaks loudest wins" },
-          { id: "c", text: "Personal attacks are encouraged to win" },
-          { id: "d", text: "There are no rules to follow" },
+          { id: "a", text: "There are no rules to follow" },
+          { id: "b", text: "Each speaker has designated time and must use evidence" },
+          { id: "c", text: "The person who speaks loudest wins" },
+          { id: "d", text: "Personal attacks are encouraged to win" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "b",
         explanation: "Unlike casual arguments, formal debate provides structured speaking time for each participant and requires arguments to be supported by evidence and logical reasoning, not emotion or personal attacks.",
       },
       {
@@ -54,12 +54,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-01-q2",
         question: "Which skill does debate NOT primarily develop?",
         options: [
-          { id: "a", text: "Memorizing large amounts of facts" },
-          { id: "b", text: "Critical thinking and logical analysis" },
-          { id: "c", text: "Research and information gathering" },
-          { id: "d", text: "Public speaking and clear communication" },
+          { id: "a", text: "Research and information gathering" },
+          { id: "b", text: "Public speaking and clear communication" },
+          { id: "c", text: "Memorizing large amounts of facts" },
+          { id: "d", text: "Critical thinking and logical analysis" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "c",
         explanation: "While knowledge is helpful, debate primarily develops critical thinking, research, speaking, and listening skills—not pure memorization. Understanding concepts and applying them matters more than memorizing facts.",
       },
       {
@@ -72,12 +72,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-01-q3",
         question: "In a debate about 'Voting should be mandatory,' which side would the Affirmative take?",
         options: [
-          { id: "a", text: "In favor of mandatory voting" },
+          { id: "a", text: "It depends on the debater's personal opinion" },
           { id: "b", text: "Against mandatory voting" },
           { id: "c", text: "Neutral on the topic" },
-          { id: "d", text: "It depends on the debater's personal opinion" },
+          { id: "d", text: "In favor of mandatory voting" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "d",
         explanation: "The Affirmative side always supports the resolution as stated. Since the resolution says 'Voting should be mandatory,' the Affirmative argues in favor of making voting mandatory.",
       },
       {
@@ -101,12 +101,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-01-q4",
         question: "What is a common misconception about debate?",
         options: [
-          { id: "a", text: "You must personally believe in the position you're arguing" },
-          { id: "b", text: "Debate develops critical thinking skills" },
-          { id: "c", text: "Debate follows structured rules" },
-          { id: "d", text: "Evidence and logic are important" },
+          { id: "a", text: "Debate develops critical thinking skills" },
+          { id: "b", text: "Debate follows structured rules" },
+          { id: "c", text: "You must personally believe in the position you're arguing" },
+          { id: "d", text: "Evidence and logic are important" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "c",
         explanation: "It's a misconception that you must believe in your position. Debaters are often assigned sides randomly, and arguing for positions you disagree with actually helps you understand different perspectives better.",
       },
       {
@@ -144,12 +144,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-02-q1",
         question: "Why do debaters tend to excel in job interviews?",
         options: [
-          { id: "a", text: "They can structure answers logically and handle challenging questions" },
-          { id: "b", text: "They memorize answers to every possible question" },
-          { id: "c", text: "They speak louder than other candidates" },
-          { id: "d", text: "They avoid answering difficult questions" },
+          { id: "a", text: "They memorize answers to every possible question" },
+          { id: "b", text: "They can structure answers logically and handle challenging questions" },
+          { id: "c", text: "They avoid answering difficult questions" },
+          { id: "d", text: "They speak louder than other candidates" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "b",
         explanation: "Debaters excel in interviews because they're trained to structure their responses logically, support their claims with evidence, and remain composed when facing challenging questions—all skills developed through competitive debate.",
       },
       {
@@ -172,12 +172,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-02-q2",
         question: "Why is debate particularly effective at building public speaking confidence?",
         options: [
-          { id: "a", text: "Regular practice, supportive community, and immediate feedback" },
-          { id: "b", text: "Debaters never make mistakes" },
-          { id: "c", text: "Debate eliminates all nervousness immediately" },
-          { id: "d", text: "You only speak when you feel completely ready" },
+          { id: "a", text: "Debate eliminates all nervousness immediately" },
+          { id: "b", text: "Regular practice, supportive community, and immediate feedback" },
+          { id: "c", text: "You only speak when you feel completely ready" },
+          { id: "d", text: "Debaters never make mistakes" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "b",
         explanation: "Debate builds confidence through regular speaking practice in every round, a supportive community of fellow debaters, and immediate feedback from judges that helps you continuously improve.",
       },
       {
@@ -201,12 +201,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-02-q3",
         question: "How does debate participation improve academic performance?",
         options: [
-          { id: "a", text: "Reading, writing, analytical skills, and study habits all improve" },
+          { id: "a", text: "Teachers grade debaters more leniently" },
           { id: "b", text: "Debaters receive extra credit in all classes" },
-          { id: "c", text: "Teachers grade debaters more leniently" },
-          { id: "d", text: "Debate replaces regular homework" },
+          { id: "c", text: "Debate replaces regular homework" },
+          { id: "d", text: "Reading, writing, analytical skills, and study habits all improve" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "d",
         explanation: "Debate improves academic performance by enhancing reading comprehension through extensive reading, writing quality through structured argumentation, analytical skills for tests, and study habits through thorough preparation practices.",
       },
       {
@@ -260,9 +260,9 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         question: "What is the primary difference between Lincoln-Douglas and Policy debate in terms of team structure?",
         options: [
           { id: "a", text: "LD is one-on-one while Policy uses two-person teams" },
-          { id: "b", text: "LD has three-person teams while Policy is one-on-one" },
-          { id: "c", text: "Both formats use two-person teams" },
-          { id: "d", text: "Both formats are one-on-one" },
+          { id: "b", text: "Both formats use two-person teams" },
+          { id: "c", text: "LD has three-person teams while Policy is one-on-one" },
+          { id: "d", text: "Both formats are one-on-one" }
         ],
         correctAnswer: "a",
         explanation: "Lincoln-Douglas is a one-on-one format where you debate alone against a single opponent, while Policy debate uses two-person teams who work together throughout the round.",
@@ -287,12 +287,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-03-q2",
         question: "Which debate format requires the least preparation time before a round?",
         options: [
-          { id: "a", text: "Policy Debate" },
-          { id: "b", text: "Lincoln-Douglas" },
-          { id: "c", text: "Public Forum" },
-          { id: "d", text: "Parliamentary Debate" },
+          { id: "a", text: "Lincoln-Douglas" },
+          { id: "b", text: "Parliamentary Debate" },
+          { id: "c", text: "Policy Debate" },
+          { id: "d", text: "Public Forum" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "b",
         explanation: "Parliamentary Debate gives debaters only 15-20 minutes to prepare after receiving their topic, making it the format that most emphasizes quick thinking and requires the least advance preparation.",
       },
       {
@@ -315,12 +315,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-03-q3",
         question: "Which format would be best for someone who loves following current news and prefers working with a partner?",
         options: [
-          { id: "a", text: "Public Forum" },
-          { id: "b", text: "Lincoln-Douglas" },
+          { id: "a", text: "Lincoln-Douglas" },
+          { id: "b", text: "Parliamentary" },
           { id: "c", text: "Congressional Debate" },
-          { id: "d", text: "Parliamentary" },
+          { id: "d", text: "Public Forum" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "d",
         explanation: "Public Forum is ideal for current events enthusiasts who want to work with a partner. Its monthly topics focus on relevant news issues, and the team format means you collaborate with a debate partner.",
       },
       {
@@ -373,12 +373,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-04-q1",
         question: "In Lincoln-Douglas debate, what is the purpose of a 'criterion'?",
         options: [
-          { id: "a", text: "To provide the standard for measuring whether the value is achieved" },
+          { id: "a", text: "To time the speeches accurately" },
           { id: "b", text: "To state the resolution being debated" },
-          { id: "c", text: "To time the speeches accurately" },
-          { id: "d", text: "To introduce evidence in the debate" },
+          { id: "c", text: "To provide the standard for measuring whether the value is achieved" },
+          { id: "d", text: "To introduce evidence in the debate" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "c",
         explanation: "The criterion serves as the measuring stick for the value. It tells the judge how to determine which side better achieves the value being debated—for example, if justice is the value, the criterion might be 'protecting individual rights.'",
       },
       {
@@ -403,10 +403,10 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         options: [
           { id: "a", text: "Affirmative Constructive (6 minutes)" },
           { id: "b", text: "Negative Constructive (7 minutes)" },
-          { id: "c", text: "Second Affirmative Rebuttal (3 minutes)" },
-          { id: "d", text: "First Affirmative Rebuttal (4 minutes)" },
+          { id: "c", text: "First Affirmative Rebuttal (4 minutes)" },
+          { id: "d", text: "Second Affirmative Rebuttal (3 minutes)" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "c",
         explanation: "The 1AR (First Affirmative Rebuttal) is considered the hardest speech because the Affirmative must respond to the Negative's 7-minute speech and rebuild their own case—all in only 4 minutes.",
       },
       {
@@ -430,9 +430,9 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         question: "What is a key strategic advantage of the Negative in Lincoln-Douglas debate?",
         options: [
           { id: "a", text: "The Negative sees the Affirmative's case before presenting their own" },
-          { id: "b", text: "The Negative always speaks last" },
-          { id: "c", text: "The Negative has more total speaking time" },
-          { id: "d", text: "The Negative doesn't need to prepare a case" },
+          { id: "b", text: "The Negative has more total speaking time" },
+          { id: "c", text: "The Negative doesn't need to prepare a case" },
+          { id: "d", text: "The Negative always speaks last" }
         ],
         correctAnswer: "a",
         explanation: "A key Negative advantage is seeing the Affirmative's entire case before presenting the Negative Constructive. This allows the Negative to adapt their strategy and directly address the arguments they've heard.",
@@ -492,12 +492,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-05-q1",
         question: "What is a major advantage of Policy Debate's year-long topic structure?",
         options: [
-          { id: "a", text: "Debaters don't need to do much research" },
-          { id: "b", text: "Every round covers completely new material" },
+          { id: "a", text: "Every round covers completely new material" },
+          { id: "b", text: "Teams can achieve extraordinary depth in one subject area" },
           { id: "c", text: "There's no need to update evidence throughout the year" },
-          { id: "d", text: "Teams can achieve extraordinary depth in one subject area" },
+          { id: "d", text: "Debaters don't need to do much research" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "b",
         explanation: "The year-long topic allows Policy debaters to achieve extraordinary depth in their research and understanding. They can explore every angle of the topic, building cumulative expertise over months of study.",
       },
       {
@@ -520,12 +520,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-05-q2",
         question: "What is the purpose of a 'counterplan' in Policy Debate?",
         options: [
-          { id: "a", text: "To present the Negative's alternative policy proposal" },
-          { id: "b", text: "To support the Affirmative's plan" },
-          { id: "c", text: "To time the speeches correctly" },
-          { id: "d", text: "To define terms in the resolution" },
+          { id: "a", text: "To time the speeches correctly" },
+          { id: "b", text: "To present the Negative's alternative policy proposal" },
+          { id: "c", text: "To support the Affirmative's plan" },
+          { id: "d", text: "To define terms in the resolution" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "b",
         explanation: "A counterplan is the Negative team's alternative policy proposal. Instead of simply defending the current system, they offer a different solution that they argue is better than the Affirmative's plan.",
       },
       {
@@ -548,12 +548,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-05-q3",
         question: "What is the 'negative block' in Policy Debate?",
         options: [
-          { id: "a", text: "The combined 2NC and 1NR speeches (13 minutes total)" },
+          { id: "a", text: "The Negative's evidence files" },
           { id: "b", text: "The first Negative speech only" },
-          { id: "c", text: "A break the Negative team takes" },
-          { id: "d", text: "The Negative's evidence files" },
+          { id: "c", text: "The combined 2NC and 1NR speeches (13 minutes total)" },
+          { id: "d", text: "A break the Negative team takes" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "c",
         explanation: "The 'negative block' refers to the back-to-back 2NC (8 minutes) and 1NR (5 minutes) speeches, totaling 13 minutes of Negative speaking with only a cross-ex in between. The 1AR must respond to this entire block in just 5 minutes.",
       },
       {
@@ -622,11 +622,11 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         question: "How often do Public Forum debate topics typically change?",
         options: [
           { id: "a", text: "Once per school year" },
-          { id: "b", text: "Every two months" },
+          { id: "b", text: "Monthly" },
           { id: "c", text: "Every round has a different topic" },
-          { id: "d", text: "Monthly" },
+          { id: "d", text: "Every two months" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "b",
         explanation: "Public Forum topics change monthly, keeping debates focused on current, relevant issues. This rapid turnover means debaters stay engaged with recent news and developments.",
       },
       {
@@ -649,12 +649,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-06-q2",
         question: "What is unique about the 'Grand Crossfire' in Public Forum debate?",
         options: [
-          { id: "a", text: "All four debaters participate simultaneously" },
+          { id: "a", text: "Grand Crossfire lasts 10 minutes" },
           { id: "b", text: "Only one person speaks during Grand Crossfire" },
-          { id: "c", text: "Grand Crossfire lasts 10 minutes" },
-          { id: "d", text: "No questions are allowed during Grand Crossfire" },
+          { id: "c", text: "No questions are allowed during Grand Crossfire" },
+          { id: "d", text: "All four debaters participate simultaneously" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "d",
         explanation: "The Grand Crossfire is unique because all four debaters participate simultaneously—it's the only time in the round when all speakers engage together in questioning and answering.",
       },
       {
@@ -687,12 +687,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-06-q3",
         question: "What is the most important strategic goal during the Summary speech in Public Forum?",
         options: [
-          { id: "a", text: "Narrow to your strongest arguments and explain why you're winning" },
-          { id: "b", text: "Address every single argument in the round" },
+          { id: "a", text: "Address every single argument in the round" },
+          { id: "b", text: "Narrow to your strongest arguments and explain why you're winning" },
           { id: "c", text: "Introduce new evidence and arguments" },
-          { id: "d", text: "Speak as quickly as possible" },
+          { id: "d", text: "Speak as quickly as possible" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "b",
         explanation: "The Summary speech is where you narrow the debate to your strongest 1-2 arguments and clearly explain why you're winning those key issues. Trying to cover everything dilutes your message and wastes precious time.",
       },
       {
@@ -735,12 +735,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-07-q1",
         question: "What distinguishes formal debate from a casual argument?",
         options: [
-          { id: "a", text: "Debate uses structure, evidence, and prohibits personal attacks" },
-          { id: "b", text: "Debate has no rules to follow" },
-          { id: "c", text: "Winning in debate depends on being louder" },
-          { id: "d", text: "Debate is only about personal opinions" },
+          { id: "a", text: "Debate is only about personal opinions" },
+          { id: "b", text: "Debate uses structure, evidence, and prohibits personal attacks" },
+          { id: "c", text: "Debate has no rules to follow" },
+          { id: "d", text: "Winning in debate depends on being louder" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "b",
         explanation: "Formal debate is distinguished by its structure (timed speeches, designated speaking order), reliance on evidence and reasoning, and prohibition of personal attacks. These elements make it a productive intellectual exercise rather than an emotional conflict.",
       },
       {
@@ -764,9 +764,9 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         question: "Match the format to its distinguishing feature: Which format uses a single topic for the entire school year?",
         options: [
           { id: "a", text: "Policy Debate" },
-          { id: "b", text: "Lincoln-Douglas" },
+          { id: "b", text: "Parliamentary" },
           { id: "c", text: "Public Forum" },
-          { id: "d", text: "Parliamentary" },
+          { id: "d", text: "Lincoln-Douglas" }
         ],
         correctAnswer: "a",
         explanation: "Policy Debate uses a single resolution for the entire school year, allowing extraordinary depth of research. In contrast, LD changes topics every two months, PF changes monthly, and Parliamentary changes each round.",
@@ -786,12 +786,12 @@ export const UNIT_01_LESSONS: MultiPageLesson[] = [
         id: "l01-07-q3",
         question: "In Policy Debate, what is the purpose of a 'disadvantage' (DA)?",
         options: [
-          { id: "a", text: "To argue that the Affirmative's plan causes harms" },
-          { id: "b", text: "To support the Affirmative's plan" },
-          { id: "c", text: "To define terms in the resolution" },
-          { id: "d", text: "To propose an alternative timeline for the plan" },
+          { id: "a", text: "To propose an alternative timeline for the plan" },
+          { id: "b", text: "To define terms in the resolution" },
+          { id: "c", text: "To support the Affirmative's plan" },
+          { id: "d", text: "To argue that the Affirmative's plan causes harms" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "d",
         explanation: "A disadvantage is a Negative argument claiming that the Affirmative's plan would cause harmful consequences. Common examples include spending DAs (costs harm the economy), politics DAs (plan hurts political priorities), or environment DAs (plan has ecological downsides).",
       },
       {

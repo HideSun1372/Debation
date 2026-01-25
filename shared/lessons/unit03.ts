@@ -34,12 +34,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-01-q1",
         question: "Why should debaters slow down during their most important arguments?",
         options: [
-          { id: "a", text: "Because judges stop paying attention during fast sections" },
-          { id: "b", text: "Because all debates require slow speaking" },
-          { id: "c", text: "To fill the available speaking time" },
-          { id: "d", text: "To signal importance and give judges time to process and write" },
+          { id: "a", text: "To signal importance and give judges time to process and write" },
+          { id: "b", text: "Because judges stop paying attention during fast sections" },
+          { id: "c", text: "Because all debates require slow speaking" },
+          { id: "d", text: "To fill the available speaking time" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "a",
         explanation: "Slowing down during key arguments serves two purposes: it signals to judges that this point is particularly important, and it gives them adequate time to process the argument and record it in their notes. Arguments that judges capture in their notes are more likely to factor into their decision.",
       },
       {
@@ -62,12 +62,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-01-q2",
         question: "How does adopting confident body language affect a speaker?",
         options: [
-          { id: "a", text: "It only affects how others perceive you" },
-          { id: "b", text: "It has no real effect beyond appearance" },
-          { id: "c", text: "It can actually increase confidence by affecting hormones" },
-          { id: "d", text: "It makes you more nervous by adding pressure" },
+          { id: "a", text: "It can actually increase confidence by affecting hormones" },
+          { id: "b", text: "It makes you more nervous by adding pressure" },
+          { id: "c", text: "It only affects how others perceive you" },
+          { id: "d", text: "It has no real effect beyond appearance" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "a",
         explanation: "Research shows that adopting confident body language (power postures) actually increases testosterone and decreases cortisol (the stress hormone). This means confident posture doesn't just make you look confident—it can help you feel more confident too.",
       },
       {
@@ -85,12 +85,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-01-q3",
         question: "What is the most effective way to identify your own speaking weaknesses?",
         options: [
-          { id: "a", text: "Ask a friend after your speech" },
+          { id: "a", text: "Record yourself and review the recording" },
           { id: "b", text: "Just focus on your feelings during the speech" },
           { id: "c", text: "Speaking weaknesses are genetic and can't be identified" },
-          { id: "d", text: "Record yourself and review the recording" },
+          { id: "d", text: "Ask a friend after your speech" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "a",
         explanation: "Recording yourself and reviewing the recording is the most effective way to identify speaking weaknesses. It allows you to objectively hear enunciation problems, pacing issues, and vocal variety (or lack thereof) that you don't notice while speaking. You can even separate audio from video to focus on each element individually.",
       },
       {
@@ -138,10 +138,10 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-02-q1",
         question: "Why should responses on a flow be horizontally aligned with the arguments they answer?",
         options: [
-          { id: "a", text: "It makes the notes look neater" },
-          { id: "b", text: "Judges require this specific format" },
-          { id: "c", text: "It saves paper space" },
-          { id: "d", text: "It helps you visually track argument development and identify drops" },
+          { id: "a", text: "Judges require this specific format" },
+          { id: "b", text: "It saves paper space" },
+          { id: "c", text: "It makes the notes look neater" },
+          { id: "d", text: "It helps you visually track argument development and identify drops" }
         ],
         correctAnswer: "d",
         explanation: "Horizontal alignment is the key to flowing's effectiveness. By placing responses directly across from the arguments they answer, you can visually trace how each argument develops through the debate—seeing where it was attacked, defended, and whether it was ever dropped.",
@@ -166,12 +166,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-02-q2",
         question: "What should you prioritize capturing when flowing an opponent's speech?",
         options: [
-          { id: "a", text: "Every word they say verbatim" },
-          { id: "b", text: "Their rhetorical style and speaking patterns" },
-          { id: "c", text: "Main claims, key warrants, evidence authors, and structure" },
-          { id: "d", text: "Only the things you disagree with" },
+          { id: "a", text: "Their rhetorical style and speaking patterns" },
+          { id: "b", text: "Every word they say verbatim" },
+          { id: "c", text: "Only the things you disagree with" },
+          { id: "d", text: "Main claims, key warrants, evidence authors, and structure" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "Effective flowing prioritizes the substance of arguments: main claims (taglines), key warrants (the reasoning), evidence authors (for credibility challenges), and the speech structure. Capturing every word is impossible, and focusing only on disagreements means missing potential concessions or new arguments to address.",
       },
       {
@@ -194,12 +194,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-02-q3",
         question: "When an opponent 'drops' your argument, what does this mean in debate?",
         options: [
-          { id: "a", text: "They disagreed strongly with it" },
-          { id: "b", text: "They addressed it but you missed their response" },
-          { id: "c", text: "The argument is automatically removed from the debate" },
-          { id: "d", text: "They failed to respond to it, so it's treated as conceded" },
+          { id: "a", text: "The argument is automatically removed from the debate" },
+          { id: "b", text: "They disagreed strongly with it" },
+          { id: "c", text: "They failed to respond to it, so it's treated as conceded" },
+          { id: "d", text: "They addressed it but you missed their response" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "c",
         explanation: "A 'drop' occurs when opponents fail to respond to an argument. In debate, dropped arguments are typically treated as conceded—the opponent has implicitly accepted the point. This makes identifying drops through careful flowing crucial for winning rounds.",
       },
       {
@@ -227,12 +227,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-02-q4",
         question: "What is the best way to improve your flowing speed and accuracy?",
         options: [
-          { id: "a", text: "Try to write every word in complete sentences" },
+          { id: "a", text: "Use a different abbreviation system each time for variety" },
           { id: "b", text: "Focus on memorization instead of note-taking" },
-          { id: "c", text: "Use a different abbreviation system each time for variety" },
-          { id: "d", text: "Practice regularly with increasingly fast content and develop consistent abbreviations" },
+          { id: "c", text: "Practice regularly with increasingly fast content and develop consistent abbreviations" },
+          { id: "d", text: "Try to write every word in complete sentences" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "c",
         explanation: "Flowing improves through regular practice with progressively challenging content. Consistent abbreviations become muscle memory over time. Variety in systems (option D) actually hinders development—you want reliable habits that work automatically under pressure.",
       },
       {
@@ -281,11 +281,11 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         question: "What is the correct technique for diaphragmatic breathing?",
         options: [
           { id: "a", text: "Expand your chest while keeping your belly flat" },
-          { id: "b", text: "Breathe shallowly and quickly" },
-          { id: "c", text: "Expand your belly as you inhale while chest moves minimally" },
-          { id: "d", text: "Hold your breath as long as possible between sentences" },
+          { id: "b", text: "Expand your belly as you inhale while chest moves minimally" },
+          { id: "c", text: "Breathe shallowly and quickly" },
+          { id: "d", text: "Hold your breath as long as possible between sentences" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "b",
         explanation: "Diaphragmatic breathing involves expanding your belly as you inhale (the diaphragm contracts and moves down) while your chest moves minimally. This provides maximum lung capacity and the breath support needed for powerful projection without straining.",
       },
       {
@@ -313,12 +313,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-03-q2",
         question: "Why is varying your volume during a speech effective?",
         options: [
-          { id: "a", text: "It keeps judges awake through random changes" },
-          { id: "b", text: "Consistent volume helps judges focus better" },
-          { id: "c", text: "Volume contrast creates emphasis and helps key points stand out" },
-          { id: "d", text: "Judges prefer speakers who are always loud" },
+          { id: "a", text: "Consistent volume helps judges focus better" },
+          { id: "b", text: "Judges prefer speakers who are always loud" },
+          { id: "c", text: "It keeps judges awake through random changes" },
+          { id: "d", text: "Volume contrast creates emphasis and helps key points stand out" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "Volume variation creates emphasis through contrast. When everything is at the same level, nothing stands out. By strategically getting louder for key points and softer to draw listeners in, you help judges identify and remember your most important arguments.",
       },
       {
@@ -361,12 +361,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-04-q1",
         question: "Why is clear signposting important when delivering rebuttals?",
         options: [
-          { id: "a", text: "It fills time in your speech" },
-          { id: "b", text: "It makes you sound more formal" },
+          { id: "a", text: "It makes you sound more formal" },
+          { id: "b", text: "It helps judges follow your responses and record them on their flow" },
           { id: "c", text: "Judges require specific signposting phrases" },
-          { id: "d", text: "It helps judges follow your responses and record them on their flow" },
+          { id: "d", text: "It fills time in your speech" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "b",
         explanation: "Clear signposting (saying 'On their first contention...' or 'Answering their disadvantage...') helps judges track which opponent argument you're responding to and write your response directly across from it on their flow. Without signposting, judges may miss the connection between your response and what it answers.",
       },
       {
@@ -389,12 +389,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-04-q2",
         question: "What is the strongest way to attack an opponent's evidence?",
         options: [
-          { id: "a", text: "Simply state that you disagree with it" },
+          { id: "a", text: "Attack the source credibility, recency, methodology, or relevance" },
           { id: "b", text: "Ignore it completely and move on" },
-          { id: "c", text: "Attack the source credibility, recency, methodology, or relevance" },
-          { id: "d", text: "Read your own longer piece of evidence" },
+          { id: "c", text: "Simply state that you disagree with it" },
+          { id: "d", text: "Read your own longer piece of evidence" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "a",
         explanation: "The strongest evidence attacks engage with specific issues: Is the source credible and unbiased? Is the evidence recent enough? Was the methodology sound? Does it actually prove their claim? These attacks undermine the opponent's evidence on substantive grounds, not just by assertion or avoidance.",
       },
       {
@@ -430,10 +430,10 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         options: [
           { id: "a", text: "Accepting their argument as true" },
           { id: "b", text: "Changing the topic of debate" },
-          { id: "c", text: "Agreeing with their impact but changing the framing" },
-          { id: "d", text: "Showing their action causes the opposite of what they claim" },
+          { id: "c", text: "Showing their action causes the opposite of what they claim" },
+          { id: "d", text: "Agreeing with their impact but changing the framing" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "c",
         explanation: "A link turn argues that the opponent's action or policy actually causes the opposite of what they claim. If they say their plan reduces crime, a link turn would show it actually increases crime. This turns their argument into a reason to vote against them.",
       },
       {
@@ -477,11 +477,11 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         question: "What is the primary reason to focus eye contact on the judge?",
         options: [
           { id: "a", text: "Judges require eye contact by rule" },
-          { id: "b", text: "Looking at opponents is considered rude" },
-          { id: "c", text: "It makes the speech easier to deliver" },
-          { id: "d", text: "The judge is the decision-maker you need to persuade" },
+          { id: "b", text: "It makes the speech easier to deliver" },
+          { id: "c", text: "The judge is the decision-maker you need to persuade" },
+          { id: "d", text: "Looking at opponents is considered rude" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "c",
         explanation: "The judge decides who wins the round, making them your primary audience. While engaging opponents appropriately is fine, your persuasive efforts should focus on the decision-maker. Eye contact creates the connection and credibility that helps persuade the judge.",
       },
       {
@@ -504,12 +504,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-05-q2",
         question: "Why should you avoid looking primarily at your opponent when attacking their arguments?",
         options: [
-          { id: "a", text: "Looking at opponents is against debate rules" },
-          { id: "b", text: "Opponents will become distracted" },
+          { id: "a", text: "Opponents will become distracted" },
+          { id: "b", text: "The judge is who you need to persuade, not the opponent" },
           { id: "c", text: "It makes your arguments weaker" },
-          { id: "d", text: "The judge is who you need to persuade, not the opponent" },
+          { id: "d", text: "Looking at opponents is against debate rules" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "b",
         explanation: "When attacking opponent arguments, it's tempting to direct your rebuttal at them. But the judge decides the round—you need to persuade the judge that your attacks are valid, not convince the opponent. Focus eye contact on the decision-maker.",
       },
       {
@@ -557,10 +557,10 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-06-q1",
         question: "Which is typically the most credible type of source?",
         options: [
-          { id: "a", text: "A personal blog post by an interested individual" },
-          { id: "b", text: "An industry report by a company in that field" },
-          { id: "c", text: "An anonymous comment on a news article" },
-          { id: "d", text: "A peer-reviewed academic journal article" },
+          { id: "a", text: "An anonymous comment on a news article" },
+          { id: "b", text: "A personal blog post by an interested individual" },
+          { id: "c", text: "An industry report by a company in that field" },
+          { id: "d", text: "A peer-reviewed academic journal article" }
         ],
         correctAnswer: "d",
         explanation: "Peer-reviewed academic journals are typically the most credible because research undergoes scrutiny from other experts before publication. Industry reports may have commercial bias, blogs lack vetting, and anonymous comments have no accountability or verified expertise.",
@@ -585,12 +585,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-06-q2",
         question: "Why is it important to match an expert's credentials to the specific topic?",
         options: [
-          { id: "a", text: "Judges prefer longer credential descriptions" },
+          { id: "a", text: "Expertise in one field doesn't guarantee expertise in another" },
           { id: "b", text: "Only PhDs can be cited as experts" },
-          { id: "c", text: "It makes speeches sound more academic" },
-          { id: "d", text: "Expertise in one field doesn't guarantee expertise in another" },
+          { id: "c", text: "Judges prefer longer credential descriptions" },
+          { id: "d", text: "It makes speeches sound more academic" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "a",
         explanation: "Being an expert in one field doesn't make someone an expert in all fields. A Nobel Prize-winning physicist commenting on economics carries no more weight than any informed layperson on that topic. Credibility comes from specific relevant expertise.",
       },
       {
@@ -614,11 +614,11 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         question: "What is more persuasive in a debate round?",
         options: [
           { id: "a", text: "Citing five sources quickly without explanation" },
-          { id: "b", text: "Citing evidence without connecting it to your claim" },
+          { id: "b", text: "One excellent source with full credential and explanation" },
           { id: "c", text: "Older sources that sound authoritative" },
-          { id: "d", text: "One excellent source with full credential and explanation" },
+          { id: "d", text: "Citing evidence without connecting it to your claim" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "b",
         explanation: "Judges are more persuaded by depth than by quantity. One excellent source—with credibility established, key findings explained, and connection to your argument made clear—is more persuasive than rattling off multiple unexplained citations.",
       },
       {
@@ -656,12 +656,12 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-07-q1",
         question: "Which combination of skills most helps judges follow and remember your arguments?",
         options: [
-          { id: "a", text: "Speaking as fast as possible with maximum volume" },
+          { id: "a", text: "Keeping volume and pace exactly constant throughout" },
           { id: "b", text: "Reading directly from notes without looking up" },
-          { id: "c", text: "Keeping volume and pace exactly constant throughout" },
-          { id: "d", text: "Clear enunciation, strategic pacing, and vocal variety" },
+          { id: "c", text: "Clear enunciation, strategic pacing, and vocal variety" },
+          { id: "d", text: "Speaking as fast as possible with maximum volume" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "c",
         explanation: "Judges follow and remember arguments best when you speak clearly (enunciation), at a pace they can process (strategic pacing), with variation that signals importance (vocal variety). Speed without clarity loses content; monotone without variation loses attention.",
       },
       {
@@ -684,10 +684,10 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         id: "l03-07-q2",
         question: "What is the most effective way to attack an opponent's argument?",
         options: [
-          { id: "a", text: "Simply disagree with their conclusion loudly" },
-          { id: "b", text: "Ignore it and hope the judge doesn't notice" },
+          { id: "a", text: "Ignore it and hope the judge doesn't notice" },
+          { id: "b", text: "Simply disagree with their conclusion loudly" },
           { id: "c", text: "Repeat your own arguments more forcefully" },
-          { id: "d", text: "Attack the reasoning (warrant) and explain why their logic fails" },
+          { id: "d", text: "Attack the reasoning (warrant) and explain why their logic fails" }
         ],
         correctAnswer: "d",
         explanation: "Effective rebuttals attack the reasoning behind an argument, not just the conclusion. Explaining WHY their logic fails—through attacking warrants, evidence quality, or logical structure—is far more persuasive than simple disagreement or avoidance.",
