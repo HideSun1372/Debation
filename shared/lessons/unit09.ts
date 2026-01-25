@@ -68,7 +68,7 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         question: "What's the best response when someone says: 'Prove my claim is wrong!'?",
         options: [
           { id: "a", text: "Accept their claim because you can't disprove it" },
-          { id: "b", text: "'You made the claim; you bear the burden of proving it'",
+          { id: "b", text: "You made the claim; you bear the burden of proving it" },
           { id: "c", text: "Ignore the claim entirely" },
           { id: "d", text: "Agree to disagree immediately" }
         ],

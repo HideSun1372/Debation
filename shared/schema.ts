@@ -1292,6 +1292,822 @@ export const LESSON_EXERCISES: LessonExercise[] = [
       },
     ],
   },
+  // Unit 6: Sources & Credibility
+  {
+    lessonId: "l06-01",
+    questions: [
+      {
+        id: "l06-01-q1",
+        question: "What is an ad hominem fallacy?",
+        options: [
+          { id: "a", text: "Attacking the argument's evidence" },
+          { id: "b", text: "Attacking the person making the argument instead of the argument itself" },
+          { id: "c", text: "Using emotional appeals" },
+          { id: "d", text: "Presenting only two options" },
+        ],
+        correctAnswer: "b",
+        explanation: "Ad hominem attacks the person rather than their argument, which is fallacious because character doesn't determine argument validity.",
+      },
+      {
+        id: "l06-01-q2",
+        question: "How should you respond when an opponent uses ad hominem against you?",
+        options: [
+          { id: "a", text: "Attack them back with personal insults" },
+          { id: "b", text: "Name the fallacy briefly and redirect to the substance of your argument" },
+          { id: "c", text: "Leave the debate" },
+          { id: "d", text: "Ignore it completely without mentioning it" },
+        ],
+        correctAnswer: "b",
+        explanation: "The best response is to briefly identify the fallacy and redirect to substance, making the attack cost your opponent.",
+      },
+    ],
+  },
+  {
+    lessonId: "l06-02",
+    questions: [
+      {
+        id: "l06-02-q1",
+        question: "Why should debaters be able to adjust their speaking speed?",
+        options: [
+          { id: "a", text: "Speed has no impact on debate success" },
+          { id: "b", text: "Different judges and circuits have different expectations" },
+          { id: "c", text: "Faster is always better" },
+          { id: "d", text: "Slower is always better" },
+        ],
+        correctAnswer: "b",
+        explanation: "Adaptability is crucial because different judges and circuits have different expectations for speaking pace.",
+      },
+      {
+        id: "l06-02-q2",
+        question: "What should you prioritize over raw speed when speaking?",
+        options: [
+          { id: "a", text: "Volume" },
+          { id: "b", text: "Enunciation and clarity" },
+          { id: "c", text: "Gestures" },
+          { id: "d", text: "Eye contact" },
+        ],
+        correctAnswer: "b",
+        explanation: "Clear enunciation matters more than raw speed. Judges can't evaluate arguments they can't understand.",
+      },
+    ],
+  },
+  {
+    lessonId: "l06-03",
+    questions: [
+      {
+        id: "l06-03-q1",
+        question: "What does CRAAP stand for in source evaluation?",
+        options: [
+          { id: "a", text: "Credibility, Research, Authority, Accuracy, Purpose" },
+          { id: "b", text: "Currency, Relevance, Authority, Accuracy, Purpose" },
+          { id: "c", text: "Clarity, Relevance, Accuracy, Authority, Precision" },
+          { id: "d", text: "Current, Reliable, Authentic, Accurate, Published" },
+        ],
+        correctAnswer: "b",
+        explanation: "CRAAP stands for Currency, Relevance, Authority, Accuracy, and Purpose - a framework for evaluating sources.",
+      },
+      {
+        id: "l06-03-q2",
+        question: "Why is it important that an expert's credentials match the topic?",
+        options: [
+          { id: "a", text: "It isn't - all PhDs are equally credible on all topics" },
+          { id: "b", text: "Expertise doesn't transfer between unrelated fields" },
+          { id: "c", text: "Credentials never matter" },
+          { id: "d", text: "Only medical doctors can be experts" },
+        ],
+        correctAnswer: "b",
+        explanation: "Expertise doesn't transfer between fields. A PhD in art history doesn't make someone an authority on medicine.",
+      },
+    ],
+  },
+  {
+    lessonId: "l06-04",
+    questions: [
+      {
+        id: "l06-04-q1",
+        question: "What is a strawman fallacy?",
+        options: [
+          { id: "a", text: "Attacking the person making the argument" },
+          { id: "b", text: "Misrepresenting an opponent's position to make it easier to attack" },
+          { id: "c", text: "Using fear to persuade" },
+          { id: "d", text: "Claiming something is true because it's traditional" },
+        ],
+        correctAnswer: "b",
+        explanation: "A strawman misrepresents an opponent's position to create an easier target to attack.",
+      },
+      {
+        id: "l06-04-q2",
+        question: "What is the best first step when responding to a strawman attack?",
+        options: [
+          { id: "a", text: "Accept the distorted version" },
+          { id: "b", text: "Clearly restate what you actually argued" },
+          { id: "c", text: "Attack your opponent personally" },
+          { id: "d", text: "Change your argument to match the strawman" },
+        ],
+        correctAnswer: "b",
+        explanation: "The best response is to clearly restate your actual position, correcting the record for the judge.",
+      },
+    ],
+  },
+  {
+    lessonId: "l06-05",
+    questions: [
+      {
+        id: "l06-05-q1",
+        question: "What is the recommended balance between eye contact and checking notes?",
+        options: [
+          { id: "a", text: "100% eye contact, never look at notes" },
+          { id: "b", text: "About 70-80% eye contact, 20-30% notes" },
+          { id: "c", text: "Keep head down and read from notes" },
+          { id: "d", text: "Only look at judges when they're writing" },
+        ],
+        correctAnswer: "b",
+        explanation: "About 70-80% eye contact maintains connection while allowing you to stay organized with notes.",
+      },
+      {
+        id: "l06-05-q2",
+        question: "What should your posture look like when speaking?",
+        options: [
+          { id: "a", text: "Slouching to appear relaxed" },
+          { id: "b", text: "Hands in pockets" },
+          { id: "c", text: "Feet shoulder-width apart, shoulders back, head level" },
+          { id: "d", text: "Leaning heavily on the podium" },
+        ],
+        correctAnswer: "c",
+        explanation: "Balanced posture with feet shoulder-width apart, shoulders back, and head level projects confidence.",
+      },
+    ],
+  },
+  {
+    lessonId: "l06-06",
+    questions: [
+      {
+        id: "l06-06-q1",
+        question: "What is a primary source?",
+        options: [
+          { id: "a", text: "A textbook analyzing other research" },
+          { id: "b", text: "Original, uninterpreted materials like research studies or government data" },
+          { id: "c", text: "A news article about a study" },
+          { id: "d", text: "A Wikipedia entry" },
+        ],
+        correctAnswer: "b",
+        explanation: "Primary sources are original, uninterpreted materials - the data itself, original studies, or firsthand accounts.",
+      },
+      {
+        id: "l06-06-q2",
+        question: "When is a secondary source most appropriate?",
+        options: [
+          { id: "a", text: "For precise statistical claims" },
+          { id: "b", text: "To synthesize findings from many studies" },
+          { id: "c", text: "When your opponent challenges your data" },
+          { id: "d", text: "Primary sources are always better" },
+        ],
+        correctAnswer: "b",
+        explanation: "Secondary sources are valuable for synthesizing findings across many studies, like meta-analyses.",
+      },
+    ],
+  },
+  {
+    lessonId: "l06-07",
+    questions: [
+      {
+        id: "l06-07-q1",
+        question: "What distinguishes ad hominem from strawman?",
+        options: [
+          { id: "a", text: "They are the same fallacy" },
+          { id: "b", text: "Ad hominem attacks the person; strawman attacks a distorted argument" },
+          { id: "c", text: "Strawman attacks the person; ad hominem attacks the argument" },
+          { id: "d", text: "Neither is a real fallacy" },
+        ],
+        correctAnswer: "b",
+        explanation: "Ad hominem attacks the person making the argument, while strawman attacks a misrepresented version of their argument.",
+      },
+    ],
+  },
+  // Unit 7: Logic & Bias
+  {
+    lessonId: "l07-01",
+    questions: [
+      {
+        id: "l07-01-q1",
+        question: "What is funding bias?",
+        options: [
+          { id: "a", text: "Research funded by interested parties that may skew toward desired conclusions" },
+          { id: "b", text: "Choosing only facts that confirm existing beliefs" },
+          { id: "c", text: "Focusing only on successful examples" },
+          { id: "d", text: "Bias toward older sources" },
+        ],
+        correctAnswer: "a",
+        explanation: "Funding bias occurs when research funded by interested parties may skew toward conclusions that benefit the funder.",
+      },
+      {
+        id: "l07-01-q2",
+        question: "What makes an 'against interest' finding especially credible?",
+        options: [
+          { id: "a", text: "It comes from a famous person" },
+          { id: "b", text: "The source admits something contrary to their expected bias" },
+          { id: "c", text: "It's published in a newspaper" },
+          { id: "d", text: "It's very old" },
+        ],
+        correctAnswer: "b",
+        explanation: "When a source admits something against their apparent interest, they have no motivation to fabricate it.",
+      },
+    ],
+  },
+  {
+    lessonId: "l07-02",
+    questions: [
+      {
+        id: "l07-02-q1",
+        question: "What is a false dichotomy?",
+        options: [
+          { id: "a", text: "Attacking the person instead of their argument" },
+          { id: "b", text: "Presenting only two options when more exist" },
+          { id: "c", text: "Assuming correlation proves causation" },
+          { id: "d", text: "Using emotional appeals" },
+        ],
+        correctAnswer: "b",
+        explanation: "False dichotomy presents only two options when more alternatives actually exist.",
+      },
+      {
+        id: "l07-02-q2",
+        question: "How do you respond to a false dichotomy?",
+        options: [
+          { id: "a", text: "Accept one of the two options" },
+          { id: "b", text: "Introduce the hidden alternatives that were ignored" },
+          { id: "c", text: "Attack the opponent personally" },
+          { id: "d", text: "Change the subject" },
+        ],
+        correctAnswer: "b",
+        explanation: "Respond by introducing the alternatives being hidden - showing more options exist.",
+      },
+    ],
+  },
+  {
+    lessonId: "l07-03",
+    questions: [
+      {
+        id: "l07-03-q1",
+        question: "How does debate training improve essay writing?",
+        options: [
+          { id: "a", text: "It doesn't - they're unrelated" },
+          { id: "b", text: "It teaches the same claim-evidence-reasoning structure used in essays" },
+          { id: "c", text: "It only helps with speaking" },
+          { id: "d", text: "Essays don't use arguments" },
+        ],
+        correctAnswer: "b",
+        explanation: "The claim-evidence-reasoning structure in debate is exactly what strong essays require.",
+      },
+    ],
+  },
+  {
+    lessonId: "l07-04",
+    questions: [
+      {
+        id: "l07-04-q1",
+        question: "In the Toulmin model, what is the function of the 'warrant'?",
+        options: [
+          { id: "a", text: "To state the main conclusion" },
+          { id: "b", text: "To provide evidence" },
+          { id: "c", text: "To explain why the evidence supports the claim" },
+          { id: "d", text: "To acknowledge exceptions" },
+        ],
+        correctAnswer: "c",
+        explanation: "The warrant is the logical bridge connecting data to claim - it explains WHY the evidence supports the claim.",
+      },
+      {
+        id: "l07-04-q2",
+        question: "Which Toulmin element is most commonly missing in incomplete arguments?",
+        options: [
+          { id: "a", text: "Claim" },
+          { id: "b", text: "Data" },
+          { id: "c", text: "Warrant" },
+          { id: "d", text: "Rebuttal" },
+        ],
+        correctAnswer: "c",
+        explanation: "Warrants are most commonly missing - people present claims with data but don't explain the logical connection.",
+      },
+    ],
+  },
+  {
+    lessonId: "l07-05",
+    questions: [
+      {
+        id: "l07-05-q1",
+        question: "What makes a slippery slope argument fallacious rather than valid?",
+        options: [
+          { id: "a", text: "It predicts negative consequences" },
+          { id: "b", text: "It assumes an inevitable chain without evidence" },
+          { id: "c", text: "It involves more than two steps" },
+          { id: "d", text: "It connects an action to future outcomes" },
+        ],
+        correctAnswer: "b",
+        explanation: "A slippery slope becomes fallacious when it assumes an inevitable causal chain without providing evidence.",
+      },
+    ],
+  },
+  {
+    lessonId: "l07-06",
+    questions: [
+      {
+        id: "l07-06-q1",
+        question: "Why doesn't correlation prove causation?",
+        options: [
+          { id: "a", text: "Correlation and causation are the same thing" },
+          { id: "b", text: "Things can correlate due to coincidence, third variables, or reverse causation" },
+          { id: "c", text: "Correlation always proves causation" },
+          { id: "d", text: "Causation always creates correlation" },
+        ],
+        correctAnswer: "b",
+        explanation: "Correlation can occur due to coincidence, third variables causing both, or reverse causation - not just direct causation.",
+      },
+      {
+        id: "l07-06-q2",
+        question: "What's needed beyond correlation to establish causation?",
+        options: [
+          { id: "a", text: "Nothing - correlation is enough" },
+          { id: "b", text: "Temporal sequence, mechanism, controlled evidence, and ruling out alternatives" },
+          { id: "c", text: "Just a larger sample size" },
+          { id: "d", text: "Expert opinion" },
+        ],
+        correctAnswer: "b",
+        explanation: "Causation requires temporal sequence plus plausible mechanism, controlled evidence, and ruling out alternatives.",
+      },
+    ],
+  },
+  {
+    lessonId: "l07-07",
+    questions: [
+      {
+        id: "l07-07-q1",
+        question: "What do bias detection and evidence evaluation have in common?",
+        options: [
+          { id: "a", text: "Nothing - they're unrelated skills" },
+          { id: "b", text: "Both require critically examining sources rather than accepting them at face value" },
+          { id: "c", text: "Both are unnecessary in debate" },
+          { id: "d", text: "Both only apply to scientific research" },
+        ],
+        correctAnswer: "b",
+        explanation: "Both skills require critically examining sources rather than accepting claims at face value.",
+      },
+    ],
+  },
+  // Unit 8: Research & Appeals
+  {
+    lessonId: "l08-01",
+    questions: [
+      {
+        id: "l08-01-q1",
+        question: "Why should you anticipate objections in your case?",
+        options: [
+          { id: "a", text: "It's not necessary - just respond in rebuttals" },
+          { id: "b", text: "It demonstrates depth and lets you control how objections are framed" },
+          { id: "c", text: "It wastes time" },
+          { id: "d", text: "Judges prefer cases without preemption" },
+        ],
+        correctAnswer: "b",
+        explanation: "Anticipating objections demonstrates depth and lets you frame objections on your terms.",
+      },
+      {
+        id: "l08-01-q2",
+        question: "What is the 'even if' strategy?",
+        options: [
+          { id: "a", text: "Avoiding addressing objections" },
+          { id: "b", text: "Creating layered defense - showing you win whether the objection is true or false" },
+          { id: "c", text: "Conceding all opponent points" },
+          { id: "d", text: "Only using emotional appeals" },
+        ],
+        correctAnswer: "b",
+        explanation: "The 'even if' strategy creates layered defense where you win regardless of whether the objection is true.",
+      },
+    ],
+  },
+  {
+    lessonId: "l08-02",
+    questions: [
+      {
+        id: "l08-02-q1",
+        question: "When is an appeal to authority legitimate?",
+        options: [
+          { id: "a", text: "Whenever someone has any credential" },
+          { id: "b", text: "When the expert's credentials match the specific claim" },
+          { id: "c", text: "When the expert is famous" },
+          { id: "d", text: "Never - authority is always fallacious" },
+        ],
+        correctAnswer: "b",
+        explanation: "Appeal to authority is legitimate when the expert's credentials and experience directly relate to the claim.",
+      },
+      {
+        id: "l08-02-q2",
+        question: "Why is expert consensus stronger than individual expert opinion?",
+        options: [
+          { id: "a", text: "It isn't stronger" },
+          { id: "b", text: "When many qualified experts agree after reviewing evidence, that agreement itself is evidence" },
+          { id: "c", text: "Consensus can never be wrong" },
+          { id: "d", text: "Individual experts are never credible" },
+        ],
+        correctAnswer: "b",
+        explanation: "When the overwhelming majority of qualified experts agree, that convergence is itself strong evidence.",
+      },
+    ],
+  },
+  {
+    lessonId: "l08-03",
+    questions: [
+      {
+        id: "l08-03-q1",
+        question: "Why does acknowledging limitations build credibility?",
+        options: [
+          { id: "a", text: "It doesn't - always hide weaknesses" },
+          { id: "b", text: "It shows you're being honest, making judges trust your other claims more" },
+          { id: "c", text: "It confuses the judge" },
+          { id: "d", text: "Judges prefer weaker evidence" },
+        ],
+        correctAnswer: "b",
+        explanation: "Acknowledging limitations demonstrates honesty, which increases trust in everything else you say.",
+      },
+    ],
+  },
+  {
+    lessonId: "l08-04",
+    questions: [
+      {
+        id: "l08-04-q1",
+        question: "Why do larger sample sizes produce more reliable results?",
+        options: [
+          { id: "a", text: "Sample size doesn't matter" },
+          { id: "b", text: "Larger samples are less susceptible to random variation" },
+          { id: "c", text: "Smaller samples are always better" },
+          { id: "d", text: "Only experts can understand sample size" },
+        ],
+        correctAnswer: "b",
+        explanation: "Larger samples are less susceptible to random variation and more likely to represent the actual population.",
+      },
+      {
+        id: "l08-04-q2",
+        question: "What does 'statistically significant' mean?",
+        options: [
+          { id: "a", text: "The effect is large and important" },
+          { id: "b", text: "The result is unlikely to be due to random chance" },
+          { id: "c", text: "The study is perfectly designed" },
+          { id: "d", text: "The result will definitely replicate" },
+        ],
+        correctAnswer: "b",
+        explanation: "Statistical significance means the result is unlikely due to random chance - but doesn't indicate importance or size.",
+      },
+    ],
+  },
+  {
+    lessonId: "l08-05",
+    questions: [
+      {
+        id: "l08-05-q1",
+        question: "When are emotional appeals legitimate in debate?",
+        options: [
+          { id: "a", text: "When they replace logical arguments" },
+          { id: "b", text: "When they illustrate and support logical arguments" },
+          { id: "c", text: "Never" },
+          { id: "d", text: "Always - emotion is more important than logic" },
+        ],
+        correctAnswer: "b",
+        explanation: "Emotional appeals are legitimate when they illustrate and support logical arguments, not replace them.",
+      },
+    ],
+  },
+  {
+    lessonId: "l08-06",
+    questions: [
+      {
+        id: "l08-06-q1",
+        question: "Why is Google Scholar useful for debate research?",
+        options: [
+          { id: "a", text: "It only shows unreliable sources" },
+          { id: "b", text: "It provides free access to academic papers and shows citation counts" },
+          { id: "c", text: "It's the same as regular Google" },
+          { id: "d", text: "Academic papers aren't useful in debate" },
+        ],
+        correctAnswer: "b",
+        explanation: "Google Scholar provides free access to academic papers and shows citation counts indicating influence.",
+      },
+    ],
+  },
+  {
+    lessonId: "l08-07",
+    questions: [
+      {
+        id: "l08-07-q1",
+        question: "What makes a complete research strategy?",
+        options: [
+          { id: "a", text: "Only using one type of source" },
+          { id: "b", text: "Combining academic, government, and news sources while evaluating each critically" },
+          { id: "c", text: "Only trusting Wikipedia" },
+          { id: "d", text: "Avoiding all research" },
+        ],
+        correctAnswer: "b",
+        explanation: "A complete research strategy uses diverse quality sources and evaluates each critically.",
+      },
+    ],
+  },
+  // Unit 9: Evidence Quality
+  {
+    lessonId: "l09-01",
+    questions: [
+      {
+        id: "l09-01-q1",
+        question: "What is appeal to ignorance?",
+        options: [
+          { id: "a", text: "Attacking someone for being uneducated" },
+          { id: "b", text: "Arguing something is true because it hasn't been proven false" },
+          { id: "c", text: "Using complicated words" },
+          { id: "d", text: "Ignoring your opponent" },
+        ],
+        correctAnswer: "b",
+        explanation: "Appeal to ignorance argues something is true because it hasn't been proven false (or vice versa).",
+      },
+      {
+        id: "l09-01-q2",
+        question: "Who bears the burden of proof?",
+        options: [
+          { id: "a", text: "The person who denies the claim" },
+          { id: "b", text: "Whoever makes the claim" },
+          { id: "c", text: "The judge" },
+          { id: "d", text: "No one" },
+        ],
+        correctAnswer: "b",
+        explanation: "Whoever makes a claim bears the burden of proving it - you can't demand others disprove your claims.",
+      },
+    ],
+  },
+  {
+    lessonId: "l09-02",
+    questions: [
+      {
+        id: "l09-02-q1",
+        question: "What's the difference between statistical significance and effect size?",
+        options: [
+          { id: "a", text: "They're the same thing" },
+          { id: "b", text: "Significance shows it's not random; effect size shows how big the difference is" },
+          { id: "c", text: "Effect size is about sample size" },
+          { id: "d", text: "Significance is always more important" },
+        ],
+        correctAnswer: "b",
+        explanation: "Significance indicates a result isn't due to chance; effect size tells you how large the actual difference is.",
+      },
+    ],
+  },
+  {
+    lessonId: "l09-03",
+    questions: [
+      {
+        id: "l09-03-q1",
+        question: "What's the key difference between debate and personal conflict resolution?",
+        options: [
+          { id: "a", text: "Always try to win in both" },
+          { id: "b", text: "In personal situations, the goal is understanding, not winning" },
+          { id: "c", text: "Never use debate skills personally" },
+          { id: "d", text: "There's no difference" },
+        ],
+        correctAnswer: "b",
+        explanation: "In personal relationships, the goal shifts from winning to understanding and connection.",
+      },
+    ],
+  },
+  {
+    lessonId: "l09-04",
+    questions: [
+      {
+        id: "l09-04-q1",
+        question: "When is anecdotal evidence most appropriate?",
+        options: [
+          { id: "a", text: "As your only evidence for a general claim" },
+          { id: "b", text: "To illustrate a point already supported by broader data" },
+          { id: "c", text: "To prove something always happens" },
+          { id: "d", text: "To replace statistical analysis" },
+        ],
+        correctAnswer: "b",
+        explanation: "Anecdotes work best when illustrating points already supported by broader data.",
+      },
+      {
+        id: "l09-04-q2",
+        question: "Why can't a single anecdote prove a general claim?",
+        options: [
+          { id: "a", text: "Anecdotes are always false" },
+          { id: "b", text: "Individual cases may not be representative of typical experiences" },
+          { id: "c", text: "Stories have no value in debate" },
+          { id: "d", text: "Only statistics matter" },
+        ],
+        correctAnswer: "b",
+        explanation: "Individual cases may be outliers and don't prove what typically happens.",
+      },
+    ],
+  },
+  {
+    lessonId: "l09-05",
+    questions: [
+      {
+        id: "l09-05-q1",
+        question: "Why is 'we've always done it this way' not a valid argument?",
+        options: [
+          { id: "a", text: "Tradition is always wrong" },
+          { id: "b", text: "Age doesn't determine correctness - many traditions were wrong" },
+          { id: "c", text: "New things are always better" },
+          { id: "d", text: "It's always a valid argument" },
+        ],
+        correctAnswer: "b",
+        explanation: "Longevity doesn't prove correctness. Many long-standing traditions were wrong or have become outdated.",
+      },
+    ],
+  },
+  {
+    lessonId: "l09-06",
+    questions: [
+      {
+        id: "l09-06-q1",
+        question: "What makes someone an expert on a specific topic?",
+        options: [
+          { id: "a", text: "Being famous" },
+          { id: "b", text: "Relevant education, experience, and publication in that specific field" },
+          { id: "c", text: "Having any credential" },
+          { id: "d", text: "Being old" },
+        ],
+        correctAnswer: "b",
+        explanation: "Expertise requires relevant credentials, experience, and work specifically in the field of the claim.",
+      },
+    ],
+  },
+  {
+    lessonId: "l09-07",
+    questions: [
+      {
+        id: "l09-07-q1",
+        question: "How do evidence quality tools work together?",
+        options: [
+          { id: "a", text: "They're used separately, never together" },
+          { id: "b", text: "Evaluate burden of proof, source type, sample size, representativeness, and expert qualifications together" },
+          { id: "c", text: "Only one tool matters" },
+          { id: "d", text: "They contradict each other" },
+        ],
+        correctAnswer: "b",
+        explanation: "Comprehensive evidence evaluation uses multiple tools together for thorough assessment.",
+      },
+    ],
+  },
+  // Unit 10: Causation & Ethics + Capstone
+  {
+    lessonId: "l10-01",
+    questions: [
+      {
+        id: "l10-01-q1",
+        question: "What is a red herring fallacy?",
+        options: [
+          { id: "a", text: "Attacking the person" },
+          { id: "b", text: "Diverting attention from the actual issue to something irrelevant" },
+          { id: "c", text: "Using emotional appeals" },
+          { id: "d", text: "Assuming causation from correlation" },
+        ],
+        correctAnswer: "b",
+        explanation: "A red herring diverts attention from the actual issue to something irrelevant.",
+      },
+      {
+        id: "l10-01-q2",
+        question: "How should you respond when an opponent uses a red herring?",
+        options: [
+          { id: "a", text: "Follow them to the new topic" },
+          { id: "b", text: "Redirect to the original question" },
+          { id: "c", text: "Accept their new framing" },
+          { id: "d", text: "End the debate" },
+        ],
+        correctAnswer: "b",
+        explanation: "Respond by redirecting to the original question and noting they haven't addressed it.",
+      },
+    ],
+  },
+  {
+    lessonId: "l10-02",
+    questions: [
+      {
+        id: "l10-02-q1",
+        question: "What is the post hoc fallacy?",
+        options: [
+          { id: "a", text: "Attacking someone's credentials" },
+          { id: "b", text: "Assuming that because B followed A, A must have caused B" },
+          { id: "c", text: "Presenting only two options" },
+          { id: "d", text: "Using vague language" },
+        ],
+        correctAnswer: "b",
+        explanation: "Post hoc assumes that because B happened after A, A must have caused B - confusing sequence with causation.",
+      },
+      {
+        id: "l10-02-q2",
+        question: "What else might explain why B happened after A?",
+        options: [
+          { id: "a", text: "Only A could cause B" },
+          { id: "b", text: "Coincidence, natural progression, confounding variables, or reverse causation" },
+          { id: "c", text: "Nothing else could explain it" },
+          { id: "d", text: "Sequence always proves causation" },
+        ],
+        correctAnswer: "b",
+        explanation: "Alternatives include coincidence, natural progression, confounding variables, or reverse causation.",
+      },
+    ],
+  },
+  {
+    lessonId: "l10-03",
+    questions: [
+      {
+        id: "l10-03-q1",
+        question: "What should a proper citation include?",
+        options: [
+          { id: "a", text: "Just 'studies show'" },
+          { id: "b", text: "Source, author, credentials, and date" },
+          { id: "c", text: "Only the author's first name" },
+          { id: "d", text: "Nothing specific is needed" },
+        ],
+        correctAnswer: "b",
+        explanation: "Proper citations include source name, author, relevant credentials, and date for verifiability.",
+      },
+    ],
+  },
+  {
+    lessonId: "l10-04",
+    questions: [
+      {
+        id: "l10-04-q1",
+        question: "What's the most important rule about evidence ethics?",
+        options: [
+          { id: "a", text: "Win at any cost" },
+          { id: "b", text: "Never fabricate evidence" },
+          { id: "c", text: "Hide your sources" },
+          { id: "d", text: "Exaggerate for effect" },
+        ],
+        correctAnswer: "b",
+        explanation: "Never fabricate evidence - it's the most serious ethical violation with severe consequences.",
+      },
+    ],
+  },
+  {
+    lessonId: "l10-05",
+    questions: [
+      {
+        id: "l10-05-q1",
+        question: "What's the best approach when facing an unexpected argument?",
+        options: [
+          { id: "a", text: "Panic and give up" },
+          { id: "b", text: "Stay calm and apply critical thinking skills" },
+          { id: "c", text: "Pretend they didn't make it" },
+          { id: "d", text: "Attack them personally" },
+        ],
+        correctAnswer: "b",
+        explanation: "Stay calm and apply your critical thinking skills - this is a test of genuine debate ability.",
+      },
+    ],
+  },
+  {
+    lessonId: "l10-06",
+    questions: [
+      {
+        id: "l10-06-q1",
+        question: "What are the core components of the Claim-Evidence-Reasoning structure?",
+        options: [
+          { id: "a", text: "Opinion, story, emotion" },
+          { id: "b", text: "Claim, data supporting it, and explanation of why the data proves the claim" },
+          { id: "c", text: "Introduction, body, conclusion" },
+          { id: "d", text: "Speed, volume, clarity" },
+        ],
+        correctAnswer: "b",
+        explanation: "CER includes the claim, evidence supporting it, and reasoning explaining why the evidence proves the claim.",
+      },
+    ],
+  },
+  {
+    lessonId: "l10-07",
+    questions: [
+      {
+        id: "l10-07-q1",
+        question: "What mindset is most important for continued growth as a debater?",
+        options: [
+          { id: "a", text: "Believing you already know everything" },
+          { id: "b", text: "A growth mindset: every round teaches something" },
+          { id: "c", text: "Avoiding all feedback" },
+          { id: "d", text: "Only debating weaker opponents" },
+        ],
+        correctAnswer: "b",
+        explanation: "A growth mindset - viewing every round as a learning opportunity - is essential for improvement.",
+      },
+      {
+        id: "l10-07-q2",
+        question: "What's the main benefit of learning to argue both sides of issues?",
+        options: [
+          { id: "a", text: "It teaches dishonesty" },
+          { id: "b", text: "You develop genuine understanding of multiple perspectives" },
+          { id: "c", text: "You never have your own opinion" },
+          { id: "d", text: "It has no benefit" },
+        ],
+        correctAnswer: "b",
+        explanation: "Arguing both sides develops genuine understanding of multiple perspectives, making you a stronger advocate.",
+      },
+    ],
+  },
 ];
 
 export function getLessonExercise(lessonId: string): LessonExercise | undefined {
@@ -1299,7 +2115,7 @@ export function getLessonExercise(lessonId: string): LessonExercise | undefined 
 }
 
 // Multi-page lesson content - imported from lessons/ modules
-// Units 1-5 (35 lessons) are fully built out with rich interactive content
+// Units 1-10 (70 lessons) are fully built out with rich interactive content - complete Beginner section
 export const MULTI_PAGE_LESSONS: MultiPageLesson[] = ALL_MULTI_PAGE_LESSONS;
 
 export function getMultiPageLesson(lessonId: string): MultiPageLesson | undefined {
