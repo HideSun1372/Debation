@@ -507,13 +507,37 @@ export default function Learn() {
     
     // Navigate to next lesson or close lesson view
     if (nextLessonId) {
-      setActiveLessonId(nextLessonId);
-      resetLessonUIState();
-    } else {
-      // No more lessons, go back to curriculum
-      setActiveLessonId(null);
-      resetLessonUIState();
+      // Find the next lesson's unit and section info
+      for (const unit of LESSON_UNITS) {
+        for (const section of unit.sections) {
+          for (const lesson of section.lessons) {
+            if (lesson.id === nextLessonId) {
+              setActiveLessonId(nextLessonId);
+              setCurrentLesson(unit.id, section.id, nextLessonId);
+              setLessonStep("content");
+              setExerciseQuestionIndex(0);
+              setExerciseAnswer(null);
+              setExerciseAnswered(false);
+              setExerciseCorrect(false);
+              setCurrentPageIndex(0);
+              setPageAnswer(null);
+              setPageAnswered(false);
+              setPageCorrect(false);
+              setCompletedPageQuestions(new Set());
+              setLessonStartTime(Date.now());
+              setQuestionsAttempted(0);
+              setQuestionsCorrect(0);
+              setAttemptedExerciseQuestions(new Set());
+              return;
+            }
+          }
+        }
+      }
     }
+    
+    // No more lessons or lesson not found, go back to curriculum
+    setActiveLessonId(null);
+    resetLessonUIState();
   };
 
   const handlePrevPage = () => {
@@ -768,6 +792,81 @@ export default function Learn() {
     const exercise = getLessonExercise(lesson.id);
     const multiPageLesson = getMultiPageLesson(lesson.id);
 
+    const completionDialog = (
+      <Dialog open={showCompletionSummary} onOpenChange={(open) => { if (!open) handleCompletionClose(); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto mb-2 h-16 w-16 rounded-full bg-green-500/10 flex items-center justify-center">
+              <Trophy className="h-8 w-8 text-green-500" />
+            </div>
+            <DialogTitle className="text-center text-xl">Lesson Complete!</DialogTitle>
+            <DialogDescription className="text-center">
+              {completionStats?.lessonTitle}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {completionStats && (
+            <div className="space-y-4 py-4">
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div className="text-2xl font-bold">
+                    {completionStats.timeSpent < 60 
+                      ? `${completionStats.timeSpent}s`
+                      : `${Math.floor(completionStats.timeSpent / 60)}m ${completionStats.timeSpent % 60}s`
+                    }
+                  </div>
+                  <div className="text-xs text-muted-foreground">Time Spent</div>
+                </div>
+                
+                <div className="space-y-1">
+                  <div className="flex items-center justify-center">
+                    <CircleCheck className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div className="text-2xl font-bold">
+                    {completionStats.accuracy}%
+                  </div>
+                  <div className="text-xs text-muted-foreground">Accuracy</div>
+                </div>
+                
+                <div className="space-y-1">
+                  <div className="flex items-center justify-center">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="text-2xl font-bold text-primary">
+                    +{completionStats.xpEarned}
+                  </div>
+                  <div className="text-xs text-muted-foreground">XP Earned</div>
+                </div>
+              </div>
+              
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Level {user.lessonProgress.learnLevel}</span>
+                  <span className="text-muted-foreground">
+                    {getXpForNextLevel(user.lessonProgress.learnXp + completionStats.xpEarned).current} / {getXpForNextLevel(user.lessonProgress.learnXp + completionStats.xpEarned).required} XP
+                  </span>
+                </div>
+                <Progress 
+                  value={getXpForNextLevel(user.lessonProgress.learnXp + completionStats.xpEarned).progress} 
+                  className="h-2"
+                />
+              </div>
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button onClick={handleCompletionContinue} className="w-full" data-testid="button-continue-lesson">
+              Continue
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+
     if (multiPageLesson) {
       const totalPages = multiPageLesson.pages.length;
       const currentPage = multiPageLesson.pages[currentPageIndex];
@@ -896,6 +995,7 @@ export default function Learn() {
       const canProceed = currentPage.type === "content" || isQuestionAlreadyCompleted || (pageAnswered && pageCorrect);
 
       return (
+        <>
         <div className="container mx-auto px-4 py-8 max-w-3xl">
           <Button 
             variant="ghost" 
@@ -996,6 +1096,8 @@ export default function Learn() {
             </CardFooter>
           </Card>
         </div>
+        {completionDialog}
+        </>
       );
     }
 
@@ -1003,6 +1105,7 @@ export default function Learn() {
       const currentQ = exercise.questions[exerciseQuestionIndex];
       
       return (
+        <>
         <div className="container mx-auto px-4 py-8 max-w-3xl">
           <Button 
             variant="ghost" 
@@ -1125,10 +1228,13 @@ export default function Learn() {
             </CardFooter>
           </Card>
         </div>
+        {completionDialog}
+        </>
       );
     }
 
     return (
+      <>
       <div className="container mx-auto px-4 py-8 max-w-3xl">
         <Button 
           variant="ghost" 
@@ -1210,6 +1316,8 @@ export default function Learn() {
           </CardFooter>
         </Card>
       </div>
+      {completionDialog}
+      </>
     );
   }
 
