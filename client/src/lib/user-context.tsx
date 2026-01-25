@@ -112,6 +112,7 @@ interface UserContextType {
   getProgress: () => number;
   completeOnboarding: (experience: ExperienceLevel, score: number) => void;
   completeLesson: (lessonId: string, xpEarned?: number) => void;
+  completeLessons: (lessonIds: string[]) => void;
   addLearnXp: (xp: number) => void;
   setCurrentLesson: (unitId: string, sectionId: string, lessonId: string) => void;
   isLessonCompleted: (lessonId: string) => boolean;
@@ -359,6 +360,34 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     });
   }, [user.lessonProgress, isAuthenticated, saveProgressMutation]);
 
+  const completeLessons = useCallback((lessonIds: string[]) => {
+    if (lessonIds.length === 0) return;
+    
+    setLocalUser((prev) => {
+      const existingIds = new Set(prev.lessonProgress.completedLessonIds);
+      const newIds = lessonIds.filter(id => !existingIds.has(id));
+      
+      if (newIds.length === 0) return prev;
+      
+      const newProgress: LessonProgressData = {
+        ...prev.lessonProgress,
+        completedLessonIds: [...prev.lessonProgress.completedLessonIds, ...newIds],
+        lastVisitedAt: new Date().toISOString(),
+      };
+      
+      if (isAuthenticated) {
+        saveProgressMutation.mutate(newProgress);
+      }
+      
+      const newUser = {
+        ...prev,
+        lessonProgress: newProgress,
+      };
+      localStorage.setItem("debate-user", JSON.stringify(newUser));
+      return newUser;
+    });
+  }, [isAuthenticated, saveProgressMutation]);
+
   const addLearnXp = useCallback((xp: number) => {
     // Use functional update to get the latest state
     setLocalUser((prev) => {
@@ -450,6 +479,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         getProgress,
         completeOnboarding,
         completeLesson,
+        completeLessons,
         addLearnXp,
         setCurrentLesson,
         isLessonCompleted,

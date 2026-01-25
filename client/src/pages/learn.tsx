@@ -12,6 +12,7 @@ import {
   EXPERIENCE_LEVELS, 
   ASSESSMENT_QUESTIONS, 
   LESSON_UNITS, 
+  LESSON_EXERCISES,
   type ExperienceLevel,
   type CurriculumTier,
   getPlacementUnit,
@@ -37,6 +38,7 @@ import {
   CircleX,
   HelpCircle,
   X,
+  FastForward,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -46,7 +48,8 @@ export default function Learn() {
   const { 
     user, 
     completeOnboarding, 
-    completeLesson, 
+    completeLesson,
+    completeLessons,
     setCurrentLesson, 
     isLessonCompleted,
     resetLessonProgress,
@@ -89,6 +92,25 @@ export default function Learn() {
     xpEarned: number;
     lessonTitle: string;
   } | null>(null);
+
+  // Advancement test state
+  interface ScrambledQuestion {
+    id: string;
+    question: string;
+    options: Array<{ label: string; id: string; text: string }>;
+    correctAnswer: string;
+    originalLessonId: string;
+  }
+  
+  const [showAdvancementTest, setShowAdvancementTest] = useState(false);
+  const [advancementTestTarget, setAdvancementTestTarget] = useState<{ type: "unit" | "section"; unitId: string; sectionId?: string } | null>(null);
+  const [advancementQuestions, setAdvancementQuestions] = useState<ScrambledQuestion[]>([]);
+  const [advancementQuestionIndex, setAdvancementQuestionIndex] = useState(0);
+  const [advancementAnswer, setAdvancementAnswer] = useState<string | null>(null);
+  const [advancementAnswered, setAdvancementAnswered] = useState(false);
+  const [advancementCorrect, setAdvancementCorrect] = useState(false);
+  const [advancementScore, setAdvancementScore] = useState(0);
+  const [advancementTestComplete, setAdvancementTestComplete] = useState(false);
 
   const hasCompletedOnboarding = user.lessonProgress.hasCompletedOnboarding;
 
@@ -239,6 +261,152 @@ export default function Learn() {
     
     // Future tiers are unavailable
     return targetTierIndex <= placementTierIndex;
+  };
+
+  // Scramble answer options to always be A, B, C, D
+  const scrambleOptions = (options: Array<{ id: string; text: string }>, correctAnswer: string): { scrambled: Array<{ label: string; id: string; text: string }>; newCorrectAnswer: string } | null => {
+    const labels = ["A", "B", "C", "D"];
+    // Only support questions with exactly 4 options
+    if (options.length !== 4) return null;
+    
+    const shuffled = [...options].sort(() => Math.random() - 0.5);
+    const scrambled = shuffled.map((opt, idx) => ({
+      label: labels[idx],
+      id: opt.id,
+      text: opt.text,
+    }));
+    const correctIndex = scrambled.findIndex(opt => opt.id === correctAnswer);
+    if (correctIndex === -1) return null;
+    
+    return { scrambled, newCorrectAnswer: labels[correctIndex] };
+  };
+
+  // Get questions from lessons in a unit (for advancement test)
+  const getUnitQuestions = (unitId: string): ScrambledQuestion[] => {
+    const unit = LESSON_UNITS.find(u => u.id === unitId);
+    if (!unit) return [];
+    
+    const questions: ScrambledQuestion[] = [];
+    for (const section of unit.sections) {
+      for (const lesson of section.lessons) {
+        const exercise = LESSON_EXERCISES.find(e => e.lessonId === lesson.id);
+        if (exercise) {
+          for (const q of exercise.questions) {
+            const result = scrambleOptions(q.options, q.correctAnswer);
+            if (result) {
+              questions.push({
+                id: q.id,
+                question: q.question,
+                options: result.scrambled,
+                correctAnswer: result.newCorrectAnswer,
+                originalLessonId: lesson.id,
+              });
+            }
+          }
+        }
+      }
+    }
+    return questions;
+  };
+
+  // Check if a unit is locked (beyond placement)
+  const isUnitLocked = (unitId: string): boolean => {
+    if (isAdmin) return false;
+    const unitIndex = LESSON_UNITS.findIndex(u => u.id === unitId);
+    const placementUnitIndex = getPlacementUnitIndex();
+    return unitIndex > placementUnitIndex;
+  };
+
+  // Start advancement test for a unit
+  const startAdvancementTest = (unitId: string) => {
+    const questions = getUnitQuestions(unitId);
+    if (questions.length === 0) return;
+    
+    // Select up to 10 random questions
+    const shuffled = [...questions].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, Math.min(10, shuffled.length));
+    
+    setAdvancementQuestions(selected);
+    setAdvancementTestTarget({ type: "unit", unitId });
+    setAdvancementQuestionIndex(0);
+    setAdvancementAnswer(null);
+    setAdvancementAnswered(false);
+    setAdvancementCorrect(false);
+    setAdvancementScore(0);
+    setAdvancementTestComplete(false);
+    setShowAdvancementTest(true);
+  };
+
+  // Handle advancement test answer selection
+  const handleAdvancementAnswerSelect = (label: string) => {
+    if (!advancementAnswered) {
+      setAdvancementAnswer(label);
+    }
+  };
+
+  // Check advancement test answer
+  const handleCheckAdvancementAnswer = () => {
+    if (!advancementAnswer) return;
+    const currentQ = advancementQuestions[advancementQuestionIndex];
+    const isCorrect = advancementAnswer === currentQ.correctAnswer;
+    setAdvancementAnswered(true);
+    setAdvancementCorrect(isCorrect);
+    if (isCorrect) {
+      setAdvancementScore(prev => prev + 1);
+    }
+  };
+
+  // Go to next advancement question or complete test
+  const handleNextAdvancementQuestion = () => {
+    if (advancementQuestionIndex < advancementQuestions.length - 1) {
+      setAdvancementQuestionIndex(prev => prev + 1);
+      setAdvancementAnswer(null);
+      setAdvancementAnswered(false);
+      setAdvancementCorrect(false);
+    } else {
+      setAdvancementTestComplete(true);
+    }
+  };
+
+  // Complete advancement test and unlock unit
+  const handleAdvancementTestComplete = () => {
+    if (!advancementTestTarget) return;
+    
+    const passingScore = Math.ceil(advancementQuestions.length * 0.7); // 70% to pass
+    const passed = advancementScore >= passingScore;
+    
+    if (passed) {
+      // Collect all lessons from placement unit up to (but not including) target unit
+      // This makes the target unit's first lesson unlocked
+      const targetUnitIndex = LESSON_UNITS.findIndex(u => u.id === advancementTestTarget.unitId);
+      const placementUnitIndex = getPlacementUnitIndex();
+      
+      const lessonsToComplete: string[] = [];
+      
+      // Collect all lesson IDs from units between placement and target
+      for (let i = placementUnitIndex; i < targetUnitIndex; i++) {
+        const unit = LESSON_UNITS[i];
+        for (const section of unit.sections) {
+          for (const lesson of section.lessons) {
+            lessonsToComplete.push(lesson.id);
+          }
+        }
+      }
+      
+      // Batch complete all lessons at once
+      if (lessonsToComplete.length > 0) {
+        completeLessons(lessonsToComplete);
+      }
+    }
+    
+    setShowAdvancementTest(false);
+    setAdvancementTestTarget(null);
+  };
+
+  // Close advancement test
+  const handleCloseAdvancementTest = () => {
+    setShowAdvancementTest(false);
+    setAdvancementTestTarget(null);
   };
 
   const handleStartLearning = () => {
@@ -1528,19 +1696,35 @@ export default function Learn() {
                   unit.sections.forEach(s => s.lessons.forEach(l => unitLessons.push(l.id)));
                   const completedInUnit = unitLessons.filter(id => user.lessonProgress.completedLessonIds.includes(id)).length;
                   const unitProgress = Math.round((completedInUnit / unitLessons.length) * 100);
+                  const unitLocked = isUnitLocked(unit.id);
+                  const hasQuestions = getUnitQuestions(unit.id).length > 0;
 
                   return (
-                    <Card key={unit.id}>
+                    <Card key={unit.id} className={cn(unitLocked && "border-dashed opacity-75")}>
                       <CardHeader>
                         <div className="flex items-start justify-between gap-4">
                           <div>
                             <CardTitle className="flex items-center gap-2">
-                              <BookOpen className="h-5 w-5" />
+                              {unitLocked ? <Lock className="h-5 w-5 text-muted-foreground" /> : <BookOpen className="h-5 w-5" />}
                               {unit.title}
                             </CardTitle>
                             <CardDescription className="mt-1">{unit.description}</CardDescription>
                           </div>
-                          <Badge variant="outline">{completedInUnit}/{unitLessons.length}</Badge>
+                          <div className="flex items-center gap-2">
+                            {unitLocked && hasQuestions && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => startAdvancementTest(unit.id)}
+                                className="gap-1"
+                                data-testid={`button-skip-to-${unit.id}`}
+                              >
+                                <FastForward className="h-4 w-4" />
+                                Skip Ahead
+                              </Button>
+                            )}
+                            <Badge variant="outline">{completedInUnit}/{unitLessons.length}</Badge>
+                          </div>
                         </div>
                         <Progress value={unitProgress} className="h-2 mt-3" />
                       </CardHeader>
@@ -1699,6 +1883,150 @@ export default function Learn() {
               <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showAdvancementTest} onOpenChange={(open) => { if (!open) handleCloseAdvancementTest(); }}>
+        <DialogContent className="sm:max-w-lg">
+          {!advancementTestComplete ? (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <FastForward className="h-5 w-5" />
+                  Advancement Test
+                </DialogTitle>
+                <DialogDescription>
+                  Answer {Math.ceil(advancementQuestions.length * 0.7)} out of {advancementQuestions.length} questions correctly to skip ahead.
+                </DialogDescription>
+              </DialogHeader>
+              
+              {advancementQuestions.length > 0 && (
+                <div className="space-y-6 py-4">
+                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <span>Question {advancementQuestionIndex + 1} of {advancementQuestions.length}</span>
+                    <span>Score: {advancementScore}/{advancementQuestionIndex + (advancementAnswered ? 1 : 0)}</span>
+                  </div>
+                  
+                  <Progress 
+                    value={((advancementQuestionIndex + (advancementAnswered ? 1 : 0)) / advancementQuestions.length) * 100} 
+                    className="h-2" 
+                  />
+                  
+                  <div className="space-y-4">
+                    <p className="font-medium">{advancementQuestions[advancementQuestionIndex].question}</p>
+                    
+                    <RadioGroup
+                      value={advancementAnswer || ""}
+                      onValueChange={handleAdvancementAnswerSelect}
+                      className="space-y-2"
+                    >
+                      {advancementQuestions[advancementQuestionIndex].options.map((option) => (
+                        <div
+                          key={option.label}
+                          className={cn(
+                            "flex items-center space-x-3 p-3 rounded-lg border transition-colors",
+                            advancementAnswer === option.label && !advancementAnswered && "border-primary bg-primary/5",
+                            advancementAnswered && option.label === advancementQuestions[advancementQuestionIndex].correctAnswer && "border-green-500 bg-green-500/10",
+                            advancementAnswered && advancementAnswer === option.label && option.label !== advancementQuestions[advancementQuestionIndex].correctAnswer && "border-red-500 bg-red-500/10"
+                          )}
+                        >
+                          <RadioGroupItem
+                            value={option.label}
+                            id={`adv-${option.label}`}
+                            disabled={advancementAnswered}
+                          />
+                          <Label
+                            htmlFor={`adv-${option.label}`}
+                            className="flex-1 cursor-pointer flex items-center gap-2"
+                          >
+                            <span className="font-medium text-muted-foreground">{option.label}.</span>
+                            <span>{option.text}</span>
+                          </Label>
+                          {advancementAnswered && option.label === advancementQuestions[advancementQuestionIndex].correctAnswer && (
+                            <CircleCheck className="h-5 w-5 text-green-500" />
+                          )}
+                          {advancementAnswered && advancementAnswer === option.label && option.label !== advancementQuestions[advancementQuestionIndex].correctAnswer && (
+                            <CircleX className="h-5 w-5 text-red-500" />
+                          )}
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
+                </div>
+              )}
+              
+              <DialogFooter className="gap-2">
+                {!advancementAnswered ? (
+                  <Button 
+                    onClick={handleCheckAdvancementAnswer} 
+                    disabled={!advancementAnswer}
+                    className="w-full"
+                    data-testid="button-check-advancement-answer"
+                  >
+                    Check Answer
+                  </Button>
+                ) : (
+                  <Button 
+                    onClick={handleNextAdvancementQuestion}
+                    className="w-full"
+                    data-testid="button-next-advancement-question"
+                  >
+                    {advancementQuestionIndex < advancementQuestions.length - 1 ? "Next Question" : "See Results"}
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                )}
+              </DialogFooter>
+            </>
+          ) : (
+            <>
+              <DialogHeader>
+                <div className={cn(
+                  "mx-auto mb-2 h-16 w-16 rounded-full flex items-center justify-center",
+                  advancementScore >= Math.ceil(advancementQuestions.length * 0.7) 
+                    ? "bg-green-500/10" 
+                    : "bg-red-500/10"
+                )}>
+                  {advancementScore >= Math.ceil(advancementQuestions.length * 0.7) ? (
+                    <Trophy className="h-8 w-8 text-green-500" />
+                  ) : (
+                    <CircleX className="h-8 w-8 text-red-500" />
+                  )}
+                </div>
+                <DialogTitle className="text-center text-xl">
+                  {advancementScore >= Math.ceil(advancementQuestions.length * 0.7) 
+                    ? "Test Passed!" 
+                    : "Not Quite Yet"}
+                </DialogTitle>
+                <DialogDescription className="text-center">
+                  {advancementScore >= Math.ceil(advancementQuestions.length * 0.7) 
+                    ? "You've demonstrated mastery of this content and can skip ahead!" 
+                    : "You need more practice. Complete the lessons to learn the material."}
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="py-6 text-center">
+                <div className="text-4xl font-bold mb-2">
+                  {advancementScore} / {advancementQuestions.length}
+                </div>
+                <div className="text-muted-foreground">
+                  {Math.round((advancementScore / advancementQuestions.length) * 100)}% correct
+                  <span className="mx-2">|</span>
+                  {Math.ceil(advancementQuestions.length * 0.7)} needed to pass
+                </div>
+              </div>
+              
+              <DialogFooter>
+                <Button 
+                  onClick={handleAdvancementTestComplete}
+                  className="w-full"
+                  variant={advancementScore >= Math.ceil(advancementQuestions.length * 0.7) ? "default" : "outline"}
+                  data-testid="button-finish-advancement-test"
+                >
+                  {advancementScore >= Math.ceil(advancementQuestions.length * 0.7) ? "Skip Ahead" : "Back to Lessons"}
+                </Button>
+              </DialogFooter>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>
