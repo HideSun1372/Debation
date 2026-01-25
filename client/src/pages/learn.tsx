@@ -281,26 +281,54 @@ export default function Learn() {
     return { scrambled, newCorrectAnswer: labels[correctIndex] };
   };
 
-  // Get questions from lessons in a unit (for advancement test)
-  const getUnitQuestions = (unitId: string): ScrambledQuestion[] => {
-    const unit = LESSON_UNITS.find(u => u.id === unitId);
-    if (!unit) return [];
+  // Get questions from lessons that would be SKIPPED when advancing to a unit
+  // Tests should cover material you're skipping, not material you're jumping into
+  const getSkippedLessonsQuestions = (targetUnitId: string): ScrambledQuestion[] => {
+    const targetUnitIndex = LESSON_UNITS.findIndex(u => u.id === targetUnitId);
+    const placementUnitIndex = getPlacementUnitIndex();
+    
+    // Get the user's current progress - find first incomplete lesson
+    let currentUnitIndex = placementUnitIndex;
+    for (let i = placementUnitIndex; i < targetUnitIndex; i++) {
+      const unit = LESSON_UNITS[i];
+      let unitComplete = true;
+      for (const section of unit.sections) {
+        for (const lesson of section.lessons) {
+          if (!isLessonCompleted(lesson.id)) {
+            unitComplete = false;
+            break;
+          }
+        }
+        if (!unitComplete) break;
+      }
+      if (!unitComplete) {
+        currentUnitIndex = i;
+        break;
+      }
+    }
     
     const questions: ScrambledQuestion[] = [];
-    for (const section of unit.sections) {
-      for (const lesson of section.lessons) {
-        const exercise = LESSON_EXERCISES.find(e => e.lessonId === lesson.id);
-        if (exercise) {
-          for (const q of exercise.questions) {
-            const result = scrambleOptions(q.options, q.correctAnswer);
-            if (result) {
-              questions.push({
-                id: q.id,
-                question: q.question,
-                options: result.scrambled,
-                correctAnswer: result.newCorrectAnswer,
-                originalLessonId: lesson.id,
-              });
+    
+    // Collect questions from all lessons between current position and target
+    // These are the lessons being skipped
+    for (let i = currentUnitIndex; i < targetUnitIndex; i++) {
+      const unit = LESSON_UNITS[i];
+      for (const section of unit.sections) {
+        for (const lesson of section.lessons) {
+          // Only include lessons that have exercises
+          const exercise = LESSON_EXERCISES.find(e => e.lessonId === lesson.id);
+          if (exercise) {
+            for (const q of exercise.questions) {
+              const result = scrambleOptions(q.options, q.correctAnswer);
+              if (result) {
+                questions.push({
+                  id: q.id,
+                  question: q.question,
+                  options: result.scrambled,
+                  correctAnswer: result.newCorrectAnswer,
+                  originalLessonId: lesson.id,
+                });
+              }
             }
           }
         }
@@ -319,7 +347,7 @@ export default function Learn() {
 
   // Start advancement test for a unit
   const startAdvancementTest = (unitId: string) => {
-    const questions = getUnitQuestions(unitId);
+    const questions = getSkippedLessonsQuestions(unitId);
     if (questions.length === 0) return;
     
     // Select up to 10 random questions
@@ -1697,7 +1725,7 @@ export default function Learn() {
                   const completedInUnit = unitLessons.filter(id => user.lessonProgress.completedLessonIds.includes(id)).length;
                   const unitProgress = Math.round((completedInUnit / unitLessons.length) * 100);
                   const unitLocked = isUnitLocked(unit.id);
-                  const hasQuestions = getUnitQuestions(unit.id).length > 0;
+                  const hasQuestions = getSkippedLessonsQuestions(unit.id).length > 0;
 
                   return (
                     <Card key={unit.id} className={cn(unitLocked && "border-dashed opacity-75")}>
