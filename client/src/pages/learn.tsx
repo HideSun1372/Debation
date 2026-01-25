@@ -447,15 +447,55 @@ export default function Learn() {
   const handleCompletionContinue = () => {
     if (!activeLessonId || !completionStats) return;
     
+    // Store the current lesson ID before any state changes
+    const completedLessonId = activeLessonId;
+    const xpToAdd = completionStats.xpEarned;
+    
+    // Find the next lesson before closing dialog
+    const currentIndex = allLessonIds.indexOf(completedLessonId);
+    const nextLessonId = currentIndex < allLessonIds.length - 1 
+      ? allLessonIds[currentIndex + 1] 
+      : null;
+    
     // Complete the lesson with XP
-    completeLesson(activeLessonId, completionStats.xpEarned);
+    completeLesson(completedLessonId, xpToAdd);
     
     // Reset completion state
     setShowCompletionSummary(false);
     setCompletionStats(null);
     
-    // Go to next lesson
-    goToNextLesson();
+    // Navigate to next lesson or close lesson view
+    if (nextLessonId) {
+      // Find unit and section for the next lesson
+      for (const unit of LESSON_UNITS) {
+        for (const section of unit.sections) {
+          for (const lesson of section.lessons) {
+            if (lesson.id === nextLessonId) {
+              setActiveLessonId(nextLessonId);
+              setCurrentLesson(unit.id, section.id, nextLessonId);
+              setLessonStep("content");
+              setExerciseQuestionIndex(0);
+              setExerciseAnswer(null);
+              setExerciseAnswered(false);
+              setExerciseCorrect(false);
+              setCurrentPageIndex(0);
+              setPageAnswer(null);
+              setPageAnswered(false);
+              setPageCorrect(false);
+              setCompletedPageQuestions(new Set());
+              setLessonStartTime(Date.now());
+              setQuestionsAttempted(0);
+              setQuestionsCorrect(0);
+              setAttemptedExerciseQuestions(new Set());
+              return;
+            }
+          }
+        }
+      }
+    } else {
+      // No more lessons, go back to curriculum
+      setActiveLessonId(null);
+    }
   };
 
   const handlePrevPage = () => {

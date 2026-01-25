@@ -196,11 +196,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   });
 
   // Merge auth user data with progress (ensure new fields have defaults)
+  // Also merge local completedLessonIds for optimistic updates before DB refreshes
   const mergedProgress: LessonProgressData = dbProgress ? {
     ...defaultLessonProgress,
     ...dbProgress,
-    learnXp: dbProgress.learnXp ?? 0,
-    learnLevel: dbProgress.learnLevel ?? 1,
+    learnXp: Math.max(dbProgress.learnXp ?? 0, localUser.lessonProgress.learnXp),
+    learnLevel: Math.max(dbProgress.learnLevel ?? 1, localUser.lessonProgress.learnLevel),
+    // Merge completed lessons from both sources for optimistic updates
+    completedLessonIds: Array.from(new Set([
+      ...(dbProgress.completedLessonIds || []),
+      ...localUser.lessonProgress.completedLessonIds,
+    ])),
   } : localUser.lessonProgress;
 
   const user: UserState = isAuthenticated && authUser ? {
@@ -318,8 +324,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated, saveProgress, user.lessonProgress]);
 
   const completeLesson = useCallback((lessonId: string, xpEarned: number = 0) => {
+    console.log('[completeLesson] Called with:', { lessonId, xpEarned, isAuthenticated });
+    
     const currentProgress = user.lessonProgress;
+    console.log('[completeLesson] Current completedLessonIds:', currentProgress.completedLessonIds);
+    
     if (currentProgress.completedLessonIds.includes(lessonId)) {
+      console.log('[completeLesson] Lesson already completed, returning early');
       return;
     }
     
@@ -334,12 +345,19 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       learnLevel: newLevel,
     };
     
+    console.log('[completeLesson] New completedLessonIds:', newProgress.completedLessonIds);
+    
     if (isAuthenticated) {
+      console.log('[completeLesson] Saving to database');
       saveProgress(newProgress);
+    } else {
+      console.log('[completeLesson] Not authenticated, skipping database save');
     }
     
     setLocalUser((prev) => {
+      console.log('[completeLesson] Updating local user, prev completedLessonIds:', prev.lessonProgress.completedLessonIds);
       if (prev.lessonProgress.completedLessonIds.includes(lessonId)) {
+        console.log('[completeLesson] Already in local state, returning prev');
         return prev;
       }
       const newUser = {
@@ -347,6 +365,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         lessonProgress: newProgress,
       };
       localStorage.setItem("debate-user", JSON.stringify(newUser));
+      console.log('[completeLesson] Updated local storage');
       return newUser;
     });
   }, [user.lessonProgress, isAuthenticated, saveProgress]);
