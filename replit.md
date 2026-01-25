@@ -47,6 +47,13 @@ Debation is an educational debate platform where users practice debating against
 - **Visibility rules**: Locked lessons show "Locked Lesson" instead of actual titles
 - **Question feedback**: Incorrect answers don't reveal correct answer (encourages retry)
 
+### XP and Level Progression System
+- **Learn XP**: Earned by completing lessons (stored in learnXp field)
+- **Learn Level**: Calculated from total XP with increasing thresholds (Level 1: 0, Level 2: 100, Level 3: 250, etc.)
+- **XP Calculation**: Base 50 XP per lesson + accuracy bonus (up to 50 XP for 100%) + time bonus (up to 25 XP for fast completion)
+- **Lesson Completion Summary**: Shows time spent, accuracy %, XP earned, and level progress before advancing to next lesson
+- **Question Tracking**: First attempt per question counts for accuracy (retries don't inflate stats)
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
