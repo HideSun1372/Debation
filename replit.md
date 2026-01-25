@@ -33,6 +33,19 @@ Debation is an educational debate platform where users practice debating against
 ### Curriculum Structure
 - 365 lessons across 52 units organized into 5 skill-based sections
 - Sections: Fundamentals (Beginner), Core Skills (Beginner-Intermediate), Format Mastery (Intermediate), Advanced Techniques (Advanced), Championship Preparation (Master)
+- Lesson content files in `shared/lessons/` with multi-page structure (6-10 pages per lesson)
+
+### Onboarding Assessment System
+- **15 questions** with progressive difficulty: beginner (q1-7), intermediate (q8-10), advanced (q11-13), master (q14-15)
+- Last question is championship-level (kritik theory)
+- Placement logic maps score percentages to starting units based on experience level
+- Experience levels: "none" (never debated), "casual" (friendly debates), "some" (club/school experience), "competitive" (tournament experience)
+
+### Learn Page (Curriculum Navigation)
+- **Tabbed interface** with BEGINNER, INTERMEDIATE, ADVANCED, EXPERT, MASTER sections
+- Each tab shows units and lessons for that skill tier
+- **Visibility rules**: Locked lessons show "Locked Lesson" instead of actual titles
+- **Question feedback**: Incorrect answers don't reveal correct answer (encourages retry)
 
 ## User Preferences
 
