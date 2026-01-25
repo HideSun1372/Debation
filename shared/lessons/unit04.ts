@@ -36,11 +36,11 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         question: "What is the correct order of the 4 S's of Refutation?",
         options: [
           { id: "a", text: "State, Signal, Summarize, Support" },
-          { id: "b", text: "Signal, State, Support, Summarize" },
-          { id: "c", text: "Support, Signal, State, Summarize" },
-          { id: "d", text: "Summarize, State, Signal, Support" },
+          { id: "b", text: "Support, Signal, State, Summarize" },
+          { id: "c", text: "Summarize, State, Signal, Support" },
+          { id: "d", text: "Signal, State, Support, Summarize" },
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "The correct order is Signal (alert the judge), State (identify the argument), Support (provide your counter), and Summarize (explain the impact). This order creates a logical flow that judges can easily follow.",
       },
       {
@@ -59,11 +59,11 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         question: "Why is it important to state your opponent's argument fairly and accurately?",
         options: [
           { id: "a", text: "So you can make their argument sound weaker than it is" },
-          { id: "b", text: "It shows you understand their point and sets up an effective response" },
-          { id: "c", text: "Because judges don't remember what opponents said" },
-          { id: "d", text: "To use up more of your speaking time" },
+          { id: "b", text: "Because judges don't remember what opponents said" },
+          { id: "c", text: "To use up more of your speaking time" },
+          { id: "d", text: "It shows you understand their point and sets up an effective response" },
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Stating arguments accurately demonstrates that you've listened and understood, which builds credibility. It also properly sets up your counter-argument. Creating a 'strawman' (distorted version) is considered poor debating and judges will often discount such responses.",
       },
       {
@@ -87,11 +87,11 @@ export const UNIT_04_LESSONS: MultiPageLesson[] = [
         question: "What is the purpose of the 'Summarize' step in the 4 S's framework?",
         options: [
           { id: "a", text: "To repeat everything you said" },
-          { id: "b", text: "To explain why your response matters for the debate outcome" },
-          { id: "c", text: "To apologize for being harsh" },
-          { id: "d", text: "To transition to an unrelated argument" },
+          { id: "b", text: "To apologize for being harsh" },
+          { id: "c", text: "To transition to an unrelated argument" },
+          { id: "d", text: "To explain why your response matters for the debate outcome" },
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "The Summarize step explains the impact of your refutation—why it matters for who wins the debate. It connects your specific response to the broader question of which side has the stronger case.",
       },
       {

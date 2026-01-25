@@ -324,13 +324,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated, saveProgress, user.lessonProgress]);
 
   const completeLesson = useCallback((lessonId: string, xpEarned: number = 0) => {
-    console.log('[completeLesson] Called with:', { lessonId, xpEarned, isAuthenticated });
-    
     const currentProgress = user.lessonProgress;
-    console.log('[completeLesson] Current completedLessonIds:', currentProgress.completedLessonIds);
     
     if (currentProgress.completedLessonIds.includes(lessonId)) {
-      console.log('[completeLesson] Lesson already completed, returning early');
       return;
     }
     
@@ -345,19 +341,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       learnLevel: newLevel,
     };
     
-    console.log('[completeLesson] New completedLessonIds:', newProgress.completedLessonIds);
-    
+    // Call mutation directly to avoid closure issues with saveProgress callback
     if (isAuthenticated) {
-      console.log('[completeLesson] Saving to database');
-      saveProgress(newProgress);
-    } else {
-      console.log('[completeLesson] Not authenticated, skipping database save');
+      saveProgressMutation.mutate(newProgress);
     }
     
     setLocalUser((prev) => {
-      console.log('[completeLesson] Updating local user, prev completedLessonIds:', prev.lessonProgress.completedLessonIds);
       if (prev.lessonProgress.completedLessonIds.includes(lessonId)) {
-        console.log('[completeLesson] Already in local state, returning prev');
         return prev;
       }
       const newUser = {
@@ -365,10 +355,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         lessonProgress: newProgress,
       };
       localStorage.setItem("debate-user", JSON.stringify(newUser));
-      console.log('[completeLesson] Updated local storage');
       return newUser;
     });
-  }, [user.lessonProgress, isAuthenticated, saveProgress]);
+  }, [user.lessonProgress, isAuthenticated, saveProgressMutation]);
 
   const addLearnXp = useCallback((xp: number) => {
     const currentProgress = user.lessonProgress;

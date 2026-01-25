@@ -445,7 +445,9 @@ export default function Learn() {
   };
 
   const handleCompletionContinue = () => {
-    if (!activeLessonId || !completionStats) return;
+    if (!activeLessonId || !completionStats) {
+      return;
+    }
     
     // Store the current lesson ID before any state changes
     const completedLessonId = activeLessonId;
@@ -466,32 +468,23 @@ export default function Learn() {
     
     // Navigate to next lesson or close lesson view
     if (nextLessonId) {
-      // Find unit and section for the next lesson
-      for (const unit of LESSON_UNITS) {
-        for (const section of unit.sections) {
-          for (const lesson of section.lessons) {
-            if (lesson.id === nextLessonId) {
-              setActiveLessonId(nextLessonId);
-              setCurrentLesson(unit.id, section.id, nextLessonId);
-              setLessonStep("content");
-              setExerciseQuestionIndex(0);
-              setExerciseAnswer(null);
-              setExerciseAnswered(false);
-              setExerciseCorrect(false);
-              setCurrentPageIndex(0);
-              setPageAnswer(null);
-              setPageAnswered(false);
-              setPageCorrect(false);
-              setCompletedPageQuestions(new Set());
-              setLessonStartTime(Date.now());
-              setQuestionsAttempted(0);
-              setQuestionsCorrect(0);
-              setAttemptedExerciseQuestions(new Set());
-              return;
-            }
-          }
-        }
-      }
+      // Just update UI state - don't call setCurrentLesson as it would trigger
+      // another saveProgress with stale completedLessonIds
+      setActiveLessonId(nextLessonId);
+      setLessonStep("content");
+      setExerciseQuestionIndex(0);
+      setExerciseAnswer(null);
+      setExerciseAnswered(false);
+      setExerciseCorrect(false);
+      setCurrentPageIndex(0);
+      setPageAnswer(null);
+      setPageAnswered(false);
+      setPageCorrect(false);
+      setCompletedPageQuestions(new Set());
+      setLessonStartTime(Date.now());
+      setQuestionsAttempted(0);
+      setQuestionsCorrect(0);
+      setAttemptedExerciseQuestions(new Set());
     } else {
       // No more lessons, go back to curriculum
       setActiveLessonId(null);
