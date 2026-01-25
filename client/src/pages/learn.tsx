@@ -225,6 +225,22 @@ export default function Learn() {
     }
   };
 
+  const isTierAvailable = (tier: CurriculumTier): boolean => {
+    if (isAdmin) return true;
+    
+    // Get placement unit info
+    const placementUnitIndex = getPlacementUnitIndex();
+    if (placementUnitIndex < 0) return tier === "BEGINNER";
+    
+    const placementUnit = LESSON_UNITS[placementUnitIndex];
+    const tiers = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT", "MASTER"];
+    const placementTierIndex = tiers.indexOf(placementUnit.tier);
+    const targetTierIndex = tiers.indexOf(tier);
+    
+    // Future tiers are unavailable
+    return targetTierIndex <= placementTierIndex;
+  };
+
   const handleStartLearning = () => {
     if (selectedExperience && placementResult) {
       const placementUnit = getPlacementUnitInfo(placementResult);
@@ -1419,6 +1435,7 @@ export default function Learn() {
       <Tabs value={activeSection} onValueChange={(v) => setActiveSection(v as CurriculumTier)} className="space-y-6">
         <TabsList className="grid w-full grid-cols-5 h-auto">
           {(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT", "MASTER"] as CurriculumTier[]).map((tier) => {
+            const isAvailable = isTierAvailable(tier);
             const tierUnits = LESSON_UNITS.filter(u => u.tier === tier);
             const tierLessonIds: string[] = [];
             tierUnits.forEach(unit => {
@@ -1446,14 +1463,21 @@ export default function Learn() {
               <TabsTrigger 
                 key={tier} 
                 value={tier}
-                className="flex flex-col gap-1 py-2 px-1 data-[state=active]:bg-accent"
+                disabled={!isAvailable}
+                className={cn(
+                  "flex flex-col gap-1 py-2 px-1 data-[state=active]:bg-accent",
+                  !isAvailable && "opacity-50 cursor-not-allowed grayscale"
+                )}
                 data-testid={`tab-section-${tier.toLowerCase()}`}
               >
                 <div className="flex items-center gap-1.5">
                   <div className={cn("h-2 w-2 rounded-full", tierColors[tier])} />
                   <span className="text-xs sm:text-sm font-medium">{tierNames[tier]}</span>
+                  {!isAvailable && <Lock className="h-3 w-3 ml-auto text-muted-foreground" />}
                 </div>
-                <span className="text-[10px] text-muted-foreground">{completedInTier}/{tierLessonIds.length}</span>
+                <div className="text-[10px] text-muted-foreground">
+                  {isAvailable ? `${completedInTier}/${tierLessonIds.length} done` : "Locked"}
+                </div>
               </TabsTrigger>
             );
           })}
