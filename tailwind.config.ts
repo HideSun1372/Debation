@@ -63,6 +63,7 @@ export default {
           beginner: "hsl(var(--tier-beginner) / <alpha-value>)",
           intermediate: "hsl(var(--tier-intermediate) / <alpha-value>)",
           advanced: "hsl(var(--tier-advanced) / <alpha-value>)",
+          expert: "hsl(var(--tier-expert) / <alpha-value>)",
           master: "hsl(var(--tier-master) / <alpha-value>)",
         },
         sidebar: {

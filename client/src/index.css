@@ -49,6 +49,7 @@
   --tier-beginner: 160 60% 45%;
   --tier-intermediate: 45 85% 55%;
   --tier-advanced: 280 65% 55%;
+  --tier-expert: 200 75% 50%;
   --tier-master: 25 90% 55%;
   --radius: .5rem;
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
@@ -134,6 +135,7 @@
   --tier-beginner: 160 60% 55%;
   --tier-intermediate: 45 85% 60%;
   --tier-advanced: 280 65% 65%;
+  --tier-expert: 200 75% 60%;
   --tier-master: 25 90% 60%;
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
   --shadow-xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);

@@ -670,34 +670,40 @@ export function getAllLessons(): Array<{ unitId: string; sectionId: string; less
 }
 
 // Get placement unit based on experience and assessment score
-// Assessment has 15 questions: 4 beginner, 6 intermediate, 3 advanced, 2 master
+// Assessment has 15 questions: 7 beginner, 3 intermediate, 3 advanced, 2 master
 export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: number): string {
   const maxScore = ASSESSMENT_QUESTIONS.length; // 15 questions
   const scorePercent = assessmentScore / maxScore;
   
-  // For competitive debaters (have competed)
+  // For competitive debaters (have tournament experience)
   if (experience === "competitive") {
-    if (scorePercent >= 0.87) {  // 13+ correct: Expert/Master level
+    if (scorePercent >= 0.93) {  // 14+ correct: Master level
+      return "unit-41"; // Master section
+    }
+    if (scorePercent >= 0.87) {  // 13 correct: Expert level
       return "unit-31"; // Expert section
     }
-    if (scorePercent >= 0.67) {  // 10+ correct: Advanced level
+    if (scorePercent >= 0.73) {  // 11+ correct: Advanced level
       return "unit-21"; // Advanced section
     }
-    if (scorePercent >= 0.47) {  // 7+ correct: Intermediate level
+    if (scorePercent >= 0.53) {  // 8+ correct: Intermediate level
       return "unit-11"; // Intermediate section
     }
     return "unit-06"; // Still some basics to cover
   }
   
-  // For users with some debate experience
+  // For users with some debate experience (club/school)
   if (experience === "some") {
-    if (scorePercent >= 0.80) {  // 12+ correct
+    if (scorePercent >= 0.93) {  // 14+ correct: Expert level
+      return "unit-31"; // Expert section
+    }
+    if (scorePercent >= 0.80) {  // 12+ correct: Advanced level
       return "unit-21"; // Advanced section
     }
-    if (scorePercent >= 0.53) {  // 8+ correct
+    if (scorePercent >= 0.60) {  // 9+ correct: Intermediate level
       return "unit-11"; // Intermediate section
     }
-    if (scorePercent >= 0.33) {  // 5+ correct
+    if (scorePercent >= 0.40) {  // 6+ correct
       return "unit-06"; // Later beginner
     }
     return "unit-01"; // Start at beginning
@@ -705,10 +711,13 @@ export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: n
   
   // For casual argument/discussion experience only
   if (experience === "casual") {
-    if (scorePercent >= 0.67) {  // 10+ correct - surprisingly knowledgeable
+    if (scorePercent >= 0.93) {  // 14+ correct - exceptional knowledge
+      return "unit-21"; // Advanced section
+    }
+    if (scorePercent >= 0.73) {  // 11+ correct - very knowledgeable
       return "unit-11"; // Intermediate section
     }
-    if (scorePercent >= 0.40) {  // 6+ correct
+    if (scorePercent >= 0.47) {  // 7+ correct
       return "unit-06"; // Later beginner units
     }
     return "unit-01"; // Start at beginning
