@@ -212,6 +212,10 @@ export default function Learn() {
 
   const handleStartLearning = () => {
     if (selectedExperience && placementResult) {
+      const placementUnit = getPlacementUnitInfo(placementResult);
+      if (placementUnit) {
+        setActiveSection(placementUnit.tier);
+      }
       completeOnboarding(selectedExperience, assessmentScore);
     }
   };
@@ -379,6 +383,17 @@ export default function Learn() {
     return LESSON_UNITS.find(u => u.id === unitId);
   };
 
+  const getTierLabel = (tier: CurriculumTier): string => {
+    const labels: Record<CurriculumTier, string> = {
+      "BEGINNER": "Beginner",
+      "INTERMEDIATE": "Intermediate",
+      "ADVANCED": "Advanced",
+      "EXPERT": "Expert",
+      "MASTER": "Master"
+    };
+    return labels[tier] || tier;
+  };
+
   if (!hasCompletedOnboarding) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -531,41 +546,56 @@ export default function Learn() {
           </Card>
         )}
 
-        {onboardingStep === "result" && placementResult && (
-          <Card>
-            <CardHeader className="text-center">
-              <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-tier-intermediate/20 flex items-center justify-center">
-                <Trophy className="h-8 w-8 text-tier-intermediate" />
-              </div>
-              <CardTitle className="text-2xl">Assessment Complete!</CardTitle>
-              <CardDescription className="text-base">
-                You scored {assessmentScore} out of {ASSESSMENT_QUESTIONS.length}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="text-center">
-                <p className="text-muted-foreground mb-4">Based on your experience and assessment, we recommend starting with:</p>
-                <div className="rounded-lg border-2 border-primary p-4 bg-primary/5">
-                  <h3 className="text-xl font-bold mb-1">
-                    {getPlacementUnitInfo(placementResult)?.title}
-                  </h3>
+        {onboardingStep === "result" && placementResult && (() => {
+          const placementUnit = getPlacementUnitInfo(placementResult);
+          const tierLabel = placementUnit ? getTierLabel(placementUnit.tier) : "Beginner";
+          const remainingUnits = LESSON_UNITS.filter(u => u.order >= (placementUnit?.order || 1)).length;
+          const remainingLessons = LESSON_UNITS
+            .filter(u => u.order >= (placementUnit?.order || 1))
+            .reduce((sum, u) => sum + u.sections.reduce((s, sec) => s + sec.lessons.length, 0), 0);
+          
+          return (
+            <Card>
+              <CardHeader className="text-center">
+                <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-tier-intermediate/20 flex items-center justify-center">
+                  <Trophy className="h-8 w-8 text-tier-intermediate" />
+                </div>
+                <CardTitle className="text-2xl">Assessment Complete!</CardTitle>
+                <CardDescription className="text-base">
+                  You scored {assessmentScore} out of {ASSESSMENT_QUESTIONS.length}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-4">Based on your experience and assessment, you'll start at the <strong>{tierLabel}</strong> level:</p>
+                  <div className="rounded-lg border-2 border-primary p-4 bg-primary/5">
+                    <Badge className="mb-2">{tierLabel} Level</Badge>
+                    <h3 className="text-xl font-bold mb-1">
+                      {placementUnit?.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {placementUnit?.description}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-center space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    {getPlacementUnitInfo(placementResult)?.description}
+                    You have <strong>{remainingLessons} lessons</strong> across <strong>{remainingUnits} units</strong> ahead of you!
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Earlier lessons are unlocked if you want to review fundamentals.
                   </p>
                 </div>
-              </div>
-              <p className="text-sm text-center text-muted-foreground">
-                You can always go back and complete earlier lessons if needed.
-              </p>
-            </CardContent>
-            <CardFooter className="justify-center">
-              <Button onClick={handleStartLearning} size="lg" data-testid="button-start-learning">
-                <Sparkles className="h-4 w-4 mr-2" />
-                Start Learning
-              </Button>
-            </CardFooter>
-          </Card>
-        )}
+              </CardContent>
+              <CardFooter className="justify-center">
+                <Button onClick={handleStartLearning} size="lg" data-testid="button-start-learning">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Start Learning
+                </Button>
+              </CardFooter>
+            </Card>
+          );
+        })()}
       </div>
     );
   }
