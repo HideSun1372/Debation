@@ -1,0 +1,708 @@
+import { MultiPageLesson } from "./types";
+
+export const UNIT_04_LESSONS: MultiPageLesson[] = [
+  {
+    lessonId: "l04-01",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: The Art of Refutation",
+        content: "Welcome to one of the most essential skills in debate: refutation. While constructing your own arguments is important, your ability to effectively dismantle your opponent's arguments often determines who wins the round.\n\nRefutation isn't about being aggressive or dismissive. It's about systematically responding to what your opponent has said in a way that's clear, logical, and persuasive. Judges need to follow your responses and understand exactly why the opponent's argument fails.\n\nIn this lesson, you'll learn a powerful framework called the 4 S's of Refutation. This simple but effective structure will help you organize your responses so judges can easily track your clash with opponent arguments.",
+      },
+      {
+        type: "content",
+        title: "Why Structure Matters in Refutation",
+        content: "Imagine you're a judge listening to two debaters. One responds to arguments by jumping around randomly, making points that are hard to connect back to what the opponent said. The other clearly signals each response, restates the opponent's point, explains why it's wrong, and summarizes the impact.\n\nWhich debater would you find more persuasive?\n\nStructured refutation matters for several reasons:\n\n**Clarity for Judges**\nJudges are flowing (taking notes on) both sides. When you structure your responses clearly, judges can easily track the clash and see that you've addressed key arguments.\n\n**Completeness**\nA framework ensures you don't skip steps. Many debaters attack an argument but forget to explain why it matters—the framework prevents this.\n\n**Persuasion**\nOrganized responses sound more confident and prepared, which enhances your credibility with the judge.",
+        keyPoints: [
+          "Structured responses are easier for judges to follow",
+          "Frameworks ensure complete, effective refutation",
+          "Organization enhances your credibility",
+        ],
+      },
+      {
+        type: "content",
+        title: "The 4 S's Framework Overview",
+        content: "The 4 S's provide a simple, memorable structure for refutation:\n\n**1. Signal**\nAlert the judge that you're about to respond to something specific. Use phrases like 'They said...' or 'My opponent argued...'\n\n**2. State**\nClearly identify the opponent's claim or argument you're addressing. Restate it fairly and accurately.\n\n**3. Support**\nProvide your counter-argument, evidence, or reasoning. Explain WHY their argument is wrong, insufficient, or outweighed.\n\n**4. Summarize**\nExplain the impact—why does your response matter? What does this mean for the debate?\n\nThink of it as: 'They said X. Here's why X is wrong. Therefore, this argument fails to support their side.'",
+        keyPoints: [
+          "Signal: 'They said...'",
+          "State: Identify their claim",
+          "Support: Your counter",
+          "Summarize: Impact",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-01-q1",
+        question: "What is the correct order of the 4 S's of Refutation?",
+        options: [
+          { id: "a", text: "State, Signal, Summarize, Support" },
+          { id: "b", text: "Signal, State, Support, Summarize" },
+          { id: "c", text: "Support, Signal, State, Summarize" },
+          { id: "d", text: "Summarize, State, Signal, Support" },
+        ],
+        correctAnswer: "b",
+        explanation: "The correct order is Signal (alert the judge), State (identify the argument), Support (provide your counter), and Summarize (explain the impact). This order creates a logical flow that judges can easily follow.",
+      },
+      {
+        type: "content",
+        title: "Step 1: Signal - Getting the Judge's Attention",
+        content: "The first S is Signal. Before diving into your response, you need to clearly indicate to the judge that you're about to address a specific argument from your opponent.\n\n**Why Signal Matters**\nWithout a clear signal, judges may not realize you're responding to something specific. They might think you're making a new argument rather than clashing with an existing one.\n\n**Effective Signaling Phrases:**\n• 'They said...'\n• 'My opponent argued...'\n• 'On their first contention...'\n• 'Regarding their claim about...'\n• 'They tell you that...'\n\n**Poor Signaling (Avoid These):**\n• Starting immediately with your counter without reference to what you're responding to\n• Vague phrases like 'Also...' or 'But...'\n• Not identifying which argument you're addressing when they made multiple points\n\nThe signal acts like a heading in an essay—it tells your audience what's coming next.",
+      },
+      {
+        type: "content",
+        title: "Step 2: State - Accurately Identifying the Argument",
+        content: "After signaling, you need to State the opponent's argument clearly and fairly. This step is crucial for two reasons.\n\n**Showing You Understand**\nBy restating their argument accurately, you demonstrate that you've actually listened and understood what they said. This builds credibility.\n\n**Setting Up Your Response**\nA clear statement of their position makes your counter-argument more effective. The judge needs to see exactly what you're responding to.\n\n**Tips for Stating Arguments:**\n• Be fair—don't create a strawman (distorted version)\n• Be concise—summarize their point, don't repeat their entire speech\n• Use their key terms when possible\n• Focus on the core claim, not minor details\n\n**Example:**\n'They said that raising the minimum wage would reduce poverty because workers would have more money to spend.'\n\nThis is clearer than simply saying 'They talked about wages' or misrepresenting their argument.",
+      },
+      {
+        type: "question",
+        id: "l04-01-q2",
+        question: "Why is it important to state your opponent's argument fairly and accurately?",
+        options: [
+          { id: "a", text: "So you can make their argument sound weaker than it is" },
+          { id: "b", text: "It shows you understand their point and sets up an effective response" },
+          { id: "c", text: "Because judges don't remember what opponents said" },
+          { id: "d", text: "To use up more of your speaking time" },
+        ],
+        correctAnswer: "b",
+        explanation: "Stating arguments accurately demonstrates that you've listened and understood, which builds credibility. It also properly sets up your counter-argument. Creating a 'strawman' (distorted version) is considered poor debating and judges will often discount such responses.",
+      },
+      {
+        type: "content",
+        title: "Step 3: Support - Making Your Counter-Argument",
+        content: "The third S—Support—is where you actually make your response. This is the substance of your refutation.\n\n**Types of Support:**\n\n**Counter-Evidence**\nPresent evidence that contradicts their claim.\n'Actually, economic studies from MIT show that minimum wage increases don't reduce employment...'\n\n**Logical Attack**\nPoint out flaws in their reasoning.\n'Their logic doesn't follow—just because workers have more money doesn't mean employers won't cut hours or jobs...'\n\n**Alternative Causation**\nShow that other factors explain their evidence.\n'Poverty decreased in those states for other reasons, including tax credits and housing programs...'\n\n**Impact Mitigation**\nArgue that even if true, it doesn't matter.\n'Even if this is true, the effect is small compared to the harms we've identified...'\n\n**Key Principles:**\n• Be specific—vague dismissals aren't persuasive\n• Provide warrant (reasoning)—don't just assert\n• When possible, use evidence",
+        keyPoints: [
+          "Counter-evidence: facts that contradict their claim",
+          "Logical attack: flaws in their reasoning",
+          "Impact mitigation: why it doesn't matter even if true",
+        ],
+      },
+      {
+        type: "content",
+        title: "Step 4: Summarize - Explaining the Impact",
+        content: "The final S is Summarize. After making your counter-argument, you need to explain why it matters for the debate.\n\n**Why Summarizing Matters**\nMany debaters make good points but fail to connect them to the bigger picture. The summary tells the judge: 'Here's what my response means for who wins this debate.'\n\n**Effective Summary Phrases:**\n• 'Therefore, this argument fails to support their position because...'\n• 'This means you shouldn't weigh this argument in their favor...'\n• 'So their key contention falls, which is why you vote for my side...'\n• 'Even if you don't fully buy my response, at minimum this reduces the weight of their argument...'\n\n**Examples of Good Summaries:**\n• 'So their poverty argument falls, which was their only economic benefit. Without it, the harms of job losses outweigh.'\n• 'This takes out their only piece of evidence on this point. They have no other support for this claim.'\n\nThe summary brings your refutation full circle, making clear to the judge exactly what was accomplished.",
+      },
+      {
+        type: "question",
+        id: "l04-01-q3",
+        question: "What is the purpose of the 'Summarize' step in the 4 S's framework?",
+        options: [
+          { id: "a", text: "To repeat everything you said" },
+          { id: "b", text: "To explain why your response matters for the debate outcome" },
+          { id: "c", text: "To apologize for being harsh" },
+          { id: "d", text: "To transition to an unrelated argument" },
+        ],
+        correctAnswer: "b",
+        explanation: "The Summarize step explains the impact of your refutation—why it matters for who wins the debate. It connects your specific response to the broader question of which side has the stronger case.",
+      },
+      {
+        type: "content",
+        title: "Putting It All Together: A Complete Example",
+        content: "Let's see the 4 S's in action with a complete example.\n\n**Resolution:** Social media does more harm than good.\n\n**Opponent's Argument:** 'Social media helps people stay connected with friends and family, reducing loneliness and improving mental health.'\n\n**Your Refutation Using 4 S's:**\n\n**Signal:** 'They said that social media reduces loneliness...'\n\n**State:** '...by helping people stay connected with friends and family, claiming this improves mental health.'\n\n**Support:** 'But studies from the American Psychological Association show the opposite—heavy social media use correlates with increased feelings of isolation and depression. This is because social media provides shallow connections that replace deeper real-world relationships. People see curated highlights of others' lives and feel worse about their own.'\n\n**Summarize:** 'So their mental health argument actually flips to our side. Social media doesn't reduce loneliness—it increases it. This reinforces why social media does more harm than good.'\n\nNotice how each step flows naturally into the next, creating a clear and persuasive response.",
+      },
+      {
+        type: "content",
+        title: "Common Mistakes to Avoid",
+        content: "As you practice the 4 S's, watch out for these common errors:\n\n**Skipping the Signal**\nJumping straight into 'That's wrong because...' without indicating what you're responding to. Judges may lose track.\n\n**Strawmanning in the State**\nDistorting or oversimplifying the opponent's argument to make it easier to attack. Good judges will notice and discount your response.\n\n**Unsupported Assertions**\nSaying 'That's not true' without explaining why or providing evidence. You need actual reasoning.\n\n**Forgetting the Summarize**\nMaking a good point but failing to connect it to the debate. Always explain why your response matters.\n\n**Going Too Fast**\nRushing through responses makes them hard to follow. Take time to clearly execute each step.\n\n**Only Doing One Step**\nSome debaters only attack (Support) without signaling, stating, or summarizing. Use all four steps for maximum effectiveness.",
+      },
+      {
+        type: "content",
+        title: "Real-World Applications",
+        content: "The 4 S's framework isn't just for formal debate—it's valuable in many real-world situations.\n\n**In the Workplace**\nWhen a colleague proposes an idea you disagree with: 'You suggested we switch vendors because of cost [Signal/State]. However, the quality difference would cost us more in returns [Support]. So the current vendor is actually more cost-effective [Summarize].'\n\n**In Academic Discussions**\nResponding to classmates or professors: 'The reading argues that X [Signal/State]. But the author overlooks Y evidence [Support]. This limitation weakens the overall thesis [Summarize].'\n\n**In Everyday Conversations**\nEven casual disagreements benefit from structure: 'I hear you saying we should go to the beach [Signal/State]. But the weather forecast shows storms [Support]. So maybe the museum would be better today [Summarize].'\n\nStructured responses are clearer, more respectful, and more persuasive in any context.",
+      },
+      {
+        type: "question",
+        id: "l04-01-q4",
+        question: "Which of the following is a complete example of the 4 S's framework?",
+        options: [
+          { id: "a", text: "That's wrong. I disagree. We win." },
+          { id: "b", text: "They said taxes hurt the economy. Economic studies show tax cuts don't increase growth. Their argument fails." },
+          { id: "c", text: "They said taxes hurt the economy by reducing investment. But Harvard research shows moderate taxes fund infrastructure that helps businesses. So their economic harm argument actually becomes a benefit for our side." },
+          { id: "d", text: "I think we're right about this issue." },
+        ],
+        correctAnswer: "c",
+        explanation: "Option C demonstrates all 4 S's: Signal/State ('They said taxes hurt the economy by reducing investment'), Support ('But Harvard research shows moderate taxes fund infrastructure that helps businesses'), and Summarize ('So their economic harm argument actually becomes a benefit for our side').",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Mastering the 4 S's",
+        content: "You've now learned the 4 S's of Refutation—a powerful framework that will transform how you respond to opponent arguments.\n\n**Key Takeaways:**\n• **Signal:** Alert the judge you're responding ('They said...')\n• **State:** Fairly identify their argument\n• **Support:** Provide your counter with reasoning and evidence\n• **Summarize:** Explain why your response matters\n\nThis framework ensures your refutations are:\n• Clear for judges to follow\n• Complete, covering all necessary elements\n• Persuasive, connecting to the bigger picture\n\n**Practice Tips:**\n• Start by writing out 4 S's responses, then practice saying them aloud\n• Watch debate rounds and identify how debaters use (or fail to use) this structure\n• In practice debates, focus on executing the framework even if it feels slow at first\n\nWith practice, the 4 S's will become second nature, and your refutations will become significantly more effective. In the next lesson, we'll explore body language—how to deliver your arguments with physical presence and confidence.",
+        keyPoints: [
+          "Signal, State, Support, Summarize—in that order",
+          "Each step serves a specific purpose for clarity and persuasion",
+          "Practice until the framework becomes automatic",
+        ],
+      },
+    ],
+  },
+  {
+    lessonId: "l04-02",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: The Power of Body Language",
+        content: "Have you ever watched a debate where one speaker said all the right things but somehow wasn't convincing? Or seen someone who commanded attention the moment they stood up, before saying a single word?\n\nThe difference is often body language. Research suggests that a significant portion of communication is non-verbal. In debate, your physical presence can enhance or undermine even the strongest arguments.\n\nThis lesson explores how to use your body as a communication tool. You'll learn about posture, movement, nervous habits, and how to project confidence through your physical presence—even when you're feeling nervous inside.",
+      },
+      {
+        type: "content",
+        title: "Confident Posture: The Foundation",
+        content: "Your posture is the foundation of confident body language. How you stand affects not only how others perceive you but also how you feel about yourself.\n\n**Elements of Confident Posture:**\n\n**Stand Tall**\nImagine a string pulling you up from the top of your head. This elongates your spine and opens your chest. Avoid slouching or hunching.\n\n**Feet Shoulder-Width Apart**\nThis provides a stable base. Standing with feet too close together can make you look tentative; too wide looks aggressive.\n\n**Weight Evenly Distributed**\nAvoid shifting from foot to foot or leaning on one hip. This conveys stability and groundedness.\n\n**Shoulders Back and Relaxed**\nNot stiff or military, but open and comfortable. Rounded shoulders suggest insecurity.\n\n**Head Level**\nLooking down suggests submission; chin too high looks arrogant. A level head appears confident and engaged.",
+        keyPoints: [
+          "Stand tall with shoulders back, but relaxed",
+          "Feet shoulder-width apart for stable base",
+          "Weight evenly distributed, head level",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-02-q1",
+        question: "What does shifting weight from foot to foot typically convey to an audience?",
+        options: [
+          { id: "a", text: "Confidence and authority" },
+          { id: "b", text: "Nervousness and uncertainty" },
+          { id: "c", text: "Enthusiasm and energy" },
+          { id: "d", text: "Thoughtfulness and consideration" },
+        ],
+        correctAnswer: "b",
+        explanation: "Shifting weight from foot to foot is typically perceived as a sign of nervousness or uncertainty. A stable stance with weight evenly distributed conveys confidence and groundedness.",
+      },
+      {
+        type: "content",
+        title: "Purposeful Movement",
+        content: "Movement in debate should be intentional, not random. Strategic movement can emphasize points and keep the audience engaged.\n\n**When to Move:**\n• When transitioning between major points or arguments\n• To emphasize a particularly important moment\n• To engage different parts of the room or panel\n\n**How to Move:**\n• Take deliberate steps, not shuffles\n• Move during natural pauses, not mid-sentence\n• Maintain good posture while moving\n• Stop fully before continuing to speak\n\n**Where to Move:**\n• Generally, stay within a defined speaking area\n• Move toward the judge when making key points\n• Use the space to your advantage—don't pace in one spot\n\n**What to Avoid:**\n• Aimless wandering or pacing\n• Turning your back to the judge\n• Moving so much it becomes distracting\n• Standing rigidly in one spot the entire time",
+      },
+      {
+        type: "content",
+        title: "Avoiding Nervous Habits",
+        content: "When we're nervous, our bodies often betray us through unconscious habits. Being aware of these habits is the first step to controlling them.\n\n**Common Nervous Habits:**\n\n**With Hands:**\n• Fidgeting with pens, papers, or clothing\n• Touching face, hair, or neck repeatedly\n• Cracking knuckles or wringing hands\n• Putting hands in pockets and playing with contents\n\n**With Feet:**\n• Tapping or bouncing\n• Crossing and uncrossing legs\n• Rocking back and forth\n\n**With Voice/Face:**\n• Excessive 'um,' 'uh,' or 'like'\n• Avoiding eye contact\n• Licking or biting lips\n\n**How to Break These Habits:**\n• Record yourself practicing and watch for patterns\n• Have coaches or friends point them out\n• Give your hands something specific to do (hold notes properly, use gestures)\n• Practice in front of a mirror\n• Build awareness through repetition",
+        keyPoints: [
+          "Identify your personal nervous habits",
+          "Give your hands purposeful things to do",
+          "Practice until controlled movement becomes natural",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-02-q2",
+        question: "What is the best way to identify and correct nervous habits in debate?",
+        options: [
+          { id: "a", text: "Ignore them and focus only on content" },
+          { id: "b", text: "Record yourself and get feedback from others" },
+          { id: "c", text: "Hold completely still during speeches" },
+          { id: "d", text: "Speak as quickly as possible to finish faster" },
+        ],
+        correctAnswer: "b",
+        explanation: "Recording yourself and getting feedback from coaches or peers is the most effective way to identify nervous habits. You often don't notice what you're doing until you see it on video or have it pointed out.",
+      },
+      {
+        type: "content",
+        title: "Open Stance: Connecting with Your Audience",
+        content: "An 'open' stance invites connection and conveys confidence. A 'closed' stance creates barriers between you and your audience.\n\n**Open Stance Characteristics:**\n• Arms uncrossed, at sides or used for gestures\n• Body facing the judge/audience directly\n• Relaxed facial expression\n• Palms occasionally visible (suggests honesty)\n• Appropriate eye contact maintained\n\n**Closed Stance (Avoid These):**\n• Arms crossed over chest (defensive)\n• Turned away from judge (disengaged)\n• Hands clasped tightly in front (nervous)\n• Looking at floor or ceiling (avoidant)\n• Hunched shoulders (insecure)\n\n**The Psychology Behind It:**\nOpen body language signals that you're confident in your arguments and have nothing to hide. It makes you appear more trustworthy and likeable, which influences how persuasive the judge finds your arguments.\n\nRemember: body language that feels 'exposed' to you often looks confident to your audience.",
+      },
+      {
+        type: "content",
+        title: "Managing Nervousness: Fake It Till You Make It",
+        content: "Here's a powerful secret: confident body language can actually make you feel more confident. Research by social psychologist Amy Cuddy found that 'power poses' can affect hormone levels and feelings of confidence.\n\n**Before the Round:**\n• Find a private space for a few minutes\n• Stand in an expansive pose (arms wide, taking up space)\n• Take deep breaths\n• Visualize yourself succeeding\n\n**During the Round:**\n• Even if nervous, maintain confident posture\n• Slow down your movements (nervousness speeds us up)\n• Take a breath before speaking\n• Focus on your message, not your feelings\n\n**Reframing Nervousness:**\n• That racing heart? It means you care\n• Those butterflies? They're energy you can use\n• Nervous is just 'excited' with a different label\n\nThe goal isn't to eliminate nervousness—even experienced debaters feel it. The goal is to prevent nervousness from showing and to channel that energy positively.",
+        keyPoints: [
+          "Confident body language can create actual confidence",
+          "Use pre-round rituals to settle nerves",
+          "Reframe nervousness as excitement and energy",
+        ],
+      },
+      {
+        type: "content",
+        title: "Practicing Body Language",
+        content: "Like any skill, confident body language requires practice. Here are strategies to improve:\n\n**Mirror Practice**\nPractice speeches in front of a mirror. Watch for posture, nervous habits, and open stance.\n\n**Video Recording**\nRecord yourself and review. You'll notice things you can't see in the moment.\n\n**Partner Feedback**\nHave teammates or coaches specifically watch your body language and give feedback.\n\n**Focused Drills**\nPractice specific elements: Give a 30-second speech focusing only on posture. Then again focusing only on eliminating filler words. Then on purposeful movement.\n\n**Everyday Practice**\nApply these principles in daily life—class presentations, conversations, job interviews. The more contexts you practice in, the more natural it becomes.\n\n**Progressive Exposure**\nStart practicing alone, then with a friend, then with a small group, then larger audiences. Build confidence gradually.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Embodying Confidence",
+        content: "Body language is a powerful tool that many debaters overlook. By mastering your physical presence, you enhance the impact of every argument you make.\n\n**Remember:**\n• **Confident Posture:** Stand tall, shoulders back, weight balanced\n• **Purposeful Movement:** Move intentionally, not randomly\n• **Avoid Nervous Habits:** Identify and control unconscious fidgeting\n• **Open Stance:** Face your audience, uncross arms, maintain eye contact\n\n**The Mind-Body Connection:**\nYour body influences your mind. By adopting confident body language, you actually become more confident. This creates a positive cycle where good posture leads to feeling confident leads to better performance leads to more confidence.\n\n**Action Steps:**\n1. Record yourself giving a speech this week\n2. Identify two nervous habits to work on\n3. Practice power poses before your next stressful situation\n\nIn the next lesson, we'll dive deeper into direct refutation techniques—the specific strategies for attacking opponent arguments effectively.",
+        keyPoints: [
+          "Body language significantly impacts how persuasive you appear",
+          "Confident posture actually creates confident feelings",
+          "Regular practice is essential for natural body language",
+        ],
+      },
+    ],
+  },
+  {
+    lessonId: "l04-03",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: The Art of Direct Attack",
+        content: "You've learned the 4 S's framework for structuring refutation. Now it's time to explore what goes in the 'Support' step—the actual techniques for directly attacking opponent arguments.\n\nDirect refutation is like being a detective. Your job is to find the weaknesses in your opponent's case and expose them clearly. Every argument has potential vulnerabilities, and skilled debaters know how to identify and exploit them.\n\nIn this lesson, you'll learn four primary attack strategies: finding weak points, attacking evidence, attacking logic, and denying impact. These tools will make your refutation sharp and effective.",
+      },
+      {
+        type: "content",
+        title: "Finding Weak Points: The Detective Work",
+        content: "Before you can attack an argument, you need to identify where it's vulnerable. This requires careful listening and quick analysis.\n\n**Where to Look for Weaknesses:**\n\n**The Claim Itself**\nIs it overstated? Too broad? Does it claim more than the evidence supports?\n\n**The Evidence**\nIs it outdated? Biased? Taken out of context? Based on too-small samples?\n\n**The Reasoning**\nDoes the logic actually follow? Are there missing steps or hidden assumptions?\n\n**The Impact**\nDoes this actually matter? Is the significance exaggerated?\n\n**The Source**\nWho said this? Are they credible on this topic? Any conflicts of interest?\n\n**Listening for Weaknesses:**\nAs your opponent speaks, actively note potential vulnerabilities. Ask yourself: 'What would I need to believe for this to be true?' Often, those underlying assumptions are where the argument is weakest.",
+        keyPoints: [
+          "Every argument has potential weak points",
+          "Listen for overstated claims, weak evidence, or flawed logic",
+          "Ask: 'What assumptions does this argument require?'",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-03-q1",
+        question: "What is the most strategic first step when preparing to refute an opponent's argument?",
+        options: [
+          { id: "a", text: "Immediately attack their conclusion" },
+          { id: "b", text: "Identify the weakest point in their claim, evidence, or reasoning" },
+          { id: "c", text: "Ignore their argument and present new ones" },
+          { id: "d", text: "Agree with everything they said" },
+        ],
+        correctAnswer: "b",
+        explanation: "Strategic refutation starts with identifying where the argument is most vulnerable—whether that's the claim itself, the evidence, the reasoning, or the impact. Attacking the weakest link is more effective than a scattered approach.",
+      },
+      {
+        type: "content",
+        title: "Evidence Attacks: Challenging Their Proof",
+        content: "Evidence attacks target the facts and data your opponent uses to support their claims.\n\n**Types of Evidence Attacks:**\n\n**Source Credibility**\n'Their evidence comes from an advocacy group with a clear bias on this issue.'\n'This expert has no credentials in this field.'\n\n**Outdated Evidence**\n'This study is from 2005—the situation has changed dramatically since then.'\n'More recent research contradicts these findings.'\n\n**Insufficient Sample**\n'This was based on only 50 people in one city—we can't generalize from that.'\n\n**Context Problems**\n'If you look at the full quote, the author actually argued the opposite.'\n'This data is from a different country with different policies.'\n\n**Counter-Evidence**\n'Our evidence from a more comprehensive study shows the opposite result.'\n\n**When Evidence Attacks Work Best:**\n• When opponent relies heavily on one piece of evidence\n• When you have superior evidence on the same point\n• When the source has obvious credibility problems",
+      },
+      {
+        type: "content",
+        title: "Logic Attacks: Exposing Flawed Reasoning",
+        content: "Even with good evidence, arguments can fail if the reasoning doesn't hold up. Logic attacks target the connections between claims and conclusions.\n\n**Common Logical Flaws to Exploit:**\n\n**Correlation vs. Causation**\n'Just because two things happened together doesn't mean one caused the other.'\n\n**Hasty Generalization**\n'They cite one example and assume it applies everywhere.'\n\n**False Dichotomy**\n'They present only two options, but there are actually many other solutions.'\n\n**Slippery Slope**\n'There's no evidence that A would actually lead to B, C, and D.'\n\n**Non-Sequitur**\n'Their conclusion doesn't actually follow from their premises.'\n\n**Missing Link**\n'They jump from Point A to Point C without explaining how we get from A to B.'\n\n**How to Articulate Logic Attacks:**\n1. Identify the logical error\n2. Explain clearly what the flaw is\n3. Show why this breaks their argument\n4. Provide an alternative explanation if possible",
+        keyPoints: [
+          "Common flaws: correlation/causation, false dichotomy, slippery slope",
+          "Clearly name and explain the logical error",
+          "Show why the flaw breaks their overall argument",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-03-q2",
+        question: "An opponent argues: 'States that implemented this policy saw lower crime rates, so the policy reduces crime.' What type of logical flaw might this contain?",
+        options: [
+          { id: "a", text: "False dichotomy" },
+          { id: "b", text: "Correlation vs. causation" },
+          { id: "c", text: "Ad hominem attack" },
+          { id: "d", text: "Circular reasoning" },
+        ],
+        correctAnswer: "b",
+        explanation: "This is a correlation vs. causation error. Just because crime rates were lower in states with the policy doesn't prove the policy caused the reduction. Other factors might explain the difference, or the causation might even run the other direction.",
+      },
+      {
+        type: "content",
+        title: "Impact Denial: Why It Doesn't Matter",
+        content: "Sometimes the best attack isn't on the evidence or logic, but on why the argument matters. Impact denial concedes the argument might be true but argues it doesn't change the outcome.\n\n**Impact Denial Strategies:**\n\n**Magnitude**\n'Even if true, the effect is tiny—only 2% of the population is affected.'\n\n**Probability**\n'This outcome is extremely unlikely to actually occur.'\n\n**Timeframe**\n'This won't happen for 50 years, and many things will change by then.'\n\n**Outweighed**\n'Even accepting their benefit, our harms are larger and more certain.'\n\n**Not Unique**\n'This problem exists with or without the policy—it's not a reason to prefer either side.'\n\n**Solvency Doubt**\n'Even if this is a problem, their solution doesn't actually fix it.'\n\n**When to Use Impact Denial:**\n• When you can't effectively attack their evidence or logic\n• When your own arguments create larger impacts\n• When their impact is genuinely small or speculative",
+      },
+      {
+        type: "content",
+        title: "Combining Attack Strategies",
+        content: "The best refutation often combines multiple attack types. This creates a layered response that's harder to recover from.\n\n**Example of Layered Attack:**\n\nOpponent's Argument: 'Studies show violent video games cause aggressive behavior in teenagers.'\n\n**Evidence Attack:** 'These studies have been widely criticized for small sample sizes and researcher bias.'\n\n**Logic Attack:** 'Even the studies only show correlation, not causation. Aggressive kids might simply prefer violent games.'\n\n**Impact Denial:** 'But even if there's some effect, it's tiny compared to other factors like family environment, and it doesn't translate to actual violence.'\n\n**Why Layering Works:**\nIf the judge doesn't accept your first attack, they might accept your second or third. It also shows thorough analysis and makes your opponent's job harder—they have to rebuild on multiple levels.\n\n**Strategic Ordering:**\nLead with your strongest attack. If time is short, you can drop the weaker ones. But if you have time, build a complete case for why their argument fails.",
+        keyPoints: [
+          "Layer evidence, logic, and impact attacks for stronger refutation",
+          "Lead with your strongest attack",
+          "Multiple attacks make opponent's rebuilding harder",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-03-q3",
+        question: "What is impact denial as a refutation strategy?",
+        options: [
+          { id: "a", text: "Saying the opponent's argument is a lie" },
+          { id: "b", text: "Arguing that even if the argument is true, it doesn't significantly affect the debate outcome" },
+          { id: "c", text: "Ignoring the opponent's argument entirely" },
+          { id: "d", text: "Agreeing with everything the opponent says" },
+        ],
+        correctAnswer: "b",
+        explanation: "Impact denial concedes that an argument might be true but argues that it doesn't significantly change who should win the debate—perhaps because the impact is too small, unlikely, or outweighed by other considerations.",
+      },
+      {
+        type: "content",
+        title: "Practicing Direct Refutation",
+        content: "Direct refutation is a skill that improves with deliberate practice. Here are exercises to sharpen your abilities:\n\n**Evidence Analysis Drill**\nTake op-eds or debate evidence cards. Practice identifying: source credibility issues, outdated information, context problems, and limitations.\n\n**Logic Flaw Spotting**\nRead arguments and try to name the logical fallacy. Many websites offer logic fallacy practice exercises.\n\n**Rapid Response Drills**\nHave a partner make a one-minute argument. Take 30 seconds to identify the weakest point, then deliver a 30-second response.\n\n**Multiple Attack Practice**\nTake a single opponent argument and practice generating all three attack types: evidence, logic, and impact.\n\n**Debate Flow Review**\nWatch recorded debates. On paper, note what attacks you would have made. Compare to what the debaters actually said.\n\n**Pro Tip:** Great refutation in a round comes from great preparation before the round. Research your opponent's likely arguments and prepare attacks in advance.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Becoming a Refutation Expert",
+        content: "Direct refutation is where debates are won and lost. By mastering these techniques, you'll become much more effective at dismantling opponent cases.\n\n**The Four Attack Types:**\n• **Evidence Attacks:** Challenge source credibility, recency, context, and sufficiency\n• **Logic Attacks:** Expose reasoning flaws like correlation/causation, false dichotomies, and non-sequiturs\n• **Impact Denial:** Argue the argument doesn't matter—too small, unlikely, or outweighed\n• **Combined Attacks:** Layer multiple attack types for maximum effect\n\n**Key Principles:**\n1. Find the weakest link before attacking\n2. Be specific in your criticisms\n3. Connect attacks back to why they matter for the debate\n4. Prepare attacks in advance when possible\n\n**Remember:** The goal isn't to be mean or aggressive—it's to clearly and fairly demonstrate why the opponent's argument doesn't hold up. Professional, substantive refutation is far more effective than emotional dismissal.\n\nNext lesson, we'll explore gestures—how to use your hands to emphasize points and engage your audience effectively.",
+        keyPoints: [
+          "Master all four attack types: evidence, logic, impact, combined",
+          "Identify the weakest point before attacking",
+          "Professional, substantive refutation beats emotional dismissal",
+        ],
+      },
+    ],
+  },
+  {
+    lessonId: "l04-04",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: Speaking with Your Hands",
+        content: "Watch any great speaker—politicians, TED talk presenters, trial lawyers—and you'll notice something they have in common: they use gestures effectively.\n\nGestures are a natural part of human communication. They help convey meaning, emphasize important points, and keep audiences engaged. In debate, effective gesturing can make your arguments more memorable and persuasive.\n\nBut gestures can also backfire if they're distracting, excessive, or inappropriate. This lesson will help you find the right balance—using natural gestures that enhance your speaking without drawing attention away from your arguments.",
+      },
+      {
+        type: "content",
+        title: "Why Gestures Matter",
+        content: "Gestures serve several important functions in communication:\n\n**Emphasis**\nA pointed finger, an open palm, or a fist can punctuate your most important points, signaling to the audience: 'This matters.'\n\n**Clarity**\nGestures can illustrate abstract concepts. Showing 'on one hand... on the other hand' literally helps audiences follow your comparison.\n\n**Engagement**\nMovement catches the eye. Appropriate gesturing keeps audiences visually engaged rather than letting their attention drift.\n\n**Energy**\nGestures convey passion and investment in your arguments. Completely still speakers can seem robotic or disengaged.\n\n**Naturalness**\nWhen you suppress natural gestures, you can appear stiff or uncomfortable. Allowing appropriate gesturing makes you seem more authentic.\n\n**The Research:**\nStudies show that audiences rate speakers who gesture appropriately as more confident, knowledgeable, and persuasive than those who don't use their hands.",
+        keyPoints: [
+          "Gestures emphasize points and improve clarity",
+          "Movement keeps audiences visually engaged",
+          "Appropriate gesturing conveys confidence and authenticity",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-04-q1",
+        question: "What is one reason gestures are important in public speaking?",
+        options: [
+          { id: "a", text: "They distract the audience from weak arguments" },
+          { id: "b", text: "They help emphasize points and keep audiences engaged" },
+          { id: "c", text: "They are required by debate rules" },
+          { id: "d", text: "They make you appear nervous" },
+        ],
+        correctAnswer: "b",
+        explanation: "Gestures help emphasize important points and keep audiences visually engaged. Research shows that appropriate gesturing makes speakers appear more confident and persuasive.",
+      },
+      {
+        type: "content",
+        title: "Natural Gestures: Finding Your Style",
+        content: "The best gestures feel natural to you and appropriate to the situation. Here's how to develop your natural gesturing style:\n\n**Start with Awareness**\nNotice what you naturally do with your hands when you speak casually with friends. These instincts are a good starting point.\n\n**The Gesture Zone**\nEffective gestures happen in the area between your waist and shoulders, and about a foot to each side. This is where audiences naturally look.\n\n**Match Gestures to Content**\nBig ideas = bigger gestures (within reason)\nDetails or nuance = smaller, more precise gestures\nContrasts = using both hands to show 'this vs. that'\n\n**Common Natural Gestures:**\n• Open palms (honesty, openness)\n• Counting on fingers (listing points)\n• Bringing hands together (connection, synthesis)\n• Pushing away (rejection of an idea)\n• Hand over heart (sincerity)\n\n**Resting Position**\nWhen not gesturing, hands should rest comfortably at your sides or loosely clasped in front. Avoid gripping the podium, crossing arms, or putting hands in pockets.",
+      },
+      {
+        type: "content",
+        title: "Emphasis Techniques: Making Points Stick",
+        content: "Strategic gestures can make your key arguments more memorable. Here are techniques for emphasis:\n\n**The Point**\nA single pointed finger toward the audience or at your notes emphasizes 'this specifically.' Use sparingly—too much pointing feels aggressive.\n\n**The Chop**\nA vertical hand chopping motion emphasizes definitiveness: 'This is certain.'\n\n**The Fist**\nA closed fist shows strength and conviction, good for your most passionate moments.\n\n**The Count**\nRaising fingers as you list points ('First... Second... Third...') helps audiences track your structure.\n\n**The Bracket**\nHands held apart showing size can illustrate 'the gap between' or 'the scope of.'\n\n**The Embrace**\nArms opening wide can welcome an idea or invite agreement.\n\n**Timing Is Everything:**\nThe gesture should happen slightly before or simultaneous with the emphasized word—not after. Practice until the coordination is natural.",
+        keyPoints: [
+          "Different gestures convey different meanings",
+          "Timing: gesture with or slightly before key words",
+          "Match gesture intensity to point importance",
+        ],
+      },
+      {
+        type: "content",
+        title: "Avoiding Distracting Gestures",
+        content: "While gestures enhance communication, wrong or excessive gestures distract from it. Here's what to avoid:\n\n**Repetitive Motions**\nDoing the same gesture constantly (like repeated pointing or hand circles) becomes distracting. Vary your gestures.\n\n**Gesturing Non-Stop**\nConstant hand movement loses emphasis—when everything is emphasized, nothing is. Have quiet moments.\n\n**Too Small**\nTiny, tentative gestures near your body don't read well and can seem nervous.\n\n**Too Large**\nWild, sweeping gestures can seem manic or over-the-top. Match scale to setting.\n\n**Fidgeting**\nPlaying with rings, clicking pens, adjusting clothing—these aren't gestures, they're distractions.\n\n**Mismatched Gestures**\nA cheerful gesture while delivering serious news seems incongruent. Gestures should match tone.\n\n**Behind-the-Back**\nHiding hands behind your back seems evasive or uncomfortable.\n\n**Self-Check:** Record yourself and watch specifically for distracting gesture patterns. We often don't notice what we're doing in the moment.",
+      },
+      {
+        type: "question",
+        id: "l04-04-q2",
+        question: "Why should you avoid making the same gesture repeatedly throughout a speech?",
+        options: [
+          { id: "a", text: "It's against debate rules" },
+          { id: "b", text: "Repetitive motions become distracting and lose their emphasis" },
+          { id: "c", text: "Judges prefer speakers who don't move at all" },
+          { id: "d", text: "It will make your arms tired" },
+        ],
+        correctAnswer: "b",
+        explanation: "Repetitive gestures lose their impact and can become distracting to the audience. Varying your gestures keeps them effective for emphasis, while constant repetition turns a communication tool into a distraction.",
+      },
+      {
+        type: "content",
+        title: "Cultural Awareness in Gestures",
+        content: "Gestures don't have universal meanings. What's positive in one culture might be offensive in another. This matters in debate, especially at diverse tournaments.\n\n**Gestures That Vary by Culture:**\n\n**Thumbs Up**\nPositive in the US, but offensive in some Middle Eastern countries.\n\n**OK Sign (Circle with Fingers)**\nMeans 'fine' in America, but zero in France, and is offensive in Brazil.\n\n**Pointing**\nAcceptable in Western contexts, but rude in many Asian cultures where an open palm is preferred.\n\n**Head Nodding**\nMeans 'yes' most places, but 'no' in parts of Greece, Bulgaria, and Southern Italy.\n\n**Eye Contact**\nDirect eye contact shows respect in Western cultures but can be seen as aggressive or disrespectful elsewhere.\n\n**Best Practices:**\n• When in doubt, use more neutral, open-palm gestures\n• Observe what gestures are common in your debate community\n• Be mindful of international tournaments with diverse participants\n• If you're unsure, err on the side of restraint",
+        keyPoints: [
+          "Gesture meanings vary across cultures",
+          "Open-palm gestures are generally safer",
+          "Observe and adapt to your debate community norms",
+        ],
+      },
+      {
+        type: "content",
+        title: "Conclusion: Gesturing with Purpose",
+        content: "Effective gesturing is a powerful but often overlooked debate skill. When used well, your hands become an extension of your voice, adding emphasis, clarity, and engagement to your arguments.\n\n**Key Takeaways:**\n• **Natural Gestures:** Build on your instincts, gesture in the effective zone\n• **Emphasis Techniques:** Use specific gestures to punctuate important points\n• **Avoid Distractions:** Vary gestures, avoid repetition and fidgeting\n• **Cultural Awareness:** Be mindful that meanings vary; when in doubt, use open palms\n\n**Practice Tips:**\n1. Record yourself and analyze your gesturing patterns\n2. Practice specific gestures with specific phrases\n3. Have a coach or partner give feedback specifically on hands\n4. Watch skilled speakers and note what gestures they use\n\n**The Goal:**\nYour gestures should feel natural and enhance your message. The audience shouldn't consciously notice your hands—they should just find you more engaging and persuasive.\n\nIn the next lesson, we'll explore Types of Claims—understanding the fundamental differences between factual, value, and policy claims and how to argue each effectively.",
+      },
+    ],
+  },
+  {
+    lessonId: "l04-05",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: Not All Claims Are Created Equal",
+        content: "In debate, you'll encounter many different types of arguments and claims. But at the most fundamental level, all claims fall into three categories: claims of fact, claims of value, and claims of policy.\n\nUnderstanding these distinctions is crucial because each type of claim requires different types of proof and is evaluated by different standards. What convinces a judge that a fact is true is different from what convinces them that something is morally right or that a policy should be adopted.\n\nIn this lesson, you'll learn to identify each type of claim, understand what makes each type persuasive, and apply appropriate standards when making and evaluating arguments.",
+      },
+      {
+        type: "content",
+        title: "Claims of Fact: What Is True",
+        content: "A claim of fact asserts that something is objectively true or false. These claims can, at least in principle, be verified through evidence and observation.\n\n**Examples of Factual Claims:**\n• 'Climate change is caused primarily by human activity.'\n• 'The minimum wage increase led to job losses.'\n• 'Crime rates have decreased over the past decade.'\n\n**What Makes Factual Claims Strong:**\n• **Empirical Evidence:** Statistics, studies, documented observations\n• **Expert Testimony:** Qualified authorities in relevant fields\n• **Consistency:** Multiple independent sources agreeing\n• **Recency:** Up-to-date information\n• **Methodology:** Sound research practices\n\n**Evaluating Factual Claims:**\nAsk: 'What evidence supports this?' 'How reliable is that evidence?' 'Do experts in the field agree?'\n\nFactual claims are won through superior evidence. The side with better, more credible, more recent data generally wins on disputed facts.",
+        keyPoints: [
+          "Factual claims assert objective truth that can be verified",
+          "Supported by empirical evidence, expert testimony, and data",
+          "Won through superior evidence quality and quantity",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-05-q1",
+        question: "Which of the following is a claim of FACT?",
+        options: [
+          { id: "a", text: "The death penalty is morally wrong" },
+          { id: "b", text: "We should increase the minimum wage" },
+          { id: "c", text: "The unemployment rate fell by 2% last year" },
+          { id: "d", text: "Education is the most important investment a society can make" },
+        ],
+        correctAnswer: "c",
+        explanation: "A factual claim asserts something that can be empirically verified. 'The unemployment rate fell by 2%' is a factual claim that can be checked against data. The others involve value judgments (morally wrong, most important) or policy proposals (should increase).",
+      },
+      {
+        type: "content",
+        title: "Claims of Value: What Is Good or Right",
+        content: "Claims of value assert that something is good, bad, right, wrong, better, worse, moral, immoral, or otherwise deserving of a positive or negative evaluation.\n\n**Examples of Value Claims:**\n• 'Democracy is the best form of government.'\n• 'Privacy is more important than security.'\n• 'Animal testing is morally wrong.'\n\n**What Makes Value Claims Strong:**\n• **Clear Criteria:** Defining what makes something 'good' or 'right'\n• **Consistent Application:** Using the same standards for both sides\n• **Shared Values:** Connecting to values the audience holds\n• **Supporting Facts:** Evidence that shows how criteria are met\n• **Comparative Analysis:** Showing why your position is 'better' than alternatives\n\n**Evaluating Value Claims:**\nAsk: 'What criterion defines \"good\" here?' 'Why should we accept that criterion?' 'Does the situation actually meet that standard?'\n\n**The Role of Values:**\nIn Lincoln-Douglas debate, the entire format centers on value claims. Debaters establish a 'value' (like justice or freedom) and a 'criterion' (the standard for measuring the value).",
+        keyPoints: [
+          "Value claims assert moral judgments about good, bad, right, wrong",
+          "Require clear criteria for evaluation",
+          "Won by establishing standards and showing they're met",
+        ],
+      },
+      {
+        type: "content",
+        title: "Claims of Policy: What Should Be Done",
+        content: "Claims of policy argue that a specific action should or should not be taken. These are 'should' statements that propose changes to the status quo.\n\n**Examples of Policy Claims:**\n• 'The U.S. should adopt universal healthcare.'\n• 'Schools should ban cell phones in classrooms.'\n• 'The voting age should be lowered to 16.'\n\n**What Makes Policy Claims Strong:**\n• **Problem (Harm):** There's a significant problem that needs addressing\n• **Inherency:** The problem won't be solved without the proposed change\n• **Plan:** A clear, workable proposal for action\n• **Solvency:** The plan actually solves the problem\n• **Advantages vs. Disadvantages:** Benefits outweigh costs and risks\n\n**Evaluating Policy Claims:**\nAsk: 'Is there really a problem?' 'Will this solution work?' 'What are the costs and risks?' 'Do the benefits outweigh the harms?'\n\n**Policy Debate Structure:**\nPolicy debate (the format) is entirely about policy claims. Teams must defend or attack specific proposals, comparing the world with the policy to the world without it.",
+      },
+      {
+        type: "question",
+        id: "l04-05-q2",
+        question: "What distinguishes a claim of policy from other claim types?",
+        options: [
+          { id: "a", text: "It asserts something is morally right or wrong" },
+          { id: "b", text: "It proposes that a specific action should be taken" },
+          { id: "c", text: "It claims something is objectively true" },
+          { id: "d", text: "It only relies on emotional appeals" },
+        ],
+        correctAnswer: "b",
+        explanation: "Policy claims are characterized by proposing action—they argue that something 'should' or 'should not' be done. They require demonstrating that a problem exists, a solution is workable, and benefits outweigh costs.",
+      },
+      {
+        type: "content",
+        title: "Different Standards for Different Claims",
+        content: "A critical insight is that each claim type demands different proof. Using the wrong standard weakens your argument.\n\n**For Factual Claims:**\n• Primary Standard: **Evidence quality**\n• Key Question: Is this empirically true?\n• What Wins: Better data, more credible sources\n\n**For Value Claims:**\n• Primary Standard: **Philosophical reasoning**\n• Key Question: Is this morally right according to justified criteria?\n• What Wins: Persuasive ethical framework + showing criteria are met\n\n**For Policy Claims:**\n• Primary Standard: **Cost-benefit analysis**\n• Key Question: Do benefits of this action outweigh costs?\n• What Wins: Demonstrating net benefits and workable implementation\n\n**Common Mistake:**\nDebaters often argue factual claims as if they were values, or policy claims as if they were purely factual. Recognizing claim type helps you apply the right approach.\n\n**Example:**\n'We should reduce carbon emissions' (policy) requires different proof than 'Carbon emissions cause warming' (fact) or 'We have a moral duty to future generations' (value).",
+        keyPoints: [
+          "Factual claims: won through evidence quality",
+          "Value claims: won through ethical reasoning and criteria",
+          "Policy claims: won through cost-benefit analysis",
+        ],
+      },
+      {
+        type: "content",
+        title: "How Claim Types Interact",
+        content: "In real debates, you'll often encounter all three claim types working together. Understanding how they interact strengthens your argumentation.\n\n**The Typical Structure:**\nMany arguments combine claims in a logical chain:\n1. **Fact:** Climate change is causing severe weather events\n2. **Value:** We have a moral obligation to protect vulnerable populations\n3. **Policy:** Therefore, we should invest in renewable energy\n\nEach claim type supports the next. Facts establish what's happening, values establish why it matters, and policy establishes what to do about it.\n\n**Attack Strategy:**\nWhen facing such an argument, you can attack at any level:\n• Challenge the facts: 'The evidence doesn't support their claims about weather'\n• Challenge the values: 'Other values like economic growth matter more'\n• Challenge the policy: 'Renewable investment won't actually solve the problem'\n\n**Identifying the Core Claim:**\nDebate resolutions often signal which type is primary:\n• 'Resolved: X is true' = Factual\n• 'Resolved: X is just' = Value\n• 'Resolved: We should X' = Policy",
+      },
+      {
+        type: "question",
+        id: "l04-05-q3",
+        question: "In an argument chain of Fact → Value → Policy, which level would you attack by saying 'Even if true, economic concerns outweigh environmental concerns'?",
+        options: [
+          { id: "a", text: "The factual claim" },
+          { id: "b", text: "The value claim" },
+          { id: "c", text: "The policy claim" },
+          { id: "d", text: "None of the above" },
+        ],
+        correctAnswer: "b",
+        explanation: "Saying 'economic concerns outweigh environmental concerns' is a value-level attack. You're not disputing the facts about climate change, nor specifically attacking the policy's mechanics—you're arguing that different values should take priority in our evaluation.",
+      },
+      {
+        type: "content",
+        title: "Applying Claim Types in Debate Formats",
+        content: "Different debate formats emphasize different claim types:\n\n**Lincoln-Douglas:**\nPrimarily value-focused. Debaters establish a value (justice, liberty, etc.) and criterion, then argue which side better upholds that value. Factual claims support value arguments.\n\n**Policy Debate:**\nPrimarily policy-focused. Teams defend or attack specific plans, weighing advantages against disadvantages. Value and fact claims support policy conclusions.\n\n**Public Forum:**\nMixed, typically policy with strong value and fact components. Topics are current events where facts are disputed and values inform evaluation.\n\n**Parliamentary:**\nVaries by motion. Can be any type, often combining value and policy elements.\n\n**Adapting Your Approach:**\nKnow what type of claims your format emphasizes, but be prepared to engage on all levels. A skilled Lincoln-Douglas debater still needs facts. A Policy debater still engages with values.",
+      },
+      {
+        type: "content",
+        title: "Practice: Classifying Claims",
+        content: "Let's practice identifying claim types. For each claim, determine whether it's fact, value, or policy:\n\n**1. 'Social media increases rates of teen depression.'**\nThis is a **factual claim**—it asserts a causal relationship that can be studied empirically.\n\n**2. 'Personal privacy is a fundamental human right.'**\nThis is a **value claim**—it makes a moral judgment about the importance of privacy.\n\n**3. 'The government should regulate social media companies.'**\nThis is a **policy claim**—it proposes specific action that should be taken.\n\n**4. 'Education is more valuable than job training.'**\nThis is a **value claim**—it makes a comparative judgment about worth.\n\n**5. 'Graduation rates have improved by 15% since 2010.'**\nThis is a **factual claim**—it asserts a measurable, verifiable statistic.\n\n**6. 'Universities should eliminate standardized test requirements.'**\nThis is a **policy claim**—it advocates for specific institutional change.\n\n**Your Turn:** As you listen to arguments in debates, practice quickly categorizing each major claim.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Mastering Claim Types",
+        content: "Understanding the three types of claims—fact, value, and policy—is fundamental to effective debating. Each type requires different proof and is evaluated by different standards.\n\n**Key Takeaways:**\n\n**Claims of Fact:**\n• Assert verifiable truth\n• Require empirical evidence\n• Won through data quality\n\n**Claims of Value:**\n• Assert moral judgments\n• Require clear criteria\n• Won through ethical reasoning\n\n**Claims of Policy:**\n• Propose specific action\n• Require problem/solution analysis\n• Won through cost-benefit comparison\n\n**Practical Applications:**\n1. Before making an argument, identify what type of claim it is\n2. Ensure you're using the right kind of support for that claim type\n3. When refuting, consider attacking at different levels (fact, value, or policy)\n4. Recognize how claims chain together in complex arguments\n\nNext lesson, we'll build on this foundation by learning how to construct strong claims—making your assertions specific, provable, and strategically framed.",
+        keyPoints: [
+          "Fact = verifiable truth, won with evidence",
+          "Value = moral judgment, won with criteria and reasoning",
+          "Policy = proposed action, won with cost-benefit analysis",
+        ],
+      },
+    ],
+  },
+  {
+    lessonId: "l04-06",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: The Foundation of Strong Arguments",
+        content: "Every debate argument begins with a claim—a statement that you'll defend with evidence and reasoning. But not all claims are equally effective. Some claims invite easy attacks, while others are solid foundations for winning arguments.\n\nIn this lesson, you'll learn how to construct claims that are specific, defensible, and strategically powerful. Whether you're writing your cases before the tournament or responding to arguments in the round, these principles will make your claims much stronger.\n\nThink of claim construction like engineering: a well-designed claim can bear heavy attacks without collapsing, while a poorly designed one crumbles at the first challenge.",
+      },
+      {
+        type: "content",
+        title: "Specificity: The Power of Precision",
+        content: "Vague claims are weak claims. The more specific your claim, the easier it is to prove and the harder it is to attack through misinterpretation.\n\n**Weak (Vague):** 'Social media is bad for teens.'\n\n**Stronger (Specific):** 'Heavy social media use (3+ hours daily) correlates with higher rates of anxiety and depression in adolescents aged 13-17.'\n\n**Why Specificity Helps:**\n\n**Provable:** Specific claims can be directly supported with targeted evidence.\n\n**Defensible:** You only have to defend exactly what you claimed, not broader interpretations.\n\n**Credible:** Precision signals that you've done real research and thinking.\n\n**How to Increase Specificity:**\n• Add quantifiers: How much? How many? What percentage?\n• Define populations: Who exactly is affected?\n• Clarify timeframes: When does this happen?\n• Identify mechanisms: How/why does this occur?\n• Limit scope: In what circumstances?\n\nThe goal isn't just being technical—it's making claims that are concrete enough to prove.",
+        keyPoints: [
+          "Specific claims are easier to prove and defend",
+          "Add quantifiers, populations, timeframes, and mechanisms",
+          "Precision increases credibility and limits attack surface",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-06-q1",
+        question: "Which claim is most effectively specific?",
+        options: [
+          { id: "a", text: "Renewable energy is good for the economy" },
+          { id: "b", text: "Solar power creates many jobs" },
+          { id: "c", text: "Solar panel installation created 250,000 jobs in the U.S. in 2023" },
+          { id: "d", text: "Energy is important" },
+        ],
+        correctAnswer: "c",
+        explanation: "Option C is most specific—it names the exact sector (solar panel installation), quantifies the impact (250,000 jobs), specifies the location (U.S.), and gives a timeframe (2023). This precision makes it provable and defensible.",
+      },
+      {
+        type: "content",
+        title: "Scope Limits: Know Your Boundaries",
+        content: "Every claim has a scope—how broadly it applies. Smart debaters carefully limit their scope to avoid overreach.\n\n**Scope Problems:**\n\n**Universal Claims:** 'This ALWAYS works' or 'This NEVER happens'\n• Problem: One counterexample defeats your entire claim\n• Fix: 'This typically works' or 'This rarely happens'\n\n**Absolute Language:** 'The ONLY solution' or 'Completely eliminates'\n• Problem: Opponents can easily show exceptions\n• Fix: 'A key solution' or 'Significantly reduces'\n\n**Unlimited Timeframes:** 'Will always be true' or 'Has always been true'\n• Problem: Invites historical or future counterexamples\n• Fix: Specify relevant time periods\n\n**Strategic Scoping:**\nMatch your scope to your evidence. If your evidence shows something works in the U.S., don't claim it works everywhere. If studies show a 50% reduction, don't claim 'elimination.'\n\n**Exception Acknowledgment:**\nSometimes explicitly acknowledging limits strengthens your claim: 'While there are exceptions in rural areas, in most urban settings this approach succeeds.'",
+      },
+      {
+        type: "content",
+        title: "Provability: Claims You Can Actually Defend",
+        content: "A claim is only as strong as your ability to prove it. Before making any claim, ask yourself: 'Do I have evidence for this?'\n\n**The Provability Test:**\n1. Can I find credible evidence supporting this?\n2. Is that evidence sufficient to convince a skeptic?\n3. Can I explain the reasoning connecting my evidence to my claim?\n\n**Common Provability Mistakes:**\n\n**Speculation Stated as Fact:**\nBad: 'This will definitely happen'\nBetter: 'Evidence suggests this is likely'\n\n**Unsupported Causation:**\nBad: 'X causes Y' (with only correlation data)\nBetter: 'X correlates with Y, and mechanisms suggest causation'\n\n**Opinion as Truth:**\nBad: 'Everyone knows that...' or 'It's obvious that...'\nBetter: 'Research demonstrates...' or 'Evidence shows...'\n\n**The Evidence Check:**\nBefore finalizing any claim, ensure you have:\n• At least one piece of strong evidence\n• A clear explanation of why that evidence proves your point\n• Awareness of any limitations in your evidence",
+        keyPoints: [
+          "Only claim what you can actually prove with evidence",
+          "Avoid stating speculation as fact",
+          "Match claim strength to evidence strength",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-06-q2",
+        question: "What is the main problem with a claim that uses 'always' or 'never'?",
+        options: [
+          { id: "a", text: "These words are grammatically incorrect" },
+          { id: "b", text: "A single counterexample can defeat the entire claim" },
+          { id: "c", text: "Judges don't understand absolute terms" },
+          { id: "d", text: "They are too specific" },
+        ],
+        correctAnswer: "b",
+        explanation: "Universal claims using 'always' or 'never' are vulnerable because a single counterexample disproves them. A claim that 'this always works' can be defeated by showing just one case where it didn't work.",
+      },
+      {
+        type: "content",
+        title: "Strategic Framing: Position Matters",
+        content: "How you frame a claim affects how judges evaluate it. The same underlying argument can be framed more or less effectively.\n\n**Framing for Your Burden:**\nMake claims that match what you need to prove.\n\nIf you only need to show problems exist:\nBetter: 'The policy has caused significant harm' (easier to prove)\nWorse: 'The policy has failed completely' (harder to prove)\n\nIf you need comparative advantage:\nBetter: 'Our approach is more effective than the alternative'\nWorse: 'Our approach is the only one that works'\n\n**Framing for Impact:**\nPosition claims to highlight what matters.\n\nBetter: 'This threatens fundamental democratic principles'\nWorse: 'This is somewhat concerning'\n\nThe first framing makes the judge care more about your argument.\n\n**Framing Against Opponents:**\nAnticipate counterarguments and frame to preempt them.\n\n'While costs are a concern, the long-term savings outweigh short-term expenses.'\n\nThis acknowledges the attack before it comes and frames it as less important.",
+      },
+      {
+        type: "content",
+        title: "The Claim Construction Checklist",
+        content: "Before including any claim in your case, run through this checklist:\n\n**Specificity Check:**\n[ ] Does the claim include specific details (numbers, populations, timeframes)?\n[ ] Could a listener misinterpret what I mean? If so, clarify.\n\n**Scope Check:**\n[ ] Does the claim avoid universal language (always, never, all, none)?\n[ ] Is the scope appropriate for my evidence?\n[ ] Have I acknowledged reasonable limitations?\n\n**Provability Check:**\n[ ] Do I have evidence directly supporting this claim?\n[ ] Is my evidence from credible sources?\n[ ] Can I explain the reasoning from evidence to claim?\n\n**Strategic Check:**\n[ ] Does the claim match my burden of proof?\n[ ] Is it framed for maximum impact?\n[ ] Have I considered how opponents will attack it?\n[ ] Is it positioned to preempt likely counterarguments?\n\nUsing this checklist during case preparation catches weak claims before they hurt you in rounds.",
+        keyPoints: [
+          "Run every major claim through the checklist",
+          "Check specificity, scope, provability, and strategy",
+          "Catching weak claims in prep prevents problems in rounds",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-06-q3",
+        question: "What is 'strategic framing' of a claim?",
+        options: [
+          { id: "a", text: "Making a claim that isn't true" },
+          { id: "b", text: "Positioning a claim to match your burden of proof and preempt attacks" },
+          { id: "c", text: "Using as many words as possible" },
+          { id: "d", text: "Copying your opponent's claims exactly" },
+        ],
+        correctAnswer: "b",
+        explanation: "Strategic framing means positioning your claim to match what you need to prove, maximize its perceived importance, and anticipate likely counterarguments. The same underlying argument can be framed more or less effectively for your side.",
+      },
+      {
+        type: "content",
+        title: "Examples: Weak Claims Made Strong",
+        content: "Let's transform weak claims into strong ones using our principles:\n\n**Example 1:**\nWeak: 'Social media is destroying society.'\nStrong: 'Studies from the American Psychological Association show that heavy social media use among teens correlates with 30% higher rates of anxiety and depression compared to light users.'\n\n*Improvements: Added source, quantified effect, specified population and comparison.*\n\n**Example 2:**\nWeak: 'The policy will never work.'\nStrong: 'Similar policies failed in three comparable states, with implementation costs exceeding projections by an average of 200%.'\n\n*Improvements: Replaced 'never' with evidence of past failures, added specific data.*\n\n**Example 3:**\nWeak: 'Everyone supports this approach.'\nStrong: 'A 2024 Pew survey found 67% of Americans support this approach, including majorities across political affiliations.'\n\n*Improvements: Replaced vague universal claim with specific polling data and source.*\n\nNotice how each improvement makes the claim more defensible while maintaining persuasive power.",
+      },
+      {
+        type: "content",
+        title: "Common Claim Construction Errors",
+        content: "Watch out for these frequent mistakes when constructing claims:\n\n**Overclaiming**\nSaying more than your evidence supports. If your source says 'may contribute to,' don't claim 'definitely causes.'\n\n**Underclaiming**\nBeing so cautious that your claim lacks impact. 'This might possibly sometimes help a little' doesn't persuade anyone.\n\n**Mismatch**\nClaiming X but providing evidence for Y. Your evidence should directly prove your claim, not something adjacent.\n\n**Complexity Overload**\nPacking too many ideas into one claim. Break complex arguments into multiple clear claims.\n\n**Jargon Obscurity**\nUsing technical terms without explanation. If judges don't understand your claim, they can't be persuaded by it.\n\n**Passive Voice Hiding**\n'Mistakes were made' obscures agency. 'The policy failed' is clearer than 'The goals were not achieved.'\n\n**Finding Balance:**\nThe best claims are strong enough to be persuasive but not so strong that they become indefensible. Aim for confident claims matched by solid evidence.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Building Your Argumentative Foundation",
+        content: "Strong claims are the foundation of winning debates. By applying the principles of specificity, scope management, provability, and strategic framing, you'll construct arguments that are both persuasive and defensible.\n\n**Key Takeaways:**\n\n**Specificity:** Add details that make claims concrete and provable.\n\n**Scope Limits:** Avoid universals; match scope to evidence.\n\n**Provability:** Only claim what you can defend with evidence.\n\n**Strategic Framing:** Position claims to match your burden and preempt attacks.\n\n**The Claim Construction Checklist:**\n[ ] Specific enough to prove?\n[ ] Scope appropriate to evidence?\n[ ] Evidence available to support it?\n[ ] Strategically positioned for your side?\n\n**Practice Exercise:**\nTake a position on a current debate topic. Write three claims supporting that position. Then revise each using today's principles. Notice how the revised versions are stronger.\n\nIn our final lesson of this unit, we'll review everything you've learned about refutation, delivery, and claim construction.",
+        keyPoints: [
+          "Specificity, scope, provability, and framing are essential",
+          "Use the checklist for every major claim",
+          "Balance persuasive strength with defensibility",
+        ],
+      },
+    ],
+  },
+  {
+    lessonId: "l04-07",
+    pages: [
+      {
+        type: "content",
+        title: "Unit 4 Review: Putting It All Together",
+        content: "Congratulations on completing Unit 4! You've covered essential skills for effective debating: refutation frameworks, physical delivery, claim types, and claim construction.\n\nThis review lesson will help you consolidate what you've learned and see how these skills work together. Strong debaters combine clear refutation structure, confident delivery, and well-constructed claims into a persuasive package.\n\nLet's revisit the key concepts and see how they connect.",
+      },
+      {
+        type: "content",
+        title: "The 4 S's Framework Revisited",
+        content: "The 4 S's give you a reliable structure for refutation that judges can easily follow.\n\n**Signal:** Alert the judge you're responding\n'They said...' 'My opponent argued...' 'On their point about...'\n\n**State:** Identify their argument fairly\nRestate their claim accurately and concisely.\n\n**Support:** Make your counter-argument\nUse evidence attacks, logic attacks, or impact denial.\n\n**Summarize:** Explain why it matters\nConnect your response to the debate outcome.\n\n**Remember:**\n• All four steps matter—don't skip any\n• Fair representation of opponent's argument builds credibility\n• Your Support should use the right type of attack for the claim\n• The Summarize step tells the judge what to do with your refutation\n\n**Connection to Delivery:**\nUse body language and gestures to emphasize your refutation. A confident stance and purposeful gestures make your 4 S's responses more impactful.",
+        keyPoints: [
+          "Signal, State, Support, Summarize—every time",
+          "Match your attack type to the claim type",
+          "Confident delivery amplifies effective refutation",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-07-q1",
+        question: "You're responding to an opponent's claim that 'raising taxes always hurts economic growth.' Using the 4 S's, which step involves pointing out that 'always' is too absolute since Nordic countries maintain growth with high taxes?",
+        options: [
+          { id: "a", text: "Signal" },
+          { id: "b", text: "State" },
+          { id: "c", text: "Support" },
+          { id: "d", text: "Summarize" },
+        ],
+        correctAnswer: "c",
+        explanation: "The Support step is where you provide your counter-argument and reasoning. Pointing out that Nordic countries maintain growth despite high taxes is your counter-evidence attacking their universal claim. This goes in the Support step.",
+      },
+      {
+        type: "content",
+        title: "Delivery Techniques Review",
+        content: "Your physical presence significantly impacts persuasiveness.\n\n**Body Language Essentials:**\n• Stand tall with weight evenly distributed\n• Keep shoulders back but relaxed\n• Face your audience with open stance\n• Move purposefully, not randomly\n• Control nervous habits through awareness and practice\n\n**Effective Gestures:**\n• Use the gesture zone (waist to shoulders)\n• Match gesture size to point importance\n• Time gestures with key words\n• Vary gestures—avoid repetition\n• Be aware of cultural differences\n\n**Managing Nerves:**\n• Confident body language creates confident feelings\n• Use pre-round rituals and power poses\n• Reframe nervousness as excitement\n• Focus on your message, not your feelings\n\n**Connection to Content:**\nThe best delivery enhances your arguments. Emphasize your key claims with stronger gestures. Use movement to mark transitions between major points.",
+      },
+      {
+        type: "content",
+        title: "Claim Types and Construction",
+        content: "Understanding claim types helps you construct stronger arguments and attack opponent claims more effectively.\n\n**The Three Claim Types:**\n\n**Fact:** What is objectively true\n• Proved with: Empirical evidence, expert testimony\n• Example: 'Crime rates fell 15% after the policy.'\n\n**Value:** What is good, right, or important\n• Proved with: Criteria and ethical reasoning\n• Example: 'Privacy is a fundamental right.'\n\n**Policy:** What action should be taken\n• Proved with: Problem/solution and cost-benefit analysis\n• Example: 'We should implement universal healthcare.'\n\n**Strong Claim Construction:**\n• Be specific: Add details, numbers, populations\n• Limit scope: Avoid 'always' and 'never'\n• Ensure provability: Have evidence ready\n• Frame strategically: Match your burden, preempt attacks\n\n**Using Claim Types in Refutation:**\nIdentify what type of claim your opponent is making, then choose the appropriate attack strategy. Evidence attacks work best on factual claims; philosophical challenges work best on value claims.",
+        keyPoints: [
+          "Fact, value, and policy claims need different proof",
+          "Strong claims are specific, limited in scope, provable",
+          "Match your attack strategy to the claim type",
+        ],
+      },
+      {
+        type: "question",
+        id: "l04-07-q2",
+        question: "An opponent argues 'We should ban single-use plastics.' What type of claim is this, and what elements would you need to attack it most effectively?",
+        options: [
+          { id: "a", text: "Factual claim; challenge with counter-data" },
+          { id: "b", text: "Value claim; challenge the moral framework" },
+          { id: "c", text: "Policy claim; challenge problem, plan, or cost-benefit" },
+          { id: "d", text: "None—this cannot be effectively refuted" },
+        ],
+        correctAnswer: "c",
+        explanation: "This is a policy claim ('We should...') proposing action. Effective refutation could challenge whether there's really a problem, whether the ban is workable, whether it would actually solve the problem, or whether the costs outweigh the benefits.",
+      },
+      {
+        type: "content",
+        title: "Integration: A Complete Example",
+        content: "Let's see how all these skills work together in a real example.\n\n**Opponent's Argument:**\n'Social media should be banned for users under 16 because it causes mental health problems in young people.'\n\n**Your Integrated Response:**\n\n*With confident posture and clear gestures...*\n\n**Signal + State:** 'They argue we should ban social media for under-16s based on mental health concerns.'\n\n**Support (Evidence Attack):** 'But their causal claim is overstated. The American Psychological Association found correlation, not causation—teens with existing mental health issues may simply use social media more.'\n\n*Gesture emphasizing the contrast...*\n\n**Support (Logic Attack):** 'Furthermore, their policy has a false dichotomy—it's not ban-or-nothing. Age verification, screen time limits, and parental controls address concerns without complete prohibition.'\n\n*Open palms showing alternatives...*\n\n**Summarize:** 'So their policy claim fails because the underlying factual claim is unproven, and better alternatives exist. This reason alone doesn't justify such a drastic ban.'\n\nNotice how we combined: 4 S's structure, identification of claim type (policy with factual support), appropriate attack strategies, and delivery awareness.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Your Refutation Toolkit",
+        content: "You now have a complete toolkit for effective refutation and argumentation.\n\n**The 4 S's Framework:**\nStructure every response with Signal, State, Support, and Summarize.\n\n**Physical Delivery:**\nConfident posture, purposeful movement, controlled gestures, and open stance enhance every argument.\n\n**Direct Refutation:**\nAttack evidence, logic, or impact—or combine all three.\n\n**Claim Types:**\nRecognize fact, value, and policy claims and use appropriate standards.\n\n**Strong Claims:**\nConstruct specific, limited, provable, and strategically framed claims.\n\n**Practice Priorities:**\n1. Record yourself using the 4 S's and review for completeness\n2. Get feedback specifically on body language and gestures\n3. Practice identifying claim types in articles and debates\n4. Revise old cases using the claim construction checklist\n\n**What's Next:**\nIn the upcoming units, you'll build on these foundations with more advanced techniques for argumentation, cross-examination, and debate strategy. The skills from Unit 4 will support everything you learn going forward.\n\nCongratulations on completing Unit 4!",
+        keyPoints: [
+          "Master the 4 S's for clear, organized refutation",
+          "Delivery skills amplify your content",
+          "Match attack strategies to claim types",
+          "Construct claims that are defensible and powerful",
+        ],
+      },
+    ],
+  },
+];

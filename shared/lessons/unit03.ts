@@ -1,0 +1,707 @@
+import { MultiPageLesson } from "./types";
+
+export const UNIT_03_LESSONS: MultiPageLesson[] = [
+  {
+    lessonId: "l03-01",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: Speaking Clearly and Confidently",
+        content: "Welcome to one of the most fundamental skills in debate—speaking clearly and confidently! You could have the most brilliant arguments in the world, but if the judge can't understand you or doesn't believe you mean what you say, those arguments won't win rounds.\n\nIn this lesson, you'll learn the mechanics of clear speech: how to enunciate so every word lands, how to pace yourself so listeners can follow your reasoning, and how to project confidence even when you're nervous inside.\n\nThese skills aren't just for debate—they'll serve you in job interviews, presentations, leadership roles, and every situation where you need to communicate effectively. Let's build your foundation as a powerful speaker.",
+      },
+      {
+        type: "content",
+        title: "The Power of Enunciation",
+        content: "Enunciation is the art of pronouncing words clearly and distinctly. In debate, poor enunciation is one of the most common reasons judges miss arguments—and arguments they miss can't help you win.\n\n**Common Enunciation Problems:**\n• Dropping word endings ('goin' instead of 'going')\n• Mumbling through complex terms\n• Slurring words together ('gonna' instead of 'going to')\n• Swallowing syllables in long words\n\n**Techniques for Improvement:**\n\n**1. Exaggerate in Practice:**\nWhen practicing, over-enunciate dramatically. This builds muscle memory for clearer speech in actual rounds.\n\n**2. Tongue Twisters:**\n'Peter Piper picked a peck of pickled peppers' and similar exercises warm up your mouth and improve agility.\n\n**3. Record Yourself:**\nListening to recordings reveals enunciation problems you don't notice while speaking.\n\n**4. Read Aloud Daily:**\nSpend 10 minutes daily reading aloud, focusing on crisp consonants and complete word endings.",
+        keyPoints: [
+          "Clear enunciation ensures judges catch every argument",
+          "Practice over-enunciation to build muscle memory",
+          "Record yourself to identify problem areas",
+        ],
+      },
+      {
+        type: "content",
+        title: "Pacing: Finding Your Rhythm",
+        content: "Speaking too fast overwhelms listeners. Speaking too slowly loses their attention. Finding the right pace is crucial.\n\n**The Speed Problem:**\nMany new debaters speak too quickly, especially when nervous. They rush through arguments, and judges can't keep up. Remember: judges are taking notes while you speak. If you outpace their writing, they'll miss content.\n\n**Optimal Debate Pace:**\n• Conversational speed: ~120-150 words per minute (good baseline)\n• Moderate debate speed: ~150-180 words per minute (comfortable for most judges)\n• Faster debate (experienced): ~180-220 words per minute (requires excellent enunciation)\n\n**Strategic Pacing:**\nNot every part of your speech should be the same speed:\n• **Slow down** for your most important points—this signals significance\n• **Slow down** when introducing new concepts or complex ideas\n• **Speed up slightly** when transitioning or covering less critical material\n• **Pause** after key arguments to let them sink in\n\n**The Power of the Pause:**\nStrategic pauses are incredibly effective. A moment of silence after a powerful point draws attention to it and gives the judge time to process and write.",
+        keyPoints: [
+          "Match your speed to judge note-taking capacity",
+          "Slow down for important points, speed up for transitions",
+          "Strategic pauses emphasize key arguments",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-01-q1",
+        question: "Why should debaters slow down during their most important arguments?",
+        options: [
+          { id: "a", text: "Because judges stop paying attention during fast sections" },
+          { id: "b", text: "To signal importance and give judges time to process and write" },
+          { id: "c", text: "Because all debates require slow speaking" },
+          { id: "d", text: "To fill the available speaking time" },
+        ],
+        correctAnswer: "b",
+        explanation: "Slowing down during key arguments serves two purposes: it signals to judges that this point is particularly important, and it gives them adequate time to process the argument and record it in their notes. Arguments that judges capture in their notes are more likely to factor into their decision.",
+      },
+      {
+        type: "content",
+        title: "Building Genuine Confidence",
+        content: "Confidence in debate isn't about feeling fearless—it's about appearing composed and authoritative even when you're nervous. Good news: confidence can be practiced and developed.\n\n**The Confidence-Competence Loop:**\nPractice builds competence. Competence builds confidence. Confidence improves performance. Better performance motivates more practice. Enter this positive cycle.\n\n**Mental Techniques:**\n\n**Preparation = Confidence:**\nNothing builds confidence like knowing your material cold. When you've practiced your case dozens of times, you speak with natural authority.\n\n**Reframe Nervousness:**\nThat racing heart and sweaty palms? That's not fear—it's excitement. Your body is preparing to perform. Elite athletes feel the same thing.\n\n**Visualization:**\nBefore rounds, visualize yourself speaking confidently and persuasively. Mental rehearsal is proven to improve performance.\n\n**Focus Outward:**\nNervous people focus on themselves ('How do I look? Am I making sense?'). Confident speakers focus outward ('Is the judge following? How can I persuade them?').",
+      },
+      {
+        type: "content",
+        title: "Physical Confidence Cues",
+        content: "Your body language communicates confidence (or lack of it) before you say a word. Learn to project confidence physically:\n\n**Power Posture:**\n• Stand tall with shoulders back\n• Plant your feet firmly (no swaying or shifting)\n• Keep your chin level (not up arrogantly or down submissively)\n• Use open body language (no crossed arms)\n\n**Hand Position:**\n• Hands at your sides or gesturing naturally\n• Avoid fidgeting, hair touching, or nervous movements\n• Don't grip the podium like a life raft\n\n**Facial Expression:**\n• Maintain a pleasant, engaged expression\n• Avoid the 'frozen face' of panic\n• Match expressions to content (serious for serious arguments, lighter for examples)\n\n**The Pre-Round Ritual:**\nBefore speaking, take a deep breath. Stand tall. Arrange your notes calmly. This projects confidence and actually helps you feel calmer.\n\n**'Fake It Till You Make It':**\nResearch shows that adopting confident body language actually increases your testosterone and decreases your cortisol (stress hormone). Posture affects psychology, not just the reverse.",
+        keyPoints: [
+          "Stand tall with open, stable body language",
+          "Avoid nervous fidgeting and defensive postures",
+          "Confident posture actually increases confidence",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-01-q2",
+        question: "How does adopting confident body language affect a speaker?",
+        options: [
+          { id: "a", text: "It only affects how others perceive you" },
+          { id: "b", text: "It has no real effect beyond appearance" },
+          { id: "c", text: "It can actually increase confidence by affecting hormones" },
+          { id: "d", text: "It makes you more nervous by adding pressure" },
+        ],
+        correctAnswer: "c",
+        explanation: "Research shows that adopting confident body language (power postures) actually increases testosterone and decreases cortisol (the stress hormone). This means confident posture doesn't just make you look confident—it can help you feel more confident too.",
+      },
+      {
+        type: "content",
+        title: "Vocal Variety: Avoiding Monotone",
+        content: "A monotone voice puts listeners to sleep, no matter how good your arguments are. Vocal variety keeps audiences engaged and helps emphasize key points.\n\n**Elements of Vocal Variety:**\n\n**Pitch:**\nVary the highness and lowness of your voice. Higher pitch conveys energy and excitement; lower pitch conveys seriousness and authority. Avoid speaking in one constant pitch.\n\n**Volume:**\nGet louder for emphasis, softer for intimate or serious moments. Dynamic range keeps listeners alert. (We'll cover volume more in a later lesson.)\n\n**Rate:**\nAs discussed, vary your speed strategically. Slow for importance, faster for less critical transitions.\n\n**Tone:**\nMatch your emotional tone to your content. Outrage when discussing injustice. Hope when discussing solutions. Skepticism when questioning opponents.\n\n**Emphasis:**\nStress certain words within sentences to convey meaning:\n• 'THIS argument is key' (emphasizing which argument)\n• 'This ARGUMENT is key' (emphasizing it's an argument, not evidence)\n• 'This argument is KEY' (emphasizing importance)\n\nThe same sentence with different emphasis conveys different meanings.",
+      },
+      {
+        type: "content",
+        title: "Practicing Vocal Skills",
+        content: "Like any skill, clear and confident speaking improves with deliberate practice:\n\n**Daily Exercises:**\n\n**1. The Morning Read (10 minutes):**\nRead a news article or book passage aloud, focusing on enunciation and variety. Record yourself and listen back.\n\n**2. Exaggeration Drills (5 minutes):**\nRead a paragraph with wildly exaggerated vocal variety—extreme pitch changes, dramatic pauses, emphatic stress. Then dial it back to natural but varied delivery.\n\n**3. Breathing Exercises (3 minutes):**\nDeep diaphragmatic breaths before practice sessions. This supports projection and calms nerves.\n\n**4. Record and Review:**\nRegularly record practice speeches. Watch without sound (to see body language), then listen without watching (to hear voice clearly).\n\n**Practice Structure:**\n• Work on one element at a time (enunciation one week, pacing the next)\n• Get feedback from coaches, teammates, or debate friends\n• Practice in conditions similar to competition (standing, timed)\n• Gradually increase difficulty (add time pressure, unfamiliar topics)",
+      },
+      {
+        type: "question",
+        id: "l03-01-q3",
+        question: "What is the most effective way to identify your own speaking weaknesses?",
+        options: [
+          { id: "a", text: "Ask a friend after your speech" },
+          { id: "b", text: "Record yourself and review the recording" },
+          { id: "c", text: "Just focus on your feelings during the speech" },
+          { id: "d", text: "Speaking weaknesses are genetic and can't be identified" },
+        ],
+        correctAnswer: "b",
+        explanation: "Recording yourself and reviewing the recording is the most effective way to identify speaking weaknesses. It allows you to objectively hear enunciation problems, pacing issues, and vocal variety (or lack thereof) that you don't notice while speaking. You can even separate audio from video to focus on each element individually.",
+      },
+      {
+        type: "content",
+        title: "Real-World Applications",
+        content: "The speaking skills you develop in debate translate directly to countless real-world situations:\n\n**Academic Settings:**\nClass presentations, thesis defenses, and oral exams all require clear, confident communication. Students with debate experience consistently outperform in these situations.\n\n**Professional Life:**\nJob interviews, client presentations, team meetings, and pitches to investors—every career involves persuasive speaking. Many executives credit their success to early speech training.\n\n**Leadership Roles:**\nFrom student government to corporate boardrooms, leaders must communicate clearly and inspire confidence. The skills you're building now are leadership fundamentals.\n\n**Personal Situations:**\nAsking for a raise, resolving conflicts, expressing your needs clearly—confident communication improves relationships and outcomes in everyday life.\n\n**Public Advocacy:**\nWhether speaking at a school board meeting, rallying volunteers, or advocating for a cause, these skills amplify your impact.\n\nEvery time you practice speaking clearly and confidently in debate, you're investing in your future success across every domain of life.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Your Speaking Foundation",
+        content: "You now have the tools to speak clearly and confidently in any debate round!\n\n**Key Takeaways:**\n\n• **Enunciation**: Pronounce every word completely and distinctly. Practice with exaggeration, tongue twisters, and daily reading aloud.\n\n• **Pacing**: Match your speed to judge capacity. Slow down for important points, speed up for transitions, and use strategic pauses for emphasis.\n\n• **Confidence Building**: Prepare thoroughly, reframe nervousness as excitement, visualize success, and focus outward on your audience.\n\n• **Physical Cues**: Stand tall, maintain open body language, avoid fidgeting—confident posture actually increases confidence.\n\n• **Vocal Variety**: Vary pitch, volume, rate, tone, and emphasis to keep listeners engaged and highlight key points.\n\n**Looking Ahead:**\nIn the next lesson, you'll learn 'flowing'—the specialized note-taking system that helps you track every argument in a debate and respond precisely.\n\nRemember: Every great debater started where you are. With consistent practice, clear and confident speaking becomes second nature.",
+      },
+    ],
+  },
+  {
+    lessonId: "l03-02",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: Flowing (Note-Taking in Debate)",
+        content: "Welcome to one of the most essential technical skills in competitive debate—flowing! Flowing is the specialized note-taking system debaters use to track every argument in a round.\n\nUnlike regular note-taking, flowing is designed for the back-and-forth nature of debate. It helps you see how arguments develop across speeches, identify what opponents dropped, and organize your responses systematically.\n\nMastering the flow separates good debaters from great ones. Without it, you'll forget arguments, miss opportunities, and lose rounds you should win. With it, you'll have a complete map of the debate that guides you to victory.\n\nThis lesson covers everything from basic column structure to advanced abbreviation systems. By the end, you'll have the foundation for a flowing system that works for you.",
+      },
+      {
+        type: "content",
+        title: "Why Flowing Matters",
+        content: "Before diving into technique, let's understand why flowing is so critical:\n\n**Memory is Unreliable:**\nDebates contain dozens of arguments. No one can remember them all perfectly. Your flow is your external memory—capturing everything so nothing is lost.\n\n**Responsiveness:**\nJudges reward debaters who directly engage with opponent arguments. Your flow shows exactly what to respond to, in what order, and what was said.\n\n**Identifying Drops:**\nWhen opponents fail to answer your arguments ('drop' them), those arguments typically flow through to your side. Your flow reveals these dropped arguments.\n\n**Strategic Planning:**\nLooking at your flow, you can quickly assess the state of the debate: Where are you winning? What needs defense? What should you extend?\n\n**Credibility:**\nQuoting opponents accurately shows attention and intellectual honesty. 'You said X, but that fails because...' is more credible with a good flow.\n\n**Time Management:**\nA clear flow helps you allocate speech time efficiently—more time on important clashes, less on minor points.",
+        keyPoints: [
+          "Flowing is your external memory for all arguments",
+          "Enables direct engagement and identifying dropped points",
+          "Essential for strategic planning during rounds",
+        ],
+      },
+      {
+        type: "content",
+        title: "The Column System",
+        content: "The fundamental structure of flowing is the column system. Each speech gets its own column, allowing you to track how arguments evolve:\n\n**Basic Layout (Lincoln-Douglas example):**\n| AC | NC | 1AR | NR | 2AR |\n(Affirmative Constructive, Negative Constructive, 1st Aff Rebuttal, Neg Rebuttal, 2nd Aff Rebuttal)\n\n**How It Works:**\n1. In the first column, write down the first speaker's arguments\n2. In the next column, write opponent responses DIRECTLY ACROSS from what they're answering\n3. Continue this pattern through all speeches\n\n**Visual Alignment:**\nThe key insight: arguments and their responses should be horizontally aligned. If the Neg says 'Turn: your plan actually causes harm,' that goes directly across from the Aff argument it attacks.\n\n**Paper Setup:**\n• Use legal-size paper (more space) or tape multiple sheets together\n• Turn paper sideways (landscape orientation) for more columns\n• Leave space between lines for opponent responses\n• Some debaters use separate sheets for each major argument area",
+        keyPoints: [
+          "Each speech gets its own column left to right",
+          "Responses align horizontally with what they answer",
+          "Use landscape orientation and leave space for responses",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-02-q1",
+        question: "Why should responses on a flow be horizontally aligned with the arguments they answer?",
+        options: [
+          { id: "a", text: "It makes the notes look neater" },
+          { id: "b", text: "It helps you visually track argument development and identify drops" },
+          { id: "c", text: "Judges require this specific format" },
+          { id: "d", text: "It saves paper space" },
+        ],
+        correctAnswer: "b",
+        explanation: "Horizontal alignment is the key to flowing's effectiveness. By placing responses directly across from the arguments they answer, you can visually trace how each argument develops through the debate—seeing where it was attacked, defended, and whether it was ever dropped.",
+      },
+      {
+        type: "content",
+        title: "Essential Abbreviations",
+        content: "Writing fast is crucial—you can't flow if you're writing complete sentences while speeches continue. Develop a personal abbreviation system:\n\n**Common Debate Abbreviations:**\n• DA = Disadvantage\n• CP = Counterplan\n• K = Kritik\n• T = Topicality\n• SQ = Status Quo\n• Aff/A = Affirmative\n• Neg/N = Negative\n• bc = because\n• w/ = with\n• w/o = without\n• → = leads to\n• ↑ = increases\n• ↓ = decreases\n• X = doesn't work/wrong\n• ✓ = correct/true\n• AT: = Answering (their argument)\n• Ext = Extend\n\n**Creating Your Own:**\n• Use first letters (gov = government, econ = economy)\n• Drop vowels (mgmt = management)\n• Use symbols ($ = money/economy, + = and/also)\n• Be consistent—same abbreviation every time\n\n**The Goal:**\nYou should be able to capture the essence of an argument in 3-7 words/symbols while the speaker continues.",
+      },
+      {
+        type: "content",
+        title: "What to Write (and What to Skip)",
+        content: "You can't write everything—and you shouldn't try. Learn to capture what matters:\n\n**Always Capture:**\n• Taglines/main claims ('Warming causes extinction')\n• Key warrants/reasons (the 'because' of the argument)\n• Author names for evidence ('Smith '22')\n• Specific numbers or statistics cited\n• The structure (First, Second, Third contention)\n• Direct responses to your arguments\n\n**Skip or Abbreviate:**\n• Rhetorical flourishes and repetition\n• Extended examples (capture the point, not the full story)\n• Evidence text beyond the core claim\n• Transitions ('Now moving on to...')\n• Restating things already said\n\n**Listen for Structure:**\nGood speakers signal what's important:\n• 'Most importantly...'\n• 'The key warrant is...'\n• 'Vote on this because...'\n• 'First... Second... Third...'\n\nThese signals tell you to pay extra attention and capture precisely.",
+        keyPoints: [
+          "Capture taglines, warrants, author names, and structure",
+          "Skip rhetoric, excessive detail, and repetition",
+          "Listen for structural signals that highlight importance",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-02-q2",
+        question: "What should you prioritize capturing when flowing an opponent's speech?",
+        options: [
+          { id: "a", text: "Every word they say verbatim" },
+          { id: "b", text: "Their rhetorical style and speaking patterns" },
+          { id: "c", text: "Main claims, key warrants, evidence authors, and structure" },
+          { id: "d", text: "Only the things you disagree with" },
+        ],
+        correctAnswer: "c",
+        explanation: "Effective flowing prioritizes the substance of arguments: main claims (taglines), key warrants (the reasoning), evidence authors (for credibility challenges), and the speech structure. Capturing every word is impossible, and focusing only on disagreements means missing potential concessions or new arguments to address.",
+      },
+      {
+        type: "content",
+        title: "Tracking Responses Across Speeches",
+        content: "The power of flowing emerges when you track how arguments develop through multiple speeches:\n\n**The Horizontal Story:**\nLook across a row on your flow. You should see something like:\n\nAC → NC response → 1AR answer → NR extension → 2AR final word\n\nEach entry builds on what came before.\n\n**Drawing Connections:**\nUse arrows or lines to connect related points:\n• → to show 'leads to' or 'answered by'\n• Draw lines across columns to trace an argument's path\n• Circle or star important points that need extension\n\n**Noting Non-Responses:**\nWhen opponents DON'T answer something, mark it clearly:\n• 'DROPPED' or 'D' across from the unanswered argument\n• Draw the argument forward with an arrow to show it still stands\n• Star it as something to highlight in your next speech\n\n**Cross-Application:**\nSometimes one response answers multiple arguments. Note this:\n• 'X-apply to C2' means this response applies to Contention 2 as well\n• Use consistent symbols for cross-applications",
+      },
+      {
+        type: "content",
+        title: "Identifying and Exploiting Drops",
+        content: "One of flowing's greatest benefits is revealing what opponents failed to address—dropped arguments:\n\n**What Counts as a Drop:**\n• Complete silence on an argument\n• Addressing only part of an argument (partial drop)\n• Responding to a different point than what you actually said\n• Superficial responses that don't engage the substance\n\n**Why Drops Matter:**\nIn most debate formats, dropped arguments are considered conceded. If they don't answer your point, it's treated as true. This is huge.\n\n**Finding Drops:**\nAfter each opponent speech, scan your flow:\n• Which of your arguments have nothing across from them?\n• Where did they respond to something but miss the key warrant?\n• What evidence did they ignore?\n\n**Exploiting Drops:**\nWhen extending a dropped argument:\n1. Point out the drop explicitly: 'They never responded to...'\n2. Re-explain why the argument matters\n3. Show how this dropped point wins you the debate\n4. Don't let them make new responses in later speeches (in most formats)\n\nA well-identified drop can win rounds.",
+        keyPoints: [
+          "Dropped arguments are typically treated as conceded",
+          "Scan your flow after each speech for unanswered points",
+          "Explicitly call out drops and explain why they matter",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-02-q3",
+        question: "When an opponent 'drops' your argument, what does this mean in debate?",
+        options: [
+          { id: "a", text: "They disagreed strongly with it" },
+          { id: "b", text: "They failed to respond to it, so it's treated as conceded" },
+          { id: "c", text: "They addressed it but you missed their response" },
+          { id: "d", text: "The argument is automatically removed from the debate" },
+        ],
+        correctAnswer: "b",
+        explanation: "A 'drop' occurs when opponents fail to respond to an argument. In debate, dropped arguments are typically treated as conceded—the opponent has implicitly accepted the point. This makes identifying drops through careful flowing crucial for winning rounds.",
+      },
+      {
+        type: "content",
+        title: "Organizing Multiple Flows",
+        content: "Complex debates often require multiple flows for different argument areas:\n\n**Separate Flows For:**\n• Case arguments (your contentions)\n• Off-case positions (DA, CP, K, T)\n• Framework/Standards debate\n• Theory arguments\n\n**Color Coding:**\nSome debaters use different colored pens:\n• Black for Affirmative arguments\n• Blue for Negative arguments\n• Red for important extensions or drops\n• Green for your own strategic notes\n\n**Paper Management:**\n• Label each flow clearly at the top\n• Keep flows in consistent order\n• Use a system that works with your speaking style (folder, clipboard, etc.)\n• Have backup paper and pens ready\n\n**Digital Flowing:**\nSome debaters flow on laptops using:\n• Verbatim (common debate template)\n• Excel/Sheets with column structures\n• Specialized debate flowing apps\n\nDigital offers speed (typing) and searchability; paper offers spatial memory and reliability. Try both to find your preference.",
+      },
+      {
+        type: "content",
+        title: "Flowing in Different Formats",
+        content: "While the core principles are universal, flowing adapts to different debate formats:\n\n**Lincoln-Douglas:**\n• Typically 5 columns (AC, NC, 1AR, NR, 2AR)\n• Focus heavily on the value framework clash\n• Usually manageable on one or two sheets\n\n**Policy Debate:**\n• Often 8+ columns plus separate off-case flows\n• Higher speed requires faster abbreviation\n• Multiple sheets or digital flowing common\n\n**Public Forum:**\n• Fewer speeches but 'crossfire' interactions to track\n• Summary and Final Focus don't add new arguments—note what's extended\n• Generally more accessible pace for flowing\n\n**Parliamentary:**\n• Limited prep means simpler case structures\n• Track Points of Information offered/accepted\n• Less evidence to cite, more logic chains to capture\n\n**World Schools:**\n• Three speakers with distinct roles\n• Note which team made which point (for Reply speech)\n• Track POIs like Parliamentary",
+      },
+      {
+        type: "content",
+        title: "Developing Your Personal System",
+        content: "Every experienced debater has a personalized flowing system. Here's how to develop yours:\n\n**Start Simple:**\nBegin with basic columns and common abbreviations. Don't try to implement everything at once.\n\n**Practice Regularly:**\n• Flow practice debates (watch online rounds)\n• Flow lectures, podcasts, or news segments\n• Review your flows after each practice round\n\n**Analyze What Works:**\nAfter rounds, ask yourself:\n• Did I miss any arguments? Why?\n• Could I find everything I needed during speeches?\n• What was hard to read or decipher later?\n\n**Iterate:**\n• Add new abbreviations as you encounter repeated terms\n• Adjust layout based on what you're missing\n• Adopt techniques from successful debaters\n\n**Speed Building:**\n• Practice flowing faster speakers over time\n• Challenge yourself with rapid YouTube debates\n• Your flowing speed will improve with practice\n\n**Consistency:**\nOnce you develop systems that work, use them consistently. Muscle memory makes flowing automatic.",
+        keyPoints: [
+          "Start simple and build complexity over time",
+          "Practice flowing regularly, including non-debate content",
+          "Review and iterate based on what's working",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-02-q4",
+        question: "What is the best way to improve your flowing speed and accuracy?",
+        options: [
+          { id: "a", text: "Try to write every word in complete sentences" },
+          { id: "b", text: "Practice regularly with increasingly fast content and develop consistent abbreviations" },
+          { id: "c", text: "Focus on memorization instead of note-taking" },
+          { id: "d", text: "Use a different abbreviation system each time for variety" },
+        ],
+        correctAnswer: "b",
+        explanation: "Flowing improves through regular practice with progressively challenging content. Consistent abbreviations become muscle memory over time. Variety in systems (option D) actually hinders development—you want reliable habits that work automatically under pressure.",
+      },
+      {
+        type: "content",
+        title: "Real-World Applications",
+        content: "Flowing skills extend far beyond the debate room:\n\n**Academic Note-Taking:**\nThe structured approach to capturing key claims, warrants, and tracking development helps in lectures and seminars. You'll capture more useful information than classmates.\n\n**Meeting Documentation:**\nIn business meetings, flowing techniques help you track decisions, action items, who said what, and follow-up needs—all while staying engaged in the discussion.\n\n**Legal Practice:**\nLawyers flow depositions and courtroom testimony, tracking witness statements and identifying inconsistencies. Many attorneys started as debaters.\n\n**Journalism:**\nInterviewers use similar techniques to track quotes, note follow-up questions, and identify the key story elements.\n\n**Negotiation:**\nTracking positions, concessions, and arguments across negotiation sessions requires organized note-taking and identifying what was 'dropped' (conceded).\n\n**Active Listening:**\nThe discipline of flowing makes you a better listener in any context—you're trained to capture substance and organize information in real-time.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Your Flowing Foundation",
+        content: "You now have the foundation for one of debate's most critical technical skills!\n\n**Key Takeaways:**\n\n• **The Column System**: Each speech gets a column; responses align horizontally with what they answer\n\n• **Abbreviations**: Develop a consistent personal system that captures essence in 3-7 words/symbols\n\n• **What to Capture**: Taglines, warrants, author names, structure—skip rhetoric and excessive detail\n\n• **Tracking Responses**: Follow arguments across speeches, draw connections, note non-responses\n\n• **Identifying Drops**: Scan for unanswered arguments; drops are typically conceded points you should extend\n\n• **Multiple Flows**: Organize separate sheets for different argument types; consider color coding\n\n• **Practice**: Flow regularly, review your notes, iterate on your system\n\n**Looking Ahead:**\nIn the next lesson, you'll learn about volume and projection—ensuring everyone in the room can hear your carefully prepared arguments.\n\nRemember: Your flow is your map of the debate. A good map shows you where you are, where you've been, and where to go next. Start building your flowing skills today!",
+      },
+    ],
+  },
+  {
+    lessonId: "l03-03",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: Volume and Projection",
+        content: "Welcome to a lesson on making yourself heard! Volume and projection are fundamental speaking skills that many debaters overlook—yet they can make or break your round.\n\nIf judges can't hear you, they can't evaluate your arguments. If you're straining your voice, you'll tire quickly and lose vocal quality. The goal is to fill the room with clear, sustainable sound that commands attention without exhausting you.\n\nIn this lesson, you'll learn the mechanics of proper projection, how to read a room and adjust accordingly, how to protect your voice from strain, and how to use dynamic range for emphasis. These skills ensure your voice carries your ideas as powerfully as you intend.",
+      },
+      {
+        type: "content",
+        title: "The Physics of Projection",
+        content: "Projection isn't about shouting—it's about efficiently using your body to produce resonant sound that carries.\n\n**Sound Production:**\nYour voice originates at the vocal cords but gains volume and resonance from:\n• The chest cavity\n• The throat and mouth\n• The sinus cavities\n\n**Why Shouting Fails:**\nWhen you shout, you tighten your throat and force air through tense vocal cords. This:\n• Strains your voice quickly\n• Produces harsh, unpleasant tones\n• Reduces clarity and articulation\n• Leads to vocal fatigue and damage\n\n**True Projection:**\nProper projection uses relaxed throat muscles and strong breath support from the diaphragm. The sound resonates through open cavities, producing full, carrying tones without strain.\n\nThink of the difference between a trumpet (air pushed through with breath support) and a kazoo (buzzing against resistance). You want to be the trumpet.",
+        keyPoints: [
+          "Projection uses breath support, not throat tension",
+          "Shouting strains the voice and reduces clarity",
+          "Resonance from chest and head cavities creates carrying power",
+        ],
+      },
+      {
+        type: "content",
+        title: "Diaphragm Breathing",
+        content: "The diaphragm—a dome-shaped muscle below your lungs—is the engine of good projection.\n\n**How It Works:**\nWhen you breathe deeply, the diaphragm contracts and moves down, creating space for your lungs to fill completely. This provides the air reservoir for sustained, powerful speech.\n\n**Checking Your Breathing:**\nPlace one hand on your chest and one on your belly:\n• Shallow breathing: only chest moves\n• Diaphragmatic breathing: belly expands, chest moves minimally\n\n**Practice Exercise:**\n1. Lie flat on your back with a book on your stomach\n2. Breathe so the book rises when you inhale and falls when you exhale\n3. Your chest should move very little\n4. Practice until this feels natural\n\n**Applying to Speech:**\n• Take a deep diaphragmatic breath before important passages\n• Support long sentences with steady air flow from below\n• Avoid running out of air mid-sentence (causes rushing and trailing off)\n• Breathe naturally between phrases—don't hold your breath\n\n**The Result:**\nWith proper breath support, your voice has power, sustain, and consistency. You can speak at volume for extended periods without strain.",
+        keyPoints: [
+          "Diaphragm breathing expands the belly, not just the chest",
+          "Deep breaths provide the air reservoir for sustained projection",
+          "Practice lying down with a book to develop the habit",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-03-q1",
+        question: "What is the correct technique for diaphragmatic breathing?",
+        options: [
+          { id: "a", text: "Expand your chest while keeping your belly flat" },
+          { id: "b", text: "Breathe shallowly and quickly" },
+          { id: "c", text: "Expand your belly as you inhale while chest moves minimally" },
+          { id: "d", text: "Hold your breath as long as possible between sentences" },
+        ],
+        correctAnswer: "c",
+        explanation: "Diaphragmatic breathing involves expanding your belly as you inhale (the diaphragm contracts and moves down) while your chest moves minimally. This provides maximum lung capacity and the breath support needed for powerful projection without straining.",
+      },
+      {
+        type: "content",
+        title: "Room Awareness and Adjustment",
+        content: "Every room is different. Good speakers read the space and adjust accordingly:\n\n**Room Factors to Assess:**\n\n**Size:**\n• Small classroom: conversational volume often sufficient\n• Large lecture hall: significantly more projection needed\n• Outdoor spaces: compete with ambient noise, project more\n\n**Acoustics:**\n• Hard surfaces (tile, concrete): sound bounces, may echo\n• Soft surfaces (carpet, curtains): sound absorbed, need more volume\n• High ceilings: sound disperses upward\n\n**Noise:**\n• HVAC systems running\n• Activity in adjacent rooms\n• Outside traffic or weather\n\n**Audience Distance:**\n• Focus on reaching the most distant listener\n• The judge is your primary audience—ensure they hear clearly\n\n**Quick Assessment:**\nBefore your first speech, take a breath and feel the room:\n• Where is the judge sitting?\n• How far do I need to project?\n• Are there competing noises?\n\nAsk yourself: 'Can the person in the back corner hear me comfortably?'",
+      },
+      {
+        type: "content",
+        title: "Avoiding Vocal Strain",
+        content: "Debate tournaments can involve many rounds over long days. Protecting your voice is essential:\n\n**Warning Signs of Strain:**\n• Throat feeling tight or scratchy\n• Voice becoming hoarse or raspy\n• Having to push harder to maintain volume\n• Pain or discomfort when speaking\n\n**Prevention Strategies:**\n\n**Hydration:**\nDrink plenty of water throughout the tournament. Lukewarm or room temperature is best—cold constricts, hot can irritate. Avoid excessive caffeine and alcohol (both dehydrate).\n\n**Technique, Not Force:**\nWhen you feel yourself straining, reset. Take a breath, relax your throat, and project from your diaphragm. Forcing makes things worse.\n\n**Vocal Rest:**\nBetween rounds, speak less when possible. Don't shout across the cafeteria. Save your voice for when it matters.\n\n**Warm Up, Cool Down:**\nBefore speaking: gentle humming, lip trills, easy scales.\nAfter long sessions: rest your voice, hydrate, avoid whispering (it's actually hard on vocal cords).\n\n**Know Your Limits:**\nIf your voice is failing, adjust your strategy. Speak more slowly and carefully. A controlled, clear voice is better than a loud, damaged one.",
+        keyPoints: [
+          "Hydrate consistently with room-temperature water",
+          "Use diaphragm technique instead of forcing volume",
+          "Rest your voice between rounds when possible",
+        ],
+      },
+      {
+        type: "content",
+        title: "Dynamic Range: Volume as Emphasis",
+        content: "Good speakers don't stay at one volume—they use dynamic range to emphasize and engage:\n\n**The Power of Contrast:**\nConsistent volume becomes monotonous. When everything is at the same level, nothing stands out. Strategic variation creates emphasis.\n\n**When to Get Louder:**\n• Key claims you want the judge to remember\n• Moments of genuine conviction or passion\n• Calling out an opponent's critical flaw\n• Conclusion and voting issues\n\n**When to Get Softer:**\n• Drawing audience in for an important point\n• Creating contrast before a loud, emphatic statement\n• Conveying seriousness or gravity\n• Personal stories or emotional appeals\n\n**The Loud-Soft Pattern:**\nA classic technique: drop your volume slightly before your most important point, then deliver it with increased volume and energy. The contrast makes the key point pop.\n\n**Natural Dynamics:**\nDon't plan every volume change mechanically. As you become more comfortable, volume variation should flow naturally from your engagement with the content. Genuine passion produces natural dynamics.",
+      },
+      {
+        type: "question",
+        id: "l03-03-q2",
+        question: "Why is varying your volume during a speech effective?",
+        options: [
+          { id: "a", text: "It keeps judges awake through random changes" },
+          { id: "b", text: "Consistent volume helps judges focus better" },
+          { id: "c", text: "Volume contrast creates emphasis and helps key points stand out" },
+          { id: "d", text: "Judges prefer speakers who are always loud" },
+        ],
+        correctAnswer: "c",
+        explanation: "Volume variation creates emphasis through contrast. When everything is at the same level, nothing stands out. By strategically getting louder for key points and softer to draw listeners in, you help judges identify and remember your most important arguments.",
+      },
+      {
+        type: "content",
+        title: "Practical Exercises",
+        content: "Build your projection skills with these exercises:\n\n**The Wall Test:**\nStand facing a wall at close range. Speak at normal volume and gradually increase distance while maintaining the same apparent volume at the wall. Notice how your projection must increase.\n\n**The Outdoor Exercise:**\nPractice projecting outdoors where there's no echo. Without walls to bounce sound back, you'll develop true carrying power.\n\n**Breath Counting:**\nTake a deep diaphragmatic breath and count slowly as you exhale. Try to reach 20, then 30, then higher. This builds breath control.\n\n**The Candle Test:**\nHold a candle at arm's length. Speak so the flame flickers but doesn't go out. This trains controlled, sustained airflow rather than explosive bursts.\n\n**Volume Scales:**\nPractice a simple phrase at five distinct volume levels (1-5). Then try saying a paragraph, varying the volume for different sentences. Develop your control over the full range.\n\n**Record and Compare:**\nRecord yourself at different volumes. Listen back to assess how clear and pleasant each level sounds. Find your optimal projection zone.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Commanding the Room",
+        content: "You now have the foundation for powerful, sustainable vocal projection!\n\n**Key Takeaways:**\n\n• **Projection vs. Shouting**: True projection uses breath support and resonance, not throat strain and force\n\n• **Diaphragm Breathing**: Deep belly breaths provide the air reservoir for sustained, powerful speech\n\n• **Room Awareness**: Assess room size, acoustics, and distance; adjust your projection accordingly\n\n• **Voice Protection**: Stay hydrated, use proper technique, rest between rounds, and recognize warning signs of strain\n\n• **Dynamic Range**: Vary your volume for emphasis—louder for key points, softer to draw listeners in, contrast to make ideas pop\n\n**Looking Ahead:**\nIn the next lesson, you'll learn about rebuttals—how to directly engage with and dismantle opponent arguments.\n\nRemember: Your voice is your instrument in debate. Learn to play it well, and it will serve you not just in rounds, but in presentations, meetings, and every situation where you need to command a room. Practice these techniques, and projection will become natural.",
+      },
+    ],
+  },
+  {
+    lessonId: "l03-04",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: What is a Rebuttal?",
+        content: "Welcome to the art of the rebuttal—one of the most crucial skills in competitive debate! A rebuttal is your response to opponent arguments, and it's where debates are often won or lost.\n\nAnyone can read a prepared case. The real test of a debater is how they respond to attacks under pressure. Can you identify the flaws in your opponent's reasoning? Can you defend your own arguments while dismantling theirs? Can you show judges why your side should win the clash?\n\nIn this lesson, you'll learn the anatomy of effective rebuttals: how to respond directly, attack the reasoning (not just the conclusion), provide alternatives, and weigh competing impacts. These skills transform you from someone who presents arguments into someone who wins debates.",
+      },
+      {
+        type: "content",
+        title: "The Purpose of Rebuttals",
+        content: "Before diving into technique, let's understand what rebuttals accomplish:\n\n**Clash is Essential:**\nDebate isn't two ships passing in the night. Judges want to see you directly engage with opponent arguments. Without clash, they can't compare positions.\n\n**Rebuttals Show Critical Thinking:**\nYour ability to respond shows you understand the debate deeply—not just your own case, but the implications of opponent arguments.\n\n**Rebuttals Protect Your Case:**\nEvery opponent attack weakens your position if unanswered. Rebuttals defend your arguments and keep them alive.\n\n**Rebuttals Create Offense:**\nBeyond defense, rebuttals can turn opponent arguments against them, creating new reasons to vote for your side.\n\n**Types of Rebuttal Speeches:**\n• Dedicated rebuttal speeches (like the 1AR in LD)\n• Rebuttal portions within constructives (like NC answering AC)\n• Response sections in summaries and final focus\n\nIn all cases, the same core skills apply.",
+        keyPoints: [
+          "Clash is essential—judges want direct engagement",
+          "Rebuttals defend your case and attack opponents",
+          "Strong rebuttals can turn opponent arguments into your advantages",
+        ],
+      },
+      {
+        type: "content",
+        title: "Direct Response: The Foundation",
+        content: "The first rule of rebuttals: respond directly to what your opponent actually said.\n\n**Signpost Clearly:**\nTell judges exactly what you're answering:\n• 'On their first contention about economic harm...'\n• 'They claimed X, but...'\n• 'Answering their disadvantage...'\n\nClear signposting helps judges follow your responses and write them on their flow.\n\n**Address Their Actual Argument:**\nDon't strawman (misrepresent their argument to make it easier to attack). Don't respond to what you wish they said. Engage with their real position.\n\n**Be Complete:**\nAddress all key components of their argument:\n• Their claim\n• Their evidence\n• Their reasoning\n• Their impact\n\n**Order Options:**\n• Go in order (their first argument, then second, etc.)\n• Go by importance (most dangerous to you first)\n• Group similar arguments together\n\nMost debaters go in order for clarity, but adjust based on time constraints and strategic priorities.",
+      },
+      {
+        type: "question",
+        id: "l03-04-q1",
+        question: "Why is clear signposting important when delivering rebuttals?",
+        options: [
+          { id: "a", text: "It fills time in your speech" },
+          { id: "b", text: "It helps judges follow your responses and record them on their flow" },
+          { id: "c", text: "It makes you sound more formal" },
+          { id: "d", text: "Judges require specific signposting phrases" },
+        ],
+        correctAnswer: "b",
+        explanation: "Clear signposting (saying 'On their first contention...' or 'Answering their disadvantage...') helps judges track which opponent argument you're responding to and write your response directly across from it on their flow. Without signposting, judges may miss the connection between your response and what it answers.",
+      },
+      {
+        type: "content",
+        title: "Attacking Reasoning: The Heart of Rebuttal",
+        content: "The most effective rebuttals attack the reasoning (warrant) behind an argument, not just the conclusion:\n\n**Why Target the Reasoning?**\nSimply asserting 'that's wrong' proves nothing. Explaining WHY their logic fails is persuasive.\n\n**Common Logical Attacks:**\n\n**Causal Flaw:**\n'They claim A causes B, but they haven't shown the mechanism. Correlation isn't causation.'\n\n**Missing Link:**\n'Their chain of logic has a gap. They show A leads to B and C leads to D, but never connect B to C.'\n\n**False Dichotomy:**\n'They present only two options, but there are clearly more possibilities.'\n\n**Overgeneralization:**\n'One example doesn't prove a general rule. Their evidence is too limited.'\n\n**Outdated Evidence:**\n'Their evidence is from 2010. The situation has fundamentally changed since then.'\n\n**Biased Source:**\n'This source has a clear interest in reaching this conclusion. We should be skeptical.'\n\n**The Warrant Attack Formula:**\n'They claim [X], based on [their reasoning]. But this reasoning fails because [your attack]. Therefore, their argument doesn't prove what they say it does.'",
+        keyPoints: [
+          "Attack the reasoning (warrant), not just the conclusion",
+          "Common attacks: causal flaws, missing links, false dichotomies",
+          "Explain WHY their logic fails, don't just assert it's wrong",
+        ],
+      },
+      {
+        type: "content",
+        title: "Attacking Evidence",
+        content: "When opponents cite evidence, you have several angles of attack:\n\n**Source Credibility:**\n• Is the author an expert in this field?\n• Does the source have a bias or agenda?\n• Is this from a reputable publication or platform?\n\n**Recency:**\n• When was this written?\n• Has the situation changed since then?\n• Is there more recent contradicting data?\n\n**Methodology:**\n• How did they gather this data?\n• Is the sample size adequate?\n• Are there confounding variables?\n\n**Relevance:**\n• Does this evidence actually prove their claim?\n• Is it about the same context (different country, time period, population)?\n• Are they extrapolating beyond what the evidence supports?\n\n**Context:**\n• Are they quoting out of context?\n• What does the full source say?\n• Does the same author make conflicting points elsewhere?\n\n**Counter-Evidence:**\nIf you have your own evidence contradicting theirs, explain why yours is more credible, recent, or relevant.",
+      },
+      {
+        type: "question",
+        id: "l03-04-q2",
+        question: "What is the strongest way to attack an opponent's evidence?",
+        options: [
+          { id: "a", text: "Simply state that you disagree with it" },
+          { id: "b", text: "Ignore it completely and move on" },
+          { id: "c", text: "Attack the source credibility, recency, methodology, or relevance" },
+          { id: "d", text: "Read your own longer piece of evidence" },
+        ],
+        correctAnswer: "c",
+        explanation: "The strongest evidence attacks engage with specific issues: Is the source credible and unbiased? Is the evidence recent enough? Was the methodology sound? Does it actually prove their claim? These attacks undermine the opponent's evidence on substantive grounds, not just by assertion or avoidance.",
+      },
+      {
+        type: "content",
+        title: "Providing Alternatives",
+        content: "Sometimes the best rebuttal offers a different way of looking at the issue:\n\n**Alternative Causes:**\n'They blame X for the problem, but the real cause is Y. Their solution won't work because it targets the wrong thing.'\n\n**Alternative Solutions:**\n'Even if we agree there's a problem, their approach isn't the only or best solution. We could do Z instead without the harms they create.'\n\n**Alternative Interpretations:**\n'The evidence they cite actually supports our position when you look at it this way...'\n\n**Alternative Frameworks:**\n'They're measuring success by A, but we should really be measuring by B. Under the right framework, we're winning.'\n\n**Why Alternatives Work:**\nJudges often find positive alternatives more persuasive than pure negation. Instead of just saying 'no,' you're offering a 'yes, but better.'\n\n**When to Use Alternatives:**\n• When you can't fully disprove their point\n• When you want to shift the lens of evaluation\n• When you have a stronger competing explanation\n• When you want to absorb their offense (co-opt their advantages)",
+        keyPoints: [
+          "Alternatives offer different ways to view the issue",
+          "Include alternative causes, solutions, interpretations, or frameworks",
+          "Positive alternatives are often more persuasive than pure negation",
+        ],
+      },
+      {
+        type: "content",
+        title: "Weighing Impacts",
+        content: "When multiple arguments survive on both sides, judges need to weigh which matter more. Help them:\n\n**Impact Calculus Categories:**\n\n**Magnitude:**\nHow big is the impact? Number of people affected, degree of harm or benefit. 'Our impact saves 10,000 lives; their benefit is marginal cost savings.'\n\n**Probability:**\nHow likely is the impact? 'Their scenario requires five unlikely steps; ours is virtually guaranteed.'\n\n**Timeframe:**\nWhen does the impact happen? 'Their harm is speculative and decades away; ours is immediate and certain.'\n\n**Reversibility:**\nCan the impact be undone? 'Their harms can be remedied later; extinction is permanent.'\n\n**Scope:**\nWho is affected? 'This affects the most vulnerable populations who deserve greatest consideration.'\n\n**Using Weighing in Rebuttals:**\n'Even if you grant them some offense, vote Aff because: Our impact is larger in magnitude, more probable, and happens sooner. Their scenario requires multiple speculative steps.'\n\nWeighing is especially critical in later speeches when you're crystallizing the round.",
+      },
+      {
+        type: "content",
+        title: "Turning Arguments",
+        content: "The most devastating rebuttal technique: turning your opponent's arguments into reasons to vote for you.\n\n**What is a Turn?**\nA turn shows that their argument actually supports your side, not theirs.\n\n**Link Turn:**\nThey claim their action leads to good outcome X. You show the action actually leads to the opposite of X.\n• They: 'This policy reduces crime.'\n• You: 'Actually, this policy increases crime because...'\n\n**Impact Turn:**\nYou accept their link but show the outcome they claim is good is actually bad (or vice versa).\n• They: 'This policy increases government power.'\n• You: 'We agree—but increased government power is necessary because...'\n\n**Warning: Don't Double-Turn:**\nNever make both a link turn AND an impact turn on the same argument. If the policy doesn't cause X AND X isn't bad anyway, you've contradicted yourself.\n\n**When to Turn:**\n• When you have strong evidence supporting the opposite link\n• When their impact isn't clearly good/bad\n• When you want to create offense, not just defense\n\nTurns are powerful because they don't just neutralize—they flip arguments to your side.",
+        keyPoints: [
+          "Turns flip opponent arguments into reasons to vote for you",
+          "Link turns: their action causes the opposite outcome",
+          "Impact turns: their outcome is actually good/bad for you",
+          "Never make both a link turn and impact turn on the same argument",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-04-q3",
+        question: "What is a 'link turn' in debate?",
+        options: [
+          { id: "a", text: "Accepting their argument as true" },
+          { id: "b", text: "Showing their action causes the opposite of what they claim" },
+          { id: "c", text: "Changing the topic of debate" },
+          { id: "d", text: "Agreeing with their impact but changing the framing" },
+        ],
+        correctAnswer: "b",
+        explanation: "A link turn argues that the opponent's action or policy actually causes the opposite of what they claim. If they say their plan reduces crime, a link turn would show it actually increases crime. This turns their argument into a reason to vote against them.",
+      },
+      {
+        type: "content",
+        title: "Organizing Your Rebuttal",
+        content: "Structure makes rebuttals clear and persuasive:\n\n**The Basic Framework:**\n1. **State** what they said\n2. **Respond** with your attack\n3. **Explain** why this matters\n\n**Time Allocation:**\nNot every argument deserves equal time. Spend more on:\n• Arguments that most threaten your position\n• Arguments where you have strong responses\n• Points the judge seems interested in\n\n**Grouping:**\nSometimes you can answer multiple arguments with one response:\n'All three of their contentions rely on the same flawed assumption: that people respond rationally to incentives. But psychology research shows...'\n\n**Don't Forget Defense:**\nWhile attacking opponents, also:\n• Extend your own arguments ('They dropped our second contention—pull this through')\n• Rebuild arguments they attacked ('They said X, but our evidence clearly shows...')\n• Remind judges of your case's strengths\n\n**The 2-1 Rule:**\nFor every one thing they say, aim for at least two responses: one defensive (why their attack fails) and one offensive (why your argument still stands or why theirs is actually a reason to vote for you).",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Mastering the Clash",
+        content: "You now have the complete toolkit for effective rebuttals!\n\n**Key Takeaways:**\n\n• **Direct Response**: Signpost clearly, address their actual argument, be complete\n\n• **Attack Reasoning**: Target the warrant, expose logical flaws, explain WHY their logic fails\n\n• **Attack Evidence**: Challenge credibility, recency, methodology, relevance, and context\n\n• **Provide Alternatives**: Offer different causes, solutions, interpretations, or frameworks\n\n• **Weigh Impacts**: Compare magnitude, probability, timeframe, reversibility, and scope\n\n• **Turn Arguments**: Flip their arguments into reasons to vote for you (but never double-turn)\n\n• **Organize**: State-respond-explain, allocate time strategically, group where possible\n\n**Looking Ahead:**\nIn the next lesson, you'll learn about eye contact—an essential skill for connecting with judges and projecting confidence.\n\nRemember: The rebuttal is where thinking debaters shine. Anyone can read a prepared case, but responding effectively under pressure requires true understanding. Practice these techniques, and you'll become formidable in the clash.",
+      },
+    ],
+  },
+  {
+    lessonId: "l03-05",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: Eye Contact",
+        content: "Welcome to a lesson on one of the most underrated skills in debate—eye contact! While arguments win rounds on paper, effective delivery makes those arguments persuasive. And nothing communicates confidence and connection like good eye contact.\n\nJudges are human beings who respond to speakers who engage with them directly. A debater who stares at notes the entire speech feels disconnected and uncertain. A debater who makes consistent, comfortable eye contact feels confident and trustworthy.\n\nIn this lesson, you'll learn why eye contact matters, how to focus on the judge while still using notes, and techniques for engaging your entire audience. These skills immediately elevate your presence in any speaking situation.",
+      },
+      {
+        type: "content",
+        title: "Why Eye Contact Matters",
+        content: "Eye contact isn't just polite—it's strategically important in debate:\n\n**Confidence Signal:**\nLooking people in the eye universally signals confidence. Avoiding eye contact suggests uncertainty, nervousness, or dishonesty. Judges unconsciously trust speakers who engage directly.\n\n**Connection:**\nEye contact creates a relationship between speaker and listener. The judge feels like you're talking TO them, not AT them. This personal connection increases persuasion.\n\n**Attention Check:**\nBy looking at judges, you can see if they're following you. Are they nodding? Writing? Looking confused? This feedback helps you adjust in real-time.\n\n**Credibility:**\nStudies consistently show that speakers with good eye contact are rated as more credible, competent, and persuasive—even when the content is identical.\n\n**Authority:**\nThe ability to look at people while speaking suggests you know your material well enough not to rely on notes. This projects mastery.\n\nIn short: Eye contact makes the same arguments more likely to win.",
+        keyPoints: [
+          "Eye contact signals confidence and credibility",
+          "Creates connection that increases persuasion",
+          "Allows you to gauge judge reactions and adjust",
+        ],
+      },
+      {
+        type: "content",
+        title: "The Judge as Your Audience",
+        content: "In debate, your primary audience is the judge. Structure your eye contact accordingly:\n\n**Primary Focus:**\nThe judge decides the round. They should receive the majority of your eye contact—aim for 60-80% of your speaking time with eyes on the judge.\n\n**Reading the Judge:**\nAs you speak, watch for:\n• Nodding: They're following and agreeing. Keep going.\n• Writing: Good—they're capturing your point. Pace appropriately.\n• Confused expression: Slow down, clarify, or re-explain.\n• Looking away: You may need to re-engage. Vary delivery.\n\n**Multiple Judges:**\nIn panels, distribute attention:\n• Give each judge meaningful eye contact (not just quick glances)\n• Spend slightly more time on the center judge\n• Don't neglect judges who seem less engaged—try to bring them back\n\n**Opponent Awareness:**\nBrief eye contact with opponents is fine, especially during cross-ex or when directly addressing their arguments. But they're not your decision-maker—don't focus primarily on them.",
+      },
+      {
+        type: "question",
+        id: "l03-05-q1",
+        question: "What is the primary reason to focus eye contact on the judge?",
+        options: [
+          { id: "a", text: "Judges require eye contact by rule" },
+          { id: "b", text: "The judge is the decision-maker you need to persuade" },
+          { id: "c", text: "Looking at opponents is considered rude" },
+          { id: "d", text: "It makes the speech easier to deliver" },
+        ],
+        correctAnswer: "b",
+        explanation: "The judge decides who wins the round, making them your primary audience. While engaging opponents appropriately is fine, your persuasive efforts should focus on the decision-maker. Eye contact creates the connection and credibility that helps persuade the judge.",
+      },
+      {
+        type: "content",
+        title: "The Note Glancing Technique",
+        content: "You need your notes, but you also need to look up. Here's how to balance both:\n\n**The Glance Pattern:**\n1. Look down briefly to capture your next point\n2. Look up and deliver 2-4 sentences while making eye contact\n3. Glance down for the next point\n4. Repeat\n\n**Tips for Smooth Glancing:**\n\n**Prepare Your Notes:**\nFormat notes for quick scanning:\n• Use bullet points, not paragraphs\n• Highlight or bold key words\n• Leave white space so points stand out\n• Use large, clear handwriting or font\n\n**Trust Your Memory:**\nYou don't need to read word-for-word. Glance at a key word, then look up and explain the idea in your own words.\n\n**Use Transitions:**\nGlance at notes during transitions ('Now, moving to our second contention...') when less eye contact is expected.\n\n**Practice Until Natural:**\nThe glance pattern feels awkward at first. With practice, it becomes smooth and natural.\n\n**What NOT to Do:**\n• Don't bury your head in notes continuously\n• Don't read complete sentences verbatim\n• Don't look up only for one-second peeks",
+        keyPoints: [
+          "Glance down for keywords, look up to deliver 2-4 sentences",
+          "Format notes for quick scanning with bullets and highlights",
+          "Practice until the glance pattern feels natural",
+        ],
+      },
+      {
+        type: "content",
+        title: "Common Eye Contact Mistakes",
+        content: "Avoid these common pitfalls:\n\n**The Note Reader:**\nSpeaking with eyes locked on notes the entire speech. Judges feel ignored and speakers seem unprepared.\n\n**The Ceiling Starer:**\nLooking up—but at the ceiling, walls, or into space rather than at people. This avoids the note problem but creates no connection.\n\n**The Rapid Glancer:**\nEyes darting around constantly, never settling anywhere. This appears nervous and unfocused.\n\n**The Floor Looker:**\nFocusing downward even when not reading notes. Often a nervous habit that signals uncertainty.\n\n**The Opponent Fixater:**\nStaring at opponents instead of the judge, especially when attacking their arguments. Remember: persuade the judge, not the opponent.\n\n**The Thousand-Yard Stare:**\nLooking in the judge's direction but not actually AT them—eyes unfocused or looking through them.\n\n**Solutions:**\n• Practice with a friend who signals when your eye contact fades\n• Record yourself and note where eyes go\n• Place a marker (water bottle, paper) where the 'judge' sits during practice",
+      },
+      {
+        type: "question",
+        id: "l03-05-q2",
+        question: "Why should you avoid looking primarily at your opponent when attacking their arguments?",
+        options: [
+          { id: "a", text: "Looking at opponents is against debate rules" },
+          { id: "b", text: "The judge is who you need to persuade, not the opponent" },
+          { id: "c", text: "Opponents will become distracted" },
+          { id: "d", text: "It makes your arguments weaker" },
+        ],
+        correctAnswer: "b",
+        explanation: "When attacking opponent arguments, it's tempting to direct your rebuttal at them. But the judge decides the round—you need to persuade the judge that your attacks are valid, not convince the opponent. Focus eye contact on the decision-maker.",
+      },
+      {
+        type: "content",
+        title: "Beyond the Basics: Engaging Your Full Audience",
+        content: "In some contexts, you have a broader audience beyond the judge:\n\n**Congressional Debate:**\nYou're speaking to an entire chamber. Sweep your eye contact across the room, spending time on different sections. Make individuals feel addressed.\n\n**Public Speaking Events:**\nWith larger audiences, use the 'triangle technique': focus on individuals in three areas (left, center, right) and move between them. This creates the impression of addressing everyone.\n\n**Classroom Presentations:**\nApply the same skills: primary eye contact with the teacher (decision-maker), but engage classmates too. This impresses teachers and builds connection with peers.\n\n**Job Interviews:**\nWith interview panels, give each interviewer meaningful eye contact. Focus most on whoever asked the current question, but include others.\n\n**Virtual Debates:**\nOn video platforms, look at the camera lens (not the screen) to create direct eye contact. Place notes near the camera so glances don't seem like you're looking away.\n\nIn all settings, the principles are the same: engage decision-makers primarily while including the broader audience.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: The Power of Connection",
+        content: "You now understand how to use eye contact as a powerful communication tool!\n\n**Key Takeaways:**\n\n• **Why It Matters**: Eye contact signals confidence, creates connection, and increases persuasiveness and credibility\n\n• **Judge Focus**: The judge should receive 60-80% of your eye contact—they're the decision-maker\n\n• **Note Glancing**: Glance down for keywords, look up to deliver 2-4 sentences, format notes for quick scanning\n\n• **Avoid Mistakes**: Don't be a note reader, ceiling starer, rapid glancer, or opponent fixater\n\n• **Broader Audiences**: In Congressional debate, presentations, or interviews, sweep eye contact while prioritizing decision-makers\n\n**Looking Ahead:**\nIn the next lesson, you'll learn about evidence—what counts as valid support for your arguments and how to evaluate source quality.\n\nRemember: Eye contact is a skill that improves with conscious practice. Start noticing your habits now, and work to engage more directly with your audience. The impact on your persuasiveness will be immediate.",
+      },
+    ],
+  },
+  {
+    lessonId: "l03-06",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: What Counts as Evidence?",
+        content: "Welcome to a critical lesson on the foundation of persuasive argumentation—evidence! In debate, you can't just claim things are true. You need support for your arguments, and not all support is created equal.\n\nWhat makes one source credible and another worthless? How do you evaluate the evidence your opponents present? What kinds of evidence are most persuasive in debate rounds?\n\nThis lesson teaches you to distinguish strong evidence from weak, understand what makes sources credible, and use evidence strategically to build winning arguments. These skills are essential not just for debate, but for evaluating information critically in an era of abundant (and often unreliable) content.",
+      },
+      {
+        type: "content",
+        title: "Types of Evidence",
+        content: "Evidence comes in many forms, each with strengths and appropriate uses:\n\n**Statistical Evidence:**\nNumbers, data, and quantified findings. '73% of experts agree...' or 'The program reduced costs by 45%.'\n• Strength: Concrete and measurable\n• Weakness: Can be manipulated, context matters\n\n**Expert Testimony:**\nOpinions or findings from qualified authorities. 'According to Dr. Smith, a leading economist...'\n• Strength: Specialized knowledge and credibility\n• Weakness: Experts can disagree, may have biases\n\n**Examples and Case Studies:**\nSpecific instances that illustrate a broader point. 'When Germany implemented this policy in 2015...'\n• Strength: Concrete and memorable\n• Weakness: One case may not prove general rules\n\n**Analogies:**\nComparisons to similar situations. 'Just as the New Deal addressed the Depression...'\n• Strength: Helps audience understand new concepts\n• Weakness: Analogies are rarely perfect matches\n\n**Research Studies:**\nAcademic research with methodology and findings. 'A Harvard study found...'\n• Strength: Rigorous methodology\n• Weakness: Studies can be flawed, may not generalize\n\n**Anecdotes:**\nPersonal stories or individual experiences. 'I spoke with a family affected by this policy...'\n• Strength: Emotionally compelling\n• Weakness: Unrepresentative, unfalsifiable",
+        keyPoints: [
+          "Statistics offer concrete data but need context",
+          "Expert testimony provides credibility but experts can disagree",
+          "Examples are memorable but may not prove general rules",
+        ],
+      },
+      {
+        type: "content",
+        title: "Source Credibility",
+        content: "Not all sources are equally trustworthy. Evaluate credibility along these dimensions:\n\n**Expertise:**\n• Does the author have relevant credentials?\n• Is this their field of study or work?\n• What is their track record?\n\n**Institutional Backing:**\n• Is the source from a reputable organization?\n• Academic journals > opinion magazines > random blogs\n• University research, major think tanks, established news organizations\n\n**Bias and Agenda:**\n• Who funds this organization?\n• Does the source have obvious political or commercial interests?\n• Is the conclusion too convenient for the source's position?\n\n**Peer Review:**\n• Has this been reviewed by other experts?\n• Peer-reviewed academic journals are gold standard\n• Self-published or non-reviewed claims warrant skepticism\n\n**Reputation:**\n• What is the publication's track record?\n• Have they been caught in errors or fabrications?\n• Are they respected in their field?\n\n**Independence:**\n• Is the source independent of the parties involved?\n• Industry-funded studies on industry products raise flags\n• Government sources on government programs may be biased",
+        keyPoints: [
+          "Expertise: author credentials in the relevant field",
+          "Institutional backing: reputable organization or peer review",
+          "Bias: consider funding, agenda, and convenient conclusions",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-06-q1",
+        question: "Which is typically the most credible type of source?",
+        options: [
+          { id: "a", text: "A personal blog post by an interested individual" },
+          { id: "b", text: "A peer-reviewed academic journal article" },
+          { id: "c", text: "An industry report by a company in that field" },
+          { id: "d", text: "An anonymous comment on a news article" },
+        ],
+        correctAnswer: "b",
+        explanation: "Peer-reviewed academic journals are typically the most credible because research undergoes scrutiny from other experts before publication. Industry reports may have commercial bias, blogs lack vetting, and anonymous comments have no accountability or verified expertise.",
+      },
+      {
+        type: "content",
+        title: "Recency Matters",
+        content: "When evidence was created often determines its value:\n\n**Why Recency Matters:**\n• Situations change over time\n• New research supersedes old findings\n• Policies, technologies, and conditions evolve\n• Judges expect current information on current topics\n\n**When Recency Is Critical:**\n• Economic data (markets change constantly)\n• Technology topics (rapid innovation)\n• Current events debates\n• Scientific findings (research progresses)\n• Policy outcomes (results take time to measure)\n\n**When Older Sources Are Acceptable:**\n• Foundational theory (Adam Smith on economics)\n• Historical analysis (past events don't change)\n• Classic research that hasn't been superseded\n• Philosophical arguments (timeless reasoning)\n\n**Calling Out Outdated Evidence:**\n'Their 2012 study predates the entire current regulatory framework. The landscape has fundamentally changed since then—this evidence tells us nothing about today.'\n\n**Best Practice:**\nUse the most recent credible sources available. When older sources are necessary, acknowledge why they're still relevant.",
+      },
+      {
+        type: "content",
+        title: "Expert Qualifications",
+        content: "When citing experts, their qualifications matter enormously:\n\n**What Makes a True Expert:**\n• Advanced degree in the relevant field\n• Years of professional experience\n• Publications and recognized contributions\n• Current position at credible institution\n• Specialized knowledge in the specific area\n\n**Matching Expert to Topic:**\nA physicist may be brilliant but isn't an expert on psychology. A doctor isn't automatically an economist. Match expert credentials to the specific claim they're supporting.\n\n**Citing Experts Effectively:**\n'According to Dr. Sarah Chen, Professor of Environmental Science at Stanford and former EPA advisor with 30 years of experience in climate policy...'\n\nThis establishes why we should trust this source.\n\n**Attacking Opponent Expert Claims:**\n• 'Their source has no credentials in this specific field'\n• 'This person works for a lobbying organization with clear bias'\n• 'This expert has been contradicted by the broader consensus'\n• 'They cite one outlier researcher while ignoring mainstream findings'\n\n**Expert Consensus:**\nWhen the overwhelming majority of qualified experts agree, individual dissenting voices carry less weight. '97% of climate scientists...' is powerful.",
+        keyPoints: [
+          "True experts have credentials specifically in the relevant field",
+          "Match expert qualifications to the specific claim they support",
+          "Expert consensus outweighs individual dissenting voices",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-06-q2",
+        question: "Why is it important to match an expert's credentials to the specific topic?",
+        options: [
+          { id: "a", text: "Judges prefer longer credential descriptions" },
+          { id: "b", text: "Expertise in one field doesn't guarantee expertise in another" },
+          { id: "c", text: "Only PhDs can be cited as experts" },
+          { id: "d", text: "It makes speeches sound more academic" },
+        ],
+        correctAnswer: "b",
+        explanation: "Being an expert in one field doesn't make someone an expert in all fields. A Nobel Prize-winning physicist commenting on economics carries no more weight than any informed layperson on that topic. Credibility comes from specific relevant expertise.",
+      },
+      {
+        type: "content",
+        title: "Evaluating Research Quality",
+        content: "When opponents cite studies, or when you're selecting your own, consider:\n\n**Methodology:**\n• Was the study well-designed?\n• Is the sample size adequate?\n• Were there proper controls?\n• Could results be explained by other factors?\n\n**Replicability:**\n• Has this finding been replicated?\n• Single studies can be flukes\n• Meta-analyses (combining many studies) are strongest\n\n**Publication:**\n• Where was this published?\n• Was it peer-reviewed?\n• Has it been cited by other researchers?\n\n**Limitations:**\n• Did researchers acknowledge limitations?\n• What does the study NOT prove?\n• Can the findings be generalized?\n\n**Funding:**\n• Who paid for this research?\n• Drug company-funded drug studies, for example, warrant skepticism\n\n**Common Attacks on Research:**\n• 'This study only looked at 50 people—the sample is too small'\n• 'Lab conditions don't reflect real-world application'\n• 'This has never been replicated'\n• 'The methodology had serious flaws in...'\n• 'Several researchers have criticized this study's conclusions'",
+      },
+      {
+        type: "content",
+        title: "Using Evidence Strategically",
+        content: "Having good evidence isn't enough—you need to deploy it effectively:\n\n**Presentation:**\nDon't just cite the conclusion. Briefly explain:\n• Who produced it (credibility)\n• What they found (the claim)\n• Why it matters (impact)\n\n**Quality Over Quantity:**\nOne excellent, highly credible source is better than five weak ones. Judges are more persuaded by depth than by piling on low-quality citations.\n\n**Anticipate Attacks:**\nKnow your evidence well enough to defend it:\n• How recent is it?\n• What are the author's credentials?\n• What were the study parameters?\n• What might opponents say against it?\n\n**Explain the Warrant:**\nEvidence alone isn't argument. Connect the evidence to your claim:\n• 'This proves X because...'\n• 'This matters for today's debate because...'\n\n**Cross-Examination:**\nUse CX to probe opponent evidence:\n• 'What are your author's credentials?'\n• 'What year was that published?'\n• 'What was the sample size?'\n• 'Did that study control for...?'",
+        keyPoints: [
+          "Present evidence with source credibility and explanation",
+          "Quality over quantity—one strong source beats many weak ones",
+          "Connect evidence to your claim (don't assume it speaks for itself)",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-06-q3",
+        question: "What is more persuasive in a debate round?",
+        options: [
+          { id: "a", text: "Citing five sources quickly without explanation" },
+          { id: "b", text: "One excellent source with full credential and explanation" },
+          { id: "c", text: "Citing evidence without connecting it to your claim" },
+          { id: "d", text: "Older sources that sound authoritative" },
+        ],
+        correctAnswer: "b",
+        explanation: "Judges are more persuaded by depth than by quantity. One excellent source—with credibility established, key findings explained, and connection to your argument made clear—is more persuasive than rattling off multiple unexplained citations.",
+      },
+      {
+        type: "content",
+        title: "Real-World Critical Thinking",
+        content: "The evidence evaluation skills you learn in debate apply everywhere:\n\n**News Consumption:**\nEvaluate sources, check credentials, notice bias, look for corroboration. These habits make you a more informed citizen.\n\n**Academic Work:**\nDistinguish reliable sources from unreliable ones. Understand what makes research strong or weak. Build better arguments in papers.\n\n**Professional Life:**\nEvaluate proposals, reports, and data critically. Don't be fooled by confident claims without solid backing.\n\n**Social Media:**\nRecognize misinformation and manipulation. Check before sharing. Identify when 'studies say' claims are dubious.\n\n**Personal Decisions:**\nFrom health choices to financial decisions, strong evidence evaluation helps you make better choices based on reliable information.\n\nIn an era of abundant information and rampant misinformation, the ability to distinguish credible evidence from noise is among the most valuable skills you can develop.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Building on Strong Foundations",
+        content: "You now have the tools to use and evaluate evidence like a skilled debater!\n\n**Key Takeaways:**\n\n• **Types of Evidence**: Statistics, expert testimony, examples, analogies, research, anecdotes—each has strengths and appropriate uses\n\n• **Source Credibility**: Evaluate expertise, institutional backing, bias, peer review, reputation, and independence\n\n• **Recency**: Recent evidence is usually stronger, especially for rapidly changing topics\n\n• **Expert Qualifications**: Match credentials to the specific claim; consensus outweighs outliers\n\n• **Research Quality**: Consider methodology, replication, publication venue, limitations, and funding\n\n• **Strategic Use**: Quality over quantity; explain credibility and connect evidence to claims\n\n**Looking Ahead:**\nIn the next lesson, you'll review the core skills we've covered in this unit—speaking, flowing, evidence, and rebuttals—and consolidate your learning.\n\nRemember: Arguments are only as strong as the evidence supporting them. Learn to build on solid foundations, and you'll construct arguments that stand up to scrutiny.",
+      },
+    ],
+  },
+  {
+    lessonId: "l03-07",
+    pages: [
+      {
+        type: "content",
+        title: "Review: Core Skills",
+        content: "Welcome to the review lesson for Unit 3! You've covered a tremendous amount of ground in this unit, building essential skills that every debater needs.\n\nIn this lesson, we'll consolidate your learning by reviewing the key concepts from speaking, flowing, rebuttals, and evidence. Use this as a checkpoint to ensure you've internalized the fundamentals before moving forward.\n\nThink of this review as your essential toolkit—the skills you'll use in every single debate round, regardless of format or topic.",
+      },
+      {
+        type: "content",
+        title: "Speaking Fundamentals Recap",
+        content: "Clear, confident speaking is the foundation of effective debate:\n\n**Enunciation:**\n• Pronounce every word completely and distinctly\n• Practice with tongue twisters and daily reading aloud\n• Record yourself to identify problem areas\n\n**Pacing:**\n• Match your speed to judge note-taking capacity\n• Slow down for important points\n• Use strategic pauses for emphasis\n\n**Confidence:**\n• Prepare thoroughly—knowledge builds confidence\n• Reframe nervousness as excitement\n• Focus outward on your audience, not inward on yourself\n\n**Physical Presence:**\n• Stand tall with open body language\n• Avoid fidgeting and defensive postures\n• Confident posture actually increases internal confidence\n\n**Vocal Variety:**\n• Vary pitch, volume, rate, and tone\n• Avoid monotone delivery\n• Match emotional tone to content\n\n**Volume and Projection:**\n• Use diaphragm breathing for power without strain\n• Adjust to room size and acoustics\n• Vary volume for emphasis—louder for key points, softer to draw in\n• Protect your voice with hydration and proper technique",
+        keyPoints: [
+          "Clear enunciation + strategic pacing = comprehension",
+          "Physical confidence + vocal variety = engagement",
+          "Diaphragm breathing = sustainable projection",
+        ],
+      },
+      {
+        type: "question",
+        id: "l03-07-q1",
+        question: "Which combination of skills most helps judges follow and remember your arguments?",
+        options: [
+          { id: "a", text: "Speaking as fast as possible with maximum volume" },
+          { id: "b", text: "Clear enunciation, strategic pacing, and vocal variety" },
+          { id: "c", text: "Reading directly from notes without looking up" },
+          { id: "d", text: "Keeping volume and pace exactly constant throughout" },
+        ],
+        correctAnswer: "b",
+        explanation: "Judges follow and remember arguments best when you speak clearly (enunciation), at a pace they can process (strategic pacing), with variation that signals importance (vocal variety). Speed without clarity loses content; monotone without variation loses attention.",
+      },
+      {
+        type: "content",
+        title: "Flowing and Note-Taking Recap",
+        content: "Your flow is your map of the debate:\n\n**The Column System:**\n• Each speech gets its own column\n• Responses align horizontally with what they answer\n• Use landscape orientation and leave space for responses\n\n**Abbreviations:**\n• Develop consistent personal abbreviations\n• Capture essence in 3-7 words/symbols\n• Common: DA, CP, K, T, bc, w/, →, ↑, ↓\n\n**What to Capture:**\n• Taglines, warrants, author names, structure\n• Skip rhetoric and excessive detail\n• Listen for structural signals\n\n**Tracking and Drops:**\n• Follow arguments across speeches\n• Mark unanswered arguments as 'DROPPED'\n• Dropped arguments are typically conceded\n\n**Organization:**\n• Separate flows for different argument areas\n• Consider color coding\n• Choose paper vs. digital based on preference\n\n**Development:**\n• Start simple, build complexity\n• Practice regularly with various content\n• Review and iterate your system",
+        keyPoints: [
+          "Columns track speeches; horizontal alignment tracks responses",
+          "Consistent abbreviations enable fast capture",
+          "Dropped arguments are key opportunities to exploit",
+        ],
+      },
+      {
+        type: "content",
+        title: "Rebuttal and Evidence Recap",
+        content: "**Rebuttals:**\n• Signpost clearly so judges can track responses\n• Attack reasoning (warrants), not just conclusions\n• Common attacks: causal flaws, missing links, false dichotomies\n• Attack evidence: credibility, recency, methodology, relevance\n• Provide alternatives: different causes, solutions, frameworks\n• Weigh impacts: magnitude, probability, timeframe\n• Turn arguments to flip them to your side\n• Never double-turn (link turn + impact turn together)\n\n**Evidence:**\n• Types: statistics, expert testimony, examples, research, anecdotes\n• Source credibility: expertise, institution, bias, peer review\n• Recency matters for most topics\n• Expert qualifications must match the specific claim\n• Research quality: methodology, replication, publication\n• Quality over quantity in presentation\n• Always connect evidence to your claim\n\n**Eye Contact:**\n• Focus 60-80% on the judge (decision-maker)\n• Glance at notes, deliver while looking up\n• Avoid common mistakes: note reading, ceiling staring, opponent fixating",
+      },
+      {
+        type: "question",
+        id: "l03-07-q2",
+        question: "What is the most effective way to attack an opponent's argument?",
+        options: [
+          { id: "a", text: "Simply disagree with their conclusion loudly" },
+          { id: "b", text: "Attack the reasoning (warrant) and explain why their logic fails" },
+          { id: "c", text: "Ignore it and hope the judge doesn't notice" },
+          { id: "d", text: "Repeat your own arguments more forcefully" },
+        ],
+        correctAnswer: "b",
+        explanation: "Effective rebuttals attack the reasoning behind an argument, not just the conclusion. Explaining WHY their logic fails—through attacking warrants, evidence quality, or logical structure—is far more persuasive than simple disagreement or avoidance.",
+      },
+      {
+        type: "content",
+        title: "Putting It All Together",
+        content: "These skills work together synergistically:\n\n**Speaking + Flowing:**\nGood speaking at appropriate pace allows judges (and you) to flow effectively. Your flow helps you deliver organized, responsive speeches.\n\n**Flowing + Rebuttals:**\nStrong flows reveal what to rebut and what's been dropped. Your rebuttal structure comes from your flow.\n\n**Evidence + Rebuttals:**\nStrong evidence backs up your attacks. Evidence evaluation skills help you dismantle opponent sources.\n\n**Eye Contact + Everything:**\nEngaging the judge directly makes all your other skills more persuasive.\n\n**The Integrated Debater:**\nA skilled debater speaks clearly while maintaining eye contact, flows opponent arguments accurately, identifies the key clashes, responds with well-reasoned rebuttals backed by credible evidence, and does it all with confidence and vocal variety.\n\n**Practice Integration:**\nAs you develop, practice combining skills. Give a rebuttal while maintaining eye contact. Flow while preparing your next speech. Let the skills become automatic so you can focus on strategy.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Your Essential Toolkit",
+        content: "Congratulations on completing Unit 3! You now possess the essential skills that form the foundation of competitive debate:\n\n**Your Core Skills Toolkit:**\n• Clear, confident speaking with vocal variety\n• Sustainable projection through proper technique\n• Systematic flowing to track every argument\n• Identifying and exploiting dropped arguments\n• Direct, reasoned rebuttals that attack warrants\n• Strategic use of quality evidence\n• Effective eye contact with decision-makers\n\n**What's Next:**\nBuilding on this foundation, future units will cover:\n• Advanced argumentation techniques\n• Format-specific strategies\n• Cross-examination skills\n• Case construction\n• And much more\n\n**Remember:**\nThese fundamentals matter at every level of debate. Champions still work on enunciation, still flow carefully, still structure rebuttals. Master the basics, and you'll have the foundation for advanced success.\n\nKeep practicing, keep competing, and keep improving!",
+      },
+    ],
+  },
+];
