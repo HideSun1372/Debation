@@ -36,6 +36,7 @@ import {
   CircleCheck,
   CircleX,
   HelpCircle,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
