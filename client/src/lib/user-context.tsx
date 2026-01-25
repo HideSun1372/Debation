@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback } from "react";
-import { getSkillTier, getTierProgress, SKILL_TIERS, type ExperienceLevel, getPlacementUnit } from "@shared/schema";
+import { getSkillTier, getTierProgress, SKILL_TIERS, type ExperienceLevel, getPlacementUnit, getAllLessons } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
 import { useAdmin } from "@/hooks/use-admin";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -198,12 +198,33 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const completeOnboarding = useCallback((experience: ExperienceLevel, score: number) => {
     const placementUnit = getPlacementUnit(experience, score);
     const currentProgress = user.lessonProgress;
+    
+    // Get all lessons and mark everything before placement unit as complete
+    const allLessons = getAllLessons();
+    const lessonsToComplete: string[] = [];
+    
+    // Find all lessons before the placement unit
+    for (const lessonData of allLessons) {
+      // Stop when we reach the placement unit
+      if (lessonData.unitId === placementUnit) {
+        break;
+      }
+      lessonsToComplete.push(lessonData.lesson.id);
+    }
+    
+    // Merge with any existing completed lessons (deduplicate)
+    const allCompletedLessons = Array.from(new Set([
+      ...currentProgress.completedLessonIds,
+      ...lessonsToComplete
+    ]));
+    
     const newProgress: LessonProgressData = {
       ...currentProgress,
       hasCompletedOnboarding: true,
       experienceLevel: experience,
       assessmentScore: score,
       currentUnitId: placementUnit,
+      completedLessonIds: allCompletedLessons,
       lastVisitedAt: new Date().toISOString(),
     };
     
