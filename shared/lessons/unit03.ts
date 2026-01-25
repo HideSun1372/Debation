@@ -446,6 +446,25 @@ export const UNIT_03_LESSONS: MultiPageLesson[] = [
         title: "Conclusion: Mastering the Clash",
         content: "You now have the complete toolkit for effective rebuttals!\n\n**Key Takeaways:**\n\n• **Direct Response**: Signpost clearly, address their actual argument, be complete\n\n• **Attack Reasoning**: Target the warrant, expose logical flaws, explain WHY their logic fails\n\n• **Attack Evidence**: Challenge credibility, recency, methodology, relevance, and context\n\n• **Provide Alternatives**: Offer different causes, solutions, interpretations, or frameworks\n\n• **Weigh Impacts**: Compare magnitude, probability, timeframe, reversibility, and scope\n\n• **Turn Arguments**: Flip their arguments into reasons to vote for you (but never double-turn)\n\n• **Organize**: State-respond-explain, allocate time strategically, group where possible\n\n**Looking Ahead:**\nIn the next lesson, you'll learn about eye contact—an essential skill for connecting with judges and projecting confidence.\n\nRemember: The rebuttal is where thinking debaters shine. Anyone can read a prepared case, but responding effectively under pressure requires true understanding. Practice these techniques, and you'll become formidable in the clash.",
       },
+      {
+        type: "practice",
+        id: "l03-04-p1",
+        title: "Practice Your Rebuttals",
+        description: "Time to practice responding to an AI opponent's argument using the rebuttal techniques you've learned.",
+        practice: {
+          type: "refutation",
+          topic: "Social media platforms should be required to verify user identities",
+          targetSkill: "Constructing effective rebuttals using direct response and reasoning attacks",
+          instructions: "Your AI opponent will present an argument. Use the techniques from this lesson to construct an effective rebuttal: signpost clearly, attack the reasoning or evidence, provide alternatives if applicable, and explain why your response matters.",
+          exampleResponse: "Use the state-respond-explain framework: identify their argument, explain why it fails, and connect to the broader debate.",
+          successCriteria: [
+            "Clearly identifies and addresses the opponent's specific argument",
+            "Attacks the reasoning or evidence, not just the conclusion",
+            "Explains why the response matters for the debate",
+            "Uses appropriate rebuttal techniques (direct response, alternative causation, impact weighing)",
+          ],
+        },
+      },
     ],
   },
   {
