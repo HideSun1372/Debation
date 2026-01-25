@@ -23,6 +23,13 @@ export function Navbar() {
   const { user: authUser, isLoading: authLoading, isAuthenticated } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Disable navbar in debate route or if user is in a lesson
+  // The Learn page renders lessons in a full-screen fixed overlay, so hiding navbar here
+  // ensures it doesn't peek through or interfere.
+  if (location === "/debate") {
+    return null;
+  }
+
   const getInitials = (firstName?: string | null, lastName?: string | null) => {
     const first = firstName?.charAt(0) || "";
     const last = lastName?.charAt(0) || "";

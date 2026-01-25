@@ -61,6 +61,7 @@ export default function Learn() {
   
   const [activeLessonId, setActiveLessonId] = useState<string | null>(null);
   const [showResetDialog, setShowResetDialog] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   
   const [lessonStep, setLessonStep] = useState<"content" | "quiz">("content");
   const [exerciseQuestionIndex, setExerciseQuestionIndex] = useState(0);
@@ -540,6 +541,38 @@ export default function Learn() {
     resetLessonUIState();
   };
 
+  const handleExitLesson = () => {
+    // Only show confirmation if user has progressed (attempted questions or moved past first page)
+    const hasProgressed = questionsAttempted > 0 || currentPageIndex > 0 || lessonStep === "quiz";
+    
+    if (hasProgressed) {
+      setShowExitConfirm(true);
+    } else {
+      setActiveLessonId(null);
+      resetLessonUIState();
+    }
+  };
+
+  const confirmExit = () => {
+    setShowExitConfirm(false);
+    setActiveLessonId(null);
+    resetLessonUIState();
+  };
+
+  const getTimeLeft = () => {
+    const active = getActiveLesson();
+    if (!active || !lessonStartTime) return "0:00";
+    
+    const durationMinutes = active.lesson.estimatedMinutes;
+    const elapsedSeconds = Math.floor((Date.now() - lessonStartTime) / 1000);
+    const totalSeconds = durationMinutes * 60;
+    const remainingSeconds = Math.max(0, totalSeconds - elapsedSeconds);
+    
+    const mins = Math.floor(remainingSeconds / 60);
+    const secs = remainingSeconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
   const handlePrevPage = () => {
     if (currentPageIndex > 0) {
       const prevPageIndex = currentPageIndex - 1;
@@ -792,6 +825,31 @@ export default function Learn() {
     const exercise = getLessonExercise(lesson.id);
     const multiPageLesson = getMultiPageLesson(lesson.id);
 
+    const exitConfirmDialog = (
+      <Dialog open={showExitConfirm} onOpenChange={setShowExitConfirm}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Exit Lesson?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to exit? Your progress in this session will not be saved.
+              <br />
+              <span className="text-primary font-medium mt-2 block">
+                Estimated time remaining: {getTimeLeft()}
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-2 sm:justify-end">
+            <Button variant="outline" onClick={() => setShowExitConfirm(false)}>
+              Keep Learning
+            </Button>
+            <Button variant="destructive" onClick={confirmExit}>
+              Exit Lesson
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+
     const completionDialog = (
       <Dialog open={showCompletionSummary} onOpenChange={(open) => { if (!open) handleCompletionClose(); }}>
         <DialogContent className="sm:max-w-md">
@@ -995,63 +1053,53 @@ export default function Learn() {
       const canProceed = currentPage.type === "content" || isQuestionAlreadyCompleted || (pageAnswered && pageCorrect);
 
       return (
-        <>
-        <div className="container mx-auto px-4 py-8 max-w-3xl">
-          <Button 
-            variant="ghost" 
-            className="mb-4"
-            onClick={() => setActiveLessonId(null)}
-            data-testid="button-back-to-lessons"
-          >
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            Back to Lessons
-          </Button>
+        <div className="fixed inset-0 z-50 bg-background flex flex-col">
+          {exitConfirmDialog}
+          {completionDialog}
+          <header className="border-b p-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={handleExitLesson}
+                data-testid="button-exit-lesson"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+              <div>
+                <h2 className="font-semibold text-sm line-clamp-1">{lesson.title}</h2>
+                <p className="text-xs text-muted-foreground">{unit.title}</p>
+              </div>
+            </div>
+            <div className="flex-1 max-w-xs mx-4">
+              <Progress value={progressValue} className="h-2" />
+            </div>
+            <div className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+              Page {currentPageIndex + 1} of {totalPages}
+            </div>
+          </header>
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                <span>{unit.title}</span>
-                <ChevronRight className="h-4 w-4" />
-                <span>{section.title}</span>
-              </div>
-              <CardTitle className="text-2xl">
-                {currentPage.type === "content" ? currentPage.title : lesson.title}
-              </CardTitle>
-              <div className="flex flex-wrap items-center gap-3 mt-2">
-                <Badge variant="outline" className="gap-1">
-                  <BookOpen className="h-3 w-3" />
-                  Page {currentPageIndex + 1} of {totalPages}
-                </Badge>
-                <Badge variant="outline" className="gap-1">
-                  <Clock className="h-3 w-3" />
-                  {lesson.estimatedMinutes} min
-                </Badge>
-                {isCompleted && (
-                  <Badge className="bg-tier-beginner gap-1">
-                    <Check className="h-3 w-3" />
-                    Completed
-                  </Badge>
-                )}
-              </div>
-              <Progress value={progressValue} className="h-2 mt-4" />
-            </CardHeader>
-            <CardContent className="space-y-6">
+          <main className="flex-1 overflow-y-auto p-4 md:p-8">
+            <div className="max-w-3xl mx-auto">
               {currentPage.type === "content" 
                 ? renderContentPage(currentPage) 
-                : renderQuestionPage(currentPage)
-              }
-            </CardContent>
-            <CardFooter className="justify-between gap-2">
-              <Button 
-                variant="outline" 
+                : renderQuestionPage(currentPage)}
+            </div>
+          </main>
+
+          <footer className="border-t p-4 bg-muted/30">
+            <div className="max-w-3xl mx-auto flex items-center justify-between">
+              <Button
+                variant="outline"
                 onClick={handlePrevPage}
                 disabled={currentPageIndex === 0}
+                className="gap-1"
                 data-testid="button-prev-page"
               >
-                <ArrowLeft className="h-4 w-4 mr-1" />
+                <ChevronRight className="h-4 w-4 rotate-180" />
                 Previous
               </Button>
-              
+
               <div className="flex gap-2">
                 {currentPage.type === "question" && !pageAnswered && !isQuestionAlreadyCompleted && (
                   <Button 
@@ -1093,11 +1141,9 @@ export default function Learn() {
                   </Button>
                 )}
               </div>
-            </CardFooter>
-          </Card>
+            </div>
+          </footer>
         </div>
-        {completionDialog}
-        </>
       );
     }
 
@@ -1105,198 +1151,191 @@ export default function Learn() {
       const currentQ = exercise.questions[exerciseQuestionIndex];
       
       return (
-        <>
-        <div className="container mx-auto px-4 py-8 max-w-3xl">
-          <Button 
-            variant="ghost" 
-            className="mb-4"
-            onClick={() => setLessonStep("content")}
-            data-testid="button-back-to-content"
-          >
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            Back to Lesson
-          </Button>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between mb-2">
-                <Badge variant="outline" className="gap-1">
-                  <HelpCircle className="h-3 w-3" />
-                  Question {exerciseQuestionIndex + 1} of {exercise.questions.length}
-                </Badge>
-                <span className="text-sm text-muted-foreground">{lesson.title}</span>
+        <div className="fixed inset-0 z-50 bg-background flex flex-col">
+          {exitConfirmDialog}
+          {completionDialog}
+          <header className="border-b p-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={handleExitLesson}
+                data-testid="button-exit-lesson"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+              <div>
+                <h2 className="font-semibold text-sm line-clamp-1">{lesson.title}</h2>
+                <p className="text-xs text-muted-foreground">{unit.title}</p>
               </div>
-              <Progress 
-                value={((exerciseQuestionIndex + (exerciseAnswered && exerciseCorrect ? 1 : 0)) / exercise.questions.length) * 100} 
-                className="h-2"
-              />
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <h3 className="text-lg font-medium">{currentQ.question}</h3>
-              
-              <div className="space-y-3">
-                {currentQ.options.map((option) => {
-                  const isSelected = exerciseAnswer === option.id;
-                  const isCorrectOption = option.id === currentQ.correctAnswer;
-                  
-                  let optionStyle = "border-muted hover:bg-accent/50";
-                  if (exerciseAnswered) {
-                    if (exerciseCorrect && isCorrectOption) {
-                      optionStyle = "border-tier-beginner bg-tier-beginner/10";
-                    } else if (isSelected && !isCorrectOption) {
-                      optionStyle = "border-destructive bg-destructive/10";
-                    }
-                  } else if (isSelected) {
-                    optionStyle = "border-primary bg-primary/5";
-                  }
-                  
-                  return (
-                    <button
-                      key={option.id}
-                      onClick={() => handleExerciseAnswerSelect(option.id)}
-                      disabled={exerciseAnswered}
-                      className={cn(
-                        "w-full flex items-center gap-3 rounded-lg border-2 p-4 text-left transition-colors",
-                        optionStyle,
-                        exerciseAnswered && "cursor-default"
-                      )}
-                      data-testid={`option-exercise-${option.id}`}
-                    >
-                      <span className={cn(
-                        "flex h-6 w-6 items-center justify-center rounded-full border text-sm font-medium",
-                        exerciseAnswered && exerciseCorrect && isCorrectOption && "bg-tier-beginner text-white border-tier-beginner",
-                        exerciseAnswered && isSelected && !isCorrectOption && "bg-destructive text-white border-destructive"
-                      )}>
-                        {exerciseAnswered && exerciseCorrect && isCorrectOption ? (
-                          <Check className="h-3 w-3" />
-                        ) : exerciseAnswered && isSelected && !isCorrectOption ? (
-                          <CircleX className="h-3 w-3" />
-                        ) : (
-                          option.id.toUpperCase()
-                        )}
-                      </span>
-                      <span>{option.text}</span>
-                    </button>
-                  );
-                })}
-              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="gap-1">
+                <Clock className="h-3 w-3" />
+                {lesson.estimatedMinutes}m
+              </Badge>
+            </div>
+          </header>
 
-              {exerciseAnswered && (
-                <div className={cn(
-                  "rounded-lg p-4",
-                  exerciseCorrect ? "bg-tier-beginner/10 border border-tier-beginner/30" : "bg-destructive/10 border border-destructive/30"
-                )}>
-                  <div className="flex items-center gap-2 mb-2">
-                    {exerciseCorrect ? (
-                      <>
-                        <CircleCheck className="h-5 w-5 text-tier-beginner" />
-                        <span className="font-medium text-tier-beginner">Correct!</span>
-                      </>
-                    ) : (
-                      <>
-                        <CircleX className="h-5 w-5 text-destructive" />
-                        <span className="font-medium text-destructive">Not quite right</span>
-                      </>
-                    )}
+          <main className="flex-1 overflow-y-auto p-4 md:p-8">
+            <div className="max-w-3xl mx-auto">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold">Lesson Quiz</h3>
+                  <div className="text-sm text-muted-foreground">
+                    Question {exerciseQuestionIndex + 1} of {exercise.questions.length}
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    {exerciseCorrect ? currentQ.explanation : "Try again to find the correct answer."}
-                  </p>
                 </div>
-              )}
-            </CardContent>
-            <CardFooter className="justify-end gap-2">
-              {!exerciseAnswered ? (
-                <Button 
-                  onClick={handleCheckAnswer} 
-                  disabled={!exerciseAnswer}
-                  data-testid="button-check-answer"
-                >
-                  Check Answer
-                </Button>
-              ) : exerciseCorrect ? (
-                <Button onClick={handleNextExerciseQuestion} data-testid="button-continue-quiz">
-                  {exerciseQuestionIndex < exercise.questions.length - 1 ? "Next Question" : "Complete Lesson"}
-                  <ChevronRight className="h-4 w-4 ml-1" />
-                </Button>
-              ) : (
-                <Button onClick={handleRetryQuestion} variant="outline" data-testid="button-retry-question">
-                  <RotateCcw className="h-4 w-4 mr-1" />
-                  Try Again
-                </Button>
-              )}
-            </CardFooter>
-          </Card>
+                
+                <Progress value={((exerciseQuestionIndex + 1) / exercise.questions.length) * 100} className="h-2 mb-8" />
+                
+                <div className="space-y-4">
+                  <h4 className="text-lg font-medium">{currentQ.question}</h4>
+                  
+                  <RadioGroup
+                    value={exerciseAnswer || ""}
+                    onValueChange={handleExerciseAnswerSelect}
+                    disabled={exerciseAnswered}
+                    className="space-y-3"
+                  >
+                    {currentQ.options.map((option) => {
+                      const isSelected = exerciseAnswer === option.id;
+                      const isCorrectOption = option.id === currentQ.correctAnswer;
+                      
+                      let optionStyle = "border-muted hover:bg-accent/50";
+                      if (exerciseAnswered) {
+                        if (exerciseCorrect && isCorrectOption) {
+                          optionStyle = "border-tier-beginner bg-tier-beginner/10";
+                        } else if (isSelected && !isCorrectOption) {
+                          optionStyle = "border-destructive bg-destructive/10";
+                        }
+                      } else if (isSelected) {
+                        optionStyle = "border-primary bg-primary/5";
+                      }
+                      
+                      return (
+                        <button
+                          key={option.id}
+                          onClick={() => handleExerciseAnswerSelect(option.id)}
+                          disabled={exerciseAnswered}
+                          className={cn(
+                            "w-full flex items-center gap-3 rounded-lg border-2 p-4 text-left transition-colors",
+                            optionStyle,
+                            exerciseAnswered && "cursor-default"
+                          )}
+                          data-testid={`option-exercise-${option.id}`}
+                        >
+                          <span className={cn(
+                            "flex h-6 w-6 items-center justify-center rounded-full border text-sm font-medium",
+                            exerciseAnswered && exerciseCorrect && isCorrectOption && "bg-tier-beginner text-white border-tier-beginner",
+                            exerciseAnswered && isSelected && !isCorrectOption && "bg-destructive text-white border-destructive"
+                          )}>
+                            {exerciseAnswered && exerciseCorrect && isCorrectOption ? (
+                              <Check className="h-3 w-3" />
+                            ) : exerciseAnswered && isSelected && !isCorrectOption ? (
+                              <CircleX className="h-3 w-3" />
+                            ) : (
+                              option.id.toUpperCase()
+                            )}
+                          </span>
+                          <span>{option.text}</span>
+                        </button>
+                      );
+                    })}
+                  </RadioGroup>
+                </div>
+                
+                <div className="mt-8 flex justify-end gap-3">
+                  {!exerciseAnswered ? (
+                    <Button 
+                      onClick={handleCheckAnswer} 
+                      disabled={!exerciseAnswer}
+                      data-testid="button-check-answer"
+                    >
+                      Check Answer
+                    </Button>
+                  ) : exerciseCorrect ? (
+                    <Button onClick={handleNextExerciseQuestion} data-testid="button-continue-quiz">
+                      {exerciseQuestionIndex < exercise.questions.length - 1 ? "Next Question" : "Complete Lesson"}
+                      <ChevronRight className="h-4 w-4 ml-1" />
+                    </Button>
+                  ) : (
+                    <Button onClick={handleRetryQuestion} variant="outline" data-testid="button-retry-question">
+                      <RotateCcw className="h-4 w-4 mr-1" />
+                      Try Again
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </main>
         </div>
-        {completionDialog}
-        </>
       );
     }
 
     return (
-      <>
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
-        <Button 
-          variant="ghost" 
-          className="mb-4"
-          onClick={() => setActiveLessonId(null)}
-          data-testid="button-back-to-lessons"
-        >
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Lessons
-        </Button>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-              <span>{unit.title}</span>
-              <ChevronRight className="h-4 w-4" />
-              <span>{section.title}</span>
+      <div className="fixed inset-0 z-50 bg-background flex flex-col">
+        {exitConfirmDialog}
+        {completionDialog}
+        <header className="border-b p-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleExitLesson}
+              data-testid="button-exit-lesson"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+            <div>
+              <h2 className="font-semibold text-sm line-clamp-1">{lesson.title}</h2>
+              <p className="text-xs text-muted-foreground">{unit.title}</p>
             </div>
-            <CardTitle className="text-2xl">{lesson.title}</CardTitle>
-            <div className="flex items-center gap-3 mt-2">
-              <Badge variant="outline" className="gap-1">
-                <Clock className="h-3 w-3" />
-                {lesson.estimatedMinutes} min
-              </Badge>
-              {isCompleted && (
-                <Badge className="bg-tier-beginner gap-1">
-                  <Check className="h-3 w-3" />
-                  Completed
-                </Badge>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="gap-1">
+              <Clock className="h-3 w-3" />
+              {lesson.estimatedMinutes}m
+            </Badge>
+          </div>
+        </header>
+
+        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="space-y-6">
+              <div className="prose prose-sm dark:prose-invert max-w-none">
+                <p className="text-base leading-relaxed">{lesson.content}</p>
+              </div>
+
+              {lesson.keyPoints && lesson.keyPoints.length > 0 && (
+                <div className="rounded-lg bg-muted/50 p-4">
+                  <h4 className="font-medium mb-3">Key Points</h4>
+                  <ul className="space-y-2">
+                    {lesson.keyPoints.map((point, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm">
+                        <Check className="h-4 w-4 text-tier-beginner mt-0.5 flex-shrink-0" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {lesson.exercise && (
+                <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <PlayCircle className="h-4 w-4 text-primary" />
+                    Practice Exercise
+                  </h4>
+                  <p className="text-sm text-muted-foreground">{lesson.exercise}</p>
+                </div>
               )}
             </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="prose prose-sm dark:prose-invert max-w-none">
-              <p className="text-base leading-relaxed">{lesson.content}</p>
-            </div>
-
-            {lesson.keyPoints && lesson.keyPoints.length > 0 && (
-              <div className="rounded-lg bg-muted/50 p-4">
-                <h4 className="font-medium mb-3">Key Points</h4>
-                <ul className="space-y-2">
-                  {lesson.keyPoints.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm">
-                      <Check className="h-4 w-4 text-tier-beginner mt-0.5 flex-shrink-0" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {lesson.exercise && (
-              <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
-                <h4 className="font-medium mb-2 flex items-center gap-2">
-                  <PlayCircle className="h-4 w-4 text-primary" />
-                  Practice Exercise
-                </h4>
-                <p className="text-sm text-muted-foreground">{lesson.exercise}</p>
-              </div>
-            )}
-          </CardContent>
-          <CardFooter className="justify-end gap-2">
+          </div>
+        </main>
+        
+        <footer className="border-t p-4 bg-muted/30">
+          <div className="max-w-3xl mx-auto flex justify-end">
             {isCompleted ? (
               <Button onClick={goToNextLesson} variant="outline" data-testid="button-next-lesson">
                 Next Lesson
@@ -1313,11 +1352,9 @@ export default function Learn() {
                 Mark Complete & Continue
               </Button>
             )}
-          </CardFooter>
-        </Card>
+          </div>
+        </footer>
       </div>
-      {completionDialog}
-      </>
     );
   }
 
