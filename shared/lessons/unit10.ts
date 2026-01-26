@@ -6,7 +6,93 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
     pages: [
       {
         type: "content",
-        title: "Introduction: The Red Herring Fallacy",
+        title: "Introduction: Avoiding Personal Attacks",
+        content: "In earlier lessons, you learned about the ad hominem fallacy—attacking the person instead of the argument. Now let's explore the broader principle: why personal attacks undermine your credibility and distract from winning debates.\n\nPersonal attacks are tempting. When you're frustrated or losing, attacking your opponent feels satisfying. But it's almost always counterproductive. Judges penalize it, audiences lose respect, and you waste time you could spend on substance.\n\nIn this lesson, you'll learn why personal attacks fail strategically, how to keep focus on ideas even when provoked, and how to respond professionally when opponents attack you.",
+      },
+      {
+        type: "content",
+        title: "Why Personal Attacks Fail",
+        content: "Personal attacks backfire for several reasons:\n\n**They Don't Refute Anything:**\nCalling someone incompetent doesn't address their argument. The argument stands unrefuted while you've wasted speaking time.\n\n**They Damage Your Credibility:**\nJudges notice when debaters resort to attacks. It suggests you can't win on substance.\n\n**They Lower Speaker Points:**\nMost ballots include professionalism criteria. Attacks cost you points.\n\n**They Distract You:**\nEnergy spent on attacks is energy not spent on winning arguments.\n\n**They Escalate Conflicts:**\nAttacks invite counter-attacks, derailing the debate into mutual hostility.\n\n**The Strategic Reality:**\nEven if an attack lands emotionally, it rarely wins rounds. Focus on arguments wins rounds.",
+        keyPoints: [
+          "Personal attacks don't refute arguments",
+          "They damage your credibility with judges",
+          "Energy spent attacking is wasted on non-winning moves",
+        ],
+      },
+      {
+        type: "content",
+        title: "Common Forms of Personal Attacks",
+        content: "Recognize these attack patterns—both to avoid using them and to identify when opponents use them:\n\n**Direct Insults:**\n'My opponent is clearly inexperienced/ignorant/confused...'\n\n**Condescension:**\n'Let me explain this slowly so my opponent can understand...'\n\n**Questioning Motives:**\n'My opponent only argues this because they want [negative attribution]...'\n\n**Dismissive Language:**\n'That argument is laughable/ridiculous/absurd...'\n\n**Tone Policing:**\n'My opponent seems upset/defensive/aggressive...'\n\n**Credential Attacks:**\n'What does my opponent know about this topic anyway?'\n\n**Subtle Attacks:**\nEven raised eyebrows, sighing, or dismissive gestures count as attacks.\n\n**The Pattern:**\nAll of these focus on the person rather than the argument. All waste time. All can cost you the round.",
+        keyPoints: [
+          "Direct insults, condescension, and dismissiveness are all attacks",
+          "Even subtle gestures can be perceived as attacks",
+          "All forms waste time and hurt your credibility",
+        ],
+      },
+      {
+        type: "question",
+        id: "l10-01-q1",
+        question: "Which response to an opponent's argument is a personal attack?",
+        options: [
+          { id: "a", text: "'This argument fails because the evidence is outdated.'" },
+          { id: "b", text: "'Let me explain this simply so my opponent can understand.'" },
+          { id: "c", text: "'The reasoning here has a logical flaw...'" },
+          { id: "d", text: "'I disagree with this conclusion because...'" }
+        ],
+        correctAnswer: "b",
+        explanation: "Option B is condescending—implying the opponent can't understand complex ideas. This is a personal attack disguised as explanation. The other options focus on the argument itself (evidence, reasoning, conclusions) without attacking the person.",
+      },
+      {
+        type: "content",
+        title: "Keeping Focus on Ideas",
+        content: "Train yourself to stay substantive:\n\n**Reframe Your Thinking:**\nInstead of 'My opponent is wrong,' think 'This argument is wrong.' Arguments are separate from people.\n\n**Use Neutral Language:**\n• 'This claim fails...' not 'They fail to understand...'\n• 'The evidence shows...' not 'Anyone can see...'\n• 'This reasoning is flawed...' not 'This is ridiculous...'\n\n**Prepare Substantive Responses:**\nIf you know opponent arguments, prepare responses to the IDEAS, not the people.\n\n**Pause Before Reacting:**\nWhen frustrated, take a breath. Your next words should attack arguments, not people.\n\n**Focus on Winning:**\nRemind yourself: attacks don't win rounds. Arguments win rounds.\n\n**The Professional Standard:**\nImagine a transcript of your speech being read by future employers. Would you be proud of how you engaged?",
+        keyPoints: [
+          "Separate arguments from the people making them",
+          "Use neutral language focused on claims and evidence",
+          "Pause and refocus when frustrated",
+        ],
+      },
+      {
+        type: "content",
+        title: "Responding When Attacked",
+        content: "When opponents attack you personally:\n\n**1. Don't Retaliate:**\nResist the temptation to attack back. It only escalates and wastes time.\n\n**2. Brief Acknowledgment:**\n'I'll let the judge evaluate that characterization. Let's return to the arguments...'\n\n**3. Redirect to Substance:**\n'Setting that aside, my argument stands unrebutted. Here's why...'\n\n**4. Use It Against Them:**\n'Notice my opponent has resorted to personal attacks rather than addressing my evidence. That tells you something about the strength of their position.'\n\n**5. Stay Calm:**\nVisible frustration gives attackers what they want. Stay composed.\n\n**The Goal:**\nMake the attack cost your opponent, not you. Judges notice who stays professional under pressure.",
+        keyPoints: [
+          "Never retaliate—it escalates and wastes time",
+          "Redirect to substance quickly",
+          "Staying calm signals confidence and professionalism",
+        ],
+      },
+      {
+        type: "question",
+        id: "l10-01-q2",
+        question: "Your opponent calls your argument 'laughable.' What's the best response?",
+        options: [
+          { id: "a", text: "Call their argument laughable in return" },
+          { id: "b", text: "Get visibly angry to show you're offended" },
+          { id: "c", text: "'My opponent finds this funny, but hasn't explained why it's wrong. Let me reinforce why this argument succeeds...'" },
+          { id: "d", text: "Stop debating and walk out" }
+        ],
+        correctAnswer: "c",
+        explanation: "The best response turns the attack against them by noting they haven't actually refuted your argument. Then redirect to substance. This makes them look unprofessional while keeping you focused on winning the debate.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Ideas Over Personalities",
+        content: "You've learned why personal attacks fail and how to keep debates focused on substance.\n\n**Key Takeaways:**\n• Personal attacks waste time and damage your credibility\n• They don't refute arguments—they just distract\n• Keep language neutral and focused on claims, evidence, and reasoning\n• When attacked, redirect to substance without retaliating\n• Staying professional under pressure impresses judges\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the red herring fallacy—how arguments get derailed by irrelevant topics.\n\n**Practice Challenge:**\nReview your recent debate speeches or notes. Did you use any dismissive language? Any attacks, even subtle ones? Practice reframing those moments to focus purely on arguments.",
+        keyPoints: [
+          "Personal attacks are strategically counterproductive",
+          "Focus on ideas, not personalities",
+          "Professional composure wins respect and rounds",
+        ],
+      },
+    ],
+  },
+  {
+    lessonId: "l10-02",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: Red Herring and Irrelevance",
         content: "Watch a political debate, and you'll often see candidates answering questions they weren't asked. This is the red herring fallacy—diverting attention from the actual issue to something irrelevant that's easier to address.\n\nThe term comes from the practice of using smoked fish (red herring) to throw hunting dogs off a scent trail. In argumentation, a red herring diverts the audience from the relevant issue.\n\nIn this lesson, you'll learn to recognize red herrings, understand why they work, and develop strategies for keeping debates focused on what actually matters.",
       },
       {
@@ -31,7 +117,7 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l10-01-q1",
+        id: "l10-02-q1",
         question: "A politician asked 'How will you address climate change?' responds: 'My opponent has a terrible environmental record.' What happened?",
         options: [
           { id: "a", text: "They answered the question directly" },
@@ -54,7 +140,7 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l10-01-q2",
+        id: "l10-02-q2",
         question: "Your opponent introduces a dramatic but irrelevant story instead of addressing your argument. What's the best response?",
         options: [
           { id: "a", text: "Tell your own dramatic story" },
@@ -78,21 +164,126 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       {
         type: "content",
         title: "Conclusion: Staying on the Scent",
-        content: "You've learned to recognize red herrings and keep debates focused on the actual issues.\n\n**Key Takeaways:**\n• Red herring diverts from the actual issue to something irrelevant\n• Watch for subject changes, whataboutism, and emotional diversions\n• Respond by redirecting to the original question\n• Name the tactic so judges recognize it\n• Avoid red herrings yourself by answering directly\n• Signpost when you need to address related points\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the post hoc fallacy—confusing sequence with causation.\n\n**Practice Challenge:**\nWatch a political interview or debate. Count how many times questions are answered with unrelated topics. Notice how interviewers (sometimes) redirect. This awareness makes you a more critical consumer of discourse.",
+        content: "You've learned to recognize red herrings and keep debates focused on the actual issues.\n\n**Key Takeaways:**\n• Red herring diverts from the actual issue to something irrelevant\n• Watch for subject changes, whataboutism, and emotional diversions\n• Respond by redirecting to the original question\n• Name the tactic so judges recognize it\n• Avoid red herrings yourself by answering directly\n• Signpost when you need to address related points\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the differences between academic and popular sources.\n\n**Practice Challenge:**\nWatch a political interview or debate. Count how many times questions are answered with unrelated topics. Notice how interviewers (sometimes) redirect. This awareness makes you a more critical consumer of discourse.",
         keyPoints: [
           "Red herring diverts to irrelevant topics",
           "Track the original question to detect diversions",
           "Answer what's asked, not what you'd prefer",
         ],
       },
+      {
+        type: "practice",
+        id: "l10-02-p1",
+        title: "Identifying and Responding to Red Herrings",
+        description: "Practice recognizing when opponents divert from the actual issue and redirecting the debate back to substance.",
+        practice: {
+          type: "refutation",
+          topic: "Universal basic income should be implemented",
+          targetSkill: "Identifying red herring diversions and refocusing on the original argument",
+          instructions: "Your AI opponent will attempt to divert the debate away from the actual issue using red herring tactics like whataboutism, emotional diversions, or answering different questions. Identify the diversion, name the tactic, and redirect the debate back to the original issue.",
+          exampleResponse: "My opponent has changed the subject from whether UBI reduces poverty to discussing unrelated government programs. This is a red herring. The actual question remains: does UBI effectively reduce poverty? Let me bring us back to the evidence...",
+          successCriteria: [
+            "Correctly identifies the red herring diversion",
+            "Names the specific tactic being used",
+            "Redirects to the original issue clearly",
+            "Notes that the original argument remains unaddressed",
+          ],
+        },
+      },
     ],
   },
   {
-    lessonId: "l10-02",
+    lessonId: "l10-03",
     pages: [
       {
         type: "content",
-        title: "Introduction: Post Hoc Fallacy",
+        title: "Introduction: Academic vs Popular Sources",
+        content: "Not all sources are created equal. In debate, you'll encounter evidence from academic journals, newspapers, magazines, websites, and social media. Understanding the difference between academic and popular sources helps you choose the strongest evidence and attack weaker opponent sources.\n\nAcademic sources go through rigorous peer review; popular sources often don't. Each has appropriate uses, but confusing them—or relying too heavily on weaker sources—can undermine your case.\n\nIn this lesson, you'll learn to distinguish academic from popular sources, understand when each is appropriate, and use this knowledge strategically.",
+      },
+      {
+        type: "content",
+        title: "What Makes a Source 'Academic'",
+        content: "Academic sources have specific characteristics:\n\n**Peer Review:**\nOther experts in the field review the work before publication. They check methodology, evidence, and conclusions. This catches errors and ensures quality.\n\n**Scholarly Credentials:**\nAuthors are typically professors, researchers, or experts with relevant advanced degrees.\n\n**Citations and References:**\nAcademic work cites its sources extensively, allowing readers to verify claims.\n\n**Specialized Language:**\nWritten for experts, using field-specific terminology.\n\n**Published in Journals:**\nAppears in academic journals, not general-interest publications.\n\n**Examples:**\n• Journal of Political Economy\n• Nature, Science, The Lancet\n• American Economic Review\n• Peer-reviewed university press books\n\n**The Standard:**\nPeer review doesn't guarantee truth, but it does ensure expert scrutiny before publication.",
+        keyPoints: [
+          "Peer review ensures expert scrutiny",
+          "Academic authors have relevant credentials",
+          "Extensive citations allow verification",
+        ],
+      },
+      {
+        type: "content",
+        title: "What Makes a Source 'Popular'",
+        content: "Popular sources have different characteristics:\n\n**No Peer Review:**\nEditors review for style and basic accuracy, but not with academic rigor.\n\n**General Audience:**\nWritten for non-specialists; avoids jargon.\n\n**Journalist Authors:**\nOften written by journalists rather than subject-matter experts.\n\n**Current Events Focus:**\nNews and magazines cover recent events quickly.\n\n**Examples of Popular Sources:**\n• Newspapers: New York Times, Wall Street Journal\n• Magazines: The Economist, Time, Newsweek\n• Websites: News sites, blogs, opinion pages\n• Television: News broadcasts, documentaries\n\n**Not Automatically Bad:**\nQuality popular sources (major newspapers, respected magazines) can be excellent for:\n• Current events\n• Summaries of academic research\n• Expert opinion pieces\n• Data and statistics\n\nThe key is knowing what you're using and why.",
+        keyPoints: [
+          "Popular sources lack peer review",
+          "Written for general audiences by journalists",
+          "Can be excellent for current events and summaries",
+        ],
+      },
+      {
+        type: "question",
+        id: "l10-03-q1",
+        question: "What's the main difference between academic and popular sources?",
+        options: [
+          { id: "a", text: "Academic sources are always right; popular sources are always wrong" },
+          { id: "b", text: "Academic sources undergo peer review by experts; popular sources typically don't" },
+          { id: "c", text: "Popular sources are more reliable because journalists are objective" },
+          { id: "d", text: "There's no meaningful difference between them" }
+        ],
+        correctAnswer: "b",
+        explanation: "The key difference is peer review. Academic sources are reviewed by other experts in the field before publication, which catches errors and ensures methodological rigor. Popular sources typically undergo editorial review but not expert peer review.",
+      },
+      {
+        type: "content",
+        title: "When to Use Each Type",
+        content: "Match source type to your purpose:\n\n**Use Academic Sources For:**\n• Causal claims (X causes Y)\n• Disputed facts requiring rigorous proof\n• Technical or scientific topics\n• Foundational claims your case depends on\n• When opponents might challenge methodology\n\n**Use Popular Sources For:**\n• Current events and recent news\n• Expert opinions and analysis (op-eds by experts)\n• Accessible explanations of complex topics\n• Statistics from reputable organizations\n• Historical context and background\n\n**The Hierarchy:**\n1. Peer-reviewed research (strongest for empirical claims)\n2. Expert analysis in quality publications\n3. Major newspaper reporting (good for facts, weaker for causation)\n4. Magazine articles and websites (verify carefully)\n5. Blogs and social media (rarely acceptable alone)\n\n**Combining Sources:**\nOften the best approach combines: academic research for core claims, quality journalism for context and accessibility.",
+        keyPoints: [
+          "Academic for causal claims and disputed facts",
+          "Popular for current events and accessible explanation",
+          "Combine both for strongest cases",
+        ],
+      },
+      {
+        type: "content",
+        title: "Attacking Source Quality",
+        content: "Use source type strategically:\n\n**When Opponents Use Popular Sources:**\n'My opponent cites a newspaper article, not peer-reviewed research. Journalists aren't subject-matter experts, and this hasn't undergone rigorous review.'\n\n**When Opponents Use Weak Sources:**\n'This comes from a blog/opinion piece/advocacy site, not a credible research source.'\n\n**Defending Your Sources:**\n'This is from a peer-reviewed study in [respected journal], conducted by researchers at [institution].'\n\n**Anticipate Attacks:**\nIf using popular sources, explain why:\n'While this is a newspaper report, it cites [underlying study/official statistics/expert interviews], which I'll explain...'\n\n**The Balance:**\nDon't be a source snob—quality popular sources are legitimate. But do distinguish between the weight different sources carry.",
+        keyPoints: [
+          "Challenge opponent reliance on non-academic sources",
+          "Defend your own source choices",
+          "Quality popular sources are legitimate for appropriate uses",
+        ],
+      },
+      {
+        type: "question",
+        id: "l10-03-q2",
+        question: "When is a newspaper article an appropriate source in debate?",
+        options: [
+          { id: "a", text: "Never—only academic sources should be used" },
+          { id: "b", text: "For current events, reporting facts, or when it cites underlying academic research" },
+          { id: "c", text: "Only when you can't find anything else" },
+          { id: "d", text: "For all types of claims equally" }
+        ],
+        correctAnswer: "b",
+        explanation: "Newspaper articles are appropriate for current events, factual reporting, and when they cite underlying research or expert sources. They're less appropriate for complex causal claims that require peer-reviewed research. Know what you're using and why.",
+      },
+      {
+        type: "content",
+        title: "Conclusion: Source Literacy",
+        content: "You've learned to distinguish academic from popular sources and use each appropriately.\n\n**Key Takeaways:**\n• Academic sources undergo peer review; popular sources typically don't\n• Academic sources are strongest for causal and empirical claims\n• Popular sources work for current events and accessible explanations\n• Quality popular sources (major newspapers, respected magazines) are legitimate\n• Combine sources strategically for the strongest case\n• Attack weak sources; defend your source choices\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the post hoc fallacy—confusing sequence with causation.\n\n**Practice Challenge:**\nFor your next debate topic, find one academic source and one popular source on the same issue. What does each provide? How would you use them together?",
+        keyPoints: [
+          "Academic for rigor; popular for accessibility and currency",
+          "Know the hierarchy and appropriate uses",
+          "Strategic source selection strengthens your case",
+        ],
+      },
+    ],
+  },
+  {
+    lessonId: "l10-04",
+    pages: [
+      {
+        type: "content",
+        title: "Introduction: Post Hoc Ergo Propter Hoc",
         content: "I wore my lucky socks, and we won the game. My lucky socks caused the victory!\n\nThis is the post hoc fallacy (Latin: 'post hoc ergo propter hoc'—after this, therefore because of this). It assumes that because event B followed event A, A must have caused B.\n\nThis fallacy is closely related to correlation versus causation, but focuses specifically on temporal sequence. Just because something happened first doesn't mean it caused what came next.\n\nIn this lesson, you'll learn to recognize post hoc reasoning, understand why sequence doesn't prove causation, and distinguish legitimate causal claims from fallacious ones.",
       },
       {
@@ -117,7 +308,7 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l10-02-q1",
+        id: "l10-04-q1",
         question: "Someone says: 'I started meditating, and then my headaches stopped. Meditation cured my headaches!' What fallacy might this be?",
         options: [
           { id: "a", text: "Strawman" },
@@ -150,7 +341,7 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l10-02-q2",
+        id: "l10-04-q2",
         question: "A politician claims: 'Since I took office, unemployment dropped. My policies work!' What's the best response?",
         options: [
           { id: "a", text: "Accept their claim since unemployment did drop" },
@@ -184,7 +375,7 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
     ],
   },
   {
-    lessonId: "l10-03",
+    lessonId: "l10-05",
     pages: [
       {
         type: "content",
@@ -213,7 +404,7 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "question",
-        id: "l10-03-q1",
+        id: "l10-05-q1",
         question: "Which is the better citation in a debate speech?",
         options: [
           { id: "a", text: "'Studies show this is true'" },
@@ -236,17 +427,17 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
-        title: "Written Briefs and Cards",
-        content: "For evidence files and briefs:\n\n**Standard Format:**\n• Tag line (your claim in a sentence)\n• Citation header (author, credentials, source, date)\n• Evidence text (often with highlights/underlines)\n\n**Example Card:**\n```\nClimate change is accelerating beyond projections\n\nDr. Sarah Chen, climate scientist at NASA, writing for Science, 2023\n\n\"Recent data shows that ice sheet melt is occurring 50% faster than models predicted just five years ago. This acceleration suggests [highlighted text continues]...\"\n```\n\n**Formatting Tips:**\n• Bold or all-caps the tag line\n• Include full citations for verification\n• Highlight or underline what you'll read\n• Note page numbers and access dates for websites\n\n**Organization:**\n• Organize by argument or topic\n• Make evidence easy to find quickly\n• Include table of contents for long files",
+        title: "Avoiding Citation Errors",
+        content: "Common mistakes to avoid:\n\n**Vague Citations:**\n'Studies show...' 'Experts say...' → Which studies? Which experts?\n\n**Misrepresentation:**\nDon't twist sources to say what they don't. Quote accurately.\n\n**Missing Context:**\nDon't quote out of context in ways that distort meaning.\n\n**Outdated Sources:**\nOld evidence may be wrong. Note dates; prefer recent sources.\n\n**Power Tagging:**\nDon't make your tag line stronger than the evidence supports.\n\n**Insufficient Credentials:**\n'John Smith says...' tells us nothing. Who is John Smith?\n\n**Fabrication:**\nNever make up sources. This can result in disqualification.\n\n**The Test:**\nWould the original author agree that you've represented their work fairly? If not, revise.",
         keyPoints: [
-          "Standard format: tag, citation, evidence text",
-          "Include enough detail for verification",
-          "Highlight what you'll actually read",
+          "Avoid vague 'studies show' citations",
+          "Don't misrepresent or fabricate sources",
+          "Power-tagged claims should match evidence strength",
         ],
       },
       {
         type: "question",
-        id: "l10-03-q2",
+        id: "l10-05-q2",
         question: "Why should you include dates in your citations?",
         options: [
           { id: "a", text: "Dates aren't important for citations" },
@@ -259,194 +450,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
-        title: "Avoiding Citation Errors",
-        content: "Common mistakes to avoid:\n\n**Vague Citations:**\n'Studies show...' 'Experts say...' → Which studies? Which experts?\n\n**Misrepresentation:**\nDon't twist sources to say what they don't. Quote accurately.\n\n**Missing Context:**\nDon't quote out of context in ways that distort meaning.\n\n**Outdated Sources:**\nOld evidence may be wrong. Note dates; prefer recent sources.\n\n**Power Tagging:**\nDon't make your tag line stronger than the evidence supports.\n\n**Insufficient Credentials:**\n'John Smith says...' tells us nothing. Who is John Smith?\n\n**Fabrication:**\nNever make up sources. This can result in disqualification.\n\n**The Test:**\nWould the original author agree that you've represented their work fairly? If not, revise.",
-        keyPoints: [
-          "Avoid vague 'studies show' citations",
-          "Don't misrepresent or fabricate sources",
-          "Power-tagged claims should match evidence strength",
-        ],
-      },
-      {
-        type: "content",
         title: "Conclusion: Evidence Presented Well",
-        content: "You've learned best practices for citation—ensuring your evidence is credible, verifiable, and persuasive.\n\n**Key Takeaways:**\n• Citation builds credibility and enables verification\n• Include source, author, credentials, and date\n• Verbal citations should be concise but complete\n• Written briefs use standard tag-cite-evidence format\n• Avoid vague citations, misrepresentation, and outdated sources\n• Represent sources fairly and accurately\n\n**Looking Ahead:**\nIn the next lesson, we'll explore ethical considerations in debate—fairness, honesty, and intellectual integrity.\n\n**Practice Challenge:**\nReview your current evidence files. Do all cards have complete citations? Could someone verify each source? Improve any that fall short.",
+        content: "You've learned best practices for citation—ensuring your evidence is credible, verifiable, and persuasive.\n\n**Key Takeaways:**\n• Citation builds credibility and enables verification\n• Include source, author, credentials, and date\n• Verbal citations should be concise but complete\n• Avoid vague citations, misrepresentation, and outdated sources\n• Represent sources fairly and accurately\n\n**Looking Ahead:**\nIn the next lesson, we'll examine false cause fallacies and the relationship between correlation and causation.\n\n**Practice Challenge:**\nReview evidence cards you've prepared. Do they include all essential citation elements? Could someone find and verify each source?",
         keyPoints: [
-          "Complete citations include source, author, credentials, date",
-          "Format consistently in written briefs",
-          "Represent sources accurately and fairly",
-        ],
-      },
-    ],
-  },
-  {
-    lessonId: "l10-04",
-    pages: [
-      {
-        type: "content",
-        title: "Introduction: Ethics in Debate",
-        content: "Debate is competitive, but it operates within ethical boundaries. There are ways to win that undermine the activity, your integrity, and the educational value of the experience.\n\nUnderstanding debate ethics helps you compete effectively while maintaining your integrity and contributing to a healthy debate community.\n\nThis lesson explores the ethical principles that guide fair and honest debate, from evidence ethics to competitive fairness to sportsmanship.",
-      },
-      {
-        type: "content",
-        title: "Evidence Ethics",
-        content: "Evidence integrity is foundational:\n\n**Never Fabricate:**\nMaking up sources, quotes, or data is the most serious ethical violation. Consequences can include disqualification and reputation damage.\n\n**Quote Accurately:**\nDon't alter words to change meaning. If you edit for length, use ellipses and don't distort the meaning.\n\n**Cite Fully:**\nInclude enough information for verification. Hiding sources suggests you don't want scrutiny.\n\n**Represent Fairly:**\nDon't claim a source says more than it does. Your tag line shouldn't overstate the evidence.\n\n**Disclose Methodology:**\nIf asked, be willing to share the full source. Hiding evidence creates suspicion.\n\n**Update Outdated Evidence:**\nIf you learn your evidence is outdated or refuted, stop using it.\n\n**The Standard:**\nWould you be comfortable if your evidence practices were fully transparent to judges, opponents, and the community?",
-        keyPoints: [
-          "Never fabricate evidence",
-          "Quote accurately and represent fairly",
-          "Be willing to share and verify sources",
-        ],
-      },
-      {
-        type: "content",
-        title: "Competitive Fairness",
-        content: "Fair competition makes debate worthwhile:\n\n**Time Limits:**\nRespect speech times. Significantly exceeding time is unfair.\n\n**Preparation Violations:**\nDon't use prep time when it's not your turn. Don't use technology to cheat during rounds.\n\n**Disclosure:**\nMany circuits have disclosure norms. Follow them—they promote preparation and fairness.\n\n**Accessibility:**\nMake your arguments comprehensible. Deliberately incomprehensible strategies harm the activity.\n\n**Opponent Treatment:**\n• Shake hands before and after\n• Don't be deliberately rude or hostile\n• Handle disputes professionally\n\n**Judge Relations:**\n• Accept decisions gracefully\n• Don't argue with judges publicly\n• Use proper channels for legitimate concerns",
-        keyPoints: [
-          "Respect time limits and rules",
-          "Follow circuit norms on disclosure",
-          "Treat opponents and judges with respect",
-        ],
-      },
-      {
-        type: "question",
-        id: "l10-04-q1",
-        question: "What should you do if you discover that evidence you've been using has been refuted by newer research?",
-        options: [
-          { id: "a", text: "Keep using it since you've already prepared with it" },
-          { id: "b", text: "Stop using the outdated evidence and update your files" },
-          { id: "c", text: "Hide the newer research so opponents don't find it" },
-          { id: "d", text: "Change the date on your evidence" }
-        ],
-        correctAnswer: "b",
-        explanation: "Ethical debaters update their evidence when they learn it's outdated or refuted. Continuing to use evidence you know is wrong, hiding contrary research, or altering dates are all serious ethical violations. Update your files with current, accurate evidence.",
-      },
-      {
-        type: "content",
-        title: "Intellectual Honesty",
-        content: "Honest argumentation builds trust and skills:\n\n**Don't Strawman:**\nRepresent opponents' arguments accurately. Attacking distorted versions is intellectually dishonest.\n\n**Acknowledge Valid Points:**\nPretending opponents said nothing worthwhile is dishonest. Grant what deserves granting.\n\n**Admit Uncertainty:**\nDon't claim more certainty than evidence supports. Use appropriate qualifiers.\n\n**Take Positions Seriously:**\nEven if you disagree with the side you're assigned, argue it seriously and fairly.\n\n**Self-Awareness:**\nNotice when you're rationalizing rather than reasoning. Check your own biases.\n\n**The Growth Mindset:**\nDebate is educational. Winning through dishonest tactics teaches bad habits and undermines your development.",
-        keyPoints: [
-          "Represent opponents accurately",
-          "Acknowledge valid points and uncertainty",
-          "Debate assigned sides seriously and fairly",
-        ],
-      },
-      {
-        type: "content",
-        title: "Community Responsibility",
-        content: "You're part of a community:\n\n**Mentorship:**\nHelp younger debaters learn. Share knowledge and support growth.\n\n**Positive Culture:**\nYour behavior shapes the community. Model the culture you want.\n\n**Inclusion:**\nMake debate welcoming. Don't tolerate harassment or exclusion.\n\n**Constructive Criticism:**\nGive feedback that helps others improve. Be honest but kind.\n\n**Tournament Conduct:**\n• Be punctual\n• Follow rules\n• Thank judges and tournament staff\n• Clean up after yourself\n\n**Long-Term Perspective:**\nYour reputation follows you. The community is small. Character matters more than any single round.",
-        keyPoints: [
-          "Support newer debaters",
-          "Model positive behavior",
-          "Build an inclusive, supportive community",
-        ],
-      },
-      {
-        type: "question",
-        id: "l10-04-q2",
-        question: "What's the main reason to maintain ethical standards in debate even when you could win by cutting corners?",
-        options: [
-          { id: "a", text: "There's no benefit to ethics if you can get away with violations" },
-          { id: "b", text: "Ethics build skills, reputation, and a healthy community that benefits everyone" },
-          { id: "c", text: "Ethics only matter if you get caught" },
-          { id: "d", text: "Winning is all that matters" }
-        ],
-        correctAnswer: "b",
-        explanation: "Ethical conduct builds genuine skills (dishonest wins don't teach you), protects your reputation (the community is small and memories long), and maintains a healthy activity that benefits everyone. Short-term gains from violations create long-term costs.",
-      },
-      {
-        type: "content",
-        title: "Conclusion: Integrity in Competition",
-        content: "You've learned that ethical conduct is foundational to meaningful debate.\n\n**Key Takeaways:**\n• Evidence ethics: Never fabricate; quote accurately; represent fairly\n• Competitive fairness: Respect rules, opponents, and judges\n• Intellectual honesty: Don't strawman; acknowledge valid points; admit uncertainty\n• Community responsibility: Mentor, model positive behavior, build inclusion\n• Long-term perspective: Character and reputation matter more than single wins\n\n**Looking Ahead:**\nIn the next lesson, we'll discuss strategies for success in competitive debate—practical tips for performing your best.\n\n**Practice Reflection:**\nThink about your own debate practices. Where are you strong ethically? Where could you improve? Honest self-assessment is itself an ethical practice.",
-        keyPoints: [
-          "Ethical conduct is foundational",
-          "Build skills and reputation through integrity",
-          "Contribute to a healthy debate community",
-        ],
-      },
-    ],
-  },
-  {
-    lessonId: "l10-05",
-    pages: [
-      {
-        type: "content",
-        title: "Introduction: Strategies for Success",
-        content: "You've learned a tremendous amount about argumentation, evidence, and debate skills. Now let's focus on practical strategies for performing your best in competition.\n\nSuccess in debate combines preparation, execution, and adaptation. The best debaters don't just know the material—they know how to perform under pressure, adapt to circumstances, and present their best selves.\n\nThis lesson offers practical advice for competitive success, drawing together skills you've developed throughout the curriculum.",
-      },
-      {
-        type: "content",
-        title: "Preparation Strategies",
-        content: "Thorough preparation is the foundation of success:\n\n**Research Deeply:**\n• Understand both sides of your topics\n• Find your best evidence on key arguments\n• Anticipate what opponents will run\n\n**Organize Effectively:**\n• Clear evidence files you can navigate quickly\n• Briefs organized by topic and argument\n• Prepped blocks against common positions\n\n**Practice Out Loud:**\n• Time your speeches\n• Practice with partners or alone\n• Get comfortable with your cases\n\n**Preparation Rituals:**\n• Consistent routines reduce anxiety\n• Review key points before rounds\n• Warm up your voice and body\n\n**The Day Before:**\n• Don't cram—review, then rest\n• Get good sleep\n• Prepare materials and clothes\n\n**The Day Of:**\n• Arrive early\n• Check room assignments\n• Warm up physically and mentally",
-        keyPoints: [
-          "Research both sides thoroughly",
-          "Organize evidence for quick access",
-          "Practice out loud and time yourself",
-        ],
-      },
-      {
-        type: "content",
-        title: "In-Round Execution",
-        content: "How you perform in the round matters:\n\n**Flowing Well:**\n• Accurate notes capture what you need to respond to\n• Use abbreviations you understand\n• Track dropped arguments on both sides\n\n**Time Management:**\n• Plan speech structure before speaking\n• Know what's essential vs. optional\n• End with your strongest points, not rushed conclusions\n\n**Adaptability:**\n• Adjust to the judge and opponent\n• Respond to what's actually said, not your prepared responses\n• Read the room\n\n**Strategic Choices:**\n• Choose which arguments to emphasize\n• Drop weak points instead of wasting time\n• Focus on what wins the round\n\n**Stay Composed:**\n• Handle unexpected arguments calmly\n• Don't show frustration\n• Project confidence even when struggling\n\n**Cross-Examination:**\n• Have specific goals for each cross-ex\n• Listen to answers before following up\n• Stay in control without being hostile",
-        keyPoints: [
-          "Flow accurately to capture key arguments",
-          "Manage time strategically",
-          "Adapt to what's actually happening in the round",
-        ],
-      },
-      {
-        type: "question",
-        id: "l10-05-q1",
-        question: "What's the best approach when your opponent runs an argument you didn't anticipate?",
-        options: [
-          { id: "a", text: "Panic and give up" },
-          { id: "b", text: "Stay calm, apply your critical thinking skills, and respond to the argument as best you can" },
-          { id: "c", text: "Pretend they didn't make the argument" },
-          { id: "d", text: "Attack them personally" }
-        ],
-        correctAnswer: "b",
-        explanation: "Unexpected arguments happen. The best response is to stay calm and apply your critical thinking skills—evaluate the argument's logic, evidence, and implications, then respond as best you can. This is a test of genuine debate skills, not just preparation.",
-      },
-      {
-        type: "content",
-        title: "Mental Game",
-        content: "Mindset affects performance:\n\n**Confidence Without Arrogance:**\n• Believe in your preparation\n• Respect opponents without being intimidated\n• Confidence is earned through preparation\n\n**Handling Nerves:**\n• Some anxiety is normal and helpful\n• Deep breaths calm the nervous system\n• Focus on the task, not the stakes\n\n**Bouncing Back:**\n• Losses happen to everyone\n• Analyze what you can improve\n• Don't dwell during tournaments\n\n**Focus:**\n• Be fully present in each round\n• Don't think about past rounds or future scenarios\n• Give this round your full attention\n\n**Self-Talk:**\n• Replace 'I can't' with 'I'll try my best'\n• Notice and challenge negative thoughts\n• Treat yourself as you'd treat a teammate",
-        keyPoints: [
-          "Confidence comes from preparation",
-          "Manage nerves with breathing and focus",
-          "Learn from losses without dwelling",
-        ],
-      },
-      {
-        type: "content",
-        title: "Long-Term Development",
-        content: "Getting better over time:\n\n**Seek Feedback:**\n• Ask judges for RFDs (reasons for decision)\n• Request feedback from coaches and teammates\n• Watch recordings of yourself\n\n**Learn from Losses:**\n• What arguments caught you off-guard?\n• What evidence do you need?\n• What skills need work?\n\n**Study Others:**\n• Watch successful debaters\n• What do they do well?\n• Adapt techniques to your style\n\n**Expand Your Range:**\n• Try different argument styles\n• Practice against varied opponents\n• Get outside your comfort zone\n\n**Teach Others:**\n• Teaching clarifies your own understanding\n• Helping others builds community\n• Mentorship develops leadership skills\n\n**Balanced Approach:**\nDebate is important, but so is rest, relationships, and other pursuits. Sustainable success requires balance.",
-        keyPoints: [
-          "Seek feedback and learn from losses",
-          "Study and adapt from successful debaters",
-          "Teach others to deepen your own understanding",
-        ],
-      },
-      {
-        type: "question",
-        id: "l10-05-q2",
-        question: "What's the most productive thing to do after losing a debate round?",
-        options: [
-          { id: "a", text: "Blame the judge and opponent" },
-          { id: "b", text: "Analyze what you could have done better and prepare to improve" },
-          { id: "c", text: "Give up on debate entirely" },
-          { id: "d", text: "Avoid thinking about it ever again" }
-        ],
-        correctAnswer: "b",
-        explanation: "Losses are learning opportunities. Analyze what happened: What arguments worked? What didn't? What would you do differently? This growth mindset leads to improvement. Blaming others or avoiding reflection prevents learning.",
-      },
-      {
-        type: "content",
-        title: "Conclusion: The Path Forward",
-        content: "You've now learned practical strategies for competitive success.\n\n**Key Takeaways:**\n• Preparation: research, organize, practice, and rest\n• Execution: flow well, manage time, adapt, stay composed\n• Mental game: confidence, handling nerves, bouncing back\n• Development: seek feedback, learn from losses, teach others\n• Balance: debate matters, but so does the rest of life\n\n**Looking Ahead:**\nIn the next lesson, we'll conduct a comprehensive review of Section 1, consolidating everything you've learned in Units 1-10.\n\n**Continued Growth:**\nRemember: improvement is ongoing. Every round teaches something. Stay curious, stay humble, and keep getting better.",
-        keyPoints: [
-          "Success combines preparation, execution, and mindset",
-          "Learn from feedback and losses",
-          "Balance intense effort with rest and perspective",
+          "Citation builds credibility and enables verification",
+          "Include all essential elements: source, author, date",
+          "Represent sources fairly and accurately",
         ],
       },
     ],
@@ -456,104 +465,103 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
     pages: [
       {
         type: "content",
-        title: "Introduction: Section 1 Comprehensive Review",
-        content: "Congratulations! You've completed Units 1-10—the entire Beginner section of the Debate Curriculum. This review lesson consolidates the major concepts from all ten units, preparing you to advance to Intermediate content.\n\nYou've covered an enormous amount of ground: what debate is, how to structure arguments, logical fallacies, evidence evaluation, persuasion techniques, delivery skills, and ethical practice. Let's bring it all together.",
+        title: "Introduction: False Cause and Correlation vs Causation",
+        content: "Countries that eat more chocolate have more Nobel Prize winners. Does chocolate make you smarter?\n\nOf course not. This is a classic example of confusing correlation (two things that happen together) with causation (one thing causing another). Both chocolate consumption and Nobel Prizes correlate with wealth and education—but chocolate doesn't cause Nobel Prizes.\n\nIn this lesson, you'll master the distinction between correlation and causation, learn to identify false cause fallacies, and develop strategies for making and attacking causal claims in debate.",
       },
       {
         type: "content",
-        title: "Core Argument Skills (Units 1-2)",
-        content: "**Unit 1: Foundations**\n• Debate vs. argument: structured, evidence-based reasoning\n• The role of logic, evidence, and persuasion\n• Different debate formats and their characteristics\n\n**Unit 2: Argument Construction**\n• Claim-Evidence-Reasoning structure\n• The Toulmin model: Claim, Data, Warrant, Backing, Qualifier, Rebuttal\n• Types of claims: fact, value, policy\n• Building complete, logical arguments\n\n**Key Skills:**\n• Structure every argument with CER\n• Make warrants explicit\n• Choose appropriate claim types for your purpose",
+        title: "Correlation vs Causation: The Basics",
+        content: "Understanding the difference is crucial:\n\n**Correlation:**\nTwo things occur together or change together. When X increases, Y also increases (or decreases). This shows a relationship but not direction or cause.\n\n**Causation:**\nX actually produces Y. Changes in X lead to changes in Y through a causal mechanism.\n\n**The Key Insight:**\nCorrelation is necessary for causation but not sufficient. Just because two things happen together doesn't mean one causes the other.\n\n**Why Correlation Happens Without Causation:**\n• Coincidence: Random chance\n• Reverse causation: Y actually causes X\n• Common cause: Z causes both X and Y\n• Confounding variables: Other factors explain the relationship\n\n**Example:**\n• Correlation: Ice cream sales and drowning deaths both increase in summer\n• Not causation: Ice cream doesn't cause drowning\n• Common cause: Hot weather causes both",
         keyPoints: [
-          "Debate uses structured, evidence-based reasoning",
-          "Claim-Evidence-Reasoning is the fundamental structure",
-          "Toulmin provides a comprehensive argument framework",
+          "Correlation means occurring together",
+          "Causation means one produces the other",
+          "Correlation doesn't prove causation",
         ],
       },
       {
         type: "content",
-        title: "Research and Evidence (Units 3-4)",
-        content: "**Unit 3: Research Skills**\n• Finding quality sources across platforms\n• The CRAAP test: Currency, Relevance, Authority, Accuracy, Purpose\n• Primary vs. secondary sources\n\n**Unit 4: Evidence Evaluation**\n• Source credibility assessment\n• Statistical evidence: sample size, significance, effect size\n• Distinguishing correlation from causation\n\n**Key Skills:**\n• Evaluate every source with CRAAP\n• Prefer peer-reviewed, recent, unconflicted sources\n• Understand what statistics actually show",
+        title: "Common False Cause Patterns",
+        content: "Recognize these fallacious reasoning patterns:\n\n**Post Hoc (After, Therefore Because):**\n'B happened after A, so A caused B.'\nWe covered this in detail—sequence doesn't prove causation.\n\n**Cum Hoc (With, Therefore Because):**\n'A and B happen together, so A causes B.'\nCorrelation alone doesn't establish cause.\n\n**Ignoring Reverse Causation:**\n'Successful people read a lot, so reading causes success.'\nMaybe success provides time and resources for reading.\n\n**Ignoring Common Causes:**\n'Countries with more doctors have more disease. Doctors cause disease!'\nNo—both increase with population size.\n\n**Oversimplification:**\n'The only difference was X, so X caused Y.'\nThere are usually many differences.\n\n**Single Study Causation:**\n'This one study shows A causes B!'\nSingle studies can be wrong; look for replication.",
         keyPoints: [
-          "Apply CRAAP test to all sources",
-          "Know source types and their appropriate uses",
-          "Distinguish correlation from causation",
-        ],
-      },
-      {
-        type: "content",
-        title: "Logical Fallacies (Units 5-7)",
-        content: "**Major Fallacies Covered:**\n• Ad hominem: Attacking the person, not the argument\n• Strawman: Misrepresenting opponent's position\n• False dichotomy: Presenting only two options when more exist\n• Slippery slope: Assuming inevitable chain without evidence\n• Appeal to ignorance: Arguing from lack of evidence\n• Post hoc: Assuming sequence proves causation\n• Red herring: Diverting from the actual issue\n• Appeal to tradition/novelty: Age as evidence\n• Appeal to emotion: Substituting feeling for logic\n\n**Key Skills:**\n• Recognize fallacies in opponent arguments\n• Avoid committing them yourself\n• Attack the fallacy, not just the content",
-        keyPoints: [
-          "Recognize major fallacies",
-          "Name fallacies when responding",
-          "Keep your own arguments fallacy-free",
+          "Post hoc confuses sequence with cause",
+          "Cum hoc confuses correlation with cause",
+          "Consider reverse causation and common causes",
         ],
       },
       {
         type: "question",
         id: "l10-06-q1",
-        question: "Which fallacy involves attacking an opponent's character rather than their argument?",
+        question: "A study finds that children who eat breakfast get better grades. What should you consider?",
         options: [
-          { id: "a", text: "Strawman" },
-          { id: "b", text: "Ad hominem" },
-          { id: "c", text: "False dichotomy" },
-          { id: "d", text: "Post hoc" }
+          { id: "a", text: "Eating breakfast causes better grades" },
+          { id: "b", text: "Better grades might cause breakfast eating" },
+          { id: "c", text: "A third factor (like family stability) might cause both" },
+          { id: "d", text: "Both B and C should be considered before concluding causation" }
         ],
-        correctAnswer: "b",
-        explanation: "Ad hominem attacks the person rather than their argument. It's fallacious because a person's character doesn't determine whether their argument is valid. Always respond to arguments, not personal characteristics.",
+        correctAnswer: "d",
+        explanation: "Before assuming breakfast causes grades, consider alternatives. Maybe doing well in school motivates morning routines (reverse causation). More likely, factors like family stability, income, and parenting affect both breakfast habits and academic performance (common cause). Correlation alone doesn't prove breakfast causes grades.",
       },
       {
         type: "content",
-        title: "Delivery and Presence (Units 5, 6)",
-        content: "**Non-Verbal Communication:**\n• Posture: Stand balanced, shoulders back, head level\n• Eye contact: 70-80% with judges\n• Gestures: Match content, avoid nervous habits\n• Movement: Purposeful, not pacing\n• Facial expressions: Match content, stay professional\n\n**Speed and Clarity:**\n• Adapt to your judge (lay vs. flow)\n• Signposting helps listeners follow structure\n• Speed variation emphasizes key points\n\n**Key Skills:**\n• Integrate all non-verbal elements authentically\n• Match speaking pace to audience\n• Project confidence through presence",
+        title: "Establishing Causation",
+        content: "What does prove causation?\n\n**Controlled Experiments:**\nRandomly assign people to treatment and control groups. If only the treated group shows the effect, causation is supported.\n\n**Multiple Studies:**\nWhen many studies with different methods find the same result, causation becomes more credible.\n\n**Mechanism:**\nA plausible explanation of HOW X causes Y strengthens causal claims.\n\n**Dose-Response:**\nMore X leads to more Y in a consistent pattern.\n\n**Temporal Order:**\nThe cause must precede the effect (necessary but not sufficient).\n\n**Ruling Out Alternatives:**\nSystematically eliminating other possible explanations.\n\n**Example of Strong Causation:**\nSmoking causes cancer because: controlled animal studies, consistent epidemiological findings, known mechanism (carcinogens), dose-response (more smoking = more risk), and elimination of confounders.",
         keyPoints: [
-          "Non-verbal communication reinforces your words",
-          "Adapt speed to judge and context",
-          "Confident presence comes from practice",
-        ],
-      },
-      {
-        type: "content",
-        title: "Persuasion and Engagement (Units 8-9)",
-        content: "**Appeals and Persuasion:**\n• Logos: Logic and evidence\n• Ethos: Credibility and authority\n• Pathos: Emotion (supporting logic, not replacing it)\n\n**Expert Testimony:**\n• Match expertise to specific claims\n• Consensus is stronger than individual opinion\n• Check for conflicts of interest\n\n**Intellectual Honesty:**\n• Acknowledge limitations\n• Represent opponents fairly\n• Strategic concessions build credibility\n\n**Key Skills:**\n• Balance logic, credibility, and emotion\n• Use experts appropriately\n• Build trust through honesty",
-        keyPoints: [
-          "Integrate logos, ethos, and pathos",
-          "Evaluate expert qualifications carefully",
-          "Honesty builds credibility",
+          "Controlled experiments are the gold standard",
+          "Mechanism, dose-response, and replication strengthen claims",
+          "Rule out alternative explanations",
         ],
       },
       {
         type: "content",
-        title: "Strategy and Ethics (Unit 10)",
-        content: "**Anticipating Objections:**\n• Preempt likely attacks\n• 'Even if' creates layered defense\n• Strategic concessions strengthen credibility\n\n**Competition Strategies:**\n• Preparation: Research, organize, practice\n• Execution: Flow, time management, adaptation\n• Mental game: Confidence, handling nerves\n\n**Ethics:**\n• Evidence integrity is non-negotiable\n• Fair competition respects rules and opponents\n• Intellectual honesty builds skills and reputation\n\n**Key Skills:**\n• Think ahead to opponent responses\n• Execute under pressure\n• Maintain integrity always",
+        title: "Attacking Causal Claims in Debate",
+        content: "When opponents claim causation:\n\n**Challenge the Evidence Type:**\n'That's correlation, not causation. Just because they happen together doesn't mean one causes the other.'\n\n**Propose Alternatives:**\n'There could be reverse causation: maybe Y causes X. Or a third factor causes both.'\n\n**Demand Mechanism:**\n'How exactly does X cause Y? What's the causal pathway?'\n\n**Question Methodology:**\n'Was this a controlled experiment or just observation? Were there control groups?'\n\n**Find Counterexamples:**\n'If X caused Y, we'd expect [outcome]. But we see [different outcome].'\n\n**Example Attack:**\n'My opponent claims the new policy reduced crime because crime dropped after implementation. But this is post hoc reasoning. Crime was already declining before the policy, similar cities without the policy saw equal declines, and they haven't shown any mechanism by which this policy would affect crime rates.'",
         keyPoints: [
-          "Anticipate objections with 'even if'",
-          "Balance preparation and adaptation",
-          "Ethics are foundational, not optional",
+          "Distinguish correlation from causation",
+          "Propose alternative explanations",
+          "Demand mechanism and controlled evidence",
         ],
       },
       {
         type: "question",
         id: "l10-06-q2",
-        question: "What's the relationship between intellectual honesty and credibility in debate?",
+        question: "Your opponent cites a study showing countries with more hospitals have higher death rates. They conclude hospitals cause death. How do you respond?",
         options: [
-          { id: "a", text: "Honesty hurts credibility by revealing weaknesses" },
-          { id: "b", text: "Honesty builds credibility by showing judges they can trust you" },
-          { id: "c", text: "Credibility has nothing to do with honesty" },
-          { id: "d", text: "Always hide limitations to seem stronger" }
+          { id: "a", text: "Accept their conclusion" },
+          { id: "b", text: "Point out reverse causation: sick populations need more hospitals" },
+          { id: "c", text: "Note common cause: larger populations have more hospitals AND more deaths" },
+          { id: "d", text: "Both B and C are good responses" }
         ],
-        correctAnswer: "b",
-        explanation: "Intellectual honesty—acknowledging limitations, representing opponents fairly, admitting uncertainty—builds credibility because it shows judges they can trust you. Pretending to have no weaknesses seems suspicious. Honesty builds trust that enhances everything else you say.",
+        correctAnswer: "d",
+        explanation: "Both are excellent responses. Reverse causation: places with sicker populations build more hospitals (hospitals don't cause the deaths; illness causes both deaths and hospital construction). Common cause: larger populations have more of both hospitals and deaths. This is a classic example of misinterpreting correlation as causation.",
       },
       {
         type: "content",
-        title: "Conclusion: Ready for Intermediate",
-        content: "You've completed Section 1! You now have foundational skills in argumentation, research, critical thinking, delivery, and ethical practice.\n\n**Section 1 Complete:**\n• 10 units covering debate fundamentals\n• Argument structure (CER, Toulmin)\n• Evidence evaluation and research\n• Major logical fallacies\n• Delivery and presence\n• Strategic and ethical practice\n\n**What's Ahead:**\nSection 2 (Intermediate) will build on these foundations with more advanced techniques, format-specific skills, and deeper strategic thinking.\n\n**Congratulations!**\nTake pride in what you've learned. You have a solid foundation for becoming an excellent debater. Keep practicing, keep learning, and keep growing.",
+        title: "Conclusion: Causation Requires More",
+        content: "You've mastered the distinction between correlation and causation—one of the most important analytical skills in debate and critical thinking.\n\n**Key Takeaways:**\n• Correlation means things occur together; causation means one produces the other\n• Consider reverse causation and common causes\n• Controlled experiments, mechanism, and replication establish causation\n• Attack causal claims by proposing alternatives and demanding evidence\n• Single studies showing correlation don't prove causation\n\n**Looking Ahead:**\nIn the next lesson, we'll complete the Beginner section with a comprehensive review of everything you've learned.\n\n**Practice Challenge:**\nFind a news headline claiming X causes Y. What's the evidence? Is it correlation or causation? What alternatives could explain the data?",
         keyPoints: [
-          "Section 1 complete with foundational skills",
-          "Section 2 builds with advanced techniques",
-          "Keep practicing to make skills automatic",
+          "Correlation doesn't imply causation",
+          "Consider alternatives before accepting causal claims",
+          "Strong causation requires controlled evidence and mechanism",
         ],
+      },
+      {
+        type: "practice",
+        id: "l10-06-p1",
+        title: "Challenging False Causal Claims",
+        description: "Practice identifying and refuting arguments that confuse correlation with causation.",
+        practice: {
+          type: "refutation",
+          topic: "Stricter gun control laws reduce violent crime",
+          targetSkill: "Distinguishing correlation from causation and proposing alternative explanations",
+          instructions: "Your AI opponent will present causal claims based on correlational evidence. Challenge these claims by identifying the correlation vs causation error, proposing alternative explanations (reverse causation, common causes, confounding variables), and demanding proper causal evidence.",
+          exampleResponse: "My opponent shows that states with stricter laws have less crime, but this is correlation, not causation. Consider reverse causation: maybe safer states pass stricter laws because they can. Or common cause: wealthier states may have both stricter laws AND less crime due to economic factors. Where is the controlled evidence showing the laws themselves caused the reduction?",
+          successCriteria: [
+            "Correctly identifies correlation being presented as causation",
+            "Proposes at least one alternative explanation",
+            "Demands mechanism or controlled evidence",
+            "Maintains focus on the logical flaw rather than the policy itself",
+          ],
+        },
       },
     ],
   },
@@ -562,88 +570,90 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
     pages: [
       {
         type: "content",
-        title: "Introduction: Section 1 Capstone",
-        content: "This is your Beginner Section capstone—a final synthesis of everything you've learned across Units 1-10. We'll revisit key concepts, connect them, and prepare you to apply these skills with confidence.\n\nAs you complete this lesson, reflect on how far you've come. The skills you've developed in critical thinking, argumentation, evidence evaluation, and delivery will serve you not just in debate, but in academics, career, and citizenship.",
+        title: "Congratulations: Beginner Section Complete!",
+        content: "You've completed the entire Beginner section of the debate curriculum! Over 70 lessons, you've built a strong foundation in argumentation, evidence, delivery, and critical thinking.\n\nThis final lesson reviews the key concepts from all 10 units, helping you consolidate your learning and prepare for the Intermediate section ahead.\n\nLet's revisit what you've mastered and identify areas for continued practice.",
       },
       {
         type: "content",
-        title: "The Complete Debater: Skills Integration",
-        content: "Great debaters integrate all their skills seamlessly:\n\n**Research → Arguments → Delivery:**\n1. Find credible, relevant evidence\n2. Structure it with CER and Toulmin\n3. Present with confidence and clarity\n\n**Attack → Defense → Counter:**\n1. Recognize fallacies and weak evidence\n2. Defend your case against attacks\n3. Turn opponent arguments when possible\n\n**Preparation → Adaptation → Execution:**\n1. Prepare thoroughly before rounds\n2. Adapt to what actually happens\n3. Execute under pressure\n\n**The Integration:**\nThese aren't separate skills—they're one interconnected practice. Strong research enables strong arguments. Good delivery makes strong arguments persuasive. Sharp thinking catches flaws in real time.",
+        title: "Review: Foundations (Units 1-2)",
+        content: "You started by understanding what debate is and exploring different formats:\n\n**Core Concepts:**\n• Debate is structured argumentation with rules and time limits\n• Major formats: Lincoln-Douglas, Policy, Public Forum, Parliamentary, Congressional\n• Each format has unique rules, time structures, and strategic considerations\n\n**Basic Argument Structure:**\n• Claim: Your assertion\n• Evidence: Facts supporting it\n• Reasoning: Why the evidence proves your claim\n\n**Key Takeaway:**\nDebate isn't about 'winning' through tricks—it's about developing ideas through rigorous argumentation. The skills transfer to everything from job interviews to everyday decisions.",
         keyPoints: [
-          "Skills integrate rather than stand alone",
-          "Each skill supports and enhances others",
-          "Practice the whole, not just the parts",
+          "Debate develops critical thinking and communication",
+          "Different formats serve different purposes",
+          "Claims require evidence and reasoning",
         ],
       },
       {
         type: "content",
-        title: "Critical Thinking as Foundation",
-        content: "Everything builds on critical thinking:\n\n**Evaluating Claims:**\n• Is this claim supported by evidence?\n• Is the evidence credible and relevant?\n• Does the logic follow?\n\n**Spotting Manipulation:**\n• Is this a fallacy?\n• Is emotion substituting for logic?\n• Is evidence being cherry-picked or misrepresented?\n\n**Making Judgments:**\n• What's the strongest version of each argument?\n• Which considerations should outweigh?\n• What would change my mind?\n\n**Everyday Application:**\nThese skills apply beyond debate: evaluating news, making decisions, participating in democracy. Debate is training for clearer thinking in all contexts.",
+        title: "Review: Essential Skills (Units 3-4)",
+        content: "You developed core skills every debater needs:\n\n**Speaking Skills:**\n• Clear enunciation and projection\n• Eye contact and body language\n• Avoiding filler words\n• Emphasis and inflection\n\n**Flowing (Note-Taking):**\n• Track arguments across speeches\n• Identify dropped arguments\n• Organize responses systematically\n\n**Refutation Basics:**\n• The 4 S's: Signal, State, Support, Summarize\n• Direct attacks on evidence and reasoning\n• Constructing and classifying claims (fact, value, policy)\n\n**Key Takeaway:**\nTechnical skills matter. Clear delivery ensures your arguments are heard; effective flowing ensures you respond to what opponents actually said.",
         keyPoints: [
-          "Critical thinking underlies all debate skills",
-          "Evaluate evidence, logic, and potential manipulation",
-          "Skills transfer to all areas of life",
+          "Delivery skills affect how arguments are received",
+          "Flowing tracks the debate accurately",
+          "Refutation has structure: the 4 S's",
         ],
       },
       {
         type: "content",
-        title: "The Value of the Activity",
-        content: "Reflect on why debate matters:\n\n**Intellectual Skills:**\n• Research and evidence evaluation\n• Logical reasoning and argument construction\n• Recognizing fallacies and manipulation\n\n**Communication Skills:**\n• Clear, organized speaking\n• Confident presence\n• Persuasive delivery\n\n**Character Development:**\n• Intellectual honesty\n• Handling pressure and setbacks\n• Respecting opponents and rules\n\n**Civic Value:**\n• Understanding multiple perspectives\n• Evaluating political claims\n• Engaging constructively in democracy\n\n**Career Preparation:**\n• These skills are valued in law, business, policy, education, and virtually every professional field.",
+        title: "Review: Evidence and Sources (Units 5-6)",
+        content: "You learned how to find, evaluate, and use evidence:\n\n**Types of Evidence:**\n• Statistics, studies, expert testimony, examples\n• Each type serves different purposes\n\n**Source Evaluation:**\n• Academic vs popular sources\n• Primary vs secondary sources\n• Evaluating credibility, recency, and bias\n\n**Warrants:**\n• The reasoning that connects evidence to claims\n• Evidence doesn't speak for itself\n\n**Citation:**\n• Include source, author, credentials, date\n• Proper citation builds credibility\n\n**Key Takeaway:**\nEvidence is only as strong as its source and your explanation of why it matters. Quality over quantity—three excellent sources beat ten mediocre ones.",
         keyPoints: [
-          "Debate develops intellectual and communication skills",
-          "Character and civic engagement benefit",
-          "Skills transfer to academic and professional success",
+          "Match evidence type to claim type",
+          "Evaluate sources for credibility and bias",
+          "Warrants explain why evidence matters",
+        ],
+      },
+      {
+        type: "content",
+        title: "Review: Logic and Fallacies (Units 7-10)",
+        content: "You mastered logical reasoning and common errors:\n\n**Fallacies Covered:**\n• Ad hominem: Attacking the person\n• Strawman: Misrepresenting arguments\n• False dichotomy: False either/or choices\n• Slippery slope: Unjustified chain reactions\n• Red herring: Irrelevant diversions\n• Post hoc: Sequence doesn't prove cause\n• Appeal to ignorance: Absence isn't proof\n• Appeal to authority: Expertise must be relevant\n\n**Correlation vs Causation:**\n• Correlation doesn't prove causation\n• Consider reverse causation and confounders\n• Controlled evidence establishes cause\n\n**The Toulmin Model:**\n• Claim, Data, Warrant, Backing, Qualifier, Rebuttal\n• Complete argument structure\n\n**Key Takeaway:**\nRecognizing fallacies helps you both avoid making them and attack opponent errors effectively.",
+        keyPoints: [
+          "Fallacies are errors in reasoning",
+          "Correlation doesn't prove causation",
+          "The Toulmin model provides complete argument structure",
         ],
       },
       {
         type: "question",
         id: "l10-07-q1",
-        question: "What is the main benefit of learning to argue both sides of issues?",
+        question: "Which of the following is NOT a logical fallacy?",
         options: [
-          { id: "a", text: "You learn to be dishonest" },
-          { id: "b", text: "You develop genuine understanding of multiple perspectives" },
-          { id: "c", text: "You only ever argue your own beliefs" },
-          { id: "d", text: "It has no value" }
+          { id: "a", text: "Ad hominem" },
+          { id: "b", text: "Citing peer-reviewed research" },
+          { id: "c", text: "False dichotomy" },
+          { id: "d", text: "Post hoc" }
         ],
         correctAnswer: "b",
-        explanation: "Arguing both sides develops genuine understanding of multiple perspectives. This makes you a stronger advocate for any position (you understand the objections) and a more thoughtful citizen (you understand why reasonable people disagree). It builds empathy and intellectual humility.",
+        explanation: "Citing peer-reviewed research is good debate practice, not a fallacy. Ad hominem (attacking the person), false dichotomy (false either/or), and post hoc (assuming sequence proves causation) are all logical fallacies you learned to identify and avoid.",
       },
       {
         type: "content",
-        title: "Looking Back and Forward",
-        content: "**What You've Learned:**\n• Debate fundamentals and formats\n• Argument structure (CER, Toulmin)\n• Research and source evaluation\n• Logical fallacies and how to counter them\n• Statistical and evidence literacy\n• Delivery and non-verbal communication\n• Strategic thinking and preparation\n• Ethical practice and community responsibility\n\n**What's Ahead in Section 2:**\n• Format-specific skills\n• Advanced argumentation techniques\n• Deeper research strategies\n• Complex case construction\n• Judging paradigms\n• Tournament strategy\n\n**Your Ongoing Journey:**\nLearning never stops. Every round teaches something. Keep the growth mindset you've developed.",
+        title: "Review: Ethics and Professionalism",
+        content: "Throughout, you learned that debate has ethical dimensions:\n\n**Intellectual Honesty:**\n• Acknowledge weaknesses in your position\n• Represent opponent arguments fairly\n• Don't fabricate or misrepresent evidence\n\n**Respectful Engagement:**\n• Attack arguments, not people\n• Maintain professionalism under pressure\n• Learn from opponents\n\n**Avoiding Personal Attacks:**\n• Attacks waste time and hurt credibility\n• Focus on ideas, not personalities\n• Respond to attacks by redirecting to substance\n\n**Key Takeaway:**\nDebate builds communities. How you treat opponents matters for your reputation, your learning, and the health of the activity itself.",
         keyPoints: [
-          "Section 1 provided strong foundations",
-          "Section 2 builds advanced skills",
-          "Continuous learning is the path forward",
+          "Intellectual honesty strengthens credibility",
+          "Professionalism matters for reputation",
+          "Debate is about ideas, not personal attacks",
         ],
       },
       {
         type: "content",
-        title: "Final Reflection",
-        content: "Take a moment to appreciate your progress:\n\n**You Can Now:**\n• Construct clear, logical arguments\n• Find and evaluate quality evidence\n• Recognize and respond to fallacies\n• Present with confidence and clarity\n• Engage respectfully with disagreement\n• Think critically about claims and evidence\n\n**Qualities You've Developed:**\n• Intellectual curiosity\n• Analytical rigor\n• Honest engagement\n• Poise under pressure\n• Respect for evidence and logic\n\n**The Ongoing Practice:**\nThese skills improve with use. Every conversation, every article you read, every decision you make is practice for clearer thinking.",
-      },
-      {
-        type: "question",
-        id: "l10-07-q2",
-        question: "What's the most important mindset for continued growth as a debater?",
-        options: [
-          { id: "a", text: "Believing you already know everything" },
-          { id: "b", text: "A growth mindset: every round teaches something; feedback helps you improve" },
-          { id: "c", text: "Avoiding feedback to protect your confidence" },
-          { id: "d", text: "Only competing against weaker opponents" }
+        title: "Looking Ahead: Intermediate Section",
+        content: "You're ready for the Intermediate section, where you'll develop more sophisticated skills:\n\n**What's Coming:**\n• Advanced fallacies and logical structures\n• Strategic refutation techniques\n• Impact calculus and weighing\n• Case construction strategies\n• More format-specific training\n• Persuasion psychology\n\n**How to Prepare:**\n• Practice the fundamentals until they're automatic\n• Compete and get feedback\n• Watch high-level debates\n• Read widely on debate topics\n• Develop a pre-round preparation routine\n\n**Remember:**\nThe Beginner section gave you tools. The Intermediate section teaches you to use them strategically. Mastery comes from practice.",
+        keyPoints: [
+          "Intermediate builds on Beginner foundations",
+          "Practice makes fundamentals automatic",
+          "Strategic sophistication comes next",
         ],
-        correctAnswer: "b",
-        explanation: "A growth mindset—viewing every round as a learning opportunity and embracing feedback—is essential for continued improvement. The best debaters stay curious, seek feedback, and continuously refine their skills. Complacency or avoiding challenge limits growth.",
       },
       {
         type: "content",
-        title: "Congratulations: Section 1 Complete",
-        content: "You've completed the Beginner section of the Debate Curriculum!\n\n**Your Achievement:**\n• 70 lessons across 10 comprehensive units\n• Strong foundation in all debate fundamentals\n• Ready for Intermediate material\n\n**Next Steps:**\n• Continue to Section 2 for intermediate content\n• Practice what you've learned in actual debates\n• Seek feedback and continue growing\n\n**Remember:**\nDebate skills are life skills. The critical thinking, communication, and ethical engagement you've developed will serve you far beyond any competition.\n\n**Well done! Your journey continues...**",
+        title: "Conclusion: Your Debate Journey Continues",
+        content: "Congratulations on completing the Beginner section! You now have a solid foundation in:\n\n**What You've Learned:**\n• Debate formats and structures\n• Argument construction (claim, evidence, warrant)\n• Speaking and delivery skills\n• Evidence evaluation and citation\n• Logical fallacies and critical thinking\n• Refutation techniques\n• Professional conduct and ethics\n\n**Your Challenge:**\nKnowledge isn't skill. Skill comes from practice. Take what you've learned and use it—in practice rounds, at tournaments, in classroom discussions, and in everyday conversations.\n\nDebate is more than a competition. It's a way of thinking that will serve you throughout your life.\n\n**Onward to Intermediate!**",
         keyPoints: [
-          "Section 1 complete: 70 lessons, solid foundations",
-          "Ready to advance to Intermediate content",
-          "Keep practicing and growing",
+          "You've completed 70 lessons of foundational training",
+          "Practice transforms knowledge into skill",
+          "The journey continues in the Intermediate section",
         ],
       },
     ],
