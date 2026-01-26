@@ -535,7 +535,16 @@ export default function Learn() {
         }
       }
       
-      // Batch complete all lessons at once
+      // First, update the user's current lesson to the first lesson of the target unit
+      // This updates the placement and unlocks the new section
+      const targetUnit = LESSON_UNITS[targetUnitIndex];
+      if (targetUnit && targetUnit.sections.length > 0 && targetUnit.sections[0].lessons.length > 0) {
+        const firstSection = targetUnit.sections[0];
+        const firstLesson = firstSection.lessons[0];
+        setCurrentLesson(targetUnit.id, firstSection.id, firstLesson.id);
+      }
+      
+      // Then batch complete all lessons
       if (lessonsToComplete.length > 0) {
         completeLessons(lessonsToComplete);
       }
