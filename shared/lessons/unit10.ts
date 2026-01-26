@@ -77,8 +77,51 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Real-World Scenarios: Recognizing Attack Patterns",
+        content: "Let's examine personal attacks in actual debate contexts:\n\n**Scenario 1: Cross-Examination Frustration**\nYou ask a clear question. Your opponent evades. You ask again. They evade again. The temptation: 'Why can't you answer a simple question?' The better approach: 'I'll note for the judge that my opponent hasn't addressed this question. Moving on...'\n\n**Scenario 2: The Experienced Opponent**\nYou're debating someone with more trophies. The temptation: feel intimidated or resent their success. The attack version: 'Just because you've won before doesn't make you right.' The better approach: Ignore their record entirely—focus on THIS debate.\n\n**Scenario 3: Perceived Unfairness**\nYou feel the topic favors one side. The attack version: 'Anyone arguing the other side is being intellectually dishonest.' The better approach: Make the best case possible regardless of side assignment.\n\n**The Lesson:**\nIn every scenario where attacks seem tempting, there's always a substantive alternative that serves you better.",
+        keyPoints: [
+          "Frustration in cross-ex doesn't justify attacks",
+          "Opponent experience is irrelevant to current arguments",
+          "Topic fairness complaints distract from making your case",
+        ],
+      },
+      {
+        type: "content",
+        title: "Building Professional Habits",
+        content: "Professionalism is a habit, not a decision made in the moment. Build these practices:\n\n**Pre-Round Preparation:**\n• Review your arguments for any dismissive language\n• Prepare responses to IDEAS, not to people\n• Remind yourself of your goals: win on substance\n\n**During the Round:**\n• Monitor your word choices\n• Check your body language (facial expressions, gestures)\n• Take a breath before responding to provocations\n\n**Post-Round Reflection:**\n• Did any of your language cross the line?\n• Were there moments you felt personally attacked? How did you handle them?\n• What would you do differently?\n\n**Long-Term Development:**\n• Watch recordings of your debates—how do you come across?\n• Seek feedback from coaches specifically about professionalism\n• Study debaters known for graceful conduct under pressure",
+        keyPoints: [
+          "Prepare for professionalism before rounds begin",
+          "Self-monitor language and body language during rounds",
+          "Reflect afterward to improve continuously",
+        ],
+      },
+      {
+        type: "content",
+        title: "The Competitive Advantage of Respect",
+        content: "Professionalism isn't just ethical—it's strategically advantageous:\n\n**Judges Reward It:**\nSpeaker points often include 'professionalism' or 'conduct' criteria. Respectful debaters earn higher points.\n\n**It Unnerves Aggressive Opponents:**\nWhen opponents attack and you stay calm, they often escalate further—digging their own hole while you stay above it.\n\n**It Builds Your Reputation:**\nThe debate community is small. Word spreads about who's pleasant to debate and who isn't. This affects partner opportunities, team selections, and career networking.\n\n**It Improves Your Thinking:**\nWhen you're not emotionally reacting, you think more clearly. Attacks consume cognitive resources better spent on arguments.\n\n**It Attracts Better Coaches:**\nCoaches want to work with students who represent them well. Professionalism opens doors.\n\n**The Bottom Line:**\nRespect isn't a constraint on your success—it's a contributor to it.",
+        keyPoints: [
+          "Judges explicitly reward professional conduct",
+          "Calm responses make aggressive opponents look worse",
+          "Reputation in debate affects opportunities",
+        ],
+      },
+      {
+        type: "question",
+        id: "l10-01-q3",
+        question: "During cross-examination, your opponent repeatedly evades your questions. What's the most professional response?",
+        options: [
+          { id: "a", text: "'Why are you being so evasive? Just answer the question!'" },
+          { id: "b", text: "'I'll note for the judge that this question remains unanswered. Let me move on...'" },
+          { id: "c", text: "'Everyone can see you're dodging because you have no answer.'" },
+          { id: "d", text: "'Are you even prepared for this debate?'" }
+        ],
+        correctAnswer: "b",
+        explanation: "Option B is professional: it flags the evasion for the judge without attacking the opponent personally. The other options—accusing them of evasion, making generalizations about 'everyone,' or questioning their preparation—are all personal attacks that waste your time and damage your credibility.",
+      },
+      {
+        type: "content",
         title: "Conclusion: Ideas Over Personalities",
-        content: "You've learned why personal attacks fail and how to keep debates focused on substance.\n\n**Key Takeaways:**\n• Personal attacks waste time and damage your credibility\n• They don't refute arguments—they just distract\n• Keep language neutral and focused on claims, evidence, and reasoning\n• When attacked, redirect to substance without retaliating\n• Staying professional under pressure impresses judges\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the red herring fallacy—how arguments get derailed by irrelevant topics.\n\n**Practice Challenge:**\nReview your recent debate speeches or notes. Did you use any dismissive language? Any attacks, even subtle ones? Practice reframing those moments to focus purely on arguments.",
+        content: "You've learned why personal attacks fail and how to keep debates focused on substance.\n\n**Key Takeaways:**\n• Personal attacks waste time and damage your credibility\n• They don't refute arguments—they just distract\n• Keep language neutral and focused on claims, evidence, and reasoning\n• When attacked, redirect to substance without retaliating\n• Staying professional under pressure impresses judges\n• Professionalism is a competitive advantage, not a constraint\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the red herring fallacy—how arguments get derailed by irrelevant topics.\n\n**Practice Challenge:**\nReview your recent debate speeches or notes. Did you use any dismissive language? Any attacks, even subtle ones? Practice reframing those moments to focus purely on arguments.",
         keyPoints: [
           "Personal attacks are strategically counterproductive",
           "Focus on ideas, not personalities",
@@ -163,8 +206,51 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Red Herrings in Different Debate Formats",
+        content: "Red herrings appear differently across formats:\n\n**In Policy Debate:**\n• Dropping an argument and hoping judges don't notice while discussing other flows\n• Spending excessive time on one advantage to avoid addressing others\n• Introducing new arguments in rebuttals that shift the focus\n\n**In Lincoln-Douglas:**\n• Abandoning the value/criterion framework for tangential philosophical discussions\n• Focusing on opponent's rhetoric rather than their actual arguments\n• Debating hypotheticals unrelated to the resolution\n\n**In Public Forum:**\n• Crossfire becoming a chance to score emotional points rather than address claims\n• Summary speeches introducing entirely new contentions\n• Final Focus ignoring the actual clash in the round\n\n**In Parliamentary:**\n• POIs that distract from the speaker's main point\n• Bringing up new material in opposition speeches that sidesteps the government case\n\n**The Solution:**\nIn every format, keep a mental (or written) list of the key questions at stake. Return to them.",
+        keyPoints: [
+          "Each debate format has characteristic red herring patterns",
+          "Policy: avoiding dropped arguments; LD: abandoning frameworks",
+          "Track key questions and return to them",
+        ],
+      },
+      {
+        type: "content",
+        title: "Strategic Use of Focus",
+        content: "Staying on topic isn't just avoiding fallacies—it's strategic:\n\n**Time Management:**\nEvery second spent on irrelevant topics is a second not spent winning key arguments. In timed debates, focus is a resource.\n\n**Framing the Round:**\nThe debater who controls which questions matter often wins. Don't let opponents drag you to their preferred questions.\n\n**Building Credibility:**\nJudges notice who answers directly and who evades. Direct answering builds trust.\n\n**Forcing Engagement:**\nWhen you persistently return to your key points, opponents must eventually address them or look evasive themselves.\n\n**Example Strategy:**\nIf your strongest argument is economic harm, keep returning to it: 'We've discussed many things, but let's remember the central issue: the economic impact. My opponent still hasn't addressed...'\n\n**The Principle:**\nControl the agenda. Refuse to be diverted. Make your questions the questions of the round.",
+        keyPoints: [
+          "Focus is a strategic resource in timed debates",
+          "Control which questions define the round",
+          "Persistent return to key arguments forces opponent engagement",
+        ],
+      },
+      {
+        type: "content",
+        title: "Practice: Spotting Diversions in Real Time",
+        content: "Develop your red herring detection skills:\n\n**The Tracking Method:**\nAs you listen to opponents, mentally (or on paper) note each question they're supposed to address. Check them off as they're answered. What remains?\n\n**The Substitution Test:**\nWhen opponents respond, ask: 'Did they answer question A, or did they actually answer question B?' If B ≠ A, it's a red herring.\n\n**The 'So What' Test:**\nEven if their point is true, ask: 'So what? How does this address my original argument?' If there's no connection, it's irrelevant.\n\n**Practice Exercises:**\n• Watch political debates and count topic changes\n• Read opinion articles and identify when writers shift focus\n• In practice rounds, ask partners to try red herrings—practice detecting them\n\n**Building Automaticity:**\nWith practice, you'll catch diversions in real time without conscious effort. This comes from deliberate training.",
+        keyPoints: [
+          "Track questions and check off which are actually answered",
+          "Use the substitution test: did they answer A or B?",
+          "Practice with political debates and media analysis",
+        ],
+      },
+      {
+        type: "question",
+        id: "l10-02-q3",
+        question: "In Policy debate, your opponent spends their entire second constructive discussing advantages you didn't even argue against, ignoring your main disadvantage. What happened?",
+        options: [
+          { id: "a", text: "They made strong arguments that defeat your case" },
+          { id: "b", text: "They used a red herring by discussing irrelevant points and ignoring your key argument" },
+          { id: "c", text: "They refuted your disadvantage effectively" },
+          { id: "d", text: "This is a standard debate strategy" }
+        ],
+        correctAnswer: "b",
+        explanation: "This is a red herring. By spending time on points you didn't contest while ignoring your main disadvantage, they're diverting from the actual clash in the round. Your response: point out that your disadvantage stands unrebutted and remains the central issue.",
+      },
+      {
+        type: "content",
         title: "Conclusion: Staying on the Scent",
-        content: "You've learned to recognize red herrings and keep debates focused on the actual issues.\n\n**Key Takeaways:**\n• Red herring diverts from the actual issue to something irrelevant\n• Watch for subject changes, whataboutism, and emotional diversions\n• Respond by redirecting to the original question\n• Name the tactic so judges recognize it\n• Avoid red herrings yourself by answering directly\n• Signpost when you need to address related points\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the differences between academic and popular sources.\n\n**Practice Challenge:**\nWatch a political interview or debate. Count how many times questions are answered with unrelated topics. Notice how interviewers (sometimes) redirect. This awareness makes you a more critical consumer of discourse.",
+        content: "You've learned to recognize red herrings and keep debates focused on the actual issues.\n\n**Key Takeaways:**\n• Red herring diverts from the actual issue to something irrelevant\n• Watch for subject changes, whataboutism, and emotional diversions\n• Respond by redirecting to the original question\n• Name the tactic so judges recognize it\n• Avoid red herrings yourself by answering directly\n• Signpost when you need to address related points\n• Focus is a strategic resource—control the agenda\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the differences between academic and popular sources.\n\n**Practice Challenge:**\nWatch a political interview or debate. Count how many times questions are answered with unrelated topics. Notice how interviewers (sometimes) redirect. This awareness makes you a more critical consumer of discourse.",
         keyPoints: [
           "Red herring diverts to irrelevant topics",
           "Track the original question to detect diversions",
@@ -268,8 +354,51 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Evaluating Source Credibility",
+        content: "Beyond the academic/popular distinction, evaluate individual sources:\n\n**Author Credentials:**\n• What are their qualifications on THIS topic?\n• Do they have relevant expertise?\n• What's their institutional affiliation?\n\n**Publication Reputation:**\n• Is this a respected outlet in its category?\n• What's its track record for accuracy?\n• Is there editorial oversight?\n\n**Bias and Funding:**\n• Who funds this research or publication?\n• Does the source have an ideological agenda?\n• Are conflicts of interest disclosed?\n\n**Methodology (for research):**\n• Is the sample size adequate?\n• Are the methods appropriate for the question?\n• Can the study be replicated?\n\n**Recency:**\n• How current is the information?\n• Has the field changed since publication?\n\n**Citation Patterns:**\n• Is this research cited by others?\n• Who cites it—other experts or only advocates?",
+        keyPoints: [
+          "Evaluate author credentials for the specific topic",
+          "Consider publication reputation and funding sources",
+          "Check methodology, recency, and citation patterns",
+        ],
+      },
+      {
+        type: "content",
+        title: "The Gray Areas: Think Tanks and Advocacy Research",
+        content: "Some sources don't fit neatly into academic or popular categories:\n\n**Think Tanks:**\n• Range from highly rigorous to openly ideological\n• Some employ credentialed researchers; others employ advocates\n• Examples: Brookings, RAND (more academic); Heritage, Center for American Progress (more ideological)\n• Evaluate individually—don't assume quality from the label\n\n**Advocacy Organizations:**\n• Openly promote a position\n• May produce legitimate research, but interpret carefully\n• Always consider what they're selling\n\n**Government Reports:**\n• Can be high quality (CBO, GAO, Census Bureau)\n• But can also reflect administration priorities\n• Generally more credible for data than for policy conclusions\n\n**Corporate Research:**\n• Often rigorous methodology\n• But severe conflict of interest concerns\n• Useful if independently verified\n\n**The Rule:**\nKnow your source's incentives. Even good methodology can be undermined by selective reporting of results.",
+        keyPoints: [
+          "Think tanks range from rigorous to ideological",
+          "Government data is generally reliable; conclusions less so",
+          "Always consider what the source is incentivized to find",
+        ],
+      },
+      {
+        type: "content",
+        title: "Building a Research Strategy",
+        content: "Develop a systematic approach to evidence gathering:\n\n**Start Broad, Then Narrow:**\n• Begin with general searches to understand the topic\n• Then target specific academic databases for key claims\n\n**Layer Your Evidence:**\n• Foundational claims: Peer-reviewed research\n• Context and examples: Quality journalism\n• Real-world impacts: News reports and case studies\n\n**Cross-Reference:**\n• Don't rely on single sources\n• Find multiple sources supporting key claims\n• If you can only find one source, note that limitation\n\n**Track Your Sources:**\n• Organize by argument/contention\n• Note source type and quality for each\n• Prepare to defend source choices\n\n**Academic Database Tips:**\n• Google Scholar for broad academic searches\n• JSTOR, EBSCOhost for full-text articles\n• University library databases for comprehensive access\n• Look at 'cited by' to find related research",
+        keyPoints: [
+          "Start broad to understand, then target academic sources",
+          "Layer evidence types for different purposes",
+          "Cross-reference and track source quality",
+        ],
+      },
+      {
+        type: "question",
+        id: "l10-03-q3",
+        question: "Your opponent cites a report from an advocacy organization supporting their position. How should you evaluate this source?",
+        options: [
+          { id: "a", text: "Accept it because organizations do research" },
+          { id: "b", text: "Reject it automatically because advocacy groups are always biased" },
+          { id: "c", text: "Consider their incentives, check if the methodology is sound, and look for independent verification" },
+          { id: "d", text: "Ignore the source and only focus on peer-reviewed research" }
+        ],
+        correctAnswer: "c",
+        explanation: "Advocacy organizations can produce legitimate research, but they have incentives to find certain results. Evaluate the methodology, consider their funding and mission, and check if the findings are independently verified. Neither automatic acceptance nor automatic rejection is appropriate.",
+      },
+      {
+        type: "content",
         title: "Conclusion: Source Literacy",
-        content: "You've learned to distinguish academic from popular sources and use each appropriately.\n\n**Key Takeaways:**\n• Academic sources undergo peer review; popular sources typically don't\n• Academic sources are strongest for causal and empirical claims\n• Popular sources work for current events and accessible explanations\n• Quality popular sources (major newspapers, respected magazines) are legitimate\n• Combine sources strategically for the strongest case\n• Attack weak sources; defend your source choices\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the post hoc fallacy—confusing sequence with causation.\n\n**Practice Challenge:**\nFor your next debate topic, find one academic source and one popular source on the same issue. What does each provide? How would you use them together?",
+        content: "You've learned to distinguish academic from popular sources and use each appropriately.\n\n**Key Takeaways:**\n• Academic sources undergo peer review; popular sources typically don't\n• Academic sources are strongest for causal and empirical claims\n• Popular sources work for current events and accessible explanations\n• Quality popular sources (major newspapers, respected magazines) are legitimate\n• Combine sources strategically for the strongest case\n• Evaluate think tanks, advocacy groups, and government sources individually\n• Attack weak sources; defend your source choices\n\n**Looking Ahead:**\nIn the next lesson, we'll explore the post hoc fallacy—confusing sequence with causation.\n\n**Practice Challenge:**\nFor your next debate topic, find one academic source and one popular source on the same issue. What does each provide? How would you use them together?",
         keyPoints: [
           "Academic for rigor; popular for accessibility and currency",
           "Know the hierarchy and appropriate uses",
@@ -354,6 +483,26 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Post Hoc in Debate Contexts",
+        content: "Watch for post hoc reasoning in specific debate scenarios:\n\n**Policy Debate - Advantages:**\n'After similar policies were implemented in Country X, outcomes improved.' Challenge: Were they already improving? What else changed?\n\n**Policy Debate - Disadvantages:**\n'Last time we did X, disaster followed.' Challenge: What else was happening? Is the comparison valid?\n\n**Value Debates:**\n'Society adopted this value, and then flourished.' Challenge: Correlation isn't causation; what actually drove the flourishing?\n\n**Historical Arguments:**\n'After the treaty was signed, peace followed.' Challenge: Was peace already emerging? What other factors?\n\n**Trend Evidence:**\nMany debaters cite before/after data without controlling for other variables. 'Before the law, rates were X; after, they were Y.' This is post hoc unless you control for other factors.\n\n**Your Defense:**\nWhen making causal claims, preempt post hoc attacks by explaining mechanism and addressing alternatives.",
+        keyPoints: [
+          "Policy advantages often rely on post hoc comparisons",
+          "Historical arguments need more than sequence",
+          "Preempt attacks by explaining mechanism and alternatives",
+        ],
+      },
+      {
+        type: "content",
+        title: "The Counterfactual Test",
+        content: "A powerful tool for evaluating causation: the counterfactual.\n\n**The Question:**\nWould B have happened WITHOUT A? This is asking about the 'counterfactual'—what would have occurred in an alternative scenario.\n\n**If Yes:**\nIf B would have happened anyway, A didn't cause it. The sequence is coincidence.\n\n**If No:**\nIf B only happened BECAUSE of A, that's evidence for causation.\n\n**Applying It:**\n• 'The economy improved after the policy.' Would it have improved without the policy? (Many economies improved globally—suggesting the policy wasn't the cause.)\n• 'I took medicine and got better.' Would you have gotten better without medicine? (For minor illnesses, probably yes.)\n\n**In Debate:**\nChallenge opponent causal claims: 'What evidence suggests this wouldn't have happened anyway?'\n\nDefend your claims: 'This outcome specifically required this cause; here's why it wouldn't have happened otherwise...'",
+        keyPoints: [
+          "Ask: would the outcome have happened without the cause?",
+          "If yes, the sequence is coincidence",
+          "Use counterfactuals to challenge or defend causal claims",
+        ],
+      },
+      {
+        type: "content",
         title: "Making Valid Causal Arguments",
         content: "How to argue for causation legitimately:\n\n**Establish Temporal Sequence:**\nYes, A must precede B. But don't stop there.\n\n**Explain the Mechanism:**\nHow does A produce B? What's the causal pathway?\n\n**Control for Alternatives:**\nRule out other explanations. Address confounders.\n\n**Cite Controlled Evidence:**\nRandomized controlled trials, natural experiments, multiple studies.\n\n**Show Dose-Response:**\nMore of A leads to more of B (when applicable).\n\n**Show Removal Effect:**\nWhen A stops, B stops or reverses.\n\n**Example:**\n'Smoking causes lung cancer. We have: temporal sequence (smoking precedes cancer), mechanism (carcinogens damage lung tissue), controlled studies, dose-response (more smoking = more risk), and cessation effect (quitting reduces risk). This isn't just post hoc—it's comprehensive causal evidence.'",
         keyPoints: [
@@ -363,9 +512,22 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         ],
       },
       {
+        type: "question",
+        id: "l10-04-q3",
+        question: "Which of the following BEST supports a causal claim rather than just showing sequence?",
+        options: [
+          { id: "a", text: "'Event A happened, then Event B happened.'" },
+          { id: "b", text: "'Event A happened, then Event B happened—and here's the mechanism, controlled studies confirm it, and removing A reverses B.'" },
+          { id: "c", text: "'Event A happened, then Event B happened, and many people believe A caused B.'" },
+          { id: "d", text: "'Event A happened, then Event B happened, and this is what we expected.'" }
+        ],
+        correctAnswer: "b",
+        explanation: "Option B provides the full package: sequence + mechanism + controlled evidence + removal effect. The other options only provide sequence (A), sequence + popularity (C), or sequence + expectation (D). Strong causation requires more than temporal order.",
+      },
+      {
         type: "content",
         title: "Conclusion: After Doesn't Mean Because",
-        content: "You've learned to recognize and challenge post hoc reasoning, understanding why sequence alone doesn't prove causation.\n\n**Key Takeaways:**\n• Post hoc assumes sequence proves causation\n• Temporal order is necessary but not sufficient\n• Consider alternatives: coincidence, natural progression, confounders\n• Respond by demanding mechanism and controlled evidence\n• Valid causal arguments need sequence PLUS mechanism, controls, and supporting evidence\n\n**Looking Ahead:**\nIn the next lesson, we'll cover proper citation and how to present evidence professionally.\n\n**Practice Challenge:**\nNotice post hoc reasoning in advertisements and political claims. 'After using our product...' 'Since the policy took effect...' How often is causation assumed rather than demonstrated?",
+        content: "You've learned to recognize and challenge post hoc reasoning, understanding why sequence alone doesn't prove causation.\n\n**Key Takeaways:**\n• Post hoc assumes sequence proves causation\n• Temporal order is necessary but not sufficient\n• Consider alternatives: coincidence, natural progression, confounders\n• Use the counterfactual test: would B have happened without A?\n• Respond by demanding mechanism and controlled evidence\n• Valid causal arguments need sequence PLUS mechanism, controls, and supporting evidence\n\n**Looking Ahead:**\nIn the next lesson, we'll cover proper citation and how to present evidence professionally.\n\n**Practice Challenge:**\nNotice post hoc reasoning in advertisements and political claims. 'After using our product...' 'Since the policy took effect...' How often is causation assumed rather than demonstrated?",
         keyPoints: [
           "Sequence is necessary but not sufficient for causation",
           "Demand mechanism and controlled evidence",
@@ -436,6 +598,26 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         ],
       },
       {
+        type: "content",
+        title: "Written Citation: Preparing Evidence Cards",
+        content: "Debate evidence 'cards' have standard components:\n\n**The Tag Line:**\nA brief claim summarizing the evidence. Should accurately reflect content—no power-tagging.\n\n**The Citation Block:**\n• Author's full name\n• Author's credentials/qualifications\n• Publication name\n• Publication date\n• URL or access information\n\n**The Card Body:**\n• The quoted text\n• Key portions highlighted or underlined\n• Ellipses [...] where text is omitted (don't distort meaning)\n\n**Example Card Format:**\n\nUniversal Basic Income reduces poverty by 40%\n\nDr. Jane Smith, Professor of Economics at Stanford, 'The Effects of Cash Transfers,' Journal of Economic Policy, March 2023\n\n\"Our randomized controlled trial across three cities found that **direct cash transfers reduced poverty rates by 40%** within the first year of implementation. Participants showed significant improvements in housing stability, food security, and employment outcomes.\"\n\n**Organization:**\nGroup cards by argument. Make them easy to find and read quickly.",
+        keyPoints: [
+          "Tag lines should accurately reflect evidence content",
+          "Citation blocks include author, credentials, source, date",
+          "Highlight key portions for quick reading",
+        ],
+      },
+      {
+        type: "content",
+        title: "Responding to Evidence Challenges",
+        content: "Be prepared for opponents to challenge your evidence:\n\n**'Where does it say that?'**\nHave the full source available. Point to the specific passage.\n\n**'Who is this author?'**\nKnow your authors' credentials. Be ready to explain why they're qualified.\n\n**'This is old.'**\nKnow your dates. Explain why older evidence is still relevant, or prioritize recent sources.\n\n**'That's out of context.'**\nBe able to show the full passage and explain how your use is fair.\n\n**'That source is biased.'**\nAcknowledge potential bias if relevant, explain why the evidence is still valid, or have corroborating sources.\n\n**'Your tag overstates the evidence.'**\nBe honest—if your tag is too strong, acknowledge it. It's better than losing credibility.\n\n**Best Practice:**\nKnow your evidence. Don't just cut cards—understand what they say and why they matter.",
+        keyPoints: [
+          "Have sources available to verify",
+          "Know author credentials and publication dates",
+          "Be honest if evidence is challenged fairly",
+        ],
+      },
+      {
         type: "question",
         id: "l10-05-q2",
         question: "Why should you include dates in your citations?",
@@ -449,9 +631,22 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         explanation: "Dates are important because they establish recency. In fast-moving fields, old evidence may be outdated. Dates help judges evaluate whether evidence reflects current knowledge. They also help opponents verify sources by finding the specific publication.",
       },
       {
+        type: "question",
+        id: "l10-05-q3",
+        question: "Your opponent challenges a piece of your evidence, saying your tag line overstates what the source actually says. What's the best response?",
+        options: [
+          { id: "a", text: "Insist your tag is accurate even if it's not" },
+          { id: "b", text: "Acknowledge if the challenge is fair, clarify what the evidence does say, and explain why it still supports your argument" },
+          { id: "c", text: "Attack the opponent for being pedantic" },
+          { id: "d", text: "Ignore the challenge completely" }
+        ],
+        correctAnswer: "b",
+        explanation: "Honesty is essential. If your tag overstates the evidence, acknowledge it—credibility matters more than one card. Then clarify what the evidence actually says and explain why it still supports your broader argument. This maintains trust with the judge.",
+      },
+      {
         type: "content",
         title: "Conclusion: Evidence Presented Well",
-        content: "You've learned best practices for citation—ensuring your evidence is credible, verifiable, and persuasive.\n\n**Key Takeaways:**\n• Citation builds credibility and enables verification\n• Include source, author, credentials, and date\n• Verbal citations should be concise but complete\n• Avoid vague citations, misrepresentation, and outdated sources\n• Represent sources fairly and accurately\n\n**Looking Ahead:**\nIn the next lesson, we'll examine false cause fallacies and the relationship between correlation and causation.\n\n**Practice Challenge:**\nReview evidence cards you've prepared. Do they include all essential citation elements? Could someone find and verify each source?",
+        content: "You've learned best practices for citation—ensuring your evidence is credible, verifiable, and persuasive.\n\n**Key Takeaways:**\n• Citation builds credibility and enables verification\n• Include source, author, credentials, and date\n• Verbal citations should be concise but complete\n• Written cards need tag lines, citation blocks, and highlighted content\n• Avoid vague citations, misrepresentation, and outdated sources\n• Represent sources fairly and accurately\n• Be prepared to defend evidence when challenged\n\n**Looking Ahead:**\nIn the next lesson, we'll examine false cause fallacies and the relationship between correlation and causation.\n\n**Practice Challenge:**\nReview evidence cards you've prepared. Do they include all essential citation elements? Could someone find and verify each source?",
         keyPoints: [
           "Citation builds credibility and enables verification",
           "Include all essential elements: source, author, date",
@@ -522,6 +717,26 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         ],
       },
       {
+        type: "content",
+        title: "Spurious Correlations: Fun and Instructive Examples",
+        content: "Sometimes correlations are clearly absurd—teaching us to be skeptical of all correlations:\n\n**Famous Spurious Correlations:**\n• Per capita cheese consumption correlates with deaths by bedsheet tangling\n• Nicolas Cage films correlate with swimming pool drownings\n• Divorce rates in Maine correlate with margarine consumption\n\n**Why These Exist:**\nWith enough data and variables, some will correlate by chance. The universe is full of coincidences.\n\n**The Lesson:**\nEven correlations that SEEM plausible might be spurious. The 'chocolate and Nobel Prizes' correlation isn't obviously absurd—but it's still not causation.\n\n**In Debate:**\nWhen opponents show correlations, you can invoke spurious correlations: 'Many things correlate without causation. What makes this correlation different? Where's the mechanism? Where's the controlled evidence?'\n\n**The Humor Test:**\nIf you can construct an equally plausible-sounding but absurd correlation, the original correlation proves nothing alone.",
+        keyPoints: [
+          "Many variables correlate by pure chance",
+          "Even plausible-seeming correlations may be spurious",
+          "Challenge correlations by demanding mechanism and controls",
+        ],
+      },
+      {
+        type: "content",
+        title: "Natural Experiments and Quasi-Experimental Evidence",
+        content: "When true experiments are impossible, researchers use natural experiments:\n\n**What Are Natural Experiments?**\nSituations where circumstances create treatment and control groups without researcher intervention.\n\n**Examples:**\n• Policy changes that affect some regions but not others\n• Random lotteries that determine who receives a benefit\n• Natural boundaries that create different conditions\n\n**Why They Matter:**\nMany causal questions (effects of policies, laws, historical events) can't be studied with randomized trials. Natural experiments provide the next best evidence.\n\n**Evaluating Them:**\n• Is the 'treatment' really random?\n• Are the groups comparable otherwise?\n• Are there still confounders?\n\n**In Debate:**\nNatural experiments are stronger than simple correlations but weaker than randomized trials. Evaluate appropriately.\n\n**Example:**\n'Studies of the minimum wage use natural experiments—comparing employment in states that raised wages to similar states that didn't. This is stronger than simple before/after data because we can control for other economic factors.'",
+        keyPoints: [
+          "Natural experiments occur when circumstances create comparison groups",
+          "They're stronger than correlations but weaker than randomized trials",
+          "Evaluate whether the 'random' assignment is really random",
+        ],
+      },
+      {
         type: "question",
         id: "l10-06-q2",
         question: "Your opponent cites a study showing countries with more hospitals have higher death rates. They conclude hospitals cause death. How do you respond?",
@@ -537,7 +752,7 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
       {
         type: "content",
         title: "Conclusion: Causation Requires More",
-        content: "You've mastered the distinction between correlation and causation—one of the most important analytical skills in debate and critical thinking.\n\n**Key Takeaways:**\n• Correlation means things occur together; causation means one produces the other\n• Consider reverse causation and common causes\n• Controlled experiments, mechanism, and replication establish causation\n• Attack causal claims by proposing alternatives and demanding evidence\n• Single studies showing correlation don't prove causation\n\n**Looking Ahead:**\nIn the next lesson, we'll complete the Beginner section with a comprehensive review of everything you've learned.\n\n**Practice Challenge:**\nFind a news headline claiming X causes Y. What's the evidence? Is it correlation or causation? What alternatives could explain the data?",
+        content: "You've mastered the distinction between correlation and causation—one of the most important analytical skills in debate and critical thinking.\n\n**Key Takeaways:**\n• Correlation means things occur together; causation means one produces the other\n• Consider reverse causation and common causes\n• Controlled experiments, mechanism, and replication establish causation\n• Natural experiments provide intermediate evidence\n• Attack causal claims by proposing alternatives and demanding evidence\n• Spurious correlations teach us to be skeptical of all correlations\n• Single studies showing correlation don't prove causation\n\n**Looking Ahead:**\nIn the next lesson, we'll complete the Beginner section with a comprehensive review of everything you've learned.\n\n**Practice Challenge:**\nFind a news headline claiming X causes Y. What's the evidence? Is it correlation or causation? What alternatives could explain the data?",
         keyPoints: [
           "Correlation doesn't imply causation",
           "Consider alternatives before accepting causal claims",
@@ -634,6 +849,26 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
           "Intellectual honesty strengthens credibility",
           "Professionalism matters for reputation",
           "Debate is about ideas, not personal attacks",
+        ],
+      },
+      {
+        type: "content",
+        title: "Putting It All Together: The Complete Debater",
+        content: "A complete debater integrates all these skills:\n\n**Before the Round:**\n• Research thoroughly using quality sources\n• Prepare evidence with proper citations\n• Anticipate opponent arguments\n• Know your format's rules and strategies\n\n**During the Round:**\n• Deliver clearly and confidently\n• Flow accurately\n• Refute with structure (4 S's)\n• Identify and call out fallacies\n• Stay professional under pressure\n\n**After the Round:**\n• Reflect on what worked and what didn't\n• Learn from feedback\n• Improve for next time\n\n**The Mindset:**\nDebate is a skill developed over time. Every round teaches you something. The goal isn't perfection—it's continuous improvement.",
+        keyPoints: [
+          "Integrate research, delivery, refutation, and professionalism",
+          "Each round is a learning opportunity",
+          "Continuous improvement is the goal",
+        ],
+      },
+      {
+        type: "content",
+        title: "Common Beginner Mistakes to Avoid",
+        content: "As you move forward, watch out for these common errors:\n\n**Research Errors:**\n• Relying on vague 'studies show' citations\n• Using outdated or biased sources\n• Not understanding what your evidence actually says\n\n**Delivery Errors:**\n• Speaking too fast (or too slow)\n• Reading directly from notes without eye contact\n• Using filler words ('um,' 'like,' 'you know')\n\n**Refutation Errors:**\n• Attacking strawmen instead of actual arguments\n• Dropping key opponent points\n• Getting personal instead of staying substantive\n\n**Logic Errors:**\n• Making the very fallacies you learned to spot\n• Assuming correlation proves causation\n• Oversimplifying complex issues\n\n**Strategic Errors:**\n• Spending too much time on weak points\n• Not managing time effectively\n• Forgetting to summarize and weigh",
+        keyPoints: [
+          "Know your evidence—don't just cut cards",
+          "Balance delivery speed with clarity",
+          "Avoid the fallacies you learned to identify",
         ],
       },
       {

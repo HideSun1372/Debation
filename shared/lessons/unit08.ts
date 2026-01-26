@@ -44,6 +44,39 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Real-World Preemption Examples",
+        content: "Let's examine how preemption works across different debate topics:\n\n**Example 1: Renewable Energy Policy**\nYour position: 'We should transition to 100% renewable energy by 2040.'\n\nLikely objection: 'This will cost jobs in fossil fuel industries.'\n\nPreemptive response: 'Some might worry about job losses. However, the renewable sector is already creating jobs faster than fossil fuels—the Solar Foundation reports solar jobs grew 167% over the last decade. Our plan includes $10 billion for worker retraining, ensuring affected workers transition to higher-paying clean energy careers.'\n\n**Example 2: Criminal Justice Reform**\nYour position: 'We should eliminate cash bail.'\n\nLikely objection: 'Dangerous criminals will be released.'\n\nPreemptive response: 'Critics may suggest this releases dangerous individuals. But our plan maintains judicial discretion for violent offenses—the 10% of cases where public safety is genuinely at risk. For the 90% accused of non-violent offenses, data from New Jersey shows no increase in crime after bail reform.'\n\n**Notice the Pattern:**\n• Acknowledge the concern exists\n• Provide specific evidence or mechanism\n• Show why the objection doesn't defeat your case",
+        keyPoints: [
+          "Preemption follows a predictable structure",
+          "Acknowledge the concern, then address it",
+          "Use specific evidence to counter objections",
+        ],
+      },
+      {
+        type: "content",
+        title: "Building an Objection Map",
+        content: "Before any debate, systematically map potential objections:\n\n**Step 1: List Your Main Arguments**\nWrite down each major claim in your case.\n\n**Step 2: For Each Argument, Brainstorm Attacks**\nThink: How could an opponent challenge this?\n• The facts are wrong\n• The logic doesn't follow\n• The impacts are exaggerated\n• There's a better alternative\n• Implementation won't work\n• The values are misplaced\n\n**Step 3: Prioritize by Likelihood**\nRank objections from 'almost certain' to 'unlikely.' Focus on the top 3-5.\n\n**Step 4: Prepare Responses**\nFor each prioritized objection:\n• Find evidence to refute it\n• Develop a logical counter-argument\n• Prepare an 'even if' backup\n\n**Step 5: Decide What to Preempt**\nInclude the most likely 1-2 objections in your constructive. Save others for rebuttal.\n\n**Example Objection Map:**\n| Argument | Likely Objection | Response | Preempt? |\n|----------|-----------------|----------|----------|\n| UBI saves money | Too expensive | Consolidates existing programs | Yes |\n| UBI helps economy | Inflation | Fed can manage; Alaska evidence | Maybe |\n| UBI is fair | Discourages work | Finland study shows continued work | Yes |",
+        keyPoints: [
+          "Systematically map objections for each argument",
+          "Prioritize by likelihood of being raised",
+          "Preempt the most certain attacks",
+        ],
+      },
+      {
+        type: "question",
+        id: "l08-01-q3",
+        question: "You're arguing for a new education policy and expect opponents to claim it's too expensive. What's the best preemptive approach?",
+        options: [
+          { id: "a", text: "Ignore the cost concern entirely" },
+          { id: "b", text: "Say 'Some might argue this is expensive. However, independent analysis shows it would save $5 billion annually through reduced remediation costs.'" },
+          { id: "c", text: "Attack your opponent personally for caring about money" },
+          { id: "d", text: "Admit the policy is too expensive and drop the argument" }
+        ],
+        correctAnswer: "b",
+        explanation: "The best preemptive approach acknowledges the likely objection ('Some might argue...'), then provides a direct response with evidence. This shows you've considered the concern and have a substantive answer, which builds credibility and takes the sting out of the opponent raising it later.",
+      },
+      {
+        type: "content",
         title: "Integrating Preemption Into Your Case",
         content: "Once you've identified likely objections, integrate them strategically:\n\n**Method 1: Address Directly**\n'Some might argue that [objection]. However, [response].'\nClear and explicit, but takes time.\n\n**Method 2: Build In Implicitly**\nStructure your argument to address concerns without explicitly stating the objection. Your evidence and reasoning naturally cover the gap.\n\n**Method 3: The 'Even If' Strategy**\n'Even if my opponent argues [objection], my point still stands because [reasoning].'\nShows you've considered the objection and can win regardless.\n\n**Method 4: Concede and Pivot**\n'I'll grant that [minor point]. However, this doesn't affect my main argument because [reasoning].'\nConceding small points makes you seem reasonable and focuses on what matters.\n\n**Placement:**\n• In constructive: Address the most predictable objections\n• In rebuttal: Address anything you didn't preempt\n• Save some responses for rebuttal to seem responsive",
         keyPoints: [
@@ -159,6 +192,39 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "The Hierarchy of Expert Evidence",
+        content: "Not all expert evidence is equally strong. Here's a hierarchy from strongest to weakest:\n\n**Tier 1: Meta-Analysis of Multiple Studies**\nSystematic reviews that combine findings from many studies. The Cochrane Collaboration in medicine is the gold standard.\n\n**Tier 2: Expert Consensus Statements**\nOfficial positions from major professional organizations (AMA, IPCC, National Academy of Sciences). Represents collective judgment of many experts.\n\n**Tier 3: Peer-Reviewed Research**\nIndividual studies published in reputable journals. Stronger when replicated by independent researchers.\n\n**Tier 4: Individual Expert Opinion**\nA single expert's view, even if credentialed. May not represent broader consensus.\n\n**Tier 5: Practitioner Experience**\nAnecdotal expertise from field experience. Valuable but limited in scope.\n\n**For Debate:**\n• Higher-tier evidence is harder to attack\n• If opponents cite lower-tier evidence, challenge with higher-tier\n• 'My opponent cites one doctor; here's the position of the American Medical Association...'",
+        keyPoints: [
+          "Meta-analyses and consensus statements are strongest",
+          "Individual expert opinion is weaker than consensus",
+          "Use higher-tier evidence to counter lower-tier",
+        ],
+      },
+      {
+        type: "content",
+        title: "Real-World Expert Evaluation",
+        content: "Let's practice evaluating expert citations:\n\n**Scenario 1:**\n'Dr. Smith, a Harvard epidemiologist with 200 peer-reviewed publications on infectious disease, says this vaccine is safe.'\n\n**Evaluation:** Strong. Relevant expertise (epidemiology), prestigious institution, extensive publication record, specific to the claim.\n\n**Scenario 2:**\n'This celebrity who recovered from cancer says chemotherapy doesn't work.'\n\n**Evaluation:** Weak. No medical expertise, personal experience ≠ medical evidence, contradicts overwhelming medical consensus.\n\n**Scenario 3:**\n'A study funded by the sugar industry found no link between sugar and obesity.'\n\n**Evaluation:** Suspect. Clear financial conflict of interest. Look for independent research on the same question.\n\n**Scenario 4:**\n'Nobel Prize-winning chemist says AI is dangerous.'\n\n**Evaluation:** Weak for AI claims. Chemistry expertise doesn't transfer to artificial intelligence. Their opinion is just that—an opinion.\n\n**The Takeaway:**\nAlways ask: Is the expertise relevant to this specific claim? Any conflicts? What does consensus say?",
+        keyPoints: [
+          "Evaluate relevance, credentials, and conflicts",
+          "Celebrity status doesn't equal expertise",
+          "Funding sources can indicate bias",
+        ],
+      },
+      {
+        type: "question",
+        id: "l08-02-q3",
+        question: "An opponent cites 'a study by scientists' without naming the scientists or the journal. How should you respond?",
+        options: [
+          { id: "a", text: "Accept the evidence as valid since scientists conducted it" },
+          { id: "b", text: "Point out that anonymous, unverifiable sources have no credibility in debate" },
+          { id: "c", text: "Ignore it and move on" },
+          { id: "d", text: "Make up your own anonymous study in response" }
+        ],
+        correctAnswer: "b",
+        explanation: "Anonymous or vague authority claims ('scientists say...') are meaningless. Without knowing who conducted the research, where it was published, and what their methodology was, there's no way to evaluate its credibility. You should call out this weakness directly.",
+      },
+      {
+        type: "content",
         title: "Evaluating Expert Qualifications",
         content: "When assessing whether to trust expert testimony:\n\n**Check Credentials:**\n• What degrees do they hold?\n• Are degrees relevant to the specific claim?\n• From what institutions?\n\n**Check Experience:**\n• Have they worked in this field?\n• For how long?\n• In what capacity?\n\n**Check Publication Record:**\n• Have they published peer-reviewed work on this topic?\n• Is their work cited by other experts?\n• Any retractions or controversies?\n\n**Check Institutional Affiliation:**\n• Do they work at a reputable institution?\n• What's the institution's reputation in this field?\n\n**Check Potential Conflicts:**\n• Who funds their research?\n• Do they sell products related to their claims?\n• Any financial interest in the outcome?\n\n**Context Matters:**\nAn industry scientist isn't automatically wrong, but conflicts warrant extra scrutiny. Apply the same standard you'd want applied to your sources.",
         keyPoints: [
@@ -255,6 +321,39 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "The Art of Steel-Manning",
+        content: "Steel-manning is the opposite of straw-manning—you engage with the strongest version of your opponent's argument:\n\n**What Steel-Manning Looks Like:**\n'Let me make sure I understand my opponent's best argument. They're saying that [strongest interpretation]. Here's why that still doesn't work...'\n\n**Why Steel-Man:**\n• Judges respect you for engaging seriously\n• If you defeat the strongest version, you've truly won\n• It demonstrates genuine understanding\n• Opponents can't claim you misrepresented them\n\n**How to Steel-Man:**\n1. Listen carefully to what they actually say\n2. Ask yourself: What's the most reasonable interpretation?\n3. State that interpretation clearly\n4. Then respond to it substantively\n\n**Example:**\n'My opponent argues for stricter gun control to reduce mass shootings. The strongest version of this claim is that reducing access to high-capacity magazines would limit casualties even if shootings still occur. However, even granting this, I'll show that other interventions are more effective...'\n\n**The Contrast:**\n• Straw-man: Misrepresent to make easy attack\n• Steel-man: Strengthen to prove genuine refutation",
+        keyPoints: [
+          "Steel-manning engages the strongest interpretation",
+          "Defeating strong arguments is more impressive",
+          "It prevents claims of misrepresentation",
+        ],
+      },
+      {
+        type: "content",
+        title: "Handling Inconvenient Evidence",
+        content: "Sometimes you encounter evidence that hurts your position. How you handle it matters:\n\n**Option 1: Address It Directly**\nIf you know opponents will cite it:\n'There is one study that found different results—the Smith 2020 study. However, it had methodological problems: small sample size and no control group. The three larger, better-designed studies all support my position.'\n\n**Option 2: Contextualize**\n'While some data points the other direction, the weight of evidence supports my position. Science is rarely unanimous, but the preponderance is clear.'\n\n**Option 3: Acknowledge and Pivot**\n'I'll grant that this one metric doesn't support my case. However, when we look at the full picture—including A, B, and C—my position remains stronger.'\n\n**What NOT to Do:**\n• Pretend the evidence doesn't exist\n• Distort what it says\n• Attack the source without substance\n\n**The Honest Standard:**\nIf an objective observer would think the evidence is relevant, you should address it rather than ignore it.",
+        keyPoints: [
+          "Address inconvenient evidence directly",
+          "Contextualize within the broader evidence base",
+          "Never pretend problematic evidence doesn't exist",
+        ],
+      },
+      {
+        type: "question",
+        id: "l08-03-q3",
+        question: "You encounter a study that contradicts your position. What's the most intellectually honest approach?",
+        options: [
+          { id: "a", text: "Pretend you never saw it" },
+          { id: "b", text: "Address it directly, explain its limitations, and show why other evidence outweighs it" },
+          { id: "c", text: "Attack the researchers personally" },
+          { id: "d", text: "Change your position entirely" }
+        ],
+        correctAnswer: "b",
+        explanation: "The intellectually honest approach is to address the contradicting evidence directly. Explain any legitimate methodological concerns, and show why the weight of evidence still supports your position. This builds credibility and prevents opponents from surprising judges with evidence you ignored.",
+      },
+      {
+        type: "content",
         title: "Strategic Concessions",
         content: "Knowing what to concede—and what not to—is a key skill:\n\n**Good Concessions:**\n• Minor points that don't affect your core argument\n• Obvious truths that make you look unreasonable if denied\n• Points that, when granted, actually strengthen your position\n\n**'Grant and Pivot':**\n'I'll grant that implementation has challenges. But the benefits still outweigh these manageable costs because...'\n\n**'Yes, And':**\n'My opponent is right that there are costs. Yes, AND those costs are worth paying for these reasons...'\n\n**Bad Concessions:**\n• Core claims your case depends on\n• Points that undermine your key arguments\n• More than necessary (don't concede what wasn't challenged)\n\n**The Danger:**\nOver-conceding makes you seem like you agree with your opponent. Concede strategically, not reflexively.",
         keyPoints: [
@@ -346,6 +445,16 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Correlation vs. Causation",
+        content: "One of the most common statistical errors is confusing correlation with causation:\n\n**What's the Difference?**\n• Correlation: Two things tend to occur together\n• Causation: One thing actually causes the other\n\n**Classic Examples:**\n• Ice cream sales and drownings both increase in summer. Ice cream doesn't cause drowning—both correlate with hot weather.\n• Countries with more chocolate consumption have more Nobel Prize winners. Chocolate probably doesn't cause brilliance—both correlate with wealth.\n\n**The Three Possibilities:**\nWhen A and B correlate:\n1. A causes B\n2. B causes A\n3. C causes both A and B (confounding variable)\n\n**How to Establish Causation:**\n• Randomized controlled experiments (not just observation)\n• Mechanism: Explain HOW the cause produces the effect\n• Time order: Cause must precede effect\n• Dose response: More cause = more effect\n• Rule out confounders\n\n**In Debate:**\n'My opponent shows correlation, but not causation. The same data is explained by [alternative explanation].'",
+        keyPoints: [
+          "Correlation shows relationship, not cause",
+          "Look for confounding variables",
+          "Causation requires mechanism and controlled studies",
+        ],
+      },
+      {
+        type: "content",
         title: "Base Rates and Percentages",
         content: "Percentages can mislead when base rates are ignored:\n\n**The Problem:**\n'Drug X reduces heart attack risk by 50%!'\nSounds amazing. But if the baseline risk was 0.02%, it's now 0.01%—a tiny absolute difference.\n\n**Relative vs. Absolute:**\n• Relative risk: Compares to baseline (50% reduction)\n• Absolute risk: The actual numbers (0.02% to 0.01%)\n• Both are true; neither alone tells the full story\n\n**Numbers Needed to Treat:**\nIf a treatment prevents 1 in 10,000 deaths, you'd need to treat 10,000 people to save one life. The relative percentage might sound dramatic, but the absolute benefit is small.\n\n**In Debate:**\n• When you want impact to seem large: Use relative percentages\n• When you want to minimize: Use absolute numbers\n• Intellectually honest: Report both\n\n**Attack:**\n'My opponent says risk dropped 50%, but the absolute change is from 0.02% to 0.01%—a difference of one hundredth of one percent.'",
         keyPoints: [
@@ -355,6 +464,19 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         ],
       },
       {
+        type: "question",
+        id: "l08-04-q3",
+        question: "A study shows that cities with more police officers have higher crime rates. What's the most likely explanation?",
+        options: [
+          { id: "a", text: "Police officers cause crime" },
+          { id: "b", text: "High-crime cities hire more police (reverse causation or confounding)" },
+          { id: "c", text: "The study must be wrong" },
+          { id: "d", text: "Crime rates don't matter" }
+        ],
+        correctAnswer: "b",
+        explanation: "This is a classic case of reverse causation or confounding. High-crime cities hire more police in response to crime—the crime causes the hiring, not the other way around. This is why correlation doesn't prove causation: the causal direction might be reversed.",
+      },
+      {
         type: "content",
         title: "Common Statistical Tricks",
         content: "Watch for these manipulations:\n\n**Cherry-Picking Time Frames:**\nChoosing start and end dates that show desired trend. 'Crime is up 10%!' (compared to an unusually low year)\n\n**Misleading Graphs:**\nY-axis doesn't start at zero, making small changes look dramatic. Different scales for different data. Truncated axes.\n\n**Comparing Incomparables:**\n'Apples increased by 50%, oranges by only 10%.' But if apples went from 2 to 3 and oranges from 100 to 110, oranges increased more.\n\n**Percent of Percent:**\n'Risk increased by 50%!' From 0.002% to 0.003%. Technically a 50% increase, but trivially small.\n\n**Selection Effects:**\nSurviving companies are successful, but that doesn't mean their strategies work—failed companies with the same strategies aren't around to survey.\n\n**Response Bias:**\nWho chose to respond to a survey? They may differ from non-respondents.\n\n**Leading Questions:**\n'Do you support wasteful government spending on X?' vs 'Do you support investing in X?' Same topic, different answers.",
@@ -362,6 +484,16 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
           "Watch for cherry-picked time frames",
           "Check if graphs use misleading scales",
           "Tiny absolute changes can be large percentages",
+        ],
+      },
+      {
+        type: "content",
+        title: "Debating with Statistics: Case Studies",
+        content: "Let's see statistical analysis in action:\n\n**Case Study 1: Education Spending**\n\nClaim: 'States that spend more on education have lower test scores, proving money doesn't help.'\n\n**Analysis:**\n• Confounding variables: High-spending states may have more disadvantaged students, higher costs of living, or different demographics\n• Selection bias: Which states spend more and why?\n• The correct analysis controls for student background\n\n**Proper Response:** 'This correlation ignores confounding factors. When we control for student demographics, spending shows positive effects—see the Jackson 2016 study.'\n\n**Case Study 2: Crime Rates**\n\nClaim: 'Violent crime rose 15% last year, proving our policies failed.'\n\n**Analysis:**\n• What's the base rate? 15% of what?\n• What time frame is being compared?\n• Is this within normal fluctuation?\n• Longer trends are more meaningful than year-over-year changes\n\n**Proper Response:** 'A single year's fluctuation isn't meaningful. The five-year trend shows crime down 20%. One year's uptick may be noise, not signal.'",
+        keyPoints: [
+          "Look for confounding variables in correlations",
+          "Single-year changes may be statistical noise",
+          "Demand proper controls and context",
         ],
       },
       {
@@ -461,6 +593,16 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Crafting Effective Emotional Appeals",
+        content: "When emotion is appropriate, use it effectively:\n\n**Choose Representative Stories:**\nDon't select the most extreme example. Choose cases that genuinely represent the typical impact of your policy.\n\n**Connect Story to Argument:**\nExplicitly link the emotional element to your logical case:\n'Maria's story shows what the data tells us: this intervention works.'\n\n**Use Specific, Concrete Details:**\nVague emotions are less persuasive. Specific details make stories vivid and memorable:\n'Maria, a single mother from Detroit, worked two jobs but still couldn't afford...'\n\n**Appeal to Shared Values:**\nFrame your argument in terms of values your audience holds:\n• Fairness: 'Is it fair that...'\n• Security: 'Families deserve to feel safe...'\n• Freedom: 'Every person should have the freedom to...'\n• Compassion: 'We can't ignore the suffering of...'\n\n**End with Emotion:**\nConclusions often benefit from emotional resonance. After presenting your logical case, a powerful closing image or story can be memorable.\n\n**Balance Matters:**\nToo much emotion seems manipulative. Too little seems cold. Find the balance appropriate to your topic and audience.",
+        keyPoints: [
+          "Use representative, not extreme, examples",
+          "Connect emotional stories to logical arguments",
+          "Appeal to shared values with specific details",
+        ],
+      },
+      {
+        type: "content",
         title: "Responding to Emotional Appeals",
         content: "When opponents use emotion heavily:\n\n**1. Acknowledge the Emotion:**\nDon't appear cold or dismissive. 'That is a tragic situation, and we all want to prevent such suffering.'\n\n**2. Redirect to Logic:**\n'The question is which policy actually prevents suffering. Let me explain why my approach works better...'\n\n**3. Challenge Representativeness:**\n'That's one story. But is it typical? The data shows most cases look quite different...'\n\n**4. Call Out Manipulation:**\nIf appropriate: 'My opponent is using emotion instead of argument. The sad story doesn't prove their policy works.'\n\n**5. Match Their Emotion:**\nIf they humanize one side, humanize the other: 'Let me tell you about the people harmed by their proposal...'\n\n**What NOT to Do:**\n• Seem heartless or dismissive of legitimate concerns\n• Attack people in the emotional examples\n• Pretend emotion has no place in persuasion",
         keyPoints: [
@@ -553,6 +695,16 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
           "Government agencies provide authoritative data",
           "International organizations offer comparative perspectives",
           "Think tanks vary in bias—check orientation",
+        ],
+      },
+      {
+        type: "content",
+        title: "Advanced Research Techniques",
+        content: "Elevate your research with these advanced techniques:\n\n**Working Backwards from Experts:**\nFind leading experts in a field. Check their publications, interviews, and which sources they cite. Their citations lead to quality evidence.\n\n**Following Citation Chains:**\nWhen you find a useful paper, check both:\n• Its references (what it cites)\n• Papers that cite it (forward citations in Google Scholar)\nThis reveals the conversation around a topic.\n\n**Using Multiple Databases:**\nDifferent databases serve different purposes:\n• Google Scholar: Broad academic search\n• SSRN: Working papers (often more recent than published)\n• ProCon.org: Pre-organized pro/con evidence\n• Factcheck.org, Snopes: Verify disputed claims\n\n**Primary Source Hunting:**\nWhen news articles cite studies:\n• Find the original study\n• Check if the article represents it accurately\n• Get direct quotes and complete data\n\n**Setting Up Alerts:**\nGoogle Alerts and Google Scholar alerts notify you when new content appears on your topics. Great for ongoing research.",
+        keyPoints: [
+          "Follow expert citations to quality sources",
+          "Use forward and backward citation chains",
+          "Always find and verify primary sources",
         ],
       },
       {
@@ -655,6 +807,16 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         type: "content",
         title: "Connecting Research and Argumentation",
         content: "Research and argumentation work together:\n\n**Building Strong Cases:**\n1. Research to understand the topic\n2. Find evidence for key claims\n3. Structure with Toulmin model\n4. Anticipate objections and preempt\n5. Balance logic and emotion\n6. Present with intellectual honesty\n\n**Attacking Weak Cases:**\n1. Evaluate source credibility\n2. Check statistical validity\n3. Question authority relevance\n4. Identify missing warrants\n5. Challenge causal claims\n6. Call out manipulation\n\n**The Complete Package:**\nGood debaters combine strong research (finding quality evidence), strong argumentation (structuring claims logically), and strong delivery (presenting credibly and persuasively).",
+      },
+      {
+        type: "content",
+        title: "Applying Skills Across Contexts",
+        content: "The skills from Unit 8 apply far beyond debate:\n\n**In Academic Writing:**\n• Find and cite quality sources\n• Acknowledge counterarguments\n• Use statistics responsibly\n• Balance evidence with analysis\n\n**In Professional Settings:**\n• Prepare for objections in presentations\n• Cite credible sources in reports\n• Present data with appropriate context\n• Build credibility through intellectual honesty\n\n**As a Citizen:**\n• Evaluate news and claims critically\n• Recognize manipulative appeals\n• Understand when experts should be trusted\n• Check statistics before sharing\n\n**In Personal Decisions:**\n• Research major choices thoroughly\n• Consider counterarguments to your preferences\n• Acknowledge uncertainty honestly\n• Balance emotion with logic\n\n**The Core Habit:**\nAlways ask: What's the evidence? Who's the authority? What am I not being told? These questions become automatic with practice.",
+        keyPoints: [
+          "Research skills transfer to academics and careers",
+          "Critical evaluation applies to news and politics",
+          "These habits improve all decision-making",
+        ],
       },
       {
         type: "question",

@@ -89,6 +89,39 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Practice Scenarios: Identifying Ad Hominem",
+        content: "Let's work through real-world scenarios to sharpen your ad hominem detection skills:\n\n**Scenario 1: The Budget Debate**\n• Argument: 'We should reduce military spending and invest in education.'\n• Response: 'You've never served in the military, so you can't understand defense needs.'\n• Analysis: This is circumstantial ad hominem. Military service isn't required to evaluate budget priorities.\n\n**Scenario 2: The Health Discussion**\n• Argument: 'Studies show this diet improves cardiovascular health.'\n• Response: 'You're overweight yourself—why should anyone listen to your health advice?'\n• Analysis: This is tu quoque combined with abusive ad hominem. The speaker's weight doesn't affect whether the studies are valid.\n\n**Scenario 3: The Policy Proposal**\n• Argument: 'Raising the minimum wage will help workers afford basic necessities.'\n• Response: 'Of course you'd say that—you're a union organizer trying to gain more members.'\n• Analysis: This is circumstantial ad hominem. Even if the speaker has motivations, the economic argument stands or falls on its own merits.\n\n**Scenario 4: The Historical Claim**\n• Argument: 'This historical interpretation is supported by primary sources.'\n• Response: 'That historian was later accused of plagiarism in an unrelated work.'\n• Analysis: This is guilt by association and abusive—the plagiarism accusation doesn't address the interpretation's validity.",
+        keyPoints: [
+          "Circumstantial: attacking background or affiliations",
+          "Tu Quoque: pointing out perceived hypocrisy",
+          "The speaker's characteristics don't determine argument validity",
+        ],
+      },
+      {
+        type: "content",
+        title: "The Fine Line: When Character Evidence Matters",
+        content: "While ad hominem is a fallacy, there are narrow circumstances where a person's character or background can legitimately factor into evaluation—without committing the fallacy:\n\n**Expert Testimony:**\nWhen someone claims expertise, their credentials matter. 'I'm a doctor, trust me on this medical issue' invites credential scrutiny. But this evaluates their authority to speak, not whether their specific claims are true.\n\n**Witness Reliability:**\nIn legal contexts, a witness's history of truthfulness affects how much weight we give their testimony. A proven perjurer's account deserves more scrutiny—but independent corroboration could still make their claims credible.\n\n**Conflict of Interest Disclosure:**\n'This researcher is funded by the industry they're studying' is relevant context that affects how we weigh their conclusions—but their research methods can still be evaluated on merit.\n\n**The Crucial Distinction:**\n• Fallacious: 'They're biased, therefore wrong.'\n• Legitimate: 'They're biased, so let's examine their evidence more carefully.'\n\n**In Debate Practice:**\nYou can question credibility while still engaging with substance: 'My opponent cites a source with potential bias. But even setting that aside, here's why their data is flawed...' This approach is both fair and effective.\n\n**The Principle:**\nCharacter evidence can adjust how much weight we give to claims, but it cannot substitute for evaluating the claims themselves.",
+        keyPoints: [
+          "Credentials matter for claimed expertise",
+          "Bias affects weight of evidence, not its automatic validity",
+          "Always engage with substance, even when questioning credibility",
+        ],
+      },
+      {
+        type: "question",
+        id: "l06-01-q3",
+        question: "A politician argues: 'My opponent's tax plan is flawed because he's a millionaire who would personally benefit from it.' Is this valid reasoning?",
+        options: [
+          { id: "a", text: "Yes, because millionaires can't be trusted on tax policy" },
+          { id: "b", text: "Yes, because personal benefit always invalidates arguments" },
+          { id: "c", text: "No, but the potential conflict of interest is worth noting while still examining the plan's merits" },
+          { id: "d", text: "No, because politicians should never discuss opponents' wealth" }
+        ],
+        correctAnswer: "c",
+        explanation: "The politician's wealth is relevant context (potential conflict of interest) but doesn't automatically make the tax plan wrong. The correct approach notes the possible bias while still evaluating the plan on its merits. Dismissing the argument solely because of the proposer's wealth would be circumstantial ad hominem.",
+      },
+      {
+        type: "content",
         title: "Conclusion: Ideas Over Identities",
         content: "Congratulations on completing this lesson on ad hominem attacks! You now have tools to recognize this fallacy, respond to it effectively, and keep your own arguments focused on substance.\n\n**Key Takeaways:**\n• Ad hominem attacks the person instead of the argument\n• It comes in many forms: abusive, circumstantial, tu quoque, guilt by association, and poisoning the well\n• Personal credibility can be relevant, but it doesn't invalidate arguments\n• Respond by naming the fallacy and redirecting to substance\n• Keep your own arguments clean by attacking evidence and reasoning, not people\n\n**Looking Ahead:**\nIn upcoming lessons, we'll explore more fallacies and logical errors, building your toolkit for both attacking weak arguments and defending against unfair tactics.\n\n**Practice Thought:**\nOver the next few days, notice ad hominem in media, conversations, and online discussions. How often do people attack ideas versus attacking people? This awareness is the first step to better discourse.",
         keyPoints: [
@@ -205,6 +238,41 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Building Speed: Progressive Training Methods",
+        content: "Speed is a skill that can be deliberately developed through structured practice:\n\n**The Ladder Drill:**\n1. Read a passage at comfortable speed (your baseline)\n2. Time yourself\n3. Read again, aiming for 10% faster\n4. Repeat, increasing 5-10% each time\n5. Stop when clarity degrades\n6. Practice at that threshold until comfortable\n7. Repeat the ladder from the new baseline\n\n**The Articulation Drill:**\nPractice tongue twisters at increasing speeds:\n• 'Red leather, yellow leather'\n• 'The sixth sick sheikh's sixth sheep's sick'\n• 'She sells seashells by the seashore'\nThis builds the muscle memory for clear articulation at speed.\n\n**The Evidence Drill:**\nTake actual debate evidence and practice reading it:\n1. First pass: understand the content\n2. Second pass: mark natural pauses\n3. Third pass: read for clarity\n4. Fourth pass: gradually increase speed\n\n**Recording Feedback:**\nRecord yourself weekly. Listen for:\n• Dropped word endings\n• Slurred transitions\n• Gasping for breath\n• Monotone delivery at high speed\n\n**The 90% Rule:**\nIn actual rounds, stay at 90% of your maximum tested speed. This leaves room for nerves and ensures you don't sacrifice clarity under pressure.",
+        keyPoints: [
+          "Use the ladder drill to gradually increase speed",
+          "Practice articulation with tongue twisters",
+          "Record and listen for clarity problems",
+          "In rounds, stay at 90% of maximum tested speed",
+        ],
+      },
+      {
+        type: "content",
+        title: "Common Speed Mistakes and Fixes",
+        content: "Even experienced debaters make speed-related errors. Here's how to diagnose and fix them:\n\n**Problem: Trailing Off at Ends of Sentences**\nThe last few words of each sentence become quieter and faster.\n• Fix: Consciously project through the period. Practice ending sentences strongly.\n\n**Problem: Speed Without Signposting**\nFast delivery with no structure markers becomes impossible to follow.\n• Fix: Slow slightly for 'First,' 'Second,' 'Next,' 'Now turning to...'\n\n**Problem: One Speed Throughout**\nNo variation makes everything sound equally unimportant.\n• Fix: Deliberately practice varying speeds within a speech. Mark your outline: fast sections, slow sections.\n\n**Problem: Gasping Mid-Sentence**\nRunning out of breath creates awkward pauses and choppy delivery.\n• Fix: Take breaths at natural pause points. Practice breath control—don't exhale all air before inhaling.\n\n**Problem: Speed in CX**\nRapid-fire questions overwhelm opponents and look aggressive.\n• Fix: CX is conversational. Take your time. Let answers land before asking follow-ups.\n\n**Problem: Same Speed Regardless of Judge**\nFailing to adapt to lay judges or unfamiliar circuits.\n• Fix: Have at least two 'modes'—tournament speed and parent-judge speed. Practice switching between them.",
+        keyPoints: [
+          "Project through sentence endings",
+          "Always signpost when speaking fast",
+          "Vary speed for emphasis and clarity",
+          "Adapt your mode to the judge",
+        ],
+      },
+      {
+        type: "question",
+        id: "l06-02-q3",
+        question: "During a debate, you notice you're running out of breath mid-sentence. What's the best fix?",
+        options: [
+          { id: "a", text: "Speak even faster to finish sentences before running out of air" },
+          { id: "b", text: "Take breaths at natural pause points and don't exhale all air before inhaling" },
+          { id: "c", text: "Stop breathing during important arguments" },
+          { id: "d", text: "Only use very short sentences" }
+        ],
+        correctAnswer: "b",
+        explanation: "Running out of breath mid-sentence is a common problem at high speeds. The fix is to take controlled breaths at natural pause points—between arguments, after key claims—and to not fully exhaust your air before inhaling. This maintains a reserve and prevents gasping.",
+      },
+      {
+        type: "content",
         title: "Conclusion: Controlled Efficiency",
         content: "You've now learned to think strategically about speaking speed—not as a single setting, but as a variable you control based on context.\n\n**Key Takeaways:**\n• Speed lets you cover more ground, but clarity ensures your arguments count\n• Always adapt to your judge's ability to follow\n• Techniques like signposting and enunciation allow both speed and clarity\n• Spreading is circuit-specific—learn when it helps and when it hurts\n• Practice expanding your comfortable speed range\n• Use speed variation strategically to emphasize key points\n\n**Looking Ahead:**\nIn the next lesson, we'll examine how to evaluate source credibility—a crucial skill for both building and attacking arguments.\n\n**Practice Challenge:**\nRecord yourself giving a two-minute speech. Listen back: can you understand every word? Now try it 10% faster. Where does clarity break down? That's your growth edge.",
         keyPoints: [
@@ -305,6 +373,40 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Defending Your Own Sources",
+        content: "Just as you'll attack opponent sources, you must be prepared to defend your own:\n\n**Preemptive Credibility Building:**\nWhen introducing sources, establish credibility upfront:\n• 'According to Dr. Smith, a Harvard economist who has studied minimum wage for 20 years...'\n• 'A 2024 peer-reviewed study in the Journal of Medicine found...'\n• 'Government data from the Bureau of Labor Statistics shows...'\n\n**Responding to Source Attacks:**\nWhen opponents challenge your sources:\n• Address the specific criticism: 'They claim my source is outdated, but this 2019 study remains the definitive work because...'\n• Provide additional context: 'Yes, this researcher works for industry, but her methodology was independently verified by...'\n• Cite corroboration: 'Even if you discount that source, these three other studies confirm the same finding...'\n\n**The Layered Defense:**\nNever rely on a single source for crucial claims. Build redundancy:\n1. Primary source for the data\n2. Expert interpretation supporting your reading\n3. Additional corroborating evidence\n\n**When to Concede:**\nIf a source is genuinely weak, don't die on that hill:\n'Even if you discount that particular study, my argument stands because of [other evidence]...'\n\n**Source Documentation:**\nKeep full citations for every source. Be ready to provide:\n• Author name and credentials\n• Publication venue\n• Date\n• Specific page numbers or quotes",
+        keyPoints: [
+          "Build credibility when introducing sources",
+          "Address specific criticisms directly",
+          "Use multiple sources for crucial claims",
+          "Be ready to provide full documentation",
+        ],
+      },
+      {
+        type: "content",
+        title: "Source Evaluation in Practice: Case Studies",
+        content: "Let's apply credibility evaluation to realistic scenarios:\n\n**Case Study 1: The Climate Debate**\nSource: 'A 2024 report from the Heartland Institute claims climate models are unreliable.'\n• CRAAP Analysis:\n  - Currency: Recent (good)\n  - Relevance: Directly on topic (good)\n  - Authority: Think tank, not peer-reviewed research (caution)\n  - Accuracy: Known for contrarian positions, funding from fossil fuel interests\n  - Purpose: Advocacy organization with clear agenda\n• Verdict: Weak source—advocacy group with conflict of interest. Would need peer-reviewed corroboration.\n\n**Case Study 2: The Economic Policy**\nSource: 'A Congressional Budget Office analysis projects this policy will reduce the deficit by $50 billion.'\n• CRAAP Analysis:\n  - Currency: Assume recent\n  - Relevance: Direct projection on the policy\n  - Authority: Non-partisan government agency with expertise\n  - Accuracy: Transparent methodology, track record\n  - Purpose: Mandated neutral analysis\n• Verdict: Strong source—government agency with non-partisan mandate and subject expertise.\n\n**Case Study 3: The Medical Claim**\nSource: 'A study published in the New England Journal of Medicine found...'\n• CRAAP Analysis:\n  - Currency: Journal is current\n  - Relevance: Depends on the claim\n  - Authority: Premier peer-reviewed medical journal\n  - Accuracy: Rigorous peer review process\n  - Purpose: Advancing medical knowledge\n• Verdict: Strong source—peer-reviewed research in a top-tier journal.",
+        keyPoints: [
+          "Apply CRAAP test systematically to each source",
+          "Consider funding and organizational mission",
+          "Peer-reviewed research generally ranks highest",
+        ],
+      },
+      {
+        type: "question",
+        id: "l06-03-q3",
+        question: "Your opponent attacks your source by saying 'I've never heard of that journal.' How should you respond?",
+        options: [
+          { id: "a", text: "Accept that your source is weak because it's unknown" },
+          { id: "b", text: "Attack your opponent personally for their ignorance" },
+          { id: "c", text: "Explain the journal's credentials (peer-reviewed, impact factor, field reputation) and restate your evidence" },
+          { id: "d", text: "Ignore the attack completely" }
+        ],
+        correctAnswer: "c",
+        explanation: "'I've never heard of it' is not a valid source attack—personal unfamiliarity doesn't indicate source quality. Respond by establishing the journal's actual credentials: peer review process, academic standing, impact factor if relevant. Then redirect to the substance of your evidence.",
+      },
+      {
+        type: "content",
         title: "Conclusion: The Critical Consumer",
         content: "You've now developed a framework for evaluating source credibility—a skill that serves you in debate and throughout life.\n\n**Key Takeaways:**\n• Use the CRAAP test: Currency, Relevance, Authority, Accuracy, Purpose\n• Author credentials must be relevant to the topic\n• Publication venue indicates rigor and reliability\n• Recency matters most in fast-moving fields\n• Bias doesn't disqualify sources, but should be acknowledged\n• Attack weak opponent sources specifically and substantively\n\n**Looking Ahead:**\nIn the next lesson, we'll examine the strawman fallacy—when opponents misrepresent your arguments to attack weaker versions.\n\n**Practice Challenge:**\nFind a news article on a controversial topic. Apply the CRAAP test: Who wrote it? What's their background? What's the publication's reputation? When was it written? What might bias the coverage? This exercise builds automatic critical evaluation habits.",
         keyPoints: [
@@ -401,6 +503,39 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         type: "content",
         title: "Strawman in Real-World Discourse",
         content: "Understanding strawman makes you a better citizen and thinker:\n\n**Political Media:**\nCable news and social media thrive on strawmen. 'The other side wants X!' claims often distort actual positions. Before accepting these characterizations, check primary sources.\n\n**Social Media:**\nOnline, positions are frequently misrepresented for engagement. Outrageous strawmen get more shares than nuanced disagreements.\n\n**Workplace:**\nIn meetings, ensure you understand positions before disagreeing: 'Let me make sure I understand—you're saying... Is that right?'\n\n**Personal Relationships:**\nArguments escalate when partners strawman each other: 'You always...' 'You never...' Instead: 'When you did X, I felt Y.'\n\n**Self-Examination:**\nNotice when you're strawmanning in your own thinking. It's easy to dismiss positions you disagree with by imagining weaker versions.\n\n**Media Literacy:**\nWhen you see 'critics say' or 'opponents believe,' check if actual critics and opponents say those things.",
+      },
+      {
+        type: "content",
+        title: "Steel-Manning: The Opposite of Strawman",
+        content: "The best debaters don't just avoid strawmanning—they actively steel-man opponent arguments before refuting them:\n\n**What is Steel-Manning?**\nSteel-manning means presenting your opponent's argument in its strongest possible form before attacking it. You build them a suit of armor, then show you can defeat even the armored version.\n\n**Why Steel-Man?**\n• Demonstrates intellectual honesty\n• Shows judges you truly understand the issue\n• Makes your refutation more impressive\n• Prevents opponents from claiming you misunderstood\n• Forces you to engage with the real challenge\n\n**How to Steel-Man:**\n1. Listen carefully to the actual argument\n2. Ask: 'What's the strongest version of this?'\n3. Consider what evidence would best support their claim\n4. Present that strengthened version\n5. Then refute it\n\n**Example:**\nOpponent says: 'We shouldn't raise the minimum wage because small businesses will suffer.'\n\nSteel-man: 'The strongest version of my opponent's argument is that minimum wage increases disproportionately burden small businesses with thin margins, potentially leading to reduced hours or layoffs for the very workers intended to benefit. Even accepting this stronger version, my case still holds because...'\n\n**The Credibility Boost:**\nJudges respect debaters who engage honestly. Steel-manning signals that you're confident enough to face the best version of opposing arguments.",
+        keyPoints: [
+          "Steel-manning presents the strongest version of opponent's argument",
+          "It demonstrates intellectual honesty and confidence",
+          "Defeating a strong version is more impressive",
+        ],
+      },
+      {
+        type: "content",
+        title: "Common Strawman Scenarios and Responses",
+        content: "Practice recognizing and responding to these frequent strawman patterns:\n\n**Scenario 1: The Extreme Extension**\n• Your argument: 'We should require background checks for gun purchases.'\n• Strawman: 'So you want to confiscate all guns from law-abiding citizens!'\n• Response: 'That's not my position. I said background checks, not confiscation. Let me clarify: [restate actual position].'\n\n**Scenario 2: The Motivation Attack**\n• Your argument: 'We should invest more in public schools.'\n• Strawman: 'You just want to grow government bureaucracy and raise taxes!'\n• Response: 'I'm arguing about education outcomes, not bureaucracy. The evidence shows [specific benefits]. Can we discuss the actual proposal?'\n\n**Scenario 3: The Absolute Claim**\n• Your argument: 'Social media can contribute to teen anxiety.'\n• Strawman: 'So you're saying social media is the only cause of teen mental health problems?'\n• Response: 'I said it can contribute, not that it's the only cause. The research shows it's one significant factor among several.'\n\n**Scenario 4: The Slippery Slope Strawman**\n• Your argument: 'We should allow physician-assisted death for terminal patients.'\n• Strawman: 'So you think we should kill anyone who's inconvenient?'\n• Response: 'My argument is specifically about terminal patients with informed consent. That's not remotely what was suggested.'\n\n**The Pattern:**\nNotice how each strawman takes a limited, specific claim and transforms it into something broader, more extreme, or motivated by bad intentions.",
+        keyPoints: [
+          "Watch for extreme extensions of your claims",
+          "Motivation attacks misrepresent your reasoning",
+          "Absolute and slippery slope versions are common strawmen",
+        ],
+      },
+      {
+        type: "question",
+        id: "l06-04-q3",
+        question: "You argue: 'We should reduce sugar in school lunches.' Your opponent responds: 'So you want to starve children by taking away all their food!' What's your best response?",
+        options: [
+          { id: "a", text: "Accept their characterization and defend starving children" },
+          { id: "b", text: "Attack your opponent personally for misrepresenting you" },
+          { id: "c", text: "Clarify that you said reduce sugar, not eliminate food, then restate your actual position with evidence" },
+          { id: "d", text: "Abandon your argument entirely" }
+        ],
+        correctAnswer: "c",
+        explanation: "This is a classic extreme extension strawman—taking 'reduce sugar' and transforming it into 'eliminate food.' The best response is to clearly identify the distortion, restate your actual position (reducing sugar, not eliminating food), and continue with your evidence for why reducing sugar is beneficial.",
       },
       {
         type: "content",
@@ -524,6 +659,16 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Troubleshooting Common Non-Verbal Problems",
+        content: "Even experienced debaters struggle with non-verbal habits. Here's how to identify and fix common issues:\n\n**Problem: 'Happy Feet' (Constant Shifting)**\n• Symptom: Weight shifting from foot to foot, small steps in place\n• Cause: Nervous energy with nowhere to go\n• Fix: Plant feet firmly, transfer energy to purposeful gestures instead\n\n**Problem: 'Death Grip' on Podium or Notes**\n• Symptom: White-knuckle grip, hunched posture\n• Cause: Seeking physical security\n• Fix: Practice with open hands, or hold a pen loosely\n\n**Problem: 'Eye Dart' (Avoiding Eye Contact)**\n• Symptom: Looking at ceiling, floor, walls—anywhere but judges\n• Cause: Discomfort with direct connection\n• Fix: Practice with friends first, focus on one judge at a time\n\n**Problem: 'Monotone Posture'**\n• Symptom: Same stance, same position for entire speech\n• Cause: Focusing all energy on words, neglecting body\n• Fix: Plan movement into your outline—'move here,' 'step forward here'\n\n**Problem: 'Defensive Arms' (Crossed Arms)**\n• Symptom: Arms crossed, hands clutched, shoulders turned in\n• Cause: Feeling defensive or uncertain\n• Fix: Neutral position—arms at sides or hands loosely clasped\n\n**The Video Test:**\nRecord yourself practicing. Watch without sound first—what story does your body tell? Then watch with sound—do your non-verbals match your words?",
+        keyPoints: [
+          "Identify nervous habits through self-observation",
+          "Redirect nervous energy into purposeful movement",
+          "Use video recording to spot issues you can't feel",
+        ],
+      },
+      {
+        type: "content",
         title: "Conclusion: Your Physical Presence",
         content: "You've now reviewed and integrated all the non-verbal communication skills needed for confident debate performance.\n\n**Key Takeaways:**\n• Posture is your foundation—stand balanced and confident\n• Eye contact connects you to judges and shows confidence\n• Gestures should emphasize content, not distract\n• Movement should be purposeful, not nervous\n• Facial expressions should match content and stay professional\n• All elements should integrate into authentic presence\n\n**Looking Ahead:**\nIn the next lesson, we'll explore primary versus secondary sources and when to use each.\n\n**Practice Challenge:**\nRecord yourself giving a 3-minute speech. Watch with the sound off. What does your body language communicate? Where do you notice nervous habits? What looks confident? This video feedback is invaluable for improvement.",
         keyPoints: [
@@ -625,6 +770,28 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Common Source Mistakes and How to Avoid Them",
+        content: "Learn from these frequent sourcing errors that undermine debate arguments:\n\n**Mistake 1: The Telephone Game**\n• Error: Citing a blog that cites a news article that cites a study\n• Problem: Each step introduces potential distortion\n• Fix: Trace back to the original study; cite that directly\n\n**Mistake 2: Cherry-Picked Quotes**\n• Error: Taking a sentence out of context that seems to support your claim\n• Problem: The full context might say the opposite or include crucial caveats\n• Fix: Read the full section; be honest about what the source actually argues\n\n**Mistake 3: Mismatched Authority**\n• Error: 'Dr. Jones, a PhD, says vaccines cause autism'\n• Problem: Dr. Jones might have a PhD in literature, not immunology\n• Fix: Verify credentials match the claim domain\n\n**Mistake 4: The Zombie Source**\n• Error: Citing research from decades ago as if it's current\n• Problem: Fields evolve; old findings may be outdated or reversed\n• Fix: Check for more recent research that confirms or updates\n\n**Mistake 5: The Echo Chamber**\n• Error: Multiple sources that all trace back to one original claim\n• Problem: Looks like consensus but is really just repetition\n• Fix: Verify sources are truly independent, not just citing each other\n\n**Mistake 6: Advocacy Dressed as Research**\n• Error: Treating a think tank advocacy piece as objective research\n• Problem: Advocacy sources have predetermined conclusions\n• Fix: Identify organizational mission; treat advocacy as perspective, not proof",
+        keyPoints: [
+          "Trace back to avoid the telephone game",
+          "Read full context, not just useful quotes",
+          "Verify credentials match the claim",
+          "Check for independent corroboration",
+        ],
+      },
+      {
+        type: "content",
+        title: "Building a Strong Source Portfolio",
+        content: "For any debate topic, aim to build a diverse, robust collection of sources:\n\n**The Ideal Portfolio:**\n• 2-3 primary sources for your key claims (studies, data, documents)\n• 1-2 expert secondary sources for interpretation\n• 1-2 sources addressing potential counterarguments\n• At least one source from the opposing perspective (to steel-man effectively)\n\n**Source Diversity:**\nDon't rely on just one type:\n• Academic research (credibility)\n• Government data (authority)\n• Expert testimony (interpretation)\n• Quality journalism (accessibility)\n• Real-world examples (relatability)\n\n**Anticipating Attacks:**\nFor each key source, be ready to answer:\n• What are this author's credentials?\n• When was this published?\n• What's the publication venue's reputation?\n• Are there potential conflicts of interest?\n• Is there corroborating evidence?\n\n**Source Documentation System:**\nCreate a system for each source:\n• Full citation (author, title, publication, date, page)\n• Key quotes with page numbers\n• Brief summary of the main argument\n• Credibility notes (credentials, potential bias)\n• How you plan to use it in your case\n\n**Quality Over Quantity:**\nThree excellent, well-documented sources beat ten mediocre ones. Judges are more impressed by depth than by a long bibliography of questionable material.",
+        keyPoints: [
+          "Build diverse source types for each topic",
+          "Anticipate credibility attacks on key sources",
+          "Document sources systematically for easy reference",
+          "Prioritize quality and depth over quantity",
+        ],
+      },
+      {
+        type: "content",
         title: "Conclusion: Source Sophistication",
         content: "You now understand the crucial distinction between primary and secondary sources and when to use each effectively.\n\n**Key Takeaways:**\n• Primary sources are original materials; secondary sources analyze them\n• Use primary sources for factual claims and when accuracy is crucial\n• Use secondary sources for context, synthesis, and accessibility\n• Layer sources: secondary for context, primary for key data\n• The evidence hierarchy helps you prioritize source types\n• Trace back from secondary to primary sources when possible\n\n**Looking Ahead:**\nIn the final lesson of this unit, we'll review all the source and credibility concepts we've covered.\n\n**Practice Challenge:**\nTake an argument you're working on. For each piece of evidence, identify: Is it primary or secondary? Could you trace it back to a more authoritative source? This habit dramatically improves your evidence quality.",
         keyPoints: [
@@ -713,6 +880,17 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         type: "content",
         title: "Connecting the Concepts",
         content: "The skills from this unit work together:\n\n**Building Strong Cases:**\n• Use credible sources (CRAAP test)\n• Lead with primary sources for key claims\n• Layer with secondary sources for context\n• Deliver with confident non-verbal presence\n• Match speed to your judge\n\n**Attacking Opponent Cases:**\n• Avoid ad hominem (attack arguments, not people)\n• Don't strawman (represent positions fairly)\n• Evaluate their source credibility\n• Point out when they use weak sources\n• Offer better evidence from your own research\n\n**Defending Your Case:**\n• Call out strawman when they misrepresent you\n• Respond to ad hominem by refocusing on substance\n• Be prepared to defend your source credibility\n• Know your primary sources well enough to cite specifics",
+      },
+      {
+        type: "content",
+        title: "Unit 6 Skills in Action: A Complete Example",
+        content: "Let's see how all the Unit 6 skills come together in a single debate exchange:\n\n**The Resolution:** 'Social media platforms should be required to verify user identities.'\n\n**Your Constructive:**\nUsing strong non-verbal presence (confident posture, eye contact), you present your case at a speed matched to your judge. You cite a 2024 MIT study (primary source) on harassment reduction, layered with expert analysis (secondary source) explaining the mechanism.\n\n**Opponent's Response:**\n'My opponent wants to destroy online privacy and create a surveillance state! They're probably just upset because someone was mean to them on Twitter. Besides, their source is from a liberal university.'\n\n**Your Analysis:**\n• 'Surveillance state' = Strawman (extreme extension of your position)\n• 'Upset because someone was mean' = Ad hominem (attacking your motivation)\n• 'Liberal university' = Invalid source attack (political label, not substantive critique)\n\n**Your Rebuttal:**\n'Let me address several issues. First, I didn't argue for a surveillance state—I argued for identity verification to reduce harassment. These are different things. Second, my personal feelings are irrelevant; the MIT study's methodology speaks for itself. Third, calling MIT 'liberal' doesn't address the peer-reviewed research. Now, back to substance: the evidence shows [specific findings] because [reasoning].'\n\n**Result:** You've identified fallacies, defended your sources, and redirected to substance—all while maintaining professional presence.",
+        keyPoints: [
+          "Recognize multiple fallacy types in a single response",
+          "Address each issue briefly without dwelling",
+          "Always redirect back to substantive arguments",
+          "Maintain professional presence throughout",
+        ],
       },
       {
         type: "content",

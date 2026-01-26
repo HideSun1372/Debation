@@ -78,6 +78,39 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Real-World Bias Detection: Case Studies",
+        content: "Let's apply bias detection to real-world scenarios:\n\n**Case Study 1: Health News**\nA headline reads: 'Coffee Linked to Longer Life!'\n• Check: Who funded the study? (Coffee industry?)\n• Check: Is it correlation or causation?\n• Check: What confounding factors exist? (Coffee drinkers might have other healthy habits)\n• Check: What does the article NOT mention?\n\n**Case Study 2: Economic Analysis**\nA think tank reports: 'Tax cuts will pay for themselves through growth.'\n• Check: What's the think tank's ideological orientation?\n• Check: Does their historical research consistently support one party's positions?\n• Check: Do independent economists agree with their methodology?\n\n**Case Study 3: Technology Coverage**\nA tech blog enthusiastically reviews a new product.\n• Check: Does the blog receive advertising revenue from the manufacturer?\n• Check: Did they receive a free review unit?\n• Check: How do they cover the same company's competitors?\n\n**The Pattern:**\nIn each case, we're not dismissing the source—we're understanding its context to evaluate claims appropriately.",
+        keyPoints: [
+          "Apply bias detection systematically to real sources",
+          "Check funding, ideology, and business relationships",
+          "Context helps evaluate, not dismiss, sources",
+        ],
+      },
+      {
+        type: "content",
+        title: "Building a Balanced Information Diet",
+        content: "Actively constructing diverse information sources helps counter bias:\n\n**Diversify Your Sources:**\n• Read news from multiple outlets with different perspectives\n• Follow commentators across the political spectrum\n• Include international sources for different cultural viewpoints\n• Balance mainstream and independent sources\n\n**Create Information Friction:**\n• When you read something you agree with, actively seek counterarguments\n• Before sharing, ask: 'What might someone who disagrees say?'\n• Subscribe to at least one source that challenges your views\n\n**Develop Source Literacy:**\n• Learn which sources are most reliable in which areas\n• Understand that bias doesn't equal inaccuracy\n• Build a mental map of sources' orientations\n\n**Practice the 'Steel Man' Approach:**\n• Before criticizing a position, articulate its strongest version\n• Try to understand why reasonable people might hold that view\n• Engage with the best arguments, not the weakest\n\n**In Debate:**\nDebaters who understand multiple perspectives argue more effectively because they've genuinely engaged with opposing views rather than dismissing them.",
+        keyPoints: [
+          "Actively seek diverse information sources",
+          "When you agree with something, seek counterarguments",
+          "Understand perspectives before criticizing them",
+        ],
+      },
+      {
+        type: "question",
+        id: "l07-01-q3",
+        question: "A news article about climate policy is written by a journalist who also writes for environmental advocacy publications. How should you evaluate this article?",
+        options: [
+          { id: "a", text: "Dismiss it entirely as biased propaganda" },
+          { id: "b", text: "Accept everything without question since they're an expert" },
+          { id: "c", text: "Read it critically, noting potential perspective while evaluating the evidence and arguments presented" },
+          { id: "d", text: "Only read if other sources confirm every claim first" }
+        ],
+        correctAnswer: "c",
+        explanation: "The journalist's background suggests a particular perspective on environmental issues, but this doesn't invalidate their work. Read critically: note their potential orientation, evaluate the evidence they present, check if claims are substantiated, and consider seeking alternative perspectives. Bias awareness enhances—rather than replaces—substantive evaluation.",
+      },
+      {
+        type: "content",
         title: "Working With Biased Sources",
         content: "Bias doesn't disqualify sources—but it affects how you use them:\n\n**Strategy 1: Acknowledge and Proceed**\n'This report comes from an industry group, so we should note their perspective. That said, the data they cite from the Bureau of Labor Statistics is independently verifiable...'\n\n**Strategy 2: Triangulate**\nSeek the same conclusion from differently-biased sources. If both a progressive and conservative think tank agree on factual data, it's more credible.\n\n**Strategy 3: Separate Data from Conclusions**\nUse biased sources for raw data; draw your own conclusions or cite independent analysts for interpretation.\n\n**Strategy 4: Highlight Against-Interest**\nWhen a biased source admits something contrary to their orientation, emphasize it: 'Even the industry association acknowledges...'\n\n**Strategy 5: Use Bias Strategically**\nSometimes a source's bias strengthens your point: 'This isn't a liberal criticism—even the conservative Heritage Foundation opposes this policy.'",
         keyPoints: [
@@ -176,6 +209,39 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         ],
         correctAnswer: "c",
         explanation: "The Supreme Court upholding or overturning a law is a genuine dichotomy—those are the only two possible judicial outcomes (though they might modify or partially uphold). The other options present complex issues with many middle-ground positions as if they were binary choices.",
+      },
+      {
+        type: "content",
+        title: "False Dichotomy in Media and Advertising",
+        content: "Understanding false dichotomy helps you recognize manipulation in everyday life:\n\n**News and Political Commentary:**\n• 'The debate over healthcare: government takeover vs. free market'\n• 'Immigration: compassion vs. law enforcement'\n• 'Gun control: safety vs. freedom'\n\nEach presents a complex policy area as having only two opposite positions, ignoring the many nuanced policy options between extremes.\n\n**Advertising:**\n• 'You can have clean clothes OR save time—with our product, you get both!'\n(Implies the only alternative is their product)\n• 'Don't settle for ordinary—choose extraordinary'\n(Implies all alternatives are identical)\n\n**Social Pressure:**\n• 'Real friends would do this for you'\n(Either do what I want or you're not a real friend)\n• 'If you loved me, you would...'\n(Binary test of a complex relationship)\n\n**The Defense:**\nRecognizing these patterns helps you resist manipulation. Always ask: What options are being hidden? What middle ground exists?",
+        keyPoints: [
+          "Media often frames complex issues as two-sided debates",
+          "Advertising uses false choice to push products",
+          "Social pressure often relies on false dichotomies",
+        ],
+      },
+      {
+        type: "content",
+        title: "Practicing Alternative Generation",
+        content: "The best defense against false dichotomy is the ability to quickly generate alternatives:\n\n**Exercise: For each false dichotomy below, brainstorm at least three alternatives:**\n\n**'Either we ban plastic straws or we destroy the ocean.'**\nAlternatives: Biodegradable straws, paper straws, straw-free lids, incentive programs for reusables, focusing on larger pollution sources, graduated restrictions...\n\n**'You can either study hard or have a social life.'**\nAlternatives: Balanced scheduling, study groups (combining both), efficient study techniques, choosing some activities strategically, different periods for different priorities...\n\n**'We either fully fund arts programs or cut them entirely.'**\nAlternatives: Partial funding, community partnerships, fundraising supplements, prioritizing certain programs, phased transitions, shared resources with other schools...\n\n**The Skill:**\nWith practice, generating alternatives becomes automatic. You'll instinctively see through false dichotomies because your mind immediately populates the missing options.\n\n**In Debate:**\nHaving alternatives ready shows judges you understand complexity: 'My opponent offers a false choice. Here are three other approaches...'",
+        keyPoints: [
+          "Practice generating alternatives to build the skill",
+          "Most dichotomies dissolve when you brainstorm options",
+          "Quick alternative generation is a debater's advantage",
+        ],
+      },
+      {
+        type: "question",
+        id: "l07-02-q3",
+        question: "An opponent argues: 'Either we eliminate all regulations on businesses or we accept economic stagnation.' What's the strongest response?",
+        options: [
+          { id: "a", text: "Accept that some economic stagnation is inevitable" },
+          { id: "b", text: "Agree to eliminate all regulations" },
+          { id: "c", text: "Point out this is a false dichotomy—we can have smart, targeted regulations that protect consumers while enabling growth" },
+          { id: "d", text: "Ignore the argument and change topics" }
+        ],
+        correctAnswer: "c",
+        explanation: "This is a classic false dichotomy that ignores the spectrum of regulatory options. The strongest response introduces alternatives: targeted regulations, modernized rules, different approaches for different industries, evidence-based policy. The choice isn't 'all or nothing'—it's 'which regulations, designed how?'",
       },
       {
         type: "content",
@@ -294,6 +360,39 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Debate Skills in Healthcare and Consumer Decisions",
+        content: "Critical thinking from debate helps you navigate important life decisions:\n\n**Healthcare Conversations:**\n• Ask clarifying questions about diagnoses and treatments\n• Evaluate evidence for different treatment options\n• Understand tradeoffs between approaches\n• Advocate for yourself with medical professionals\n• Recognize when to seek second opinions\n\n**Consumer Decisions:**\n• Evaluate claims in advertising critically\n• Research products beyond marketing materials\n• Compare options systematically\n• Recognize persuasion techniques in sales\n• Question 'limited time' and urgency pressure\n\n**Financial Choices:**\n• Evaluate investment advice skeptically\n• Understand the arguments for different financial strategies\n• Question fees and fine print\n• Recognize conflicts of interest in financial advice\n\n**The Pattern:**\nIn each case, you're applying the same skills: evaluating evidence, recognizing bias, asking clarifying questions, and making reasoned judgments rather than emotional ones.",
+        keyPoints: [
+          "Advocate for yourself in healthcare with evidence-based questions",
+          "Evaluate advertising and sales tactics critically",
+          "Apply skeptical thinking to financial decisions",
+        ],
+      },
+      {
+        type: "content",
+        title: "Conflict Resolution and Mediation",
+        content: "Debate training provides excellent preparation for resolving disputes:\n\n**Understanding All Sides:**\nDebaters practice seeing issues from multiple perspectives. This helps identify what each party really needs in a conflict.\n\n**Active Listening:**\nThe habit of taking careful notes and tracking arguments translates to genuinely hearing all parties in a dispute.\n\n**Finding Common Ground:**\n• Identify shared values or goals\n• Separate positions from underlying interests\n• Look for solutions that address multiple concerns\n\n**De-escalation:**\n• Focus on issues, not personalities\n• Acknowledge valid points from all sides\n• Use calm, measured language even when others are emotional\n\n**Mediation Skills:**\n• Summarize each position fairly\n• Ask questions that clarify interests\n• Propose frameworks for resolution\n• Test potential solutions against each party's needs\n\n**Career Applications:**\nThese skills are valuable in HR, management, law, diplomacy, counseling, and any field involving human disagreement.",
+        keyPoints: [
+          "Multiple-perspective thinking helps understand disputes",
+          "Active listening and de-escalation are debate-trained skills",
+          "Mediation uses many core debate competencies",
+        ],
+      },
+      {
+        type: "question",
+        id: "l07-03-q3",
+        question: "Which debate skill is MOST directly applicable to helping resolve a conflict between two friends?",
+        options: [
+          { id: "a", text: "Speaking faster than your opponent" },
+          { id: "b", text: "The ability to understand and articulate both perspectives fairly" },
+          { id: "c", text: "Using technical debate jargon" },
+          { id: "d", text: "Declaring a winner and loser" }
+        ],
+        correctAnswer: "b",
+        explanation: "The core debate skill of understanding multiple perspectives—essential for arguing both sides of a topic—directly applies to mediation. By fairly articulating what each friend needs and feels, you can help them find common ground and resolution.",
+      },
+      {
+        type: "content",
         title: "Daily Practice Opportunities",
         content: "Every day offers chances to practice debate skills:\n\n**News Consumption:**\n• Evaluate claims and evidence in articles\n• Identify fallacies and bias\n• Consider counterarguments to positions presented\n\n**Conversations:**\n• Listen actively and summarize before responding\n• Ask clarifying questions\n• Present your views with structure\n\n**Reading:**\n• Analyze arguments in opinion pieces\n• Note how authors support claims\n• Consider missing perspectives\n\n**Decision-Making:**\n• Weigh pros and cons systematically\n• Consider evidence for different options\n• Anticipate potential objections to your choice\n\n**Social Media:**\n• Before sharing, evaluate the source\n• Consider if the framing is fair\n• Engage substantively, not emotionally\n\n**The Habit:**\nDebate skills become automatic when practiced daily. Every interaction is an opportunity to think more clearly and communicate more effectively.",
       },
@@ -385,6 +484,39 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         ],
         correctAnswer: "c",
         explanation: "The argument has a claim (social media causes depression) and data (both have increased), but is missing a warrant explaining why this correlation proves causation. Many other factors could explain both trends. The logical connection is assumed, not demonstrated.",
+      },
+      {
+        type: "content",
+        title: "Common Warrant Types and Their Vulnerabilities",
+        content: "Different types of warrants have different strengths and weaknesses:\n\n**Authoritative Warrants:**\n'Experts agree, so we should believe...'\n• Strength: Expert consensus is generally reliable\n• Vulnerability: Which experts? Do they have the right expertise? Are there dissenting experts?\n\n**Causal Warrants:**\n'X causes Y because of this mechanism...'\n• Strength: Explains how things work\n• Vulnerability: Is the mechanism proven? Are there other causes?\n\n**Analogical Warrants:**\n'This is similar to that situation, so the same applies...'\n• Strength: Uses established precedent\n• Vulnerability: Is the analogy close enough? What are the relevant differences?\n\n**Principle-Based Warrants:**\n'This principle applies here, therefore...'\n• Strength: Grounds argument in shared values\n• Vulnerability: Is the principle accepted? Does it really apply?\n\n**Statistical Warrants:**\n'The data shows a pattern, therefore...'\n• Strength: Quantified evidence\n• Vulnerability: Sample size? Correlation vs. causation? Cherry-picked data?",
+        keyPoints: [
+          "Different warrant types have distinct vulnerabilities",
+          "Authoritative warrants depend on expert credibility",
+          "Causal and analogical warrants can be challenged on fit",
+        ],
+      },
+      {
+        type: "content",
+        title: "Strengthening Weak Arguments with Toulmin",
+        content: "When your own arguments feel weak, use Toulmin diagnostically:\n\n**Diagnose the Problem:**\nWhich component is weakest? Is your data insufficient? Is your warrant implicit? Is your claim overreaching?\n\n**Common Fixes:**\n\n**Weak Data:**\n• Find additional evidence\n• Use more credible sources\n• Add multiple types of evidence (statistics + examples + expert opinion)\n\n**Implicit Warrant:**\n• Articulate the logical connection explicitly\n• Explain why your evidence actually proves your point\n• Consider if the warrant itself needs backing\n\n**Overreaching Claim:**\n• Add qualifiers ('often,' 'in many cases,' 'probably')\n• Narrow the scope of what you're claiming\n• Acknowledge limitations proactively\n\n**Missing Rebuttal:**\n• Anticipate objections and address them\n• Explain why exceptions don't undermine your main point\n• Show you've considered counterarguments\n\n**Example Improvement:**\nWeak: 'Video games cause violence.'\nStrong: 'Excessive violent video game use probably contributes to aggressive behavior in some individuals, though the effect is one of many factors and varies based on other risk factors.'",
+        keyPoints: [
+          "Use Toulmin to diagnose weak arguments",
+          "Add qualifiers when claims overreach",
+          "Explicit warrants strengthen implicit logic",
+        ],
+      },
+      {
+        type: "question",
+        id: "l07-04-q3",
+        question: "An argument claims 'Studies show coffee drinkers live longer, so coffee extends life.' A warrant-based attack would focus on:",
+        options: [
+          { id: "a", text: "Whether the studies were conducted" },
+          { id: "b", text: "The number of people who drink coffee" },
+          { id: "c", text: "Why correlation between coffee drinking and longevity proves coffee causes longer life" },
+          { id: "d", text: "Whether coffee tastes good" }
+        ],
+        correctAnswer: "c",
+        explanation: "A warrant attack challenges the logical connection between data and claim. Here, the missing warrant assumes correlation proves causation. A strong attack would ask: Why should we believe coffee causes longevity rather than some other explanation (healthier people drink more coffee, confounding lifestyle factors, etc.)?",
       },
       {
         type: "content",
@@ -489,6 +621,26 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         ],
       },
       {
+        type: "content",
+        title: "The Psychology Behind Slippery Slope",
+        content: "Understanding why slippery slope arguments are persuasive helps you counter them:\n\n**Fear of the Unknown:**\nPeople naturally fear uncertainty. Slippery slope arguments tap into anxiety about where change might lead.\n\n**Loss Aversion:**\nPeople weigh potential losses more heavily than equivalent gains. Extreme negative outcomes at the 'bottom' of the slope feel especially threatening.\n\n**Availability Heuristic:**\nVivid examples of things going wrong are easy to imagine, making extreme outcomes feel more likely than they are.\n\n**Precedent Concerns:**\nWe reasonably worry about setting precedents. Slippery slope exploits this legitimate concern, even when the precedent doesn't actually apply.\n\n**Countering the Psychology:**\n• Acknowledge legitimate concerns about precedent\n• Distinguish between logical possibility and actual likelihood\n• Provide concrete stopping mechanisms\n• Cite real-world examples where the slope didn't materialize\n• Shift focus from fear to evidence",
+        keyPoints: [
+          "Slippery slope exploits fear of uncertainty",
+          "Loss aversion makes extreme outcomes feel worse than they are",
+          "Counter with evidence and concrete stopping mechanisms",
+        ],
+      },
+      {
+        type: "content",
+        title: "Building a Valid Slippery Slope Argument",
+        content: "When you have evidence for a genuine slippery slope, here's how to argue it effectively:\n\n**Step 1: Establish the First Link Strongly**\nShow that A actually leads to B with concrete evidence, not just speculation.\n\n**Step 2: Explain the Mechanism**\nWhy does one step make the next more likely? What forces push down the slope?\n• Institutional momentum\n• Changed norms\n• Interest group pressure\n• Technological inevitability\n\n**Step 3: Cite Historical Precedent**\nWhere has this progression happened before? The more examples, the stronger.\n\n**Step 4: Explain Why Stopping Is Hard**\nWhat makes it difficult to pause or reverse? Why can't we 'just stop at B'?\n\n**Step 5: Use Appropriate Qualifiers**\n'This risks leading to...' is more credible than 'This will definitely cause...'\n\n**Example:**\n'Mission creep in military interventions is well-documented. Initial limited objectives regularly expand once troops are deployed. Vietnam started as 'advisors.' Afghanistan's nation-building wasn't the original goal. The political dynamics of deployment—sunk cost reasoning, avoiding the appearance of 'losing'—make withdrawal progressively harder.'",
+        keyPoints: [
+          "Strong slippery slopes require evidence for each link",
+          "Explain the mechanism pushing down the slope",
+          "Historical precedent strengthens the argument",
+        ],
+      },
+      {
         type: "question",
         id: "l07-05-q2",
         question: "Your opponent argues: 'If we raise the minimum wage, businesses will automate everything, all workers will be replaced, and unemployment will skyrocket.' What's a strong response?",
@@ -573,6 +725,26 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
           "Need plausible mechanism explaining the connection",
           "Controlled experiments are the gold standard",
           "Must rule out alternative explanations",
+        ],
+      },
+      {
+        type: "content",
+        title: "Recognizing Causal Language vs. Correlational Language",
+        content: "The language used in claims reveals whether they're appropriately cautious:\n\n**Correlational Language (Appropriate for Correlational Data):**\n• 'X is associated with Y'\n• 'X is linked to Y'\n• 'People who X tend to Y'\n• 'X and Y often occur together'\n• 'There's a relationship between X and Y'\n\n**Causal Language (Only Appropriate with Causal Evidence):**\n• 'X causes Y'\n• 'X leads to Y'\n• 'X produces Y'\n• 'X results in Y'\n• 'Doing X will make Y happen'\n\n**Red Flags—Causal Language with Correlational Evidence:**\n• 'Study shows chocolate MAKES you smarter' (likely correlational data)\n• 'Coffee CAUSES longer life' (probably correlation, not proven causation)\n• 'Social media LEADS TO depression' (complex relationship often overstated)\n\n**In Debate:**\nWhen opponents use causal language, ask: 'Is this correlation or causation? What's the experimental evidence?'",
+        keyPoints: [
+          "Notice whether language claims correlation or causation",
+          "Correlational language: associated with, linked to, tend to",
+          "Causal language: causes, leads to, produces, results in",
+        ],
+      },
+      {
+        type: "content",
+        title: "Real-World Correlation vs. Causation Challenges",
+        content: "Let's apply this distinction to common real-world claims:\n\n**'Countries with more guns have more gun deaths.'**\n• Correlation: Statistically true\n• Causal Question: Do more guns cause more deaths, or do other factors explain both?\n• Complications: Culture, laws, poverty, mental health systems all vary\n\n**'College graduates earn more money.'**\n• Correlation: Clear statistical relationship\n• Causal Question: Does college cause higher earnings, or do people who would earn more anyway go to college?\n• Complications: Family background, motivation, networking, signaling vs. learning\n\n**'People who exercise regularly report better mental health.'**\n• Correlation: Well-documented\n• Causal Question: Does exercise improve mental health, or do people with better mental health exercise more?\n• Evidence: Some randomized trials suggest exercise does help causally, but the direction likely goes both ways\n\n**The Lesson:**\nMost real-world relationships are complex. Multiple causal pathways often exist simultaneously.",
+        keyPoints: [
+          "Real-world correlations often have multiple possible explanations",
+          "Causal direction can be unclear or bidirectional",
+          "Multiple factors usually contribute to observed correlations",
         ],
       },
       {
@@ -693,6 +865,16 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         ],
         correctAnswer: "b",
         explanation: "'Either you're with us or you're against us' is a false dichotomy because neutral positions, partial agreement, and other stances exist. The legal verdict (guilty/not guilty), the vote outcome (passes/doesn't), and the light switch state (on/off) are genuinely binary.",
+      },
+      {
+        type: "content",
+        title: "Integrating the Skills: A Complete Analysis Example",
+        content: "Let's see how all Unit 7 skills work together on a real argument:\n\n**The Claim:**\n'Violent video games cause real-world violence. Studies show people who play violent games are more aggressive. We must ban them or accept more mass shootings.'\n\n**Bias Check:**\n• Who funds research on both sides?\n• Are advocacy groups driving the narrative?\n• What does 'aggression' mean—lab measures or real violence?\n\n**False Dichotomy:**\n• 'Ban or accept mass shootings' ignores many alternatives: age ratings, parental controls, mental health support, research-based regulation\n\n**Toulmin Analysis:**\n• Claim: Games cause violence\n• Data: Correlation with aggression in studies\n• Missing Warrant: Why does lab-measured aggression predict real violence?\n• Missing Backing: What mechanism connects game play to mass shootings?\n\n**Correlation vs. Causation:**\n• The studies show correlation at best\n• Reverse causation: Maybe aggressive people prefer violent games\n• Confounders: Age, gender, other factors affect both\n\n**Complete Response:**\n'This argument has multiple problems...'",
+        keyPoints: [
+          "Apply all Unit 7 skills to complex arguments",
+          "Check for bias, fallacies, and causation errors",
+          "Build comprehensive responses using multiple tools",
+        ],
       },
       {
         type: "content",

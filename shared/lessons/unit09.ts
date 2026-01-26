@@ -54,6 +54,39 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Real-World Examples of Burden Disputes",
+        content: "Burden of proof plays out in countless real-world contexts:\n\n**Legal System:**\n• Criminal trials: Prosecution bears burden; defendant presumed innocent\n• Civil trials: Lower standard—'preponderance of evidence' (more likely than not)\n• Why it matters: We'd rather guilty people go free than innocent people be convicted\n\n**Scientific Claims:**\n• New treatments must prove they work through clinical trials\n• A company can't sell a drug saying 'Prove it doesn't work'\n• FDA approval requires positive evidence of safety and efficacy\n\n**Policy Proposals:**\n• Those proposing new policies typically bear burden to show they'll work\n• Status quo defenders can win by showing insufficient evidence for change\n• But high-stakes status quo problems can shift burden\n\n**Everyday Claims:**\n• 'This investment will make you rich' → Burden on the person selling\n• 'This diet will cure disease' → Burden on the claimant\n• 'You should trust me' → Burden on the person asking for trust\n\n**The Pattern:**\nAcross contexts, extraordinary claims require extraordinary evidence. The more dramatic the claim, the higher the burden.",
+        keyPoints: [
+          "Criminal law places burden on prosecution",
+          "Science requires positive evidence for claims",
+          "Extraordinary claims require extraordinary evidence",
+        ],
+      },
+      {
+        type: "content",
+        title: "Philosophical Dimensions of Proving Negatives",
+        content: "The challenge of proving negatives has deep philosophical roots:\n\n**Russell's Teapot:**\nPhilosopher Bertrand Russell imagined claiming a teapot orbits the sun between Earth and Mars—too small to detect. He argued it would be absurd to expect others to disprove this rather than demanding he prove it. This illustrates why burden falls on positive claimants.\n\n**Unfalsifiable Claims:**\nSome claims are designed to be impossible to disprove:\n• 'Invisible forces are helping us'\n• 'Everything would be worse without this policy'\n• 'The effect is there but our instruments can't detect it'\n\nThese claims aren't necessarily wrong—they're just unscientific because no possible evidence could refute them.\n\n**Logical vs. Practical Impossibility:**\n• Logically: Some negatives CAN be proven ('There is no largest prime number')\n• Practically: Many negatives can't be proven ('There are no unicorns anywhere in the universe')\n\n**The Takeaway for Debate:**\nWhen someone makes an unfalsifiable claim, note it: 'What evidence would you accept as disproving this? If nothing could disprove it, the claim isn't testable.'",
+        keyPoints: [
+          "Russell's Teapot illustrates burden of proof logic",
+          "Unfalsifiable claims can't be scientifically tested",
+          "Ask what evidence would disprove the claim",
+        ],
+      },
+      {
+        type: "question",
+        id: "l09-01-q3",
+        question: "Someone claims: 'Invisible energy fields surround us and influence our health. You can't prove they don't exist!' What's the best response?",
+        options: [
+          { id: "a", text: "Accept the claim because you can't disprove it" },
+          { id: "b", text: "The burden is on you to prove they exist. What evidence would disprove your claim?" },
+          { id: "c", text: "Ignore the claim entirely without responding" },
+          { id: "d", text: "Agree that invisible fields must exist" }
+        ],
+        correctAnswer: "b",
+        explanation: "The best response clarifies burden of proof (the claimant must prove their positive claim) and challenges the falsifiability of the claim. Asking 'What evidence would disprove this?' exposes whether the claim is testable. If nothing could disprove it, the claim isn't scientific.",
+      },
+      {
+        type: "content",
         title: "Responding to Appeal to Ignorance",
         content: "When opponents commit this fallacy:\n\n**1. Name It:**\n'That's appeal to ignorance. Lack of disproof isn't proof.'\n\n**2. Clarify Burden:**\n'You made the claim; you bear the burden of proving it. I don't have to disprove what you haven't proven.'\n\n**3. Show Why It Fails:**\n'By that logic, I could claim anything—invisible unicorns, healing crystals—and demand you disprove it.'\n\n**4. Demand Positive Evidence:**\n'Instead of noting what hasn't been disproven, show me evidence your claim IS true.'\n\n**5. Distinguish Tested from Untested:**\n'It's not just that we haven't disproven it—we've actively tested and found no effect.'\n\n**Example Response:**\n'My opponent says we can't prove their policy won't work, so we should try it. But that's not how we evaluate policies. The burden is on them to show it WILL work. Otherwise, we could justify any experiment—the fact that we haven't proven disaster doesn't mean we should risk it.'",
         keyPoints: [
@@ -142,6 +175,39 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
           "Statistically significant effects can be trivially small",
           "Ask if the effect matters in practice",
         ],
+      },
+      {
+        type: "content",
+        title: "Common Statistical Traps to Avoid",
+        content: "Several statistical pitfalls can mislead even careful readers:\n\n**P-Hacking:**\nResearchers run many tests and only report the significant ones. If you test 20 things, one will be 'significant' by chance.\n• Red flag: Multiple comparisons without correction\n• Ask: How many things did they test?\n\n**Publication Bias:**\nStudies with positive results get published; negative results don't. This creates a distorted literature where effects seem stronger than they are.\n• Solution: Look for meta-analyses that include unpublished data\n\n**Correlation vs. Causation:**\nStatistical correlation doesn't prove one thing causes another.\n• Example: Ice cream sales correlate with drowning deaths (both rise in summer)\n• Ask: Could a third factor explain this relationship?\n\n**Base Rate Neglect:**\nIgnoring how common something is in the population.\n• Example: A test that's 99% accurate can still give mostly false positives if the condition is rare\n\n**Cherry-Picking:**\nSelecting only data that supports your conclusion.\n• Ask: What does the full dataset show?",
+        keyPoints: [
+          "P-hacking inflates significance through multiple testing",
+          "Publication bias hides negative results",
+          "Correlation doesn't prove causation",
+        ],
+      },
+      {
+        type: "content",
+        title: "Reading Research Papers Critically",
+        content: "When evaluating research in debates, ask these questions:\n\n**About the Sample:**\n• How large is the sample?\n• Who was included/excluded?\n• Is it representative of the relevant population?\n\n**About the Method:**\n• Was it randomized and controlled?\n• Were participants and researchers blinded?\n• What was the comparison group?\n\n**About the Results:**\n• What's the effect size, not just significance?\n• What's the confidence interval?\n• Were multiple comparisons corrected for?\n\n**About the Context:**\n• Has it been replicated?\n• Does it conflict with other studies?\n• Who funded it and are there conflicts of interest?\n\n**Red Flags:**\n• Unpublished or non-peer-reviewed\n• Very small sample with dramatic claims\n• Only significant if you squint (p = 0.049)\n• Funded by parties with obvious interest",
+        keyPoints: [
+          "Check sample size, representativeness, and methodology",
+          "Look at effect size and confidence intervals",
+          "Consider replication and funding sources",
+        ],
+      },
+      {
+        type: "question",
+        id: "l09-02-q3",
+        question: "A pharmaceutical company's study finds their drug is 'statistically significant' (p = 0.048) with an effect size of 2% improvement. What concerns should you raise?",
+        options: [
+          { id: "a", text: "No concerns—it's statistically significant" },
+          { id: "b", text: "Borderline significance, small effect size, and potential conflict of interest" },
+          { id: "c", text: "The company must be lying" },
+          { id: "d", text: "2% is always a meaningful improvement" }
+        ],
+        correctAnswer: "b",
+        explanation: "Multiple concerns apply: p = 0.048 is barely significant and might not replicate; 2% improvement may be too small to matter clinically; and company-funded research has potential conflict of interest. None of these prove the study is wrong, but they warrant skepticism and demand for replication.",
       },
       {
         type: "content",
@@ -241,6 +307,39 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Online vs. In-Person Debate Etiquette",
+        content: "Digital communication creates unique challenges for respectful engagement:\n\n**Challenges Online:**\n• Text lacks tone—sarcasm reads as hostility\n• No body language to soften criticism\n• Anonymity can disinhibit rudeness\n• Delayed responses can escalate tensions\n\n**Best Practices for Online Debate:**\n• Assume good faith until proven otherwise\n• Re-read before sending—would you say this in person?\n• Use explicit softeners: 'I respectfully disagree' or 'I see your point, but...'\n• Avoid all-caps and excessive punctuation (reads as shouting)\n• Take breaks before responding if heated\n\n**Video Debates:**\n• Maintain eye contact with the camera\n• Mute when not speaking\n• Dress and set up background professionally\n• Be patient with technical difficulties—they happen to everyone\n\n**The Golden Rule:**\nType nothing you wouldn't say to someone's face in a professional setting.",
+        keyPoints: [
+          "Text communication lacks tonal cues",
+          "Assume good faith and use explicit softeners",
+          "Re-read before sending—would you say this in person?",
+        ],
+      },
+      {
+        type: "content",
+        title: "Building Community Through Debate",
+        content: "Debate communities thrive when members invest in each other's growth:\n\n**Helping Newer Debaters:**\n• Offer constructive feedback after rounds\n• Share resources and preparation materials\n• Mentor those coming up behind you\n• Remember you were once new too\n\n**Learning from Everyone:**\n• Senior debaters can learn from fresh perspectives\n• Different styles offer different insights\n• Every opponent teaches you something\n\n**Creating Positive Spaces:**\n• Welcome newcomers warmly\n• Address problematic behavior early\n• Celebrate others' successes genuinely\n• Build teams up, not just yourself\n\n**Long-Term Benefits:**\n• Alumni networks provide career connections\n• Coaches remember how you treated others\n• Reputation compounds over years\n\n**The Mindset:**\nView debate as a collaborative pursuit of excellence, not a zero-sum competition. Your success doesn't require others' failure.",
+        keyPoints: [
+          "Invest in newer debaters' growth",
+          "Create welcoming and positive spaces",
+          "Reputation and relationships compound over time",
+        ],
+      },
+      {
+        type: "question",
+        id: "l09-03-q3",
+        question: "After winning a debate against a less experienced opponent, what's the best approach?",
+        options: [
+          { id: "a", text: "Celebrate loudly in front of them" },
+          { id: "b", text: "Offer constructive feedback and genuine encouragement" },
+          { id: "c", text: "Ignore them and walk away" },
+          { id: "d", text: "Point out every mistake they made" }
+        ],
+        correctAnswer: "b",
+        explanation: "Offering constructive feedback and encouragement builds community, helps newer debaters improve, and reflects well on your character. Everyone was a beginner once. Celebrating dismissively or ignoring them creates a hostile environment that hurts the debate community as a whole.",
+      },
+      {
+        type: "content",
         title: "Learning from Opponents",
         content: "Every opponent teaches you something:\n\n**Arguments You Hadn't Considered:**\nOpponents often raise points you didn't anticipate. Take notes for future rounds.\n\n**Weaknesses in Your Case:**\nIf their attack lands, your case needs improvement. Thank them (internally) for revealing it.\n\n**Style and Delivery:**\nWatch what works. Effective opponents model techniques worth borrowing.\n\n**Different Perspectives:**\nDebating different people exposes you to different thinking. That's valuable even when you disagree.\n\n**After Rounds:**\nAsk opponents what you could improve. Exchange ideas about the topic. Build relationships.\n\n**The Mindset:**\nOpponents are training partners, not enemies. They're helping you get better even while competing against you.",
         keyPoints: [
@@ -329,6 +428,39 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
           "Anecdotes can be unrepresentative",
           "Stories shouldn't replace systematic evidence",
         ],
+      },
+      {
+        type: "content",
+        title: "Survivorship Bias and Cherry-Picking",
+        content: "Two specific problems plague anecdotal reasoning:\n\n**Survivorship Bias:**\nWe only hear from those who 'survived' the process—not those who failed.\n• 'Successful dropouts like Bill Gates prove college isn't necessary'\n• Problem: We don't hear from millions of dropouts who struggled\n• The visible successes are exceptions, not the rule\n\n**Cherry-Picking Examples:**\nSelecting only cases that support your position while ignoring contrary examples.\n• 'This cancer patient was cured by alternative medicine'\n• Problem: What about the hundreds who weren't?\n• Any treatment will have some apparent 'successes' by chance\n\n**How to Respond:**\n• 'That's survivorship bias—we're only seeing the successes'\n• 'What about all the cases that went the other way?'\n• 'Is this example typical or an outlier?'\n\n**The Principle:**\nIndividual success stories prove something is possible—not that it's probable or replicable.",
+        keyPoints: [
+          "Survivorship bias hides failures from view",
+          "Cherry-picking selects only supporting cases",
+          "Success stories prove possibility, not probability",
+        ],
+      },
+      {
+        type: "content",
+        title: "Anecdotes in Different Debate Contexts",
+        content: "The role of anecdotes varies by context:\n\n**Policy Debates:**\n• Use case studies of countries/programs that tried similar policies\n• Ensure case studies are representative, not outliers\n• Data should ground the argument; stories illustrate\n\n**Value Debates:**\n• Stories can illustrate abstract values (freedom, justice)\n• But still need logical argument for why these values matter\n\n**Opening and Closing:**\n• Stories work well as hooks or conclusions\n• 'Let me tell you about Maria...' grabs attention\n• Return to Maria in the conclusion for emotional closure\n\n**Responding to Opponent Anecdotes:**\n• Counter-anecdote (limited value—proves anecdotes prove little)\n• Challenge representativeness\n• Provide systematic data\n\n**The Balance:**\nThe best cases combine rigorous data with humanizing stories. Neither alone is sufficient.",
+        keyPoints: [
+          "Case studies should be representative of broader patterns",
+          "Stories work well as hooks and in conclusions",
+          "Combine data with humanizing stories for maximum impact",
+        ],
+      },
+      {
+        type: "question",
+        id: "l09-04-q3",
+        question: "Someone argues: 'My grandfather smoked his whole life and lived to 95, so smoking can't be that bad.' What's the best response?",
+        options: [
+          { id: "a", text: "Accept their conclusion since it's based on real experience" },
+          { id: "b", text: "Point out survivorship bias—we don't hear from smokers who died young" },
+          { id: "c", text: "Share a story about someone who died from smoking" },
+          { id: "d", text: "Argue that their grandfather didn't really smoke" }
+        ],
+        correctAnswer: "b",
+        explanation: "This is survivorship bias—the grandfather is a visible survivor, but we don't hear from the many smokers who died decades earlier. One outlier doesn't disprove statistical patterns established by millions of cases. The response in (c) would just create a battle of anecdotes, proving nothing.",
       },
       {
         type: "content",
@@ -437,6 +569,26 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
       },
       {
         type: "content",
+        title: "Recognizing These Fallacies in Advertising",
+        content: "Marketers exploit both fallacies constantly:\n\n**Tradition Appeals:**\n• 'Family recipe since 1847'\n• 'Time-tested methods'\n• 'Trusted for generations'\n• 'The way grandma made it'\n\n**Novelty Appeals:**\n• 'New and improved formula!'\n• 'Revolutionary technology'\n• 'Breakthrough innovation'\n• 'The future of...'\n\n**What to Notice:**\n• Do they explain WHY the tradition works or WHY the innovation is better?\n• Or do they just emphasize age (old or new)?\n• What actual evidence supports the product's effectiveness?\n\n**The Irony:**\nSometimes the same company appeals to both!\n• 'Our traditional recipe, now with a modern twist'\n• This should trigger skepticism, not trust\n\n**Consumer Defense:**\nAsk: 'Strip away the age claims. What evidence shows this actually works better than alternatives?'",
+        keyPoints: [
+          "Advertisers exploit both tradition and novelty appeals",
+          "Ask whether they explain why, not just cite age",
+          "Strip away age claims and ask for actual evidence",
+        ],
+      },
+      {
+        type: "content",
+        title: "Chesterton's Fence: When to Respect Tradition",
+        content: "G.K. Chesterton's famous principle offers balance:\n\n**The Principle:**\nBefore removing a fence (tradition), understand why it was built. If you don't know why it exists, you don't know what happens when it's gone.\n\n**Implications:**\n• Traditions often encode accumulated wisdom\n• They may solve problems we've forgotten about\n• Removing them without understanding can cause unforeseen harm\n\n**How to Apply:**\n• Ask: 'Why does this tradition exist? What problem did it solve?'\n• If you can't answer, research before abolishing\n• If the original reason no longer applies, that's grounds for change\n\n**Examples:**\n• Safety regulations: Often written in response to disasters\n• Social norms: May prevent problems we've never experienced because the norms work\n• Legal precedents: Encode lessons from past cases\n\n**The Balance:**\nNeither blindly follow tradition nor blindly discard it. Understand it first, then evaluate whether it still applies.\n\n**In Debate:**\n'Why does this tradition exist? If it was solving a real problem, what's your solution to that problem?'",
+        keyPoints: [
+          "Understand why traditions exist before removing them",
+          "Traditions often encode accumulated wisdom",
+          "Evaluate whether the original reasons still apply",
+        ],
+      },
+      {
+        type: "content",
         title: "Evaluating on Actual Merits",
         content: "Instead of tradition or novelty, evaluate on substance:\n\n**For Traditional Practices:**\n• Does evidence show it works?\n• Do the reasons it was adopted still apply?\n• Has context changed significantly?\n• Are there better alternatives now?\n\n**For New Innovations:**\n• Is there evidence it works?\n• What problems does it solve?\n• What are the risks of early adoption?\n• Has it been tested adequately?\n\n**Both-And Approach:**\nSometimes the best answer combines traditional wisdom with new insights. Don't assume you must choose entirely old or entirely new.\n\n**The Standard:**\nAsk: 'If this were brand new, would I adopt it based on the evidence?' (Tests tradition)\nAsk: 'If this were traditional, would the evidence still support it?' (Tests novelty)\n\nThis strips away the irrelevant factor of age and focuses on actual merit.",
         keyPoints: [
@@ -444,6 +596,19 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
           "Ask if reasons for old practices still apply",
           "Ask if new innovations have adequate evidence",
         ],
+      },
+      {
+        type: "question",
+        id: "l09-05-q3",
+        question: "Before changing a long-standing practice in your organization, what should you do according to Chesterton's Fence?",
+        options: [
+          { id: "a", text: "Just change it—tradition is always bad" },
+          { id: "b", text: "Never change it—tradition is always good" },
+          { id: "c", text: "Understand why the practice exists before deciding whether to change it" },
+          { id: "d", text: "Ask the oldest person in the organization" }
+        ],
+        correctAnswer: "c",
+        explanation: "Chesterton's Fence says to understand why a practice exists before removing it. The tradition may encode wisdom or solve problems you're not aware of. Once you understand the reason, you can evaluate whether it still applies—and if not, that's grounds for change.",
       },
       {
         type: "content",
@@ -520,6 +685,16 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         ],
         correctAnswer: "b",
         explanation: "Expertise doesn't transfer between unrelated fields. A surgeon has deep knowledge of surgery, not climate science. Their climate opinions deserve no more weight than any informed citizen's. For climate claims, cite climate scientists.",
+      },
+      {
+        type: "content",
+        title: "The Hierarchy of Expert Evidence",
+        content: "Not all expert sources carry equal weight:\n\n**Strongest:**\n• Scientific consensus of thousands of experts\n• Meta-analyses and systematic reviews\n• Major scientific organizations' position statements\n• Repeatedly replicated findings\n\n**Strong:**\n• Leading researchers in the specific subfield\n• Multiple independent studies converging\n• Experts without obvious conflicts of interest\n• Current, active researchers\n\n**Moderate:**\n• Single studies by credentialed researchers\n• Practitioners with relevant experience\n• Experts adjacent to the specific topic\n\n**Weak:**\n• Single voices against consensus\n• Experts from unrelated fields\n• Retired experts on current developments\n• Those with significant conflicts of interest\n\n**In Debate:**\nCite from the top of the hierarchy when possible. If your opponent cites from the bottom, point out the difference.",
+        keyPoints: [
+          "Scientific consensus outweighs individual experts",
+          "Meta-analyses and reviews carry more weight than single studies",
+          "Cite the strongest sources available",
+        ],
       },
       {
         type: "content",
@@ -621,6 +796,16 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
           "Match expertise to specific claims",
           "Challenge by consensus and conflicts",
           "Disagree intensely but respectfully",
+        ],
+      },
+      {
+        type: "content",
+        title: "Evidence Evaluation Checklist",
+        content: "Use this comprehensive checklist when evaluating any evidence:\n\n**For Statistical Claims:**\n• Sample size adequate?\n• Statistically significant?\n• Effect size meaningful?\n• Study design appropriate?\n• Replicated?\n• Conflicts of interest?\n\n**For Expert Testimony:**\n• Expertise matches claim?\n• Currently active in field?\n• Free from conflicts?\n• Aligned with or against consensus?\n\n**For Anecdotes:**\n• Representative or outlier?\n• Illustrating data or replacing it?\n• Survivorship bias?\n\n**For Age-Based Appeals:**\n• Explaining why or just citing age?\n• Original reasons still apply?\n• Evidence beyond tradition/novelty?\n\n**For Any Claim:**\n• Who bears burden of proof?\n• Is absence of evidence being misused?\n• What would we expect to find if this were true?",
+        keyPoints: [
+          "Use systematic evaluation across evidence types",
+          "Check burden of proof and expectation principle",
+          "Apply appropriate criteria to each evidence type",
         ],
       },
       {
