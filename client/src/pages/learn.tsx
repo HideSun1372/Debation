@@ -343,6 +343,89 @@ export default function Learn() {
     return questions;
   };
 
+  // Get the tier of the user's placement unit
+  const getPlacementTier = (): CurriculumTier | null => {
+    const placementUnitIndex = getPlacementUnitIndex();
+    if (placementUnitIndex < 0 || placementUnitIndex >= LESSON_UNITS.length) return null;
+    return LESSON_UNITS[placementUnitIndex].tier;
+  };
+
+  // Get questions from lessons in BEGINNER tier that would be skipped when advancing to INTERMEDIATE
+  // Uses the same logic as unit skip: finds first incomplete lesson and collects from there
+  const getSkippedSectionQuestions = (targetTier: CurriculumTier): ScrambledQuestion[] => {
+    // Only support skipping to INTERMEDIATE from BEGINNER for now
+    if (targetTier !== "INTERMEDIATE") return [];
+    
+    const placementTier = getPlacementTier();
+    if (placementTier !== "BEGINNER") return [];
+    
+    const placementUnitIndex = getPlacementUnitIndex();
+    
+    // Find the first incomplete unit starting from placement
+    let currentUnitIndex = placementUnitIndex;
+    for (let i = placementUnitIndex; i < LESSON_UNITS.length; i++) {
+      const unit = LESSON_UNITS[i];
+      if (unit.tier !== "BEGINNER") break;
+      
+      let unitComplete = true;
+      for (const section of unit.sections) {
+        for (const lesson of section.lessons) {
+          if (!isLessonCompleted(lesson.id)) {
+            unitComplete = false;
+            break;
+          }
+        }
+        if (!unitComplete) break;
+      }
+      if (!unitComplete) {
+        currentUnitIndex = i;
+        break;
+      }
+    }
+    
+    const questions: ScrambledQuestion[] = [];
+    
+    // Collect questions from all remaining BEGINNER lessons from current position
+    for (let i = currentUnitIndex; i < LESSON_UNITS.length; i++) {
+      const unit = LESSON_UNITS[i];
+      if (unit.tier !== "BEGINNER") break;
+      
+      for (const section of unit.sections) {
+        for (const lesson of section.lessons) {
+          if (!isLessonCompleted(lesson.id)) {
+            const exercise = LESSON_EXERCISES.find(e => e.lessonId === lesson.id);
+            if (exercise) {
+              for (const q of exercise.questions) {
+                const result = scrambleOptions(q.options, q.correctAnswer);
+                if (result) {
+                  questions.push({
+                    id: q.id,
+                    question: q.question,
+                    options: result.scrambled,
+                    correctAnswer: result.newCorrectAnswer,
+                    originalLessonId: lesson.id,
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return questions;
+  };
+
+  // Check if a section/tier is locked (first unit of that tier is beyond placement)
+  const isSectionLocked = (tier: CurriculumTier): boolean => {
+    if (isAdmin) return false;
+    const tierUnits = LESSON_UNITS.filter(u => u.tier === tier);
+    if (tierUnits.length === 0) return true;
+    const firstUnitOfTier = tierUnits[0];
+    const firstUnitIndex = LESSON_UNITS.findIndex(u => u.id === firstUnitOfTier.id);
+    const placementUnitIndex = getPlacementUnitIndex();
+    return firstUnitIndex > placementUnitIndex;
+  };
+
   // Check if a unit is locked (beyond placement)
   const isUnitLocked = (unitId: string): boolean => {
     if (isAdmin) return false;
@@ -362,6 +445,31 @@ export default function Learn() {
     
     setAdvancementQuestions(selected);
     setAdvancementTestTarget({ type: "unit", unitId });
+    setAdvancementQuestionIndex(0);
+    setAdvancementAnswer(null);
+    setAdvancementAnswered(false);
+    setAdvancementCorrect(false);
+    setAdvancementScore(0);
+    setAdvancementTestComplete(false);
+    setShowAdvancementTest(true);
+  };
+
+  // Start advancement test for a section/tier
+  const startSectionAdvancementTest = (targetTier: CurriculumTier) => {
+    const questions = getSkippedSectionQuestions(targetTier);
+    if (questions.length === 0) return;
+    
+    // Select up to 10 random questions
+    const shuffled = [...questions].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, Math.min(10, shuffled.length));
+    
+    // Find the first unit of the target tier to use as the target
+    const tierUnits = LESSON_UNITS.filter(u => u.tier === targetTier);
+    if (tierUnits.length === 0) return;
+    const firstUnitOfTier = tierUnits[0];
+    
+    setAdvancementQuestions(selected);
+    setAdvancementTestTarget({ type: "section", unitId: firstUnitOfTier.id, sectionId: targetTier });
     setAdvancementQuestionIndex(0);
     setAdvancementAnswer(null);
     setAdvancementAnswered(false);
@@ -402,7 +510,7 @@ export default function Learn() {
     }
   };
 
-  // Complete advancement test and unlock unit
+  // Complete advancement test and unlock unit or section
   const handleAdvancementTestComplete = () => {
     if (!advancementTestTarget) return;
     
@@ -430,6 +538,11 @@ export default function Learn() {
       // Batch complete all lessons at once
       if (lessonsToComplete.length > 0) {
         completeLessons(lessonsToComplete);
+      }
+      
+      // If this was a section skip, switch to the target section tab
+      if (advancementTestTarget.type === "section" && advancementTestTarget.sectionId) {
+        setActiveSection(advancementTestTarget.sectionId as CurriculumTier);
       }
     }
     
@@ -1737,6 +1850,9 @@ export default function Learn() {
           
           const info = sectionInfo[tier];
           
+          // Check if we can show "Skip to Section 2" button (only in BEGINNER section when Section 2 is locked)
+          const canSkipToSection2 = tier === "BEGINNER" && isSectionLocked("INTERMEDIATE") && getSkippedSectionQuestions("INTERMEDIATE").length > 0;
+          
           return (
             <TabsContent key={tier} value={tier} className="space-y-4 mt-0">
               <div className="flex items-center justify-between gap-4 py-3 border-b">
@@ -1748,6 +1864,18 @@ export default function Learn() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
+                  {canSkipToSection2 && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => startSectionAdvancementTest("INTERMEDIATE")}
+                      className="gap-1"
+                      data-testid="button-skip-to-section-2"
+                    >
+                      <FastForward className="h-4 w-4" />
+                      Skip to Section 2
+                    </Button>
+                  )}
                   <Badge variant="outline">{completedInTier}/{tierLessonIds.length}</Badge>
                   <div className="w-24">
                     <Progress value={tierProgress} className="h-2" />
