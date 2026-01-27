@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -81,7 +81,8 @@ export default function Learn() {
   const [pageCorrect, setPageCorrect] = useState(false);
   const [completedPageQuestions, setCompletedPageQuestions] = useState<Set<number>>(new Set());
   const [activeSection, setActiveSection] = useState<CurriculumTier>("BEGINNER");
-  
+  const [lastViewedLessonId, setLastViewedLessonId] = useState<string | null>(null);
+
   // Practice page state
   const [practiceCompleted, setPracticeCompleted] = useState(false);
   const [practiceScore, setPracticeScore] = useState(0);
@@ -823,6 +824,9 @@ export default function Learn() {
     // Complete the lesson
     completeLesson(completedLessonId, xpToAdd);
     
+    // Set last viewed lesson for scroll
+    setLastViewedLessonId(completedLessonId);
+    
     // Reset and go to curriculum
     setShowCompletionSummary(false);
     setCompletionStats(null);
@@ -883,6 +887,7 @@ export default function Learn() {
     }
     
     // No more lessons or lesson not found, go back to curriculum
+    setLastViewedLessonId(completedLessonId);
     setActiveLessonId(null);
     resetLessonUIState();
   };
@@ -894,16 +899,36 @@ export default function Learn() {
     if (hasProgressed) {
       setShowExitConfirm(true);
     } else {
+      if (activeLessonId) {
+        setLastViewedLessonId(activeLessonId);
+      }
       setActiveLessonId(null);
       resetLessonUIState();
     }
   };
 
   const confirmExit = () => {
+    if (activeLessonId) {
+      setLastViewedLessonId(activeLessonId);
+    }
     setShowExitConfirm(false);
     setActiveLessonId(null);
     resetLessonUIState();
   };
+
+  useEffect(() => {
+    if (!activeLessonId && lastViewedLessonId) {
+      // Small delay to ensure the DOM has rendered the lesson list
+      const timer = setTimeout(() => {
+        const element = document.getElementById(`lesson-card-${lastViewedLessonId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+          setLastViewedLessonId(null);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [activeLessonId, lastViewedLessonId]);
 
   const getTimeLeft = () => {
     const active = getActiveLesson();
@@ -1941,46 +1966,47 @@ export default function Learn() {
                                 const showTitle = completed || unlocked;
                                 
                                 return (
-                                  <button
-                                    key={lesson.id}
-                                    onClick={() => handleLessonClick(unit.id, section.id, lesson.id)}
-                                    disabled={!unlocked && !completed}
-                                    className={cn(
-                                      "w-full flex items-center gap-3 p-3 rounded-md text-left transition-colors",
-                                      completed && "bg-tier-beginner/10",
-                                      unlocked && !completed && "hover:bg-accent",
-                                      !unlocked && !completed && "opacity-50 cursor-not-allowed"
-                                    )}
-                                    data-testid={`button-lesson-${lesson.id}`}
-                                  >
-                                    <div className={cn(
-                                      "h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0",
-                                      completed ? "bg-tier-beginner text-white" : unlocked ? "bg-muted" : "bg-muted"
-                                    )}>
-                                      {completed ? (
-                                        <Check className="h-4 w-4" />
-                                      ) : unlocked ? (
-                                        <PlayCircle className="h-4 w-4" />
-                                      ) : (
-                                        <Lock className="h-4 w-4" />
+                                  <div key={lesson.id} id={`lesson-card-${lesson.id}`}>
+                                    <button
+                                      onClick={() => handleLessonClick(unit.id, section.id, lesson.id)}
+                                      disabled={!unlocked && !completed}
+                                      className={cn(
+                                        "w-full flex items-center gap-3 p-3 rounded-md text-left transition-colors",
+                                        completed && "bg-tier-beginner/10",
+                                        unlocked && !completed && "hover:bg-accent",
+                                        !unlocked && !completed && "opacity-50 cursor-not-allowed"
                                       )}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                      <p className={cn(
-                                        "font-medium truncate",
-                                        completed && "text-tier-beginner",
-                                        !showTitle && "text-muted-foreground italic"
+                                      data-testid={`button-lesson-${lesson.id}`}
+                                    >
+                                      <div className={cn(
+                                        "h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0",
+                                        completed ? "bg-tier-beginner text-white" : unlocked ? "bg-muted" : "bg-muted"
                                       )}>
-                                        {showTitle ? lesson.title : "Locked Lesson"}
-                                      </p>
-                                      <p className="text-xs text-muted-foreground">
-                                        {showTitle ? `${lesson.estimatedMinutes} min` : "Complete previous lessons to unlock"}
-                                      </p>
-                                    </div>
-                                    {(unlocked || completed) && (
-                                      <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                                    )}
-                                  </button>
+                                        {completed ? (
+                                          <Check className="h-4 w-4" />
+                                        ) : unlocked ? (
+                                          <PlayCircle className="h-4 w-4" />
+                                        ) : (
+                                          <Lock className="h-4 w-4" />
+                                        )}
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <p className={cn(
+                                          "font-medium truncate",
+                                          completed && "text-tier-beginner",
+                                          !showTitle && "text-muted-foreground italic"
+                                        )}>
+                                          {showTitle ? lesson.title : "Locked Lesson"}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                          {showTitle ? `${lesson.estimatedMinutes} min` : "Complete previous lessons to unlock"}
+                                        </p>
+                                      </div>
+                                      {(unlocked || completed) && (
+                                        <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                      )}
+                                    </button>
+                                  </div>
                                 );
                               })}
                             </div>
