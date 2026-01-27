@@ -228,7 +228,17 @@ export default function Learn() {
 
   const handleExperienceNext = () => {
     if (selectedExperience) {
-      setOnboardingStep("assessment");
+      if (selectedExperience === "none") {
+        // Skip assessment and result for users with no experience
+        const placement = getPlacementUnit("none", 0);
+        const placementUnit = getPlacementUnitInfo(placement);
+        if (placementUnit) {
+          setActiveSection(placementUnit.tier);
+        }
+        completeOnboarding("none", 0);
+      } else {
+        setOnboardingStep("assessment");
+      }
     }
   };
 
