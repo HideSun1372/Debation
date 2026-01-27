@@ -34,12 +34,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         id: "l10-01-q1",
         question: "Which response to an opponent's argument is a personal attack?",
         options: [
-          { id: "a", text: "'This argument fails because the evidence is outdated.'" },
-          { id: "b", text: "'Let me explain this simply so my opponent can understand.'" },
+          { id: "a", text: "'Let me explain this simply so my opponent can understand.'" },
+          { id: "b", text: "'This argument fails because the evidence is outdated.'" },
           { id: "c", text: "'The reasoning here has a logical flaw...'" },
           { id: "d", text: "'I disagree with this conclusion because...'" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Option B is condescending—implying the opponent can't understand complex ideas. This is a personal attack disguised as explanation. The other options focus on the argument itself (evidence, reasoning, conclusions) without attacking the person.",
       },
       {
@@ -111,11 +111,11 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         question: "During cross-examination, your opponent repeatedly evades your questions. What's the most professional response?",
         options: [
           { id: "a", text: "'Why are you being so evasive? Just answer the question!'" },
-          { id: "b", text: "'I'll note for the judge that this question remains unanswered. Let me move on...'" },
-          { id: "c", text: "'Everyone can see you're dodging because you have no answer.'" },
+          { id: "b", text: "'Everyone can see you're dodging because you have no answer.'" },
+          { id: "c", text: "'I'll note for the judge that this question remains unanswered. Let me move on...'" },
           { id: "d", text: "'Are you even prepared for this debate?'" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Option B is professional: it flags the evasion for the judge without attacking the opponent personally. The other options—accusing them of evasion, making generalizations about 'everyone,' or questioning their preparation—are all personal attacks that waste your time and damage your credibility.",
       },
       {
@@ -163,12 +163,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         id: "l10-02-q1",
         question: "A politician asked 'How will you address climate change?' responds: 'My opponent has a terrible environmental record.' What happened?",
         options: [
-          { id: "a", text: "They answered the question directly" },
-          { id: "b", text: "They used a red herring—attacking the opponent instead of explaining their own plan" },
-          { id: "c", text: "They provided strong evidence" },
+          { id: "a", text: "They used a red herring—attacking the opponent instead of explaining their own plan" },
+          { id: "b", text: "They provided strong evidence" },
+          { id: "c", text: "They answered the question directly" },
           { id: "d", text: "This is good debate practice" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "This is a red herring. The question asked for their climate plan, but they diverted to attacking their opponent's record. Even if the attack is true, it doesn't answer the question. The original question about their own plan remains unaddressed.",
       },
       {
@@ -187,11 +187,11 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         question: "Your opponent introduces a dramatic but irrelevant story instead of addressing your argument. What's the best response?",
         options: [
           { id: "a", text: "Tell your own dramatic story" },
-          { id: "b", text: "Say 'That story doesn't address my argument. Let me bring us back to the actual issue...'" },
-          { id: "c", text: "Accept that your argument has been refuted" },
-          { id: "d", text: "Leave the debate" }
+          { id: "b", text: "Accept that your argument has been refuted" },
+          { id: "c", text: "Leave the debate" },
+          { id: "d", text: "Say 'That story doesn't address my argument. Let me bring us back to the actual issue...'" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Redirect to the actual issue by noting that the story, however compelling, doesn't address your argument. This makes clear to judges that your point stands unrebutted while keeping the debate focused on substance.",
       },
       {
@@ -239,12 +239,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         id: "l10-02-q3",
         question: "In Policy debate, your opponent spends their entire second constructive discussing advantages you didn't even argue against, ignoring your main disadvantage. What happened?",
         options: [
-          { id: "a", text: "They made strong arguments that defeat your case" },
-          { id: "b", text: "They used a red herring by discussing irrelevant points and ignoring your key argument" },
+          { id: "a", text: "This is a standard debate strategy" },
+          { id: "b", text: "They made strong arguments that defeat your case" },
           { id: "c", text: "They refuted your disadvantage effectively" },
-          { id: "d", text: "This is a standard debate strategy" }
+          { id: "d", text: "They used a red herring by discussing irrelevant points and ignoring your key argument" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "This is a red herring. By spending time on points you didn't contest while ignoring your main disadvantage, they're diverting from the actual clash in the round. Your response: point out that your disadvantage stands unrebutted and remains the central issue.",
       },
       {
@@ -312,11 +312,11 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         question: "What's the main difference between academic and popular sources?",
         options: [
           { id: "a", text: "Academic sources are always right; popular sources are always wrong" },
-          { id: "b", text: "Academic sources undergo peer review by experts; popular sources typically don't" },
-          { id: "c", text: "Popular sources are more reliable because journalists are objective" },
+          { id: "b", text: "Popular sources are more reliable because journalists are objective" },
+          { id: "c", text: "Academic sources undergo peer review by experts; popular sources typically don't" },
           { id: "d", text: "There's no meaningful difference between them" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "The key difference is peer review. Academic sources are reviewed by other experts in the field before publication, which catches errors and ensures methodological rigor. Popular sources typically undergo editorial review but not expert peer review.",
       },
       {
@@ -344,12 +344,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         id: "l10-03-q2",
         question: "When is a newspaper article an appropriate source in debate?",
         options: [
-          { id: "a", text: "Never—only academic sources should be used" },
-          { id: "b", text: "For current events, reporting facts, or when it cites underlying academic research" },
+          { id: "a", text: "For current events, reporting facts, or when it cites underlying academic research" },
+          { id: "b", text: "Never—only academic sources should be used" },
           { id: "c", text: "Only when you can't find anything else" },
           { id: "d", text: "For all types of claims equally" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Newspaper articles are appropriate for current events, factual reporting, and when they cite underlying research or expert sources. They're less appropriate for complex causal claims that require peer-reviewed research. Know what you're using and why.",
       },
       {
@@ -387,12 +387,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         id: "l10-03-q3",
         question: "Your opponent cites a report from an advocacy organization supporting their position. How should you evaluate this source?",
         options: [
-          { id: "a", text: "Accept it because organizations do research" },
-          { id: "b", text: "Reject it automatically because advocacy groups are always biased" },
-          { id: "c", text: "Consider their incentives, check if the methodology is sound, and look for independent verification" },
-          { id: "d", text: "Ignore the source and only focus on peer-reviewed research" }
+          { id: "a", text: "Reject it automatically because advocacy groups are always biased" },
+          { id: "b", text: "Ignore the source and only focus on peer-reviewed research" },
+          { id: "c", text: "Accept it because organizations do research" },
+          { id: "d", text: "Consider their incentives, check if the methodology is sound, and look for independent verification" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "Advocacy organizations can produce legitimate research, but they have incentives to find certain results. Evaluate the methodology, consider their funding and mission, and check if the findings are independently verified. Neither automatic acceptance nor automatic rejection is appropriate.",
       },
       {
@@ -441,11 +441,11 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         question: "Someone says: 'I started meditating, and then my headaches stopped. Meditation cured my headaches!' What fallacy might this be?",
         options: [
           { id: "a", text: "Strawman" },
-          { id: "b", text: "Post hoc—assuming sequence proves causation" },
-          { id: "c", text: "Ad hominem" },
-          { id: "d", text: "False dichotomy" }
+          { id: "b", text: "False dichotomy" },
+          { id: "c", text: "Post hoc—assuming sequence proves causation" },
+          { id: "d", text: "Ad hominem" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "This is post hoc reasoning. Just because headaches stopped after starting meditation doesn't prove meditation caused it. The headaches might have stopped anyway, or other factors (stress reduction, better sleep, placebo effect) might explain it. Sequence alone doesn't prove causation.",
       },
       {
@@ -474,11 +474,11 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         question: "A politician claims: 'Since I took office, unemployment dropped. My policies work!' What's the best response?",
         options: [
           { id: "a", text: "Accept their claim since unemployment did drop" },
-          { id: "b", text: "Ask if unemployment was already dropping, if other factors contributed, and what mechanism connects their policies to jobs" },
-          { id: "c", text: "Attack the politician personally" },
-          { id: "d", text: "Ignore the claim" }
+          { id: "b", text: "Attack the politician personally" },
+          { id: "c", text: "Ignore the claim" },
+          { id: "d", text: "Ask if unemployment was already dropping, if other factors contributed, and what mechanism connects their policies to jobs" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Challenge the post hoc reasoning by asking if the trend predated their office, what other factors might explain it, and what specific mechanism connects their policies to employment. Many factors affect unemployment; sequence alone doesn't prove causation.",
       },
       {
@@ -570,11 +570,11 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         question: "Which is the better citation in a debate speech?",
         options: [
           { id: "a", text: "'Studies show this is true'" },
-          { id: "b", text: "'A 2023 Harvard study published in Nature, surveying 10,000 participants, found...'" },
-          { id: "c", text: "'I read somewhere that...'" },
-          { id: "d", text: "'It's common knowledge that...'" }
+          { id: "b", text: "'I read somewhere that...'" },
+          { id: "c", text: "'It's common knowledge that...'" },
+          { id: "d", text: "'A 2023 Harvard study published in Nature, surveying 10,000 participants, found...'" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Option B provides institution (Harvard), date (2023), publication (Nature), and methodology (10,000 participants). This is verifiable and credible. The other options are vague and unverifiable, undermining the evidence's persuasive power.",
       },
       {
@@ -622,12 +622,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         id: "l10-05-q2",
         question: "Why should you include dates in your citations?",
         options: [
-          { id: "a", text: "Dates aren't important for citations" },
-          { id: "b", text: "Dates establish recency and help judges evaluate if the evidence is current" },
+          { id: "a", text: "Dates establish recency and help judges evaluate if the evidence is current" },
+          { id: "b", text: "Dates aren't important for citations" },
           { id: "c", text: "Only old sources need dates" },
           { id: "d", text: "Dates make speeches longer" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Dates are important because they establish recency. In fast-moving fields, old evidence may be outdated. Dates help judges evaluate whether evidence reflects current knowledge. They also help opponents verify sources by finding the specific publication.",
       },
       {
@@ -636,11 +636,11 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         question: "Your opponent challenges a piece of your evidence, saying your tag line overstates what the source actually says. What's the best response?",
         options: [
           { id: "a", text: "Insist your tag is accurate even if it's not" },
-          { id: "b", text: "Acknowledge if the challenge is fair, clarify what the evidence does say, and explain why it still supports your argument" },
-          { id: "c", text: "Attack the opponent for being pedantic" },
+          { id: "b", text: "Attack the opponent for being pedantic" },
+          { id: "c", text: "Acknowledge if the challenge is fair, clarify what the evidence does say, and explain why it still supports your argument" },
           { id: "d", text: "Ignore the challenge completely" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Honesty is essential. If your tag overstates the evidence, acknowledge it—credibility matters more than one card. Then clarify what the evidence actually says and explain why it still supports your broader argument. This maintains trust with the judge.",
       },
       {
@@ -688,12 +688,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         id: "l10-06-q1",
         question: "A study finds that children who eat breakfast get better grades. What should you consider?",
         options: [
-          { id: "a", text: "Eating breakfast causes better grades" },
+          { id: "a", text: "Both B and C should be considered before concluding causation" },
           { id: "b", text: "Better grades might cause breakfast eating" },
-          { id: "c", text: "A third factor (like family stability) might cause both" },
-          { id: "d", text: "Both B and C should be considered before concluding causation" }
+          { id: "c", text: "Eating breakfast causes better grades" },
+          { id: "d", text: "A third factor (like family stability) might cause both" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "a",
         explanation: "Before assuming breakfast causes grades, consider alternatives. Maybe doing well in school motivates morning routines (reverse causation). More likely, factors like family stability, income, and parenting affect both breakfast habits and academic performance (common cause). Correlation alone doesn't prove breakfast causes grades.",
       },
       {
@@ -741,12 +741,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         id: "l10-06-q2",
         question: "Your opponent cites a study showing countries with more hospitals have higher death rates. They conclude hospitals cause death. How do you respond?",
         options: [
-          { id: "a", text: "Accept their conclusion" },
-          { id: "b", text: "Point out reverse causation: sick populations need more hospitals" },
-          { id: "c", text: "Note common cause: larger populations have more hospitals AND more deaths" },
-          { id: "d", text: "Both B and C are good responses" }
+          { id: "a", text: "Point out reverse causation: sick populations need more hospitals, OR note common cause: larger populations have more of both" },
+          { id: "b", text: "Accept their conclusion because the data is clear" },
+          { id: "c", text: "Argue that hospitals should be closed to save lives" },
+          { id: "d", text: "Say correlation always equals causation" }
         ],
-        correctAnswer: "d",
+        correctAnswer: "a",
         explanation: "Both are excellent responses. Reverse causation: places with sicker populations build more hospitals (hospitals don't cause the deaths; illness causes both deaths and hospital construction). Common cause: larger populations have more of both hospitals and deaths. This is a classic example of misinterpreting correlation as causation.",
       },
       {
@@ -833,12 +833,12 @@ export const UNIT_10_LESSONS: MultiPageLesson[] = [
         id: "l10-07-q1",
         question: "Which of the following is NOT a logical fallacy?",
         options: [
-          { id: "a", text: "Ad hominem" },
-          { id: "b", text: "Citing peer-reviewed research" },
-          { id: "c", text: "False dichotomy" },
-          { id: "d", text: "Post hoc" }
+          { id: "a", text: "Post hoc" },
+          { id: "b", text: "False dichotomy" },
+          { id: "c", text: "Citing peer-reviewed research" },
+          { id: "d", text: "Ad hominem" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Citing peer-reviewed research is good debate practice, not a fallacy. Ad hominem (attacking the person), false dichotomy (false either/or), and post hoc (assuming sequence proves causation) are all logical fallacies you learned to identify and avoid.",
       },
       {

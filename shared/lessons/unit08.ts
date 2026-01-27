@@ -34,12 +34,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-01-q1",
         question: "Why is it important to think like your opponent when preparing arguments?",
         options: [
-          { id: "a", text: "To find weaknesses to attack in your own case" },
-          { id: "b", text: "To anticipate their objections and prepare responses in advance" },
+          { id: "a", text: "To anticipate their objections and prepare responses in advance" },
+          { id: "b", text: "To find weaknesses to attack in your own case" },
           { id: "c", text: "To copy their arguments" },
           { id: "d", text: "It's not important—focus only on your own case" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Thinking like your opponent helps you anticipate their objections so you can prepare responses in advance. This allows you to preempt attacks in your constructive speech or be ready with strong rebuttals, making your overall case more resilient.",
       },
       {
@@ -68,11 +68,11 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         question: "You're arguing for a new education policy and expect opponents to claim it's too expensive. What's the best preemptive approach?",
         options: [
           { id: "a", text: "Ignore the cost concern entirely" },
-          { id: "b", text: "Say 'Some might argue this is expensive. However, independent analysis shows it would save $5 billion annually through reduced remediation costs.'" },
-          { id: "c", text: "Attack your opponent personally for caring about money" },
-          { id: "d", text: "Admit the policy is too expensive and drop the argument" }
+          { id: "b", text: "Attack your opponent personally for caring about money" },
+          { id: "c", text: "Admit the policy is too expensive and drop the argument" },
+          { id: "d", text: "Say 'Some might argue this is expensive. However, independent analysis shows it would save $5 billion annually through reduced remediation costs.'" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "The best preemptive approach acknowledges the likely objection ('Some might argue...'), then provides a direct response with evidence. This shows you've considered the concern and have a substantive answer, which builds credibility and takes the sting out of the opponent raising it later.",
       },
       {
@@ -100,12 +100,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-01-q2",
         question: "What is the advantage of the 'even if' strategy in debate?",
         options: [
-          { id: "a", text: "It allows you to avoid making any definitive claims" },
-          { id: "b", text: "It creates layered defense so you win whether the objection is true or false" },
-          { id: "c", text: "It confuses the judge" },
-          { id: "d", text: "It lets you skip researching the topic" }
+          { id: "a", text: "It confuses the judge" },
+          { id: "b", text: "It lets you skip researching the topic" },
+          { id: "c", text: "It creates layered defense so you win whether the objection is true or false" },
+          { id: "d", text: "It allows you to avoid making any definitive claims" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "The 'even if' strategy creates layered defense: you give a reason the objection is wrong, then show that even if it were right, your argument still wins. This means opponents must defeat both levels to win the point, making your position more resilient.",
       },
       {
@@ -183,11 +183,11 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         question: "A famous physicist expresses an opinion on economics. How should this be treated?",
         options: [
           { id: "a", text: "As authoritative because they're intelligent" },
-          { id: "b", text: "As just an opinion since physics expertise doesn't transfer to economics" },
-          { id: "c", text: "As more authoritative than economists" },
+          { id: "b", text: "As more authoritative than economists" },
+          { id: "c", text: "As just an opinion since physics expertise doesn't transfer to economics" },
           { id: "d", text: "As proof that the economic claim is true" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Expertise doesn't transfer between unrelated fields. A physicist—however brilliant—has no special authority on economics. Their opinion should be treated as just that: one person's opinion, not expert evidence. For economics questions, cite economists.",
       },
       {
@@ -215,12 +215,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-02-q3",
         question: "An opponent cites 'a study by scientists' without naming the scientists or the journal. How should you respond?",
         options: [
-          { id: "a", text: "Accept the evidence as valid since scientists conducted it" },
-          { id: "b", text: "Point out that anonymous, unverifiable sources have no credibility in debate" },
+          { id: "a", text: "Point out that anonymous, unverifiable sources have no credibility in debate" },
+          { id: "b", text: "Make up your own anonymous study in response" },
           { id: "c", text: "Ignore it and move on" },
-          { id: "d", text: "Make up your own anonymous study in response" }
+          { id: "d", text: "Accept the evidence as valid since scientists conducted it" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Anonymous or vague authority claims ('scientists say...') are meaningless. Without knowing who conducted the research, where it was published, and what their methodology was, there's no way to evaluate its credibility. You should call out this weakness directly.",
       },
       {
@@ -311,12 +311,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-03-q1",
         question: "Why does acknowledging a limitation in your evidence actually strengthen your case?",
         options: [
-          { id: "a", text: "It doesn't—never admit any weakness" },
-          { id: "b", text: "It shows you're being honest, which makes judges trust your other claims more" },
+          { id: "a", text: "It shows you're being honest, which makes judges trust your other claims more" },
+          { id: "b", text: "It doesn't—never admit any weakness" },
           { id: "c", text: "It confuses the judge about your position" },
           { id: "d", text: "Judges prefer weaker evidence" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Acknowledging limitations demonstrates intellectual honesty, which increases judges' trust in everything else you say. It also preempts opponents from revealing the weakness as a surprise, and shows you've thought critically about your own evidence rather than blindly accepting it.",
       },
       {
@@ -344,12 +344,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-03-q3",
         question: "You encounter a study that contradicts your position. What's the most intellectually honest approach?",
         options: [
-          { id: "a", text: "Pretend you never saw it" },
-          { id: "b", text: "Address it directly, explain its limitations, and show why other evidence outweighs it" },
-          { id: "c", text: "Attack the researchers personally" },
-          { id: "d", text: "Change your position entirely" }
+          { id: "a", text: "Change your position entirely" },
+          { id: "b", text: "Attack the researchers personally" },
+          { id: "c", text: "Address it directly, explain its limitations, and show why other evidence outweighs it" },
+          { id: "d", text: "Pretend you never saw it" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "The intellectually honest approach is to address the contradicting evidence directly. Explain any legitimate methodological concerns, and show why the weight of evidence still supports your position. This builds credibility and prevents opponents from surprising judges with evidence you ignored.",
       },
       {
@@ -435,12 +435,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-04-q1",
         question: "A poll shows Candidate A at 48% and Candidate B at 46%, with a margin of error of ±4%. What can you conclude?",
         options: [
-          { id: "a", text: "Candidate A is definitely winning" },
-          { id: "b", text: "The race is essentially tied—the margin of error covers the difference" },
-          { id: "c", text: "Candidate B will win" },
+          { id: "a", text: "The race is essentially tied—the margin of error covers the difference" },
+          { id: "b", text: "Candidate B will win" },
+          { id: "c", text: "Candidate A is definitely winning" },
           { id: "d", text: "The poll is useless" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "With a 2-point gap and a ±4% margin of error, Candidate A could be anywhere from 44-52% and Candidate B from 42-50%. These ranges overlap significantly, meaning either candidate could actually be ahead. The race is essentially a statistical tie.",
       },
       {
@@ -469,11 +469,11 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         question: "A study shows that cities with more police officers have higher crime rates. What's the most likely explanation?",
         options: [
           { id: "a", text: "Police officers cause crime" },
-          { id: "b", text: "High-crime cities hire more police (reverse causation or confounding)" },
-          { id: "c", text: "The study must be wrong" },
-          { id: "d", text: "Crime rates don't matter" }
+          { id: "b", text: "The study must be wrong" },
+          { id: "c", text: "Crime rates don't matter" },
+          { id: "d", text: "High-crime cities hire more police (reverse causation or confounding)" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "This is a classic case of reverse causation or confounding. High-crime cities hire more police in response to crime—the crime causes the hiring, not the other way around. This is why correlation doesn't prove causation: the causal direction might be reversed.",
       },
       {
@@ -501,12 +501,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-04-q2",
         question: "A graph shows a line rising steeply, but you notice the Y-axis goes from 98 to 102 instead of 0 to 100. What's happening?",
         options: [
-          { id: "a", text: "Normal statistical presentation" },
-          { id: "b", text: "The graph is making small changes look dramatic by not starting at zero" },
-          { id: "c", text: "The data is invalid" },
-          { id: "d", text: "The graph is showing percentage change" }
+          { id: "a", text: "The graph is showing percentage change" },
+          { id: "b", text: "The data is invalid" },
+          { id: "c", text: "The graph is making small changes look dramatic by not starting at zero" },
+          { id: "d", text: "Normal statistical presentation" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "By not starting the Y-axis at zero, small changes appear dramatic. A move from 99 to 101 (a 2% change) can look like a massive spike on a truncated axis. This is a common way to make data seem more dramatic than it is.",
       },
       {
@@ -584,11 +584,11 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         question: "A speaker tells a heartbreaking story about one family but provides no evidence their solution would help families generally. What's the problem?",
         options: [
           { id: "a", text: "There's no problem—emotional stories are always valid" },
-          { id: "b", text: "The emotion is substituting for logical argument about policy effectiveness" },
-          { id: "c", text: "Emotional stories should never be used" },
-          { id: "d", text: "The story needs to be happier" }
+          { id: "b", text: "Emotional stories should never be used" },
+          { id: "c", text: "The story needs to be happier" },
+          { id: "d", text: "The emotion is substituting for logical argument about policy effectiveness" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "The emotional story is being used to substitute for logical argument. A single example doesn't prove a policy would help families generally. Emotion should illustrate and support logical arguments, not replace them. The speaker needs to also explain why their solution would work.",
       },
       {
@@ -626,12 +626,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-05-q2",
         question: "What's the best way to integrate emotion into a debate argument?",
         options: [
-          { id: "a", text: "Use only emotion and skip the evidence" },
-          { id: "b", text: "Avoid emotion entirely and stick to pure logic" },
-          { id: "c", text: "Establish logical arguments first, then use emotion to illustrate and humanize them" },
-          { id: "d", text: "Use emotion only when you have no evidence" }
+          { id: "a", text: "Use emotion only when you have no evidence" },
+          { id: "b", text: "Establish logical arguments first, then use emotion to illustrate and humanize them" },
+          { id: "c", text: "Use only emotion and skip the evidence" },
+          { id: "d", text: "Avoid emotion entirely and stick to pure logic" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "b",
         explanation: "The best integration establishes logical arguments with evidence first, then uses emotional appeals to illustrate, humanize, and make the logical case memorable. Emotion should support logic, not replace it. This combination is more persuasive than either alone.",
       },
       {
@@ -679,12 +679,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-06-q1",
         question: "Why should you look at citation counts when evaluating academic papers?",
         options: [
-          { id: "a", text: "Higher citation counts mean the paper is longer" },
-          { id: "b", text: "Citation counts indicate how influential and widely used the research is" },
+          { id: "a", text: "Citation counts indicate how influential and widely used the research is" },
+          { id: "b", text: "Higher citation counts mean the paper is longer" },
           { id: "c", text: "Citation counts don't matter at all" },
           { id: "d", text: "Papers with more citations are newer" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Citation counts indicate how many other researchers have referenced a paper in their own work. High citation counts suggest the research is influential and respected in the field. However, newer papers haven't had time to accumulate citations, so consider publication date as well.",
       },
       {
@@ -723,11 +723,11 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         question: "You want to find government statistics about unemployment. Which search would be most effective?",
         options: [
           { id: "a", text: "'unemployment' (just that word)" },
-          { id: "b", text: "'unemployment' site:bls.gov (Bureau of Labor Statistics)" },
-          { id: "c", text: "'people without jobs' (informal phrase)" },
+          { id: "b", text: "'people without jobs' (informal phrase)" },
+          { id: "c", text: "'unemployment' site:bls.gov (Bureau of Labor Statistics)" },
           { id: "d", text: "'unemployment' on social media" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Using the site: operator to search specifically the Bureau of Labor Statistics (site:bls.gov) directs you to the authoritative government source for unemployment data. This is more efficient than searching generally, and more reliable than social media or informal searches.",
       },
       {
@@ -823,12 +823,12 @@ export const UNIT_08_LESSONS: MultiPageLesson[] = [
         id: "l08-07-q2",
         question: "You're building a case and want maximum credibility. Which approach works best?",
         options: [
-          { id: "a", text: "Ignore all weaknesses in your position" },
-          { id: "b", text: "Rely only on emotional stories without evidence" },
-          { id: "c", text: "Acknowledge limitations honestly while providing strong evidence" },
-          { id: "d", text: "Attack your opponent personally" }
+          { id: "a", text: "Attack your opponent personally" },
+          { id: "b", text: "Ignore all weaknesses in your position" },
+          { id: "c", text: "Rely only on emotional stories without evidence" },
+          { id: "d", text: "Acknowledge limitations honestly while providing strong evidence" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "Maximum credibility comes from intellectual honesty combined with strong evidence. Acknowledging limitations shows judges you're being straight with them, which makes them trust your other claims more. This works better than hiding weaknesses or relying on emotion alone.",
       },
       {

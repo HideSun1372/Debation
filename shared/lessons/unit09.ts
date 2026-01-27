@@ -35,9 +35,9 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         question: "Someone says: 'You can't prove this vitamin supplement doesn't work, so it must work!' What fallacy is this?",
         options: [
           { id: "a", text: "Ad hominem" },
-          { id: "b", text: "Strawman" },
+          { id: "b", text: "False dichotomy" },
           { id: "c", text: "Appeal to ignorance" },
-          { id: "d", text: "False dichotomy" }
+          { id: "d", text: "Strawman" }
         ],
         correctAnswer: "c",
         explanation: "This is appeal to ignorance—arguing something is true because it hasn't been proven false. The burden is on the person claiming the supplement works to provide evidence, not on others to prove it doesn't work. Lack of disproof isn't proof.",
@@ -78,11 +78,11 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         question: "Someone claims: 'Invisible energy fields surround us and influence our health. You can't prove they don't exist!' What's the best response?",
         options: [
           { id: "a", text: "Accept the claim because you can't disprove it" },
-          { id: "b", text: "The burden is on you to prove they exist. What evidence would disprove your claim?" },
-          { id: "c", text: "Ignore the claim entirely without responding" },
-          { id: "d", text: "Agree that invisible fields must exist" }
+          { id: "b", text: "Ignore the claim entirely without responding" },
+          { id: "c", text: "Agree that invisible fields must exist" },
+          { id: "d", text: "The burden is on you to prove they exist. What evidence would disprove your claim?" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "The best response clarifies burden of proof (the claimant must prove their positive claim) and challenges the falsifiability of the claim. Asking 'What evidence would disprove this?' exposes whether the claim is testable. If nothing could disprove it, the claim isn't scientific.",
       },
       {
@@ -100,12 +100,12 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         id: "l09-01-q2",
         question: "What's the best response when someone says: 'Prove my claim is wrong!'?",
         options: [
-          { id: "a", text: "Accept their claim because you can't disprove it" },
-          { id: "b", text: "You made the claim; you bear the burden of proving it" },
+          { id: "a", text: "You made the claim; you bear the burden of proving it" },
+          { id: "b", text: "Accept their claim because you can't disprove it" },
           { id: "c", text: "Ignore the claim entirely" },
           { id: "d", text: "Agree to disagree immediately" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "The best response is to clarify burden of proof: the person making the claim bears the burden of proving it. You don't have to disprove their claim—they have to prove it. Demanding disproof is an inappropriate shift of burden.",
       },
       {
@@ -158,12 +158,12 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         id: "l09-02-q1",
         question: "A study finds a 'statistically significant' difference between two groups (p < 0.05). What does this tell you?",
         options: [
-          { id: "a", text: "The difference is large and important" },
-          { id: "b", text: "There's less than 5% probability the difference is due to chance" },
+          { id: "a", text: "There's less than 5% probability the difference is due to chance" },
+          { id: "b", text: "The difference is large and important" },
           { id: "c", text: "The study is perfectly designed" },
           { id: "d", text: "The result will definitely replicate" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Statistical significance (p < 0.05) means there's less than a 5% probability that the observed difference is due to random chance. It doesn't tell you the effect is large, the study is well-designed, or that it will replicate—just that it's unlikely to be random noise.",
       },
       {
@@ -288,11 +288,11 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         question: "What's the most respectful way to disagree with a strong opponent argument?",
         options: [
           { id: "a", text: "'That's the stupidest thing I've ever heard'" },
-          { id: "b", text: "'My opponent raises a fair point about X, but here's why I still win...'" },
-          { id: "c", text: "Ignore the argument entirely" },
+          { id: "b", text: "Ignore the argument entirely" },
+          { id: "c", text: "'My opponent raises a fair point about X, but here's why I still win...'" },
           { id: "d", text: "Roll your eyes and sigh loudly" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Acknowledging a strong point before explaining why you still win is both respectful and strategic. It shows you're engaging seriously with the argument, which judges appreciate, and it makes your response seem more credible than if you dismissed everything the opponent said.",
       },
       {
@@ -330,12 +330,12 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         id: "l09-03-q3",
         question: "After winning a debate against a less experienced opponent, what's the best approach?",
         options: [
-          { id: "a", text: "Celebrate loudly in front of them" },
-          { id: "b", text: "Offer constructive feedback and genuine encouragement" },
-          { id: "c", text: "Ignore them and walk away" },
-          { id: "d", text: "Point out every mistake they made" }
+          { id: "a", text: "Point out every mistake they made" },
+          { id: "b", text: "Ignore them and walk away" },
+          { id: "c", text: "Offer constructive feedback and genuine encouragement" },
+          { id: "d", text: "Celebrate loudly in front of them" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Offering constructive feedback and encouragement builds community, helps newer debaters improve, and reflects well on your character. Everyone was a beginner once. Celebrating dismissively or ignoring them creates a hostile environment that hurts the debate community as a whole.",
       },
       {
@@ -353,9 +353,9 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         id: "l09-03-q2",
         question: "After losing a debate round, what's the best mindset?",
         options: [
-          { id: "a", text: "The judge was biased and my opponent cheated" },
+          { id: "a", text: "Debate is pointless" },
           { id: "b", text: "Analyze what I could have done better and learn for next time" },
-          { id: "c", text: "Debate is pointless" },
+          { id: "c", text: "The judge was biased and my opponent cheated" },
           { id: "d", text: "Never speak to that opponent again" }
         ],
         correctAnswer: "b",
@@ -411,12 +411,12 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         id: "l09-04-q1",
         question: "When is anecdotal evidence MOST appropriate?",
         options: [
-          { id: "a", text: "As your only evidence for a general claim" },
-          { id: "b", text: "To illustrate a point already supported by broader data" },
-          { id: "c", text: "To prove that something always happens" },
+          { id: "a", text: "To prove that something always happens" },
+          { id: "b", text: "As your only evidence for a general claim" },
+          { id: "c", text: "To illustrate a point already supported by broader data" },
           { id: "d", text: "To replace statistical analysis entirely" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Anecdotes are most effective when illustrating points already supported by broader data. They make statistics vivid and memorable. Using anecdotes as your only evidence for general claims, or to prove something 'always' happens, is problematic because individual stories don't generalize.",
       },
       {
@@ -455,11 +455,11 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         question: "Someone argues: 'My grandfather smoked his whole life and lived to 95, so smoking can't be that bad.' What's the best response?",
         options: [
           { id: "a", text: "Accept their conclusion since it's based on real experience" },
-          { id: "b", text: "Point out survivorship bias—we don't hear from smokers who died young" },
-          { id: "c", text: "Share a story about someone who died from smoking" },
-          { id: "d", text: "Argue that their grandfather didn't really smoke" }
+          { id: "b", text: "Share a story about someone who died from smoking" },
+          { id: "c", text: "Argue that their grandfather didn't really smoke" },
+          { id: "d", text: "Point out survivorship bias—we don't hear from smokers who died young" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "This is survivorship bias—the grandfather is a visible survivor, but we don't hear from the many smokers who died decades earlier. One outlier doesn't disprove statistical patterns established by millions of cases. The response in (c) would just create a battle of anecdotes, proving nothing.",
       },
       {
@@ -559,12 +559,12 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         id: "l09-05-q1",
         question: "Someone argues: 'This herbal remedy has been used for 2,000 years, so it must work.' What fallacy is this?",
         options: [
-          { id: "a", text: "Appeal to novelty" },
-          { id: "b", text: "Appeal to tradition" },
-          { id: "c", text: "Strawman" },
-          { id: "d", text: "Ad hominem" }
+          { id: "a", text: "Ad hominem" },
+          { id: "b", text: "Strawman" },
+          { id: "c", text: "Appeal to novelty" },
+          { id: "d", text: "Appeal to tradition" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "This is appeal to tradition—arguing something works because it's been done for a long time. The remedy's age doesn't prove it works; many traditional remedies are ineffective. What matters is whether clinical evidence shows it works, not how long people have used it.",
       },
       {
@@ -602,12 +602,12 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         id: "l09-05-q3",
         question: "Before changing a long-standing practice in your organization, what should you do according to Chesterton's Fence?",
         options: [
-          { id: "a", text: "Just change it—tradition is always bad" },
-          { id: "b", text: "Never change it—tradition is always good" },
-          { id: "c", text: "Understand why the practice exists before deciding whether to change it" },
-          { id: "d", text: "Ask the oldest person in the organization" }
+          { id: "a", text: "Ask the oldest person in the organization" },
+          { id: "b", text: "Understand why the practice exists before deciding whether to change it" },
+          { id: "c", text: "Just change it—tradition is always bad" },
+          { id: "d", text: "Never change it—tradition is always good" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "b",
         explanation: "Chesterton's Fence says to understand why a practice exists before removing it. The tradition may encode wisdom or solve problems you're not aware of. Once you understand the reason, you can evaluate whether it still applies—and if not, that's grounds for change.",
       },
       {
@@ -678,12 +678,12 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         id: "l09-06-q1",
         question: "A famous surgeon offers opinions about climate change policy. How should you evaluate this?",
         options: [
-          { id: "a", text: "Their medical expertise makes them authoritative on all scientific topics" },
-          { id: "b", text: "Their expertise is in surgery, not climate science—their opinion deserves no special weight on climate" },
-          { id: "c", text: "Surgeons are never credible on any topic" },
-          { id: "d", text: "Famous people are always experts" }
+          { id: "a", text: "Their expertise is in surgery, not climate science—their opinion deserves no special weight on climate" },
+          { id: "b", text: "Surgeons are never credible on any topic" },
+          { id: "c", text: "Famous people are always experts" },
+          { id: "d", text: "Their medical expertise makes them authoritative on all scientific topics" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Expertise doesn't transfer between unrelated fields. A surgeon has deep knowledge of surgery, not climate science. Their climate opinions deserve no more weight than any informed citizen's. For climate claims, cite climate scientists.",
       },
       {
@@ -722,11 +722,11 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         question: "Your opponent cites a single scientist who disagrees with established climate consensus. What's the strongest attack?",
         options: [
           { id: "a", text: "That scientist must be lying" },
-          { id: "b", text: "Point out they're one voice against thousands of climate scientists who've reached different conclusions" },
-          { id: "c", text: "Scientists can never be trusted" },
-          { id: "d", text: "Accept their position" }
+          { id: "b", text: "Scientists can never be trusted" },
+          { id: "c", text: "Accept their position" },
+          { id: "d", text: "Point out they're one voice against thousands of climate scientists who've reached different conclusions" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "The strongest attack contextualizes: this is one scientist against thousands. Individual outliers exist in any field, but policy and belief should follow the overwhelming consensus of qualified experts. One voice against many doesn't overturn established science.",
       },
       {
@@ -813,12 +813,12 @@ export const UNIT_09_LESSONS: MultiPageLesson[] = [
         id: "l09-07-q1",
         question: "Your opponent offers only an emotional anecdote about one person affected by a policy. What's the best response?",
         options: [
-          { id: "a", text: "Dismiss the person's experience as irrelevant" },
-          { id: "b", text: "Acknowledge the individual case, then ask if it's representative and what broader data shows" },
+          { id: "a", text: "Acknowledge the individual case, then ask if it's representative and what broader data shows" },
+          { id: "b", text: "Dismiss the person's experience as irrelevant" },
           { id: "c", text: "Share five anecdotes of your own" },
           { id: "d", text: "Accept their conclusion based on the story" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Acknowledge the individual case respectfully, then redirect to the key question: Is this typical? What does broader evidence show? This approach is both empathetic and logical, showing you're not dismissive while making the evidential point.",
       },
       {

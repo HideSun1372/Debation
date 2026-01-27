@@ -37,11 +37,11 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         question: "Which type of ad hominem attack is this: 'You support immigration reform, but your grandparents were immigrants—of course you'd say that!'",
         options: [
           { id: "a", text: "Abusive Ad Hominem" },
-          { id: "b", text: "Circumstantial Ad Hominem" },
+          { id: "b", text: "Poisoning the Well" },
           { id: "c", text: "Tu Quoque" },
-          { id: "d", text: "Poisoning the Well" }
+          { id: "d", text: "Circumstantial Ad Hominem" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "This is circumstantial ad hominem because it attacks the speaker's circumstances (having immigrant grandparents) rather than addressing the actual merits of immigration reform policies. The speaker's family background doesn't determine whether their policy arguments are valid.",
       },
       {
@@ -185,12 +185,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-02-q1",
         question: "What should you do if you notice your judge struggling to take notes during your speech?",
         options: [
-          { id: "a", text: "Speed up to fit more arguments in" },
-          { id: "b", text: "Slow down and speak more clearly" },
-          { id: "c", text: "Ignore them and maintain your planned speed" },
-          { id: "d", text: "Stop giving arguments entirely" }
+          { id: "a", text: "Slow down and speak more clearly" },
+          { id: "b", text: "Stop giving arguments entirely" },
+          { id: "c", text: "Speed up to fit more arguments in" },
+          { id: "d", text: "Ignore them and maintain your planned speed" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "If your judge is struggling to take notes, you should slow down and speak more clearly. Arguments that judges can't follow won't help you win the round, no matter how good they are. Adapting to your judge is a crucial debate skill.",
       },
       {
@@ -213,12 +213,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-02-q2",
         question: "Why is it important for debaters to be able to adjust their speaking speed?",
         options: [
-          { id: "a", text: "Different judges and circuits have different expectations" },
-          { id: "b", text: "Speaking speed has no impact on debate success" },
+          { id: "a", text: "Speaking speed has no impact on debate success" },
+          { id: "b", text: "Speed is only relevant in online debates" },
           { id: "c", text: "Judges always prefer the fastest speakers" },
-          { id: "d", text: "Speed is only relevant in online debates" }
+          { id: "d", text: "Different judges and circuits have different expectations" }
         ],
-        correctAnswer: "a",
+        correctAnswer: "d",
         explanation: "Adaptability is crucial because different judges (lay vs. flow) and different circuits (traditional vs. national) have vastly different expectations for speaking pace. A debater who can only speak at one speed is limiting their success in diverse competitive environments.",
       },
       {
@@ -263,12 +263,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-02-q3",
         question: "During a debate, you notice you're running out of breath mid-sentence. What's the best fix?",
         options: [
-          { id: "a", text: "Speak even faster to finish sentences before running out of air" },
-          { id: "b", text: "Take breaths at natural pause points and don't exhale all air before inhaling" },
+          { id: "a", text: "Take breaths at natural pause points and don't exhale all air before inhaling" },
+          { id: "b", text: "Speak even faster to finish sentences before running out of air" },
           { id: "c", text: "Stop breathing during important arguments" },
           { id: "d", text: "Only use very short sentences" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Running out of breath mid-sentence is a common problem at high speeds. The fix is to take controlled breaths at natural pause points—between arguments, after key claims—and to not fully exhaust your air before inhaling. This maintains a reserve and prevents gasping.",
       },
       {
@@ -318,12 +318,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-03-q1",
         question: "A blog post about vaccine safety is written by someone with a PhD in Art History. What should you conclude?",
         options: [
-          { id: "a", text: "The PhD makes them an authority on all topics" },
-          { id: "b", text: "Their credentials aren't relevant to medical claims" },
+          { id: "a", text: "Their credentials aren't relevant to medical claims" },
+          { id: "b", text: "The PhD makes them an authority on all topics" },
           { id: "c", text: "Art historians are often experts in vaccines" },
           { id: "d", text: "Blog posts are always unreliable" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "Credentials matter, but they must be relevant to the topic. A PhD in Art History doesn't provide expertise in vaccine safety, which requires training in immunology, medicine, or related biological sciences. This doesn't mean their claims are automatically wrong, but their credentials don't support their authority on this subject.",
       },
       {
@@ -347,12 +347,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-03-q2",
         question: "Which source would be MOST credible for a debate about current AI technology capabilities?",
         options: [
-          { id: "a", text: "A 2015 academic paper on machine learning" },
-          { id: "b", text: "A 2024 peer-reviewed study on AI capabilities" },
-          { id: "c", text: "A 1990s textbook on artificial intelligence" },
-          { id: "d", text: "A science fiction novel about AI" }
+          { id: "a", text: "A science fiction novel about AI" },
+          { id: "b", text: "A 1990s textbook on artificial intelligence" },
+          { id: "c", text: "A 2024 peer-reviewed study on AI capabilities" },
+          { id: "d", text: "A 2015 academic paper on machine learning" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "AI technology evolves rapidly, so recency is crucial. A 2024 peer-reviewed study would reflect current capabilities and research, while older academic sources (even good ones) would be outdated. A 1990s textbook would be severely outdated, and fiction isn't evidence at all.",
       },
       {
@@ -452,9 +452,9 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-04-q1",
         question: "Person A says: 'I think we should spend more on education.' Person B responds: 'So you want to bankrupt our country with unlimited education spending?' What fallacy did Person B commit?",
         options: [
-          { id: "a", text: "Ad hominem" },
+          { id: "a", text: "False dichotomy" },
           { id: "b", text: "Strawman" },
-          { id: "c", text: "False dichotomy" },
+          { id: "c", text: "Ad hominem" },
           { id: "d", text: "Appeal to authority" }
         ],
         correctAnswer: "b",
@@ -529,12 +529,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-04-q3",
         question: "You argue: 'We should reduce sugar in school lunches.' Your opponent responds: 'So you want to starve children by taking away all their food!' What's your best response?",
         options: [
-          { id: "a", text: "Accept their characterization and defend starving children" },
-          { id: "b", text: "Attack your opponent personally for misrepresenting you" },
-          { id: "c", text: "Clarify that you said reduce sugar, not eliminate food, then restate your actual position with evidence" },
-          { id: "d", text: "Abandon your argument entirely" }
+          { id: "a", text: "Abandon your argument entirely" },
+          { id: "b", text: "Clarify that you said reduce sugar, not eliminate food, then restate your actual position with evidence" },
+          { id: "c", text: "Attack your opponent personally for misrepresenting you" },
+          { id: "d", text: "Accept their characterization and defend starving children" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "b",
         explanation: "This is a classic extreme extension strawman—taking 'reduce sugar' and transforming it into 'eliminate food.' The best response is to clearly identify the distortion, restate your actual position (reducing sugar, not eliminating food), and continue with your evidence for why reducing sugar is beneficial.",
       },
       {
@@ -639,12 +639,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-05-q2",
         question: "What should your facial expression be while your opponent is speaking?",
         options: [
-          { id: "a", text: "Roll your eyes to show you disagree" },
-          { id: "b", text: "Neutral-to-pleasant while actively taking notes" },
-          { id: "c", text: "Look at your phone to show confidence" },
-          { id: "d", text: "Laugh at their arguments" }
+          { id: "a", text: "Laugh at their arguments" },
+          { id: "b", text: "Look at your phone to show confidence" },
+          { id: "c", text: "Roll your eyes to show you disagree" },
+          { id: "d", text: "Neutral-to-pleasant while actively taking notes" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "While your opponent speaks, maintain a neutral-to-pleasant expression while actively taking notes. This shows engagement and professionalism. Eye-rolling, laughing, or visible dismissiveness is unprofessional and can be penalized by judges, even if you're not the one speaking.",
       },
       {
@@ -712,9 +712,9 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-06-q1",
         question: "A newspaper article about a new medical study is what type of source?",
         options: [
-          { id: "a", text: "Primary source" },
+          { id: "a", text: "Neither" },
           { id: "b", text: "Secondary source" },
-          { id: "c", text: "Neither" },
+          { id: "c", text: "Primary source" },
           { id: "d", text: "It depends on who wrote it" }
         ],
         correctAnswer: "b",
@@ -745,12 +745,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-06-q2",
         question: "When is a secondary source more appropriate than a primary source?",
         options: [
-          { id: "a", text: "When making precise statistical claims" },
-          { id: "b", text: "When you need to synthesize findings from many studies" },
-          { id: "c", text: "When your opponent challenges your data" },
-          { id: "d", text: "Primary sources are always better" }
+          { id: "a", text: "Primary sources are always better" },
+          { id: "b", text: "When your opponent challenges your data" },
+          { id: "c", text: "When you need to synthesize findings from many studies" },
+          { id: "d", text: "When making precise statistical claims" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "Secondary sources are particularly valuable when you need to synthesize findings across many studies, such as review articles or meta-analyses that summarize entire fields of research. Reading and citing 47 individual studies is impractical, but citing a meta-analysis that reviewed all 47 is legitimate and efficient.",
       },
       {
@@ -845,12 +845,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-07-q1",
         question: "Your opponent cites a study funded by a company that would profit from its conclusions. What's the best response?",
         options: [
-          { id: "a", text: "Ignore the funding issue and only attack the data" },
-          { id: "b", text: "Point out the conflict of interest AND explain why the methodology or conclusions are problematic" },
-          { id: "c", text: "Only mention the funding and claim the study is therefore wrong" },
-          { id: "d", text: "Accept the study because it was published" }
+          { id: "a", text: "Only mention the funding and claim the study is therefore wrong" },
+          { id: "b", text: "Accept the study because it was published" },
+          { id: "c", text: "Point out the conflict of interest AND explain why the methodology or conclusions are problematic" },
+          { id: "d", text: "Ignore the funding issue and only attack the data" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "The best approach combines pointing out the conflict of interest with substantive criticism of the study. Funding bias is a credibility concern, but doesn't automatically make conclusions wrong. Addressing both the conflict AND the substance makes your attack more complete and compelling.",
       },
       {
@@ -868,12 +868,12 @@ export const UNIT_06_LESSONS: MultiPageLesson[] = [
         id: "l06-07-q2",
         question: "You're arguing that a policy reduced crime. Which evidence combination is strongest?",
         options: [
-          { id: "a", text: "A blog post discussing crime rates" },
-          { id: "b", text: "FBI crime statistics (primary) plus expert analysis explaining the methodology (secondary)" },
-          { id: "c", text: "A news article that mentions crime went down" },
-          { id: "d", text: "Your personal experience feeling safer" }
+          { id: "a", text: "Your personal experience feeling safer" },
+          { id: "b", text: "A blog post discussing crime rates" },
+          { id: "c", text: "FBI crime statistics (primary) plus expert analysis explaining the methodology (secondary)" },
+          { id: "d", text: "A news article that mentions crime went down" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "The combination of FBI crime statistics (primary, authoritative data) plus expert analysis (secondary, explaining the methodology) provides both hard data and interpretive context. This layered approach is more compelling than blogs, news articles, or personal experience alone.",
       },
       {

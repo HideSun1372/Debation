@@ -36,11 +36,11 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         question: "A study on pesticide safety was funded by a pesticide manufacturer. What's the most accurate conclusion?",
         options: [
           { id: "a", text: "The study is automatically invalid" },
-          { id: "b", text: "The study should be scrutinized more carefully, but isn't automatically wrong" },
-          { id: "c", text: "Industry funding ensures higher quality research" },
-          { id: "d", text: "Funding sources never affect research conclusions" }
+          { id: "b", text: "Industry funding ensures higher quality research" },
+          { id: "c", text: "Funding sources never affect research conclusions" },
+          { id: "d", text: "The study should be scrutinized more carefully, but isn't automatically wrong" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "Industry funding creates a potential conflict of interest that warrants extra scrutiny, but doesn't automatically invalidate research. The study could still be accurate—but we should look for independent replication, check if the methodology is sound, and see if conclusions align with non-industry-funded research.",
       },
       {
@@ -169,10 +169,10 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         id: "l07-02-q1",
         question: "Which statement is a false dichotomy?",
         options: [
-          { id: "a", text: "You can have coffee or tea for breakfast" },
+          { id: "a", text: "Water is either frozen or liquid at this temperature" },
           { id: "b", text: "Either we invest in education or we condemn the next generation to failure" },
-          { id: "c", text: "The light switch is either on or off" },
-          { id: "d", text: "Water is either frozen or liquid at this temperature" }
+          { id: "c", text: "You can have coffee or tea for breakfast" },
+          { id: "d", text: "The light switch is either on or off" }
         ],
         correctAnswer: "b",
         explanation: "Option B is a false dichotomy because it presents only two extreme options (invest in education vs. condemn future generations) when many alternatives and middle grounds exist. Options A, C, and D present genuinely binary choices or explicitly limited options (coffee OR tea, on OR off, frozen OR liquid at a specific temperature).",
@@ -235,12 +235,12 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         id: "l07-02-q3",
         question: "An opponent argues: 'Either we eliminate all regulations on businesses or we accept economic stagnation.' What's the strongest response?",
         options: [
-          { id: "a", text: "Accept that some economic stagnation is inevitable" },
-          { id: "b", text: "Agree to eliminate all regulations" },
-          { id: "c", text: "Point out this is a false dichotomy—we can have smart, targeted regulations that protect consumers while enabling growth" },
-          { id: "d", text: "Ignore the argument and change topics" }
+          { id: "a", text: "Agree to eliminate all regulations" },
+          { id: "b", text: "Accept that some economic stagnation is inevitable" },
+          { id: "c", text: "Ignore the argument and change topics" },
+          { id: "d", text: "Point out this is a false dichotomy—we can have smart, targeted regulations that protect consumers while enabling growth" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "This is a classic false dichotomy that ignores the spectrum of regulatory options. The strongest response introduces alternatives: targeted regulations, modernized rules, different approaches for different industries, evidence-based policy. The choice isn't 'all or nothing'—it's 'which regulations, designed how?'",
       },
       {
@@ -317,12 +317,12 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         id: "l07-03-q1",
         question: "How does debate training improve essay writing?",
         options: [
-          { id: "a", text: "It doesn't—debate is oral, essays are written" },
-          { id: "b", text: "It teaches the same claim-evidence-reasoning structure used in essays" },
+          { id: "a", text: "It teaches the same claim-evidence-reasoning structure used in essays" },
+          { id: "b", text: "It doesn't—debate is oral, essays are written" },
           { id: "c", text: "It makes essays longer" },
           { id: "d", text: "It only helps with persuasive essays, not other types" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "The claim-evidence-reasoning structure fundamental to debate is exactly what strong essays require. A thesis is a claim, body paragraphs provide evidence and reasoning, and good essays acknowledge counterarguments. These are the same skills practiced in debate.",
       },
       {
@@ -383,12 +383,12 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         id: "l07-03-q3",
         question: "Which debate skill is MOST directly applicable to helping resolve a conflict between two friends?",
         options: [
-          { id: "a", text: "Speaking faster than your opponent" },
-          { id: "b", text: "The ability to understand and articulate both perspectives fairly" },
-          { id: "c", text: "Using technical debate jargon" },
+          { id: "a", text: "The ability to understand and articulate both perspectives fairly" },
+          { id: "b", text: "Using technical debate jargon" },
+          { id: "c", text: "Speaking faster than your opponent" },
           { id: "d", text: "Declaring a winner and loser" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "a",
         explanation: "The core debate skill of understanding multiple perspectives—essential for arguing both sides of a topic—directly applies to mediation. By fairly articulating what each friend needs and feels, you can help them find common ground and resolution.",
       },
       {
@@ -444,12 +444,12 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         id: "l07-04-q1",
         question: "In the Toulmin model, what is the function of the 'warrant'?",
         options: [
-          { id: "a", text: "To state the main conclusion" },
+          { id: "a", text: "To explain why the evidence supports the claim" },
           { id: "b", text: "To provide evidence for the claim" },
-          { id: "c", text: "To explain why the evidence supports the claim" },
+          { id: "c", text: "To state the main conclusion" },
           { id: "d", text: "To acknowledge exceptions to the argument" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "a",
         explanation: "The warrant is the logical bridge connecting data to claim—it explains WHY the evidence supports the claim. Without a warrant, you have an assertion with facts, but no explanation of how those facts prove your point.",
       },
       {
@@ -510,12 +510,12 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         id: "l07-04-q3",
         question: "An argument claims 'Studies show coffee drinkers live longer, so coffee extends life.' A warrant-based attack would focus on:",
         options: [
-          { id: "a", text: "Whether the studies were conducted" },
+          { id: "a", text: "Whether coffee tastes good" },
           { id: "b", text: "The number of people who drink coffee" },
-          { id: "c", text: "Why correlation between coffee drinking and longevity proves coffee causes longer life" },
-          { id: "d", text: "Whether coffee tastes good" }
+          { id: "c", text: "Whether the studies were conducted" },
+          { id: "d", text: "Why correlation between coffee drinking and longevity proves coffee causes longer life" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "d",
         explanation: "A warrant attack challenges the logical connection between data and claim. Here, the missing warrant assumes correlation proves causation. A strong attack would ask: Why should we believe coffee causes longevity rather than some other explanation (healthier people drink more coffee, confounding lifestyle factors, etc.)?",
       },
       {
@@ -592,12 +592,12 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         id: "l07-05-q1",
         question: "What makes a slippery slope argument fallacious rather than valid?",
         options: [
-          { id: "a", text: "It predicts negative consequences" },
-          { id: "b", text: "It connects an action to future outcomes" },
-          { id: "c", text: "It assumes an inevitable chain without evidence" },
-          { id: "d", text: "It involves more than two steps" }
+          { id: "a", text: "It involves more than two steps" },
+          { id: "b", text: "It assumes an inevitable chain without evidence" },
+          { id: "c", text: "It predicts negative consequences" },
+          { id: "d", text: "It connects an action to future outcomes" }
         ],
-        correctAnswer: "c",
+        correctAnswer: "b",
         explanation: "A slippery slope becomes fallacious when it assumes an inevitable causal chain without providing evidence. Valid concern about consequences provides evidence for why the chain is likely—historical precedent, logical mechanism, or documented patterns. The mere prediction of negative outcomes doesn't make an argument fallacious.",
       },
       {
@@ -645,12 +645,12 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         id: "l07-05-q2",
         question: "Your opponent argues: 'If we raise the minimum wage, businesses will automate everything, all workers will be replaced, and unemployment will skyrocket.' What's a strong response?",
         options: [
-          { id: "a", text: "Agree that unemployment will skyrocket" },
-          { id: "b", text: "Point out that many places have raised minimum wage without massive unemployment, and that automation happens independently of wage levels" },
-          { id: "c", text: "Ignore the argument entirely" },
-          { id: "d", text: "Attack the opponent personally" }
+          { id: "a", text: "Attack the opponent personally" },
+          { id: "b", text: "Ignore the argument entirely" },
+          { id: "c", text: "Agree that unemployment will skyrocket" },
+          { id: "d", text: "Point out that many places have raised minimum wage without massive unemployment, and that automation happens independently of wage levels" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "d",
         explanation: "The strongest response cites counter-examples (places that raised wages without skyrocketing unemployment) and challenges the causal mechanism (automation happens for various reasons, not just wages). This directly addresses the claimed slippery slope by showing the chain isn't inevitable.",
       },
       {
@@ -762,12 +762,12 @@ export const UNIT_07_LESSONS: MultiPageLesson[] = [
         id: "l07-06-q2",
         question: "Your opponent claims: 'Married people live longer than unmarried people, so marriage causes better health.' What's the best response?",
         options: [
-          { id: "a", text: "Accept that marriage causes health" },
-          { id: "b", text: "Point out that healthier people might be more likely to marry, and that lifestyle factors might explain both" },
-          { id: "c", text: "Claim marriage actually causes worse health" },
-          { id: "d", text: "Ignore the claim" }
+          { id: "a", text: "Ignore the claim" },
+          { id: "b", text: "Claim marriage actually causes worse health" },
+          { id: "c", text: "Point out that healthier people might be more likely to marry, and that lifestyle factors might explain both" },
+          { id: "d", text: "Accept that marriage causes health" }
         ],
-        correctAnswer: "b",
+        correctAnswer: "c",
         explanation: "The best response identifies alternative explanations: reverse causation (healthier people may be more attractive partners) and confounding variables (lifestyle, income, social support might cause both marriage and health). The correlation alone doesn't prove marriage causes health benefits.",
       },
       {
