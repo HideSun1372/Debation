@@ -12,6 +12,7 @@ const tierProgressColors = {
   BEGINNER: "bg-tier-beginner",
   INTERMEDIATE: "bg-tier-intermediate",
   ADVANCED: "bg-tier-advanced",
+  EXPERT: "bg-tier-expert",
   MASTER: "bg-tier-master",
 };
 
@@ -38,7 +39,7 @@ export function SkillProgress({ points, className, showLabels = true }: SkillPro
         <div
           className={cn(
             "h-full transition-all duration-500 ease-out rounded-full",
-            tierProgressColors[tier]
+            tierProgressColors[tier as keyof typeof tierProgressColors]
           )}
           style={{ width: `${progress}%` }}
         />

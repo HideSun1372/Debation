@@ -12,12 +12,14 @@ import Practice from "@/pages/practice";
 import Profile from "@/pages/profile";
 import History from "@/pages/history";
 import Debate from "@/pages/debate";
+import AuthPage from "@/pages/auth-page";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/auth" component={AuthPage} />
       <Route path="/learn" component={Learn} />
       <Route path="/practice" component={Practice} />
       <Route path="/profile" component={Profile} />

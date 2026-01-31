@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { getSkillTier, SKILL_TIERS } from "@shared/schema";
-import { Circle, Hexagon, Star, Crown } from "lucide-react";
+import { Circle, Hexagon, Star, Crown, Award } from "lucide-react";
 
 interface SkillBadgeProps {
   points: number;
@@ -13,6 +13,7 @@ const tierIcons = {
   BEGINNER: Circle,
   INTERMEDIATE: Hexagon,
   ADVANCED: Star,
+  EXPERT: Award,
   MASTER: Crown,
 };
 
@@ -20,6 +21,7 @@ const tierColors = {
   BEGINNER: "text-tier-beginner bg-tier-beginner/10 border-tier-beginner/30",
   INTERMEDIATE: "text-tier-intermediate bg-tier-intermediate/10 border-tier-intermediate/30",
   ADVANCED: "text-tier-advanced bg-tier-advanced/10 border-tier-advanced/30",
+  EXPERT: "text-tier-expert bg-tier-expert/10 border-tier-expert/30",
   MASTER: "text-tier-master bg-tier-master/10 border-tier-master/30",
 };
 
@@ -43,7 +45,7 @@ export function SkillBadge({
 }: SkillBadgeProps) {
   const tier = getSkillTier(points);
   const tierInfo = SKILL_TIERS[tier];
-  const Icon = tierIcons[tier];
+  const Icon = tierIcons[tier as keyof typeof tierIcons];
 
   return (
     <div

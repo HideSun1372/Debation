@@ -2,10 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import OpenAI from "openai";
-import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
-import { db } from "./db";
-import { lessonProgress } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { setupAuth, isAuthenticated } from "./auth";
 import { z } from "zod";
 import { generatePracticePrompt, evaluatePracticeResponse } from "./practice";
 import type { PracticeType, DifficultyLevel } from "@shared/lessons/types";
@@ -20,13 +17,12 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   // Setup authentication (must be before other routes)
-  await setupAuth(app);
-  registerAuthRoutes(app);
+  setupAuth(app);
 
   app.post("/api/debates", async (req, res) => {
     try {
       const { userId, opponentId, topicId, formatId, userSide } = req.body;
-      
+
       const debate = await storage.createDebate({
         userId,
         opponentId,
@@ -35,7 +31,7 @@ export async function registerRoutes(
         userSide,
         status: "in_progress",
       });
-      
+
       res.status(201).json(debate);
     } catch (error) {
       console.error("Error creating debate:", error);
@@ -47,13 +43,13 @@ export async function registerRoutes(
     try {
       const userId = req.query.userId as string | undefined;
       let debates;
-      
+
       if (userId) {
         debates = await storage.getDebatesByUser(userId);
       } else {
         debates = await storage.getAllDebates();
       }
-      
+
       res.json(debates);
     } catch (error) {
       console.error("Error fetching debates:", error);
@@ -88,23 +84,23 @@ export async function registerRoutes(
       res.status(500).json({ error: "Failed to update debate" });
     }
   });
-  
+
   app.post("/api/debate/message", async (req, res) => {
     try {
-      const { 
-        message, 
+      const {
+        message,
         debateId,
-        opponentId, 
-        opponentTier, 
-        opponentPersonality, 
-        topic, 
-        side, 
+        opponentId,
+        opponentTier,
+        opponentPersonality,
+        topic,
+        side,
         speechId,
         speechName,
         speechType,
         cxIntent,
         crossfireQuestion,
-        previousMessages 
+        previousMessages
       } = req.body;
 
       if (debateId && message) {
@@ -132,7 +128,7 @@ export async function registerRoutes(
         role: m.role === "user" ? "user" : "assistant",
         content: m.content,
       }));
-      
+
       // Add crossfire question context if provided
       if (cxIntent === "crossfire-answer-check" && crossfireQuestion) {
         contextMessages = [
@@ -190,15 +186,15 @@ export async function registerRoutes(
 
   app.post("/api/debate/evaluate", async (req, res) => {
     try {
-      const { 
+      const {
         debateId,
-        messages, 
-        opponentId, 
-        opponentSkillRange, 
-        userSkillPoints, 
-        topic, 
-        side, 
-        format 
+        messages,
+        opponentId,
+        opponentSkillRange,
+        userSkillPoints,
+        topic,
+        side,
+        format
       } = req.body;
 
       const userMessages = messages
@@ -252,7 +248,7 @@ Be fair but consider the skill level difference. If the user is debating someone
       });
 
       const evaluation = JSON.parse(response.choices[0]?.message?.content || "{}");
-      
+
       const pointsChange = calculatePointsChange(
         evaluation.won,
         evaluation.score || 50,
@@ -279,11 +275,11 @@ Be fair but consider the skill level difference. If the user is debating someone
       });
     } catch (error) {
       console.error("Error evaluating debate:", error);
-      
+
       const randomWon = Math.random() > 0.5;
       const baseChange = Math.floor(Math.random() * 30) + 10;
       const pointsChange = randomWon ? baseChange : -Math.floor(baseChange * 0.7);
-      
+
       if (req.body.debateId) {
         await storage.updateDebate(req.body.debateId, {
           status: "completed",
@@ -293,7 +289,7 @@ Be fair but consider the skill level difference. If the user is debating someone
           completedAt: new Date(),
         });
       }
-      
+
       res.json({
         won: randomWon,
         pointsChange,
@@ -344,7 +340,7 @@ Respond with a JSON object:
       });
 
       const evaluation = JSON.parse(response.choices[0]?.message?.content || '{"isComplete": true, "reason": "Default: treating as complete"}');
-      
+
       res.json({
         isComplete: evaluation.isComplete ?? true,
         reason: evaluation.reason || "Evaluation complete.",
@@ -375,7 +371,7 @@ Respond with a JSON object:
   // Check if user is admin/developer
   app.get("/api/auth/admin", isAuthenticated, async (req: any, res) => {
     try {
-      const userEmail = req.user.claims.email;
+      const userEmail = req.user.email;
       const adminEmail = process.env.ADMIN_EMAIL;
       const isAdmin = adminEmail && userEmail === adminEmail;
       res.json({ isAdmin });
@@ -388,9 +384,9 @@ Respond with a JSON object:
   // Get lesson progress for authenticated user
   app.get("/api/progress", isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const [progress] = await db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId));
-      
+      const userId = req.user.id;
+      const progress = await storage.getLessonProgress(userId);
+
       if (!progress) {
         // Return default progress if none exists
         return res.json({
@@ -404,7 +400,7 @@ Respond with a JSON object:
           lastVisitedAt: null,
         });
       }
-      
+
       res.json(progress);
     } catch (error) {
       console.error("Error fetching lesson progress:", error);
@@ -415,7 +411,7 @@ Respond with a JSON object:
   // Save/update lesson progress for authenticated user
   app.post("/api/progress", isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const {
         hasCompletedOnboarding,
         experienceLevel,
@@ -426,42 +422,33 @@ Respond with a JSON object:
         completedLessonIds,
       } = req.body;
 
-      const [existingProgress] = await db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId));
+      const existingProgress = await storage.getLessonProgress(userId);
 
       if (existingProgress) {
         // Update existing progress
-        const [updated] = await db.update(lessonProgress)
-          .set({
-            hasCompletedOnboarding: hasCompletedOnboarding ?? existingProgress.hasCompletedOnboarding,
-            experienceLevel: experienceLevel ?? existingProgress.experienceLevel,
-            assessmentScore: assessmentScore ?? existingProgress.assessmentScore,
-            currentUnitId: currentUnitId ?? existingProgress.currentUnitId,
-            currentSectionId: currentSectionId ?? existingProgress.currentSectionId,
-            currentLessonId: currentLessonId ?? existingProgress.currentLessonId,
-            completedLessonIds: completedLessonIds ?? existingProgress.completedLessonIds,
-            lastVisitedAt: new Date(),
-            updatedAt: new Date(),
-          })
-          .where(eq(lessonProgress.userId, userId))
-          .returning();
-        
+        const updated = await storage.updateLessonProgress(userId, {
+          hasCompletedOnboarding: hasCompletedOnboarding ?? existingProgress.hasCompletedOnboarding,
+          experienceLevel: experienceLevel ?? existingProgress.experienceLevel,
+          assessmentScore: assessmentScore ?? existingProgress.assessmentScore,
+          currentUnitId: currentUnitId ?? existingProgress.currentUnitId,
+          currentSectionId: currentSectionId ?? existingProgress.currentSectionId,
+          currentLessonId: currentLessonId ?? existingProgress.currentLessonId,
+          completedLessonIds: completedLessonIds ?? existingProgress.completedLessonIds,
+        });
+
         res.json(updated);
       } else {
         // Create new progress
-        const [created] = await db.insert(lessonProgress)
-          .values({
-            userId,
-            hasCompletedOnboarding: hasCompletedOnboarding ?? false,
-            experienceLevel,
-            assessmentScore: assessmentScore ?? 0,
-            currentUnitId: currentUnitId ?? "unit-1",
-            currentSectionId,
-            currentLessonId,
-            completedLessonIds: completedLessonIds ?? [],
-            lastVisitedAt: new Date(),
-          })
-          .returning();
-        
+        const created = await storage.updateLessonProgress(userId, {
+          hasCompletedOnboarding: hasCompletedOnboarding ?? false,
+          experienceLevel,
+          assessmentScore: assessmentScore ?? 0,
+          currentUnitId: currentUnitId ?? "unit-1",
+          currentSectionId,
+          currentLessonId,
+          completedLessonIds: completedLessonIds ?? [],
+        });
+
         res.status(201).json(created);
       }
     } catch (error) {
@@ -474,7 +461,7 @@ Respond with a JSON object:
   app.post("/api/tts", async (req, res) => {
     try {
       const { text, voice = "alloy" } = req.body;
-      
+
       if (!text || typeof text !== "string") {
         return res.status(400).json({ error: "Text is required" });
       }
@@ -516,18 +503,18 @@ Respond with a JSON object:
       // Extract audio from response content parts
       const message = response.choices[0]?.message;
       let audioData: string | undefined;
-      
+
       // Check for audio in content array
       if (Array.isArray((message as any)?.content)) {
         const audioPart = (message as any).content.find((part: any) => part.type === "audio");
         audioData = audioPart?.data || audioPart?.audio;
       }
-      
+
       // Fallback: check message.audio property
       if (!audioData && (message as any)?.audio?.data) {
         audioData = (message as any).audio.data;
       }
-      
+
       if (!audioData) {
         console.error("TTS response structure:", JSON.stringify(response.choices[0], null, 2));
         return res.status(500).json({ error: "No audio generated" });
@@ -571,9 +558,9 @@ Respond with a JSON object:
     try {
       const parseResult = practiceGenerateSchema.safeParse(req.body);
       if (!parseResult.success) {
-        return res.status(400).json({ 
-          error: "Invalid request", 
-          details: parseResult.error.errors 
+        return res.status(400).json({
+          error: "Invalid request",
+          details: parseResult.error.errors
         });
       }
 
@@ -597,9 +584,9 @@ Respond with a JSON object:
     try {
       const parseResult = practiceEvaluateSchema.safeParse(req.body);
       if (!parseResult.success) {
-        return res.status(400).json({ 
-          error: "Invalid request", 
-          details: parseResult.error.errors 
+        return res.status(400).json({
+          error: "Invalid request",
+          details: parseResult.error.errors
         });
       }
 
@@ -617,7 +604,7 @@ Respond with a JSON object:
       res.json(feedback);
     } catch (error) {
       console.error("Error evaluating practice response:", error);
-      res.status(500).json({ 
+      res.status(500).json({
         error: "Failed to evaluate response",
         score: 50,
         strengths: ["You attempted the exercise"],
@@ -711,7 +698,7 @@ CRITICAL RULES:
 
 Ask your single question now:`;
     }
-    
+
     if (cxIntent === "cx-answer") {
       return `You are an AI debate opponent answering cross-examination questions.
 Personality: ${personality}
@@ -735,7 +722,7 @@ CRITICAL RULES:
 
 Provide your answer now:`;
     }
-    
+
     if (cxIntent === "cx-followup") {
       return `You are an AI debate opponent continuing cross-examination.
 Personality: ${personality}
@@ -758,7 +745,7 @@ CRITICAL RULES:
 
 Ask your follow-up question:`;
     }
-    
+
     if (cxIntent === "cx-answer-check") {
       return `You are an AI debate opponent in a CROSS-EXAMINATION period.
 Personality: ${personality}
@@ -784,7 +771,7 @@ IF THEY DID NOT ANSWER (asked a question, evaded, or deflected):
 
 CRITICAL: Respond ONLY with valid JSON in one of the two formats above.`;
     }
-    
+
     if (cxIntent === "crossfire-start") {
       return `You are an AI debate opponent starting a CROSSFIRE period.
 Personality: ${personality}
@@ -809,7 +796,7 @@ CRITICAL RULES:
 
 Ask your opening crossfire question:`;
     }
-    
+
     if (cxIntent === "crossfire-exchange") {
       return `You are an AI debate opponent in a CROSSFIRE period.
 Personality: ${personality}
@@ -835,7 +822,7 @@ CRITICAL RULES:
 
 Respond now (remember to end with a question):`;
     }
-    
+
     if (cxIntent === "crossfire-answer-check") {
       return `You are an AI debate opponent in a CROSSFIRE period.
 Personality: ${personality}
@@ -863,7 +850,7 @@ IF THEY DID NOT ANSWER (asked a question, evaded, or deflected):
 
 CRITICAL: Respond ONLY with valid JSON in one of the two formats above.`;
     }
-    
+
     if (cxIntent === "cx-timeout") {
       return `Cross-examination time has expired. Respond with a brief, professional statement acknowledging that time is up (e.g., "Time's up. Let's move on to the next speech."). Keep it to one sentence.`;
     }
@@ -878,7 +865,7 @@ CRITICAL: Respond ONLY with valid JSON in one of the two formats above.`;
     "final-focus": "Make your closing appeal. Weigh the debate and explain why judges should vote for your side.",
     poi: "Make brief, strategic interventions. Points of Information should be concise (15 seconds max).",
   };
-  
+
   // Add variety with different strategic approaches
   const approaches = [
     "Focus on practical, real-world impacts and concrete examples.",
@@ -932,7 +919,7 @@ function calculatePointsChange(
   const skillDiff = opponentSkill - userSkill;
   const diffMultiplier = 1 + (skillDiff / 500);
   const scoreMultiplier = score / 50;
-  
+
   if (won) {
     let points = Math.round(basePoints * diffMultiplier * scoreMultiplier);
     points = Math.max(10, Math.min(100, points));

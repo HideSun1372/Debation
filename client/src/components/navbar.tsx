@@ -4,7 +4,7 @@ import { useUser } from "@/lib/user-context";
 import { useAuth } from "@/hooks/use-auth";
 import { SkillBadge } from "./skill-badge";
 import { ThemeToggle } from "./theme-toggle";
-import { BookOpen, Swords, User, History, Home, Menu, X, LogIn, LogOut } from "lucide-react";
+import { BookOpen, Swords, User, History, Home, Menu, X, LogIn, LogOut, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
@@ -17,10 +17,14 @@ const navItems = [
   { href: "/profile", label: "Profile", icon: User },
 ];
 
+import { Badge } from "@/components/ui/badge";
+import { useAdmin } from "@/hooks/use-admin";
+
 export function Navbar() {
   const [location] = useLocation();
   const { user } = useUser();
-  const { user: authUser, isLoading: authLoading, isAuthenticated } = useAuth();
+  const { user: authUser, isLoading: authLoading, isAuthenticated, logout } = useAuth();
+  const { isAdmin } = useAdmin();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Disable navbar in debate route or if user is in a lesson
@@ -47,9 +51,9 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location === item.href || 
+            const isActive = location === item.href ||
               (item.href !== "/" && location.startsWith(item.href));
-            
+
             return (
               <Link key={item.href} href={item.href}>
                 <Button
@@ -70,9 +74,10 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {isAdmin && <Badge variant="destructive" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5"><Code className="h-3 w-3" /> Dev</Badge>}
           <SkillBadge points={user.skillPoints} size="sm" />
           <ThemeToggle />
-          
+
           {!authLoading && (
             isAuthenticated && authUser ? (
               <div className="flex items-center gap-2">
@@ -86,7 +91,8 @@ export function Navbar() {
                   variant="ghost"
                   size="sm"
                   className="hidden sm:flex gap-1"
-                  onClick={() => { window.location.href = "/api/logout"; }}
+                  onClick={() => logout()}
+                  disabled={authLoading}
                   data-testid="button-logout"
                 >
                   <LogOut className="h-4 w-4" />
@@ -94,19 +100,20 @@ export function Navbar() {
                 </Button>
               </div>
             ) : (
-              <Button
-                variant="default"
-                size="sm"
-                className="gap-1"
-                onClick={() => { window.location.href = "/api/login"; }}
-                data-testid="button-login"
-              >
-                <LogIn className="h-4 w-4" />
-                Login
-              </Button>
+              <Link href="/auth">
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="gap-1"
+                  data-testid="button-login"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Login
+                </Button>
+              </Link>
             )
           )}
-          
+
           <Button
             variant="ghost"
             size="icon"
@@ -124,9 +131,9 @@ export function Navbar() {
           <nav className="container mx-auto px-4 py-2 flex flex-col gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = location === item.href || 
+              const isActive = location === item.href ||
                 (item.href !== "/" && location.startsWith(item.href));
-              
+
               return (
                 <Link key={item.href} href={item.href}>
                   <Button
@@ -144,28 +151,29 @@ export function Navbar() {
                 </Link>
               );
             })}
-            
+
             {!authLoading && (
               isAuthenticated ? (
                 <Button
                   variant="ghost"
                   className="w-full justify-start gap-2"
-                  onClick={() => { window.location.href = "/api/logout"; }}
+                  onClick={() => logout()}
                   data-testid="link-mobile-logout"
                 >
                   <LogOut className="h-4 w-4" />
                   Logout
                 </Button>
               ) : (
-                <Button
-                  variant="default"
-                  className="w-full justify-start gap-2 mt-2"
-                  onClick={() => { window.location.href = "/api/login"; }}
-                  data-testid="link-mobile-login"
-                >
-                  <LogIn className="h-4 w-4" />
-                  Login
-                </Button>
+                <Link href="/auth">
+                  <Button
+                    variant="default"
+                    className="w-full justify-start gap-2 mt-2"
+                    data-testid="link-mobile-login"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    Login
+                  </Button>
+                </Link>
               )
             )}
           </nav>

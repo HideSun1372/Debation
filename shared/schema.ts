@@ -47,12 +47,12 @@ export function getTierProgress(points: number): number {
 }
 
 // Speech types for different debate formats
-export type SpeechType = 
-  | "constructive" 
-  | "rebuttal" 
-  | "cross-examination" 
+export type SpeechType =
+  | "constructive"
+  | "rebuttal"
+  | "cross-examination"
   | "crossfire"
-  | "summary" 
+  | "summary"
   | "final-focus"
   | "reply"
   | "poi";
@@ -285,6 +285,8 @@ export type DebateTopic = typeof DEBATE_TOPICS[number];
 // Users table - merged with auth fields
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  username: varchar("username").unique().notNull(),
+  password: text("password").notNull(),
   email: varchar("email").unique(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
@@ -385,7 +387,7 @@ export const EDUCATIONAL_CONTENT = {
       keyPoints: ["Structured argumentation", "Evidence-based reasoning", "Respectful disagreement", "Logical analysis"]
     },
     {
-      id: "f2", 
+      id: "f2",
       title: "The Claim-Warrant-Impact Framework",
       content: "Every strong argument follows this structure: make a CLAIM (your assertion), provide a WARRANT (your reasoning or evidence), and explain the IMPACT (why it matters).",
       keyPoints: ["Claim: What you assert to be true", "Warrant: Evidence supporting your claim", "Impact: Why your claim matters"]
@@ -675,7 +677,7 @@ export function getAllLessons(): Array<{ unitId: string; sectionId: string; less
 export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: number): string {
   const maxScore = ASSESSMENT_QUESTIONS.length; // 15 questions
   const scorePercent = assessmentScore / maxScore;
-  
+
   // For competitive debaters (have tournament experience)
   if (experience === "competitive") {
     if (scorePercent >= 0.93) {  // 14+ correct: Master level
@@ -692,7 +694,7 @@ export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: n
     }
     return "unit-06"; // Still some basics to cover
   }
-  
+
   // For users with some debate experience (club/school)
   if (experience === "some") {
     if (scorePercent >= 0.93) {  // 14+ correct: Expert level
@@ -709,7 +711,7 @@ export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: n
     }
     return "unit-01"; // Start at beginning
   }
-  
+
   // For casual argument/discussion experience only
   if (experience === "casual") {
     if (scorePercent >= 0.93) {  // 14+ correct - exceptional knowledge
@@ -723,7 +725,7 @@ export function getPlacementUnit(experience: ExperienceLevel, assessmentScore: n
     }
     return "unit-01"; // Start at beginning
   }
-  
+
   // No experience - start from the very beginning
   return "unit-01";
 }

@@ -1,4 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
+// Trigger restart for env load
+import 'dotenv/config';
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
@@ -89,7 +91,6 @@ app.use((req, res, next) => {
     {
       port,
       host: "0.0.0.0",
-      reusePort: true,
     },
     () => {
       log(`serving on port ${port}`);

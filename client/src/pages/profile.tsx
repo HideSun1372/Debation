@@ -8,6 +8,8 @@ import { getSkillTier, SKILL_TIERS } from "@shared/schema";
 import { Trophy, Target, TrendingUp, TrendingDown, Percent, Swords, Award, LogIn } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Link } from "wouter";
+import { EditProfileDialog } from "@/components/edit-profile-dialog";
+import { Settings } from "lucide-react";
 
 export default function Profile() {
   const { user, isLoading, isAuthenticated } = useAuth();
@@ -49,13 +51,13 @@ export default function Profile() {
 
   const tier = getSkillTier(user.skillPoints);
   const tierInfo = SKILL_TIERS[tier];
-  
-  const winRate = user.totalDebates > 0 
-    ? Math.round((user.wins / user.totalDebates) * 100) 
+
+  const winRate = user.totalDebates > 0
+    ? Math.round((user.wins / user.totalDebates) * 100)
     : 0;
 
-  const displayName = user.firstName && user.lastName 
-    ? `${user.firstName} ${user.lastName}` 
+  const displayName = user.firstName && user.lastName
+    ? `${user.firstName} ${user.lastName}`
     : user.firstName || user.email?.split('@')[0] || 'Debater';
 
   const initials = user.firstName && user.lastName
@@ -105,9 +107,17 @@ export default function Profile() {
                   <SkillBadge points={user.skillPoints} size="lg" className="mt-2" />
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-4xl font-bold text-primary" data-testid="text-profile-points">{user.skillPoints}</p>
-                <p className="text-muted-foreground">Total Points</p>
+              <div className="flex flex-col items-end gap-2">
+                <div className="text-right">
+                  <p className="text-4xl font-bold text-primary" data-testid="text-profile-points">{user.skillPoints}</p>
+                  <p className="text-muted-foreground">Total Points</p>
+                </div>
+                <EditProfileDialog user={user}>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Settings className="h-4 w-4" />
+                    Edit Profile
+                  </Button>
+                </EditProfileDialog>
               </div>
             </div>
           </div>
@@ -188,23 +198,23 @@ export default function Profile() {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={mockProgressData}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                    <XAxis 
-                      dataKey="debate" 
-                      className="text-xs" 
+                    <XAxis
+                      dataKey="debate"
+                      className="text-xs"
                       tickFormatter={(v) => `#${v}`}
                     />
                     <YAxis className="text-xs" />
-                    <Tooltip 
-                      contentStyle={{ 
+                    <Tooltip
+                      contentStyle={{
                         backgroundColor: "hsl(var(--card))",
                         border: "1px solid hsl(var(--border))",
                         borderRadius: "6px"
                       }}
                     />
-                    <Line 
-                      type="monotone" 
-                      dataKey="points" 
-                      stroke="hsl(var(--primary))" 
+                    <Line
+                      type="monotone"
+                      dataKey="points"
+                      stroke="hsl(var(--primary))"
                       strokeWidth={2}
                       dot={{ fill: "hsl(var(--primary))" }}
                     />
@@ -229,12 +239,11 @@ export default function Profile() {
               <div className="space-y-6">
                 {tierMilestones.map((milestone, index) => (
                   <div key={milestone.tier} className="relative flex items-center gap-4 pl-10">
-                    <div 
-                      className={`absolute left-2 w-5 h-5 rounded-full border-2 ${
-                        milestone.reached 
-                          ? "bg-primary border-primary" 
+                    <div
+                      className={`absolute left-2 w-5 h-5 rounded-full border-2 ${milestone.reached
+                          ? "bg-primary border-primary"
                           : "bg-background border-muted-foreground"
-                      }`}
+                        }`}
                     />
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
