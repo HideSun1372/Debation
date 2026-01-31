@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import OpenAI from "openai";
@@ -6,11 +6,15 @@ import { setupAuth, isAuthenticated } from "./auth";
 import { z } from "zod";
 import { generatePracticePrompt, evaluatePracticeResponse } from "./practice";
 import type { PracticeType, DifficultyLevel } from "@shared/lessons/types";
+import { createCheckoutSession, createPortalSession, handleWebhook } from "./stripe";
+
+console.log("Initializing OpenAI with key:", process.env.OPENAI_API_KEY ? `${process.env.OPENAI_API_KEY.substring(0, 10)}...` : "MISSING");
 
 const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+  apiKey: process.env.OPENAI_API_KEY,
 });
+
+
 
 export async function registerRoutes(
   httpServer: Server,
@@ -18,6 +22,49 @@ export async function registerRoutes(
 ): Promise<Server> {
   // Setup authentication (must be before other routes)
   setupAuth(app);
+
+  // Stripe Routes
+  app.post("/api/create-checkout-session", isAuthenticated, async (req, res) => {
+    try {
+      const session = await createCheckoutSession(req.user!.id, req.user!.email || "");
+      res.json({ url: session.url });
+    } catch (error: any) {
+      console.error("Stripe checkout error:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Portal session
+  app.post("/api/create-portal-session", isAuthenticated, async (req, res) => {
+    try {
+      const session = await createPortalSession(req.user!.id);
+      res.json({ url: session.url });
+    } catch (error: any) {
+      console.error("Stripe portal error:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Webhook (needs raw body, which we configured in index.ts)
+  app.post("/api/webhooks/stripe", express.raw({ type: 'application/json' }), async (req, res) => {
+    const signature = req.headers['stripe-signature'];
+
+    if (!signature) {
+      return res.status(400).send("Missing stripe-signature header");
+    }
+
+    try {
+      // Create a temporary raw body buffer since express.json middleware might have consumed it
+      // In a production app, ensuring we get the raw body is critical for signature verification
+      // For this setup, we'll try to use the rawBody if attached by middleware
+
+      await handleWebhook(req.rawBody || req.body, signature as string);
+      res.json({ received: true });
+    } catch (error: any) {
+      console.error("Webhook error:", error);
+      res.status(400).send(`Webhook Error: ${error.message}`);
+    }
+  });
 
   app.post("/api/debates", async (req, res) => {
     try {
@@ -138,7 +185,7 @@ export async function registerRoutes(
       }
 
       const response = await openai.chat.completions.create({
-        model: "gpt-5.1",
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: systemPrompt },
           ...contextMessages,
@@ -238,7 +285,7 @@ Respond with a JSON object containing:
 Be fair but consider the skill level difference. If the user is debating someone much higher skilled and performs well, they should still potentially win.`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-5.1",
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: "You are a professional debate judge. Respond only with valid JSON." },
           { role: "user", content: evaluationPrompt },
@@ -330,7 +377,7 @@ Respond with a JSON object:
 }`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-5.1",
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: "You are a debate evaluator. Respond only with valid JSON. Be lenient - if they made any attempt to answer, consider it complete." },
           { role: "user", content: evaluationPrompt },

@@ -73,13 +73,13 @@ export function calculateLessonXp(
 ): number {
   // Base XP for completing a lesson
   let xp = 50;
-  
+
   // Accuracy bonus (up to 50 XP for 100% accuracy)
   if (questionsTotal > 0) {
     const accuracy = questionsCorrect / questionsTotal;
     xp += Math.round(accuracy * 50);
   }
-  
+
   // Time bonus (faster completion = more XP, max 25 XP if under 3 minutes)
   if (timeSpentSeconds < 180) {
     xp += 25;
@@ -88,7 +88,7 @@ export function calculateLessonXp(
   } else if (timeSpentSeconds < 600) {
     xp += 5;
   }
-  
+
   return xp;
 }
 
@@ -101,6 +101,9 @@ export interface UserState {
   losses: number;
   debateHistory: DebateHistoryItem[];
   lessonProgress: LessonProgressData;
+  subscriptionTier?: "free" | "pro";
+  subscriptionStatus?: string;
+  stripeCustomerId?: string | null;
 }
 
 interface UserContextType {
@@ -144,6 +147,7 @@ const defaultUser: UserState = {
   losses: 0,
   debateHistory: [],
   lessonProgress: defaultLessonProgress,
+  subscriptionTier: "free",
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -175,7 +179,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const { user: authUser, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const { isAdmin } = useAdmin();
   const queryClient = useQueryClient();
-  
+
   const [localUser, setLocalUser] = useState<UserState>(getLocalStorageUser);
 
   // Fetch progress from database when authenticated
@@ -219,6 +223,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     losses: authUser.losses,
     debateHistory: localUser.debateHistory,
     lessonProgress: mergedProgress,
+    subscriptionTier: (authUser.subscriptionTier as "free" | "pro") || "free",
+    subscriptionStatus: authUser.subscriptionStatus || "inactive",
+    stripeCustomerId: authUser.stripeCustomerId,
   } : localUser;
 
   const saveLocalUser = useCallback((newUser: UserState) => {
@@ -280,11 +287,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const completeOnboarding = useCallback((experience: ExperienceLevel, score: number) => {
     const placementUnit = getPlacementUnit(experience, score);
     const currentProgress = user.lessonProgress;
-    
+
     // Get all lessons and mark everything before placement unit as complete
     const allLessons = getAllLessons();
     const lessonsToComplete: string[] = [];
-    
+
     // Find all lessons before the placement unit
     for (const lessonData of allLessons) {
       // Stop when we reach the placement unit
@@ -293,13 +300,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       }
       lessonsToComplete.push(lessonData.lesson.id);
     }
-    
+
     // Merge with any existing completed lessons (deduplicate)
     const allCompletedLessons = Array.from(new Set([
       ...currentProgress.completedLessonIds,
       ...lessonsToComplete
     ]));
-    
+
     const newProgress: LessonProgressData = {
       ...currentProgress,
       hasCompletedOnboarding: true,
@@ -309,11 +316,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       completedLessonIds: allCompletedLessons,
       lastVisitedAt: new Date().toISOString(),
     };
-    
+
     if (isAuthenticated) {
       saveProgress(newProgress);
     }
-    
+
     setLocalUser((prev) => {
       const newUser = {
         ...prev,
@@ -326,14 +333,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const completeLesson = useCallback((lessonId: string, xpEarned: number = 0) => {
     const currentProgress = user.lessonProgress;
-    
+
     if (currentProgress.completedLessonIds.includes(lessonId)) {
       return;
     }
-    
+
     const newXp = currentProgress.learnXp + xpEarned;
     const newLevel = getLearnLevel(newXp);
-    
+
     const newProgress: LessonProgressData = {
       ...currentProgress,
       completedLessonIds: [...currentProgress.completedLessonIds, lessonId],
@@ -341,12 +348,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       learnXp: newXp,
       learnLevel: newLevel,
     };
-    
+
     // Call mutation directly to avoid closure issues with saveProgress callback
     if (isAuthenticated) {
       saveProgressMutation.mutate(newProgress);
     }
-    
+
     setLocalUser((prev) => {
       if (prev.lessonProgress.completedLessonIds.includes(lessonId)) {
         return prev;
@@ -362,23 +369,23 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const completeLessons = useCallback((lessonIds: string[]) => {
     if (lessonIds.length === 0) return;
-    
+
     setLocalUser((prev) => {
       const existingIds = new Set(prev.lessonProgress.completedLessonIds);
       const newIds = lessonIds.filter(id => !existingIds.has(id));
-      
+
       if (newIds.length === 0) return prev;
-      
+
       const newProgress: LessonProgressData = {
         ...prev.lessonProgress,
         completedLessonIds: [...prev.lessonProgress.completedLessonIds, ...newIds],
         lastVisitedAt: new Date().toISOString(),
       };
-      
+
       if (isAuthenticated) {
         saveProgressMutation.mutate(newProgress);
       }
-      
+
       const newUser = {
         ...prev,
         lessonProgress: newProgress,
@@ -393,18 +400,18 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setLocalUser((prev) => {
       const newXp = prev.lessonProgress.learnXp + xp;
       const newLevel = getLearnLevel(newXp);
-      
+
       const newProgress: LessonProgressData = {
         ...prev.lessonProgress,
         learnXp: newXp,
         learnLevel: newLevel,
         lastVisitedAt: new Date().toISOString(),
       };
-      
+
       if (isAuthenticated) {
         saveProgressMutation.mutate(newProgress);
       }
-      
+
       const newUser = {
         ...prev,
         lessonProgress: newProgress,
@@ -424,12 +431,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         currentLessonId: lessonId,
         lastVisitedAt: new Date().toISOString(),
       };
-      
+
       // Save to DB with latest state
       if (isAuthenticated) {
         saveProgressMutation.mutate(newProgress);
       }
-      
+
       const newUser = {
         ...prev,
         lessonProgress: newProgress,
@@ -455,7 +462,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (isAuthenticated) {
       saveProgress(defaultLessonProgress);
     }
-    
+
     setLocalUser((prev) => {
       const newUser = {
         ...prev,

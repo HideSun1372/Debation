@@ -297,6 +297,11 @@ export const users = pgTable("users", {
   losses: integer("losses").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+  // Stripe fields
+  stripeCustomerId: text("stripe_customer_id").unique(),
+  stripeSubscriptionId: text("stripe_subscription_id").unique(),
+  subscriptionStatus: text("subscription_status").default("inactive"), // active, past_due, canceled, inactive
+  subscriptionTier: text("subscription_tier").default("free"), // free, pro
 });
 
 export const insertUserSchema = createInsertSchema(users).omit({

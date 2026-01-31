@@ -2,8 +2,7 @@ import OpenAI from "openai";
 import type { PracticeType, DifficultyLevel } from "@shared/lessons/types";
 
 const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 interface PracticePrompt {
@@ -120,7 +119,7 @@ async function generateArgumentToRefute(
   targetSkill: string
 ): Promise<string> {
   const complexityGuide = ARGUMENT_COMPLEXITY[difficulty];
-  
+
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
