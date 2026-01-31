@@ -1,6 +1,8 @@
 
-import { users, type User, type InsertUser, type UpsertUser, type Debate, type InsertDebate, type DebateMessage, type InsertDebateMessage, type LessonProgress, type InsertLessonProgress } from "@shared/schema";
+import { users, sessions, debates, debateMessages, lessonProgress, type User, type InsertUser, type UpsertUser, type Debate, type InsertDebate, type DebateMessage, type InsertDebateMessage, type LessonProgress, type InsertLessonProgress } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { eq } from "drizzle-orm";
+import { db, pool } from "./db";
 
 interface CreateDebateInput {
   userId: string;
@@ -15,9 +17,11 @@ interface CreateDebateInput {
 }
 
 import createMemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
 import session from "express-session";
 
 const MemoryStore = createMemoryStore(session);
+const PgSession = connectPgSimple(session);
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -42,11 +46,188 @@ export interface IStorage {
   updateLessonProgress(userId: string, progress: Partial<LessonProgress>): Promise<LessonProgress>;
 }
 
+// ============================================================================
+// Database Storage - Persists data to PostgreSQL
+// ============================================================================
+export class DatabaseStorage implements IStorage {
+  sessionStore: session.Store;
+
+  constructor() {
+    if (!pool) {
+      throw new Error("Database pool not available");
+    }
+    this.sessionStore = new PgSession({
+      pool: pool,
+      tableName: "sessions",
+      createTableIfMissing: false, // We use drizzle migrations
+    });
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    if (!db) throw new Error("Database not available");
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    if (!db) throw new Error("Database not available");
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    if (!db) throw new Error("Database not available");
+    const [user] = await db.insert(users).values({
+      ...insertUser,
+      email: insertUser.email ?? null,
+      firstName: insertUser.firstName ?? null,
+      lastName: insertUser.lastName ?? null,
+      profileImageUrl: insertUser.profileImageUrl ?? null,
+      skillPoints: insertUser.skillPoints ?? 500,
+      totalDebates: insertUser.totalDebates ?? 0,
+      wins: insertUser.wins ?? 0,
+      losses: insertUser.losses ?? 0,
+    }).returning();
+    return user;
+  }
+
+  async updateUser(id: string, updates: Partial<InsertUser>): Promise<User> {
+    if (!db) throw new Error("Database not available");
+
+    // Check username uniqueness
+    if (updates.username) {
+      const existing = await this.getUserByUsername(updates.username);
+      if (existing && existing.id !== id) {
+        throw new Error("Username already exists");
+      }
+    }
+
+    // Check email uniqueness
+    if (updates.email) {
+      const [existingEmail] = await db.select().from(users).where(eq(users.email, updates.email));
+      if (existingEmail && existingEmail.id !== id) {
+        throw new Error("Email already exists");
+      }
+    }
+
+    const [updatedUser] = await db.update(users)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning();
+
+    if (!updatedUser) throw new Error("User not found");
+    return updatedUser;
+  }
+
+  async updateUserSkillPoints(id: string, points: number): Promise<User | undefined> {
+    if (!db) throw new Error("Database not available");
+    const [user] = await db.update(users)
+      .set({ skillPoints: Math.max(0, points), updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning();
+    return user;
+  }
+
+  async getDebate(id: string): Promise<Debate | undefined> {
+    if (!db) throw new Error("Database not available");
+    const [debate] = await db.select().from(debates).where(eq(debates.id, id));
+    return debate;
+  }
+
+  async getDebatesByUser(userId: string): Promise<Debate[]> {
+    if (!db) throw new Error("Database not available");
+    return db.select().from(debates)
+      .where(eq(debates.userId, userId))
+      .orderBy(debates.startedAt);
+  }
+
+  async getAllDebates(): Promise<Debate[]> {
+    if (!db) throw new Error("Database not available");
+    return db.select().from(debates).orderBy(debates.startedAt);
+  }
+
+  async createDebate(input: CreateDebateInput): Promise<Debate> {
+    if (!db) throw new Error("Database not available");
+    const [debate] = await db.insert(debates).values({
+      userId: input.userId,
+      opponentId: input.opponentId,
+      topicId: input.topicId,
+      formatId: input.formatId,
+      userSide: input.userSide,
+      status: input.status || "in_progress",
+      result: input.result || null,
+      pointsChange: input.pointsChange || null,
+      feedback: input.feedback || null,
+    }).returning();
+    return debate;
+  }
+
+  async updateDebate(id: string, updates: Partial<Debate>): Promise<Debate | undefined> {
+    if (!db) throw new Error("Database not available");
+    const [debate] = await db.update(debates)
+      .set(updates)
+      .where(eq(debates.id, id))
+      .returning();
+    return debate;
+  }
+
+  async getDebateMessages(debateId: string): Promise<DebateMessage[]> {
+    if (!db) throw new Error("Database not available");
+    return db.select().from(debateMessages)
+      .where(eq(debateMessages.debateId, debateId))
+      .orderBy(debateMessages.turnNumber);
+  }
+
+  async createDebateMessage(insertMessage: InsertDebateMessage): Promise<DebateMessage> {
+    if (!db) throw new Error("Database not available");
+    const [message] = await db.insert(debateMessages).values(insertMessage).returning();
+    return message;
+  }
+
+  async getLessonProgress(userId: string): Promise<LessonProgress | undefined> {
+    if (!db) throw new Error("Database not available");
+    const [progress] = await db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId));
+    return progress;
+  }
+
+  async updateLessonProgress(userId: string, updates: Partial<LessonProgress>): Promise<LessonProgress> {
+    if (!db) throw new Error("Database not available");
+    const now = new Date();
+
+    // Check if progress exists
+    const existing = await this.getLessonProgress(userId);
+
+    if (existing) {
+      const [updated] = await db.update(lessonProgress)
+        .set({ ...updates, updatedAt: now, lastVisitedAt: now })
+        .where(eq(lessonProgress.userId, userId))
+        .returning();
+      return updated;
+    } else {
+      const [created] = await db.insert(lessonProgress).values({
+        userId,
+        hasCompletedOnboarding: updates.hasCompletedOnboarding ?? false,
+        experienceLevel: updates.experienceLevel ?? null,
+        assessmentScore: updates.assessmentScore ?? 0,
+        currentUnitId: updates.currentUnitId ?? "unit-1",
+        currentSectionId: updates.currentSectionId ?? null,
+        currentLessonId: updates.currentLessonId ?? null,
+        completedLessonIds: updates.completedLessonIds ?? [],
+        lastVisitedAt: now,
+      }).returning();
+      return created;
+    }
+  }
+}
+
+// ============================================================================
+// Memory Storage - Stores data in memory (development fallback)
+// ============================================================================
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private debates: Map<string, Debate>;
   private debateMessages: Map<string, DebateMessage>;
-  private lessonProgress: Map<string, LessonProgress>;
+  private lessonProgressMap: Map<string, LessonProgress>;
 
   sessionStore: session.Store;
   private currentId: number;
@@ -55,7 +236,7 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.debates = new Map();
     this.debateMessages = new Map();
-    this.lessonProgress = new Map();
+    this.lessonProgressMap = new Map();
 
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000,
@@ -192,7 +373,7 @@ export class MemStorage implements IStorage {
   }
 
   async getLessonProgress(userId: string): Promise<LessonProgress | undefined> {
-    return Array.from(this.lessonProgress.values()).find(p => p.userId === userId);
+    return Array.from(this.lessonProgressMap.values()).find(p => p.userId === userId);
   }
 
   async updateLessonProgress(userId: string, updates: Partial<LessonProgress>): Promise<LessonProgress> {
@@ -218,9 +399,22 @@ export class MemStorage implements IStorage {
         updatedAt: now,
       };
     }
-    this.lessonProgress.set(progress.id, progress);
+    this.lessonProgressMap.set(progress.id, progress);
     return progress;
   }
 }
 
-export const storage = new MemStorage();
+// ============================================================================
+// Export storage - automatically picks the right implementation
+// ============================================================================
+function createStorage(): IStorage {
+  if (process.env.DATABASE_URL && db) {
+    console.log("✓ Using PostgreSQL database storage");
+    return new DatabaseStorage();
+  } else {
+    console.warn("⚠ DATABASE_URL not set - using in-memory storage (data will be lost on restart)");
+    return new MemStorage();
+  }
+}
+
+export const storage = createStorage();
