@@ -34,13 +34,22 @@ export function setupAuth(app: Express) {
     // Session setup
     const sessionSettings: session.SessionOptions = {
         secret: process.env.SESSION_SECRET || "dev_secret_key",
-        resave: false,
-        saveUninitialized: false,
+        resave: true, // Force save on every request
+        saveUninitialized: true, // Create session even if nothing modified
         store: storage.sessionStore,
+        cookie: {
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+            httpOnly: true,
+            secure: false, // Allow HTTP in development
+            sameSite: "lax",
+        },
     };
 
     if (app.get("env") === "production") {
         app.set("trust proxy", 1);
+        if (sessionSettings.cookie) {
+            sessionSettings.cookie.secure = true;
+        }
     }
 
     app.use(session(sessionSettings));
@@ -124,6 +133,14 @@ export function setupAuth(app: Express) {
             if (err) return next(err);
             res.sendStatus(200);
         });
+    });
+
+    // Auth user endpoint - returns current authenticated user
+    app.get("/api/auth/user", (req, res) => {
+        if (!req.isAuthenticated()) {
+            return res.sendStatus(401);
+        }
+        res.json(req.user);
     });
 
     app.get("/api/user", (req, res) => {

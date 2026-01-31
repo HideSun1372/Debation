@@ -59,7 +59,7 @@ export class DatabaseStorage implements IStorage {
     this.sessionStore = new PgSession({
       pool: pool,
       tableName: "sessions",
-      createTableIfMissing: false, // We use drizzle migrations
+      createTableIfMissing: false,
     });
   }
 

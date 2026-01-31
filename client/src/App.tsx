@@ -6,7 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { UserProvider } from "@/lib/user-context";
 import { Navbar } from "@/components/navbar";
+import { AuthGuard } from "@/components/auth-guard";
 import Home from "@/pages/home";
+import Dashboard from "@/pages/dashboard";
 import Learn from "@/pages/learn";
 import Practice from "@/pages/practice";
 import Profile from "@/pages/profile";
@@ -15,16 +17,42 @@ import Debate from "@/pages/debate";
 import AuthPage from "@/pages/auth-page";
 import NotFound from "@/pages/not-found";
 
+// Wrapper for protected routes
+function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
+  return (
+    <AuthGuard>
+      <Component />
+    </AuthGuard>
+  );
+}
+
 function Router() {
   return (
     <Switch>
+      {/* Public routes */}
       <Route path="/" component={Home} />
       <Route path="/auth" component={AuthPage} />
-      <Route path="/learn" component={Learn} />
-      <Route path="/practice" component={Practice} />
-      <Route path="/profile" component={Profile} />
-      <Route path="/history" component={History} />
-      <Route path="/debate" component={Debate} />
+
+      {/* Protected routes - require authentication */}
+      <Route path="/dashboard">
+        {() => <ProtectedRoute component={Dashboard} />}
+      </Route>
+      <Route path="/learn">
+        {() => <ProtectedRoute component={Learn} />}
+      </Route>
+      <Route path="/practice">
+        {() => <ProtectedRoute component={Practice} />}
+      </Route>
+      <Route path="/profile">
+        {() => <ProtectedRoute component={Profile} />}
+      </Route>
+      <Route path="/history">
+        {() => <ProtectedRoute component={History} />}
+      </Route>
+      <Route path="/debate">
+        {() => <ProtectedRoute component={Debate} />}
+      </Route>
+
       <Route component={NotFound} />
     </Switch>
   );

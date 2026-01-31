@@ -1,16 +1,11 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useUser } from "@/lib/user-context";
-import { SkillBadge } from "@/components/skill-badge";
-import { SkillProgress } from "@/components/skill-progress";
-import { BookOpen, Swords, Trophy, TrendingUp, Target, Users } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { BookOpen, Swords, Trophy, TrendingUp, Target, Users, LogIn, LayoutDashboard } from "lucide-react";
 
 export default function Home() {
-  const { user } = useUser();
-  const winRate = user.totalDebates > 0 
-    ? Math.round((user.wins / user.totalDebates) * 100) 
-    : 0;
+  const { isAuthenticated, isLoading } = useAuth();
 
   return (
     <div className="min-h-[calc(100vh-3.5rem)]">
@@ -22,22 +17,42 @@ export default function Home() {
               <span className="text-primary block mt-2">Debate</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Learn debate techniques, practice against AI opponents of varying skill levels, 
+              Learn debate techniques, practice against AI opponents of varying skill levels,
               and track your progress as you climb from Beginner to Master.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/practice">
-                <Button size="lg" className="gap-2 w-full sm:w-auto" data-testid="button-start-practice">
-                  <Swords className="h-5 w-5" />
-                  Start Practicing
-                </Button>
-              </Link>
-              <Link href="/learn">
-                <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto" data-testid="button-learn-more">
-                  <BookOpen className="h-5 w-5" />
-                  Learn Techniques
-                </Button>
-              </Link>
+              {!isLoading && (
+                isAuthenticated ? (
+                  <>
+                    <Link href="/dashboard">
+                      <Button size="lg" className="gap-2 w-full sm:w-auto" data-testid="button-go-to-dashboard">
+                        <LayoutDashboard className="h-5 w-5" />
+                        Go to Dashboard
+                      </Button>
+                    </Link>
+                    <Link href="/practice">
+                      <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto" data-testid="button-start-practice">
+                        <Swords className="h-5 w-5" />
+                        Start Practicing
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/auth">
+                      <Button size="lg" className="gap-2 w-full sm:w-auto" data-testid="button-get-started">
+                        <LogIn className="h-5 w-5" />
+                        Get Started
+                      </Button>
+                    </Link>
+                    <Link href="/auth">
+                      <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto" data-testid="button-login">
+                        Already have an account? Login
+                      </Button>
+                    </Link>
+                  </>
+                )
+              )}
             </div>
           </div>
         </div>
@@ -46,40 +61,8 @@ export default function Home() {
 
       <section className="py-12 md:py-16 container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <Card className="mb-8">
-            <CardHeader className="flex flex-row items-center justify-between gap-4 flex-wrap">
-              <div>
-                <CardTitle className="text-2xl">Your Progress</CardTitle>
-                <CardDescription>Keep practicing to level up your debate skills</CardDescription>
-              </div>
-              <SkillBadge points={user.skillPoints} size="lg" />
-            </CardHeader>
-            <CardContent>
-              <SkillProgress points={user.skillPoints} className="mb-6" />
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center p-4 rounded-lg bg-muted/50">
-                  <div className="text-2xl font-bold text-foreground">{user.totalDebates}</div>
-                  <div className="text-sm text-muted-foreground">Total Debates</div>
-                </div>
-                <div className="text-center p-4 rounded-lg bg-muted/50">
-                  <div className="text-2xl font-bold text-tier-beginner">{user.wins}</div>
-                  <div className="text-sm text-muted-foreground">Wins</div>
-                </div>
-                <div className="text-center p-4 rounded-lg bg-muted/50">
-                  <div className="text-2xl font-bold text-destructive">{user.losses}</div>
-                  <div className="text-sm text-muted-foreground">Losses</div>
-                </div>
-                <div className="text-center p-4 rounded-lg bg-muted/50">
-                  <div className="text-2xl font-bold text-primary">{winRate}%</div>
-                  <div className="text-sm text-muted-foreground">Win Rate</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
           <h2 className="text-2xl font-bold mb-6 text-center">How It Works</h2>
-          
+
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <Card className="text-center">
               <CardHeader>
@@ -125,7 +108,7 @@ export default function Home() {
           </div>
 
           <h2 className="text-2xl font-bold mb-6 text-center">Skill Tiers</h2>
-          
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="border-tier-beginner/30">
               <CardHeader className="pb-2">
@@ -193,9 +176,17 @@ export default function Home() {
               <CardContent className="py-8">
                 <Users className="h-10 w-10 text-primary mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Coming Soon: Online Multiplayer</h3>
-                <p className="text-muted-foreground max-w-md mx-auto">
+                <p className="text-muted-foreground max-w-md mx-auto mb-4">
                   Compete against real players with ELO-based matchmaking and qualify for global debate competitions.
                 </p>
+                {!isAuthenticated && !isLoading && (
+                  <Link href="/auth">
+                    <Button className="gap-2">
+                      <LogIn className="h-4 w-4" />
+                      Sign Up Now
+                    </Button>
+                  </Link>
+                )}
               </CardContent>
             </Card>
           </div>

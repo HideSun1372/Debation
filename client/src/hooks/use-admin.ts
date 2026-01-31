@@ -3,6 +3,7 @@ import { useAuth } from "./use-auth";
 
 interface AdminStatus {
   isAdmin: boolean;
+  isDeveloper: boolean;
 }
 
 export function useAdmin() {
@@ -17,6 +18,7 @@ export function useAdmin() {
 
   return {
     isAdmin: data?.isAdmin ?? false,
+    isDeveloper: data?.isDeveloper ?? false,
     isLoading: isAuthLoading || (isAuthenticated && isLoading),
   };
 }

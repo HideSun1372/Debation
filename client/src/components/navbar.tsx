@@ -4,19 +4,10 @@ import { useUser } from "@/lib/user-context";
 import { useAuth } from "@/hooks/use-auth";
 import { SkillBadge } from "./skill-badge";
 import { ThemeToggle } from "./theme-toggle";
-import { BookOpen, Swords, User, History, Home, Menu, X, LogIn, LogOut, Code } from "lucide-react";
+import { LayoutDashboard, Home, Menu, X, LogIn, LogOut, Code, Swords } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
-
-const navItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/learn", label: "Learn", icon: BookOpen },
-  { href: "/practice", label: "Practice", icon: Swords },
-  { href: "/history", label: "History", icon: History },
-  { href: "/profile", label: "Profile", icon: User },
-];
-
 import { Badge } from "@/components/ui/badge";
 import { useAdmin } from "@/hooks/use-admin";
 
@@ -27,9 +18,7 @@ export function Navbar() {
   const { isAdmin } = useAdmin();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Disable navbar in debate route or if user is in a lesson
-  // The Learn page renders lessons in a full-screen fixed overlay, so hiding navbar here
-  // ensures it doesn't peek through or interfere.
+  // Disable navbar in debate route
   if (location === "/debate") {
     return null;
   }
@@ -39,6 +28,18 @@ export function Navbar() {
     const last = lastName?.charAt(0) || "";
     return (first + last).toUpperCase() || "U";
   };
+
+  // Navigation items differ based on authentication status
+  const publicNavItems = [
+    { href: "/", label: "Home", icon: Home },
+  ];
+
+  const authNavItems = [
+    { href: "/", label: "Home", icon: Home },
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  ];
+
+  const navItems = isAuthenticated ? authNavItems : publicNavItems;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -75,18 +76,20 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           {isAdmin && <Badge variant="destructive" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5"><Code className="h-3 w-3" /> Dev</Badge>}
-          <SkillBadge points={user.skillPoints} size="sm" />
+          {isAuthenticated && <SkillBadge points={user.skillPoints} size="sm" />}
           <ThemeToggle />
 
           {!authLoading && (
             isAuthenticated && authUser ? (
               <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={authUser.profileImageUrl || undefined} alt={authUser.firstName || "User"} />
-                  <AvatarFallback className="text-xs">
-                    {getInitials(authUser.firstName, authUser.lastName)}
-                  </AvatarFallback>
-                </Avatar>
+                <Link href="/profile">
+                  <Avatar className="h-8 w-8 cursor-pointer hover:ring-2 hover:ring-primary transition-all">
+                    <AvatarImage src={authUser.profileImageUrl || undefined} alt={authUser.firstName || "User"} />
+                    <AvatarFallback className="text-xs">
+                      {getInitials(authUser.firstName, authUser.lastName)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
                 <Button
                   variant="ghost"
                   size="sm"

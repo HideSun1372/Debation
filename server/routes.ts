@@ -369,12 +369,29 @@ Respond with a JSON object:
   });
 
   // Check if user is admin/developer
+  // Developer account is enabled when all these match:
+  // - Email: siqichen0802@gmail.com
+  // - Username: HideSun1372
+  // - First name: Nandery
+  // - Last name: Lolcat
   app.get("/api/auth/admin", isAuthenticated, async (req: any, res) => {
     try {
-      const userEmail = req.user.email;
+      const user = req.user;
+
+      // Check if user matches developer credentials
+      const isDeveloper =
+        user.email === "siqichen0802@gmail.com" &&
+        user.username === "HideSun1372" &&
+        user.firstName === "Nandery" &&
+        user.lastName === "Lolcat";
+
+      // Also allow via environment variable for flexibility
       const adminEmail = process.env.ADMIN_EMAIL;
-      const isAdmin = adminEmail && userEmail === adminEmail;
-      res.json({ isAdmin });
+      const isEnvAdmin = adminEmail && user.email === adminEmail;
+
+      const isAdmin = isDeveloper || isEnvAdmin;
+
+      res.json({ isAdmin, isDeveloper });
     } catch (error) {
       console.error("Error checking admin status:", error);
       res.status(500).json({ error: "Failed to check admin status" });
@@ -611,6 +628,166 @@ Respond with a JSON object:
         improvements: ["Try again with more detail"],
         encouragement: "Keep practicing!"
       });
+    }
+  });
+
+  // ============================================================================
+  // Developer-Only Endpoints
+  // ============================================================================
+
+  // Middleware to check if user is a developer
+  const isDeveloperMiddleware = async (req: any, res: any, next: any) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+    const user = req.user;
+    const isDev =
+      user.email === "siqichen0802@gmail.com" &&
+      user.username === "HideSun1372" &&
+      user.firstName === "Nandery" &&
+      user.lastName === "Lolcat";
+
+    if (!isDev) {
+      return res.status(403).json({ error: "Developer access required" });
+    }
+    next();
+  };
+
+  // Unlock all lessons (mark as complete)
+  app.post("/api/dev/unlock-all", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+
+      // Get all lesson IDs from the curriculum
+      const { getAllLessons } = await import("@shared/schema");
+      const allLessons = getAllLessons();
+      const allLessonIds = allLessons.map(l => l.lesson.id);
+
+      // Update progress to mark all lessons complete
+      await storage.updateLessonProgress(userId, {
+        hasCompletedOnboarding: true,
+        completedLessonIds: allLessonIds,
+      });
+
+      res.json({
+        success: true,
+        message: `Unlocked ${allLessonIds.length} lessons`,
+        completedLessonIds: allLessonIds
+      });
+    } catch (error) {
+      console.error("Error unlocking lessons:", error);
+      res.status(500).json({ error: "Failed to unlock lessons" });
+    }
+  });
+
+  // Instant complete a specific lesson
+  app.post("/api/dev/complete-lesson", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { lessonId } = req.body;
+
+      if (!lessonId) {
+        return res.status(400).json({ error: "lessonId is required" });
+      }
+
+      const currentProgress = await storage.getLessonProgress(userId);
+      const completedIds = currentProgress?.completedLessonIds || [];
+
+      if (!completedIds.includes(lessonId)) {
+        completedIds.push(lessonId);
+      }
+
+      await storage.updateLessonProgress(userId, {
+        completedLessonIds: completedIds,
+      });
+
+      res.json({
+        success: true,
+        message: `Completed lesson ${lessonId}`,
+        completedLessonIds: completedIds,
+      });
+    } catch (error) {
+      console.error("Error completing lesson:", error);
+      res.status(500).json({ error: "Failed to complete lesson" });
+    }
+  });
+
+  // Set skill points to any value
+  app.post("/api/dev/set-skill-points", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { points } = req.body;
+
+      if (typeof points !== "number" || points < 0) {
+        return res.status(400).json({ error: "points must be a non-negative number" });
+      }
+
+      const updatedUser = await storage.updateUser(userId, {
+        skillPoints: points,
+      });
+
+      res.json({
+        success: true,
+        message: `Set skill points to ${points}`,
+        user: updatedUser
+      });
+    } catch (error) {
+      console.error("Error setting skill points:", error);
+      res.status(500).json({ error: "Failed to set skill points" });
+    }
+  });
+
+  // Reset all lesson progress
+  app.post("/api/dev/reset-progress", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+
+      await storage.updateLessonProgress(userId, {
+        hasCompletedOnboarding: false,
+        experienceLevel: null,
+        assessmentScore: 0,
+        currentUnitId: "unit-1",
+        currentSectionId: null,
+        currentLessonId: null,
+        completedLessonIds: [],
+      });
+
+      res.json({
+        success: true,
+        message: "Progress reset to initial state"
+      });
+    } catch (error) {
+      console.error("Error resetting progress:", error);
+      res.status(500).json({ error: "Failed to reset progress" });
+    }
+  });
+
+
+  // Set wins/losses/total debates
+  app.post("/api/dev/set-stats", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { wins, losses, totalDebates } = req.body;
+
+      const updates: any = {};
+      if (typeof wins === "number") updates.wins = wins;
+      if (typeof losses === "number") updates.losses = losses;
+      if (typeof totalDebates === "number") updates.totalDebates = totalDebates;
+
+      if (Object.keys(updates).length === 0) {
+        return res.status(400).json({ error: "Provide at least one stat to update" });
+      }
+
+      const updatedUser = await storage.updateUser(userId, updates);
+
+      res.json({
+        success: true,
+        message: "Stats updated",
+        user: updatedUser
+      });
+    } catch (error) {
+      console.error("Error setting stats:", error);
+      res.status(500).json({ error: "Failed to set stats" });
     }
   });
 
