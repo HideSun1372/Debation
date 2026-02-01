@@ -66,6 +66,9 @@ export function useAuth() {
     mutationFn: logout,
     onSuccess: () => {
       queryClient.setQueryData(["/api/auth/user"], null);
+      queryClient.removeQueries({ queryKey: ["/api/debates"] });
+      queryClient.removeQueries({ queryKey: ["/api/progress"] });
+      localStorage.removeItem("debate-user"); // Clear local session data
     },
   });
 

@@ -6,12 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SkillBadge } from "@/components/skill-badge";
 import { SkillProgress } from "@/components/skill-progress";
-import { BookOpen, Swords, History, User, Trophy, TrendingUp } from "lucide-react";
+import { BookOpen, Swords, History, User, Trophy, TrendingUp, Loader2 } from "lucide-react";
 
 export default function Dashboard() {
-    const { user: authUser } = useAuth();
+    const { user: authUser, isLoading } = useAuth();
     const { user } = useUser();
     const { isAdmin } = useAdmin();
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[calc(100vh-3.5rem)]">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+        );
+    }
 
     const winRate = user.totalDebates > 0
         ? Math.round((user.wins / user.totalDebates) * 100)
@@ -58,7 +66,7 @@ export default function Dashboard() {
                 {/* Welcome Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold mb-2">
-                        Welcome back, {authUser.firstName || authUser.username}!
+                        Welcome back, {authUser?.firstName || authUser?.username || "Debater"}!
                     </h1>
                     <p className="text-muted-foreground">
                         Ready to sharpen your debate skills?

@@ -1,7 +1,7 @@
 
 import { users, sessions, debates, debateMessages, lessonProgress, type User, type InsertUser, type UpsertUser, type Debate, type InsertDebate, type DebateMessage, type InsertDebateMessage, type LessonProgress, type InsertLessonProgress } from "@shared/schema";
 import { randomUUID } from "crypto";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { db, pool } from "./db";
 
 interface CreateDebateInput {
@@ -138,7 +138,7 @@ export class DatabaseStorage implements IStorage {
     if (!db) throw new Error("Database not available");
     return db.select().from(debates)
       .where(eq(debates.userId, userId))
-      .orderBy(debates.startedAt);
+      .orderBy(desc(debates.startedAt));
   }
 
   async getAllDebates(): Promise<Debate[]> {

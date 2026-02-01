@@ -1,17 +1,16 @@
 import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { setupAuth, isAuthenticated } from "./auth";
 import { z } from "zod";
 import { generatePracticePrompt, evaluatePracticeResponse } from "./practice";
 import type { PracticeType, DifficultyLevel } from "@shared/lessons/types";
 
-console.log("Initializing OpenAI with key:", process.env.OPENAI_API_KEY ? `${process.env.OPENAI_API_KEY.substring(0, 10)}...` : "MISSING");
+console.log("Initializing Gemini with key:", process.env.GEMINI_API_KEY ? `${process.env.GEMINI_API_KEY.substring(0, 10)}...` : "MISSING");
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export async function registerRoutes(
   httpServer: Server,
@@ -20,12 +19,19 @@ export async function registerRoutes(
   // Setup authentication (must be before other routes)
   setupAuth(app);
 
-  app.post("/api/debates", async (req, res) => {
+  app.post("/api/debates", async (req: any, res) => {
     try {
       const { userId, opponentId, topicId, formatId, userSide } = req.body;
 
+      // If authenticated, force the userId to match the session user
+      // This prevents "local-user" debates from being created when a user is actually logged in
+      const isAuthenticated = req.isAuthenticated();
+      const effectiveUserId = isAuthenticated ? req.user.id : userId;
+
+      console.log(`[CreateDebate] Auth: ${isAuthenticated}, InputUser: ${userId}, EffectiveUser: ${effectiveUserId}`);
+
       const debate = await storage.createDebate({
-        userId,
+        userId: effectiveUserId,
         opponentId,
         topicId,
         formatId,
@@ -40,16 +46,11 @@ export async function registerRoutes(
     }
   });
 
-  app.get("/api/debates", async (req, res) => {
+  app.get("/api/debates", isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.query.userId as string | undefined;
-      let debates;
-
-      if (userId) {
-        debates = await storage.getDebatesByUser(userId);
-      } else {
-        debates = await storage.getAllDebates();
-      }
+      // Always fetch debates for the authenticated user
+      const userId = req.user.id;
+      const debates = await storage.getDebatesByUser(userId);
 
       res.json(debates);
     } catch (error) {
@@ -138,17 +139,20 @@ export async function registerRoutes(
         ];
       }
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...contextMessages,
-          ...(message ? [{ role: "user" as const, content: message }] : []),
-        ],
-        max_completion_tokens: 1024,
+      const modelWithSystem = genAI.getGenerativeModel({
+        model: "gemini-2.5-flash-preview-09-2025",
+        systemInstruction: systemPrompt
       });
 
-      const aiResponse = response.choices[0]?.message?.content || "I need a moment to consider my response.";
+      const chat = modelWithSystem.startChat({
+        history: contextMessages.map((m: any) => ({
+          role: m.role === "assistant" ? "model" : "user",
+          parts: [{ text: m.content }],
+        })),
+      });
+
+      const result = await chat.sendMessage(message || "Please continue.");
+      const aiResponse = result.response.text();
 
       // For answer-check intents, parse the JSON response
       if (cxIntent === "crossfire-answer-check" || cxIntent === "cx-answer-check") {
@@ -238,17 +242,16 @@ Respond with a JSON object containing:
 
 Be fair but consider the skill level difference. If the user is debating someone much higher skilled and performs well, they should still potentially win.`;
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: "You are a professional debate judge. Respond only with valid JSON." },
-          { role: "user", content: evaluationPrompt },
-        ],
-        response_format: { type: "json_object" },
-        max_completion_tokens: 1024,
+      const modelWithSystemEvaluation = genAI.getGenerativeModel({
+        model: "gemini-2.5-flash-preview-09-2025",
+        systemInstruction: "You are a professional debate judge. Respond only with valid JSON.",
+        generationConfig: { responseMimeType: "application/json" }
       });
 
-      const evaluation = JSON.parse(response.choices[0]?.message?.content || "{}");
+      console.log(`[Evaluate] Starting evaluation for debate ${debateId}`);
+      const result = await modelWithSystemEvaluation.generateContent(evaluationPrompt);
+      const evaluation = JSON.parse(result.response.text());
+      console.log(`[Evaluate] AI response received for debate ${debateId}`);
 
       const pointsChange = calculatePointsChange(
         evaluation.won,
@@ -258,13 +261,41 @@ Be fair but consider the skill level difference. If the user is debating someone
       );
 
       if (debateId) {
-        await storage.updateDebate(debateId, {
+        console.log(`[Evaluate] Updating debate ${debateId} to completed`);
+        const updatedDebate = await storage.updateDebate(debateId, {
           status: "completed",
           result: evaluation.won ? "win" : "loss",
           pointsChange,
           feedback: evaluation.feedback,
           completedAt: new Date(),
         });
+
+        if (!updatedDebate) {
+          console.error(`[Evaluate] Failed to update debate ${debateId} - not found?`);
+        } else {
+          console.log(`[Evaluate] Debate ${debateId} updated successfully`);
+        }
+
+        // Update user stats if authenticated
+        // Use effectiveUserId logic to capture cases where session matches debate owner
+        if (req.isAuthenticated()) {
+          const user = req.user as any;
+          const currentPoints = user.skillPoints || 0;
+          const newPoints = Math.max(0, currentPoints + pointsChange);
+
+          const updates: any = {
+            skillPoints: newPoints,
+            totalDebates: (user.totalDebates || 0) + 1
+          };
+
+          if (evaluation.won) {
+            updates.wins = (user.wins || 0) + 1;
+          } else {
+            updates.losses = (user.losses || 0) + 1;
+          }
+
+          await storage.updateUser(user.id, updates);
+        }
       }
 
       res.json({
@@ -282,13 +313,43 @@ Be fair but consider the skill level difference. If the user is debating someone
       const pointsChange = randomWon ? baseChange : -Math.floor(baseChange * 0.7);
 
       if (req.body.debateId) {
-        await storage.updateDebate(req.body.debateId, {
+        console.log(`[Evaluate] Error fallback: Updating debate ${req.body.debateId} to completed`);
+        const updatedDebate = await storage.updateDebate(req.body.debateId, {
           status: "completed",
           result: randomWon ? "win" : "loss",
           pointsChange,
           feedback: "Your debate showed promise. Continue practicing to improve your argumentation skills.",
           completedAt: new Date(),
         });
+
+        if (!updatedDebate) {
+          console.error(`[Evaluate] Error fallback: Failed to update debate ${req.body.debateId}`);
+        }
+
+        // Also update stats on error fallback
+        if (req.isAuthenticated()) {
+          try {
+            const user = req.user as any;
+            const currentPoints = user.skillPoints || 0;
+            const newPoints = Math.max(0, currentPoints + pointsChange);
+
+            const updates: any = {
+              skillPoints: newPoints,
+              totalDebates: (user.totalDebates || 0) + 1
+            };
+
+            if (randomWon) {
+              updates.wins = (user.wins || 0) + 1;
+            } else {
+              updates.losses = (user.losses || 0) + 1;
+            }
+
+            await storage.updateUser(user.id, updates);
+            console.log(`[Evaluate] Error fallback: Updated stats for user ${user.id}`);
+          } catch (statError) {
+            console.error(`[Evaluate] Error fallback: Failed to update stats:`, statError);
+          }
+        }
       }
 
       res.json({
@@ -330,17 +391,14 @@ Respond with a JSON object:
   "reason": string (brief explanation of your judgment)
 }`;
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: "You are a debate evaluator. Respond only with valid JSON. Be lenient - if they made any attempt to answer, consider it complete." },
-          { role: "user", content: evaluationPrompt },
-        ],
-        response_format: { type: "json_object" },
-        max_completion_tokens: 256,
+      const modelWithSystemCrossfire = genAI.getGenerativeModel({
+        model: "gemini-2.5-flash-preview-09-2025",
+        systemInstruction: "You are a debate evaluator. Respond only with valid JSON. Be lenient - if they made any attempt to answer, consider it complete.",
+        generationConfig: { responseMimeType: "application/json" }
       });
 
-      const evaluation = JSON.parse(response.choices[0]?.message?.content || '{"isComplete": true, "reason": "Default: treating as complete"}');
+      const result = await modelWithSystemCrossfire.generateContent(evaluationPrompt);
+      const evaluation = JSON.parse(result.response.text());
 
       res.json({
         isComplete: evaluation.isComplete ?? true,
@@ -380,11 +438,7 @@ Respond with a JSON object:
       const user = req.user;
 
       // Check if user matches developer credentials
-      const isDeveloper =
-        user.email === "siqichen0802@gmail.com" &&
-        user.username === "HideSun1372" &&
-        user.firstName === "Nandery" &&
-        user.lastName === "Lolcat";
+      const isDeveloper = user.email === "siqichen0802@gmail.com";
 
       // Also allow via environment variable for flexibility
       const adminEmail = process.env.ADMIN_EMAIL;
@@ -489,35 +543,20 @@ Respond with a JSON object:
 
       // Use chat-completions with audio output via gpt-audio-mini
       // Using typed content array format as required by Replit AI Integrations
+      // Gemini does not support text-to-speech directly in the same way. 
+      // Returning a 501 Not Implemented or a placeholder audio/error.
+      console.warn("TTS requested but Gemini migration de-scoped TTS.");
+      return res.status(501).json({ error: "Text-to-Speech is not supported with Gemini yet." });
+
+      /* 
+      // Original OpenAI Code for reference:
       const response = await openai.chat.completions.create({
         model: "gpt-audio-mini",
-        modalities: ["text", "audio"],
-        audio: {
-          voice: voice as "alloy" | "ash" | "coral" | "echo" | "fable" | "onyx" | "nova" | "sage" | "shimmer",
-          format: "mp3",
-        },
-        messages: [
-          {
-            role: "system",
-            content: [
-              {
-                type: "text",
-                text: "You are a text-to-speech converter. Speak the user's message exactly as given, with natural speech patterns. Do not add any commentary or changes."
-              }
-            ]
-          },
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: truncatedText
-              }
-            ]
-          }
-        ],
-      } as any);
+        ...
+      */
 
+      // Extract audio from response content parts
+      /*
       // Extract audio from response content parts
       const message = response.choices[0]?.message;
       let audioData: string | undefined;
@@ -545,6 +584,7 @@ Respond with a JSON object:
         "Content-Length": audioBuffer.length,
       });
       res.send(audioBuffer);
+      */
     } catch (error) {
       console.error("Error generating TTS:", error);
       res.status(500).json({ error: "Failed to generate speech" });
@@ -642,11 +682,7 @@ Respond with a JSON object:
       return res.status(401).json({ error: "Not authenticated" });
     }
     const user = req.user;
-    const isDev =
-      user.email === "siqichen0802@gmail.com" &&
-      user.username === "HideSun1372" &&
-      user.firstName === "Nandery" &&
-      user.lastName === "Lolcat";
+    const isDev = user.email === "siqichen0802@gmail.com";
 
     if (!isDev) {
       return res.status(403).json({ error: "Developer access required" });
@@ -850,8 +886,8 @@ function buildDebateSpeechPrompt(
   speechType: string,
   cxIntent?: string
 ): string {
-  // Handle cross-examination with specific intents
-  if (speechType === "cross-examination" && cxIntent) {
+  // Handle cross-examination AND crossfire with specific intents
+  if ((speechType === "cross-examination" || speechType === "crossfire") && cxIntent) {
     if (cxIntent === "cx-question") {
       return `You are an AI debate opponent conducting cross-examination.
 Personality: ${personality}

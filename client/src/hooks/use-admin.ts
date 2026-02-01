@@ -7,14 +7,24 @@ interface AdminStatus {
 }
 
 export function useAdmin() {
-  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
   const { data, isLoading } = useQuery<AdminStatus>({
-    queryKey: ["/api/auth/admin"],
+    queryKey: ["/api/auth/admin", user?.id],
+    queryFn: async () => {
+      const res = await fetch("/api/auth/admin");
+      if (!res.ok) throw new Error("Failed to fetch admin status");
+      return res.json();
+    },
     enabled: isAuthenticated && !isAuthLoading,
-    staleTime: 1000 * 60 * 30,
     retry: false,
   });
+
+  /*
+  if (isAuthenticated && !isAuthLoading) {
+    console.log("useAdmin data:", data, "User ID:", user?.id);
+  }
+  */
 
   return {
     isAdmin: data?.isAdmin ?? false,

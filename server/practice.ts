@@ -1,9 +1,9 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { PracticeType, DifficultyLevel } from "@shared/lessons/types";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+// Base model, specific instances with system instructions will be created as needed
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-09-2025" });
 
 interface PracticePrompt {
   argument?: string;
@@ -96,21 +96,13 @@ export async function generatePracticePrompt(
 }
 
 async function generateClaim(difficulty: DifficultyLevel, topic: string): Promise<string> {
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: `You are a debate coach generating practice prompts. Generate a simple claim related to the topic that students can practice building arguments for. Difficulty: ${difficulty}. Just output the claim, nothing else.`,
-      },
-      {
-        role: "user",
-        content: `Topic: ${topic}. Generate a claim a student should argue for.`,
-      },
-    ],
-    max_completion_tokens: 100,
+  const modelWithSystem = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-preview-09-2025",
+    systemInstruction: `You are a debate coach generating practice prompts. Generate a simple claim related to the topic that students can practice building arguments for. Difficulty: ${difficulty}. Just output the claim, nothing else.`
   });
-  return response.choices[0]?.message?.content || "Social media increases political polarization.";
+
+  const result = await modelWithSystem.generateContent(`Topic: ${topic}. Generate a claim a student should argue for.`);
+  return result.response.text();
 }
 
 async function generateArgumentToRefute(
@@ -120,25 +112,17 @@ async function generateArgumentToRefute(
 ): Promise<string> {
   const complexityGuide = ARGUMENT_COMPLEXITY[difficulty];
 
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: `You are a debate opponent presenting an argument that a student needs to refute. 
+  const modelWithSystem = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-preview-09-2025",
+    systemInstruction: `You are a debate opponent presenting an argument that a student needs to refute. 
 ${complexityGuide}
 
 Present an argument on the given topic. The student is practicing: ${targetSkill}.
-Output only the argument itself (2-4 sentences), as if you're speaking in a debate round.`,
-      },
-      {
-        role: "user",
-        content: `Topic: ${topic}. Present your argument.`,
-      },
-    ],
-    max_completion_tokens: 200,
+Output only the argument itself (2-4 sentences), as if you're speaking in a debate round.`
   });
-  return response.choices[0]?.message?.content || "I believe social media has connected people globally in unprecedented ways, fostering community and enabling positive social movements.";
+
+  const result = await modelWithSystem.generateContent(`Topic: ${topic}. Present your argument.`);
+  return result.response.text();
 }
 
 async function generateClaimToClassify(difficulty: DifficultyLevel): Promise<string> {
@@ -181,21 +165,13 @@ async function generateEvidenceChallenge(
   difficulty: DifficultyLevel,
   topic: string
 ): Promise<string> {
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: `You are a debate opponent challenging the student's evidence. Generate a challenging question about evidence quality, relevance, or interpretation. Difficulty: ${difficulty}. Output only the challenge question.`,
-      },
-      {
-        role: "user",
-        content: `Topic: ${topic}. Challenge the student's evidence.`,
-      },
-    ],
-    max_completion_tokens: 100,
+  const modelWithSystem = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-preview-09-2025",
+    systemInstruction: `You are a debate opponent challenging the student's evidence. Generate a challenging question about evidence quality, relevance, or interpretation. Difficulty: ${difficulty}. Output only the challenge question.`
   });
-  return response.choices[0]?.message?.content || "How do you know your source is credible, and isn't that study outdated?";
+
+  const result = await modelWithSystem.generateContent(`Topic: ${topic}. Challenge the student's evidence.`);
+  return result.response.text();
 }
 
 async function generateFallaciousArgument(difficulty: DifficultyLevel): Promise<string> {
@@ -236,27 +212,19 @@ async function generateFallaciousArgument(difficulty: DifficultyLevel): Promise<
 }
 
 async function generateClaimForWarrant(difficulty: DifficultyLevel, topic: string): Promise<string> {
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: `You are a debate coach. Generate a claim and a piece of evidence. The student needs to provide the warrant (the reasoning that connects evidence to claim). Difficulty: ${difficulty}.
+  const modelWithSystem = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-preview-09-2025",
+    systemInstruction: `You are a debate coach. Generate a claim and a piece of evidence. The student needs to provide the warrant (the reasoning that connects evidence to claim). Difficulty: ${difficulty}.
 
 Format your response as:
 CLAIM: [the claim]
 EVIDENCE: [a piece of evidence]
 
-Keep it concise.`,
-      },
-      {
-        role: "user",
-        content: `Topic: ${topic}`,
-      },
-    ],
-    max_completion_tokens: 150,
+Keep it concise.`
   });
-  return response.choices[0]?.message?.content || "CLAIM: Social media harms mental health.\nEVIDENCE: A 2023 study found teens who use social media 3+ hours daily report 40% higher anxiety levels.";
+
+  const result = await modelWithSystem.generateContent(`Topic: ${topic}`);
+  return result.response.text();
 }
 
 export async function evaluatePracticeResponse(
@@ -266,30 +234,23 @@ export async function evaluatePracticeResponse(
 
   const evaluationPrompt = buildEvaluationPrompt(practiceType, difficulty, aiPrompt, targetSkill, successCriteria);
 
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: evaluationPrompt,
-      },
-      {
-        role: "user",
-        content: `Student response: "${userResponse}"`,
-      },
-    ],
-    max_completion_tokens: 500,
-    response_format: { type: "json_object" },
+  const modelWithSystem = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-preview-09-2025",
+    systemInstruction: evaluationPrompt,
+    generationConfig: { responseMimeType: "application/json" }
   });
 
+  const result = await modelWithSystem.generateContent(`Student response: "${userResponse}"`);
+
   try {
-    const result = JSON.parse(response.choices[0]?.message?.content || "{}");
+    const resultText = result.response.text();
+    const resultJson = JSON.parse(resultText);
     return {
-      score: Math.min(100, Math.max(0, result.score || 50)),
-      strengths: result.strengths || [],
-      improvements: result.improvements || [],
-      exampleResponse: result.exampleResponse,
-      encouragement: result.encouragement || "Keep practicing!",
+      score: Math.min(100, Math.max(0, resultJson.score || 50)),
+      strengths: resultJson.strengths || [],
+      improvements: resultJson.improvements || [],
+      exampleResponse: resultJson.exampleResponse,
+      encouragement: resultJson.encouragement || "Keep practicing!",
     };
   } catch {
     return {

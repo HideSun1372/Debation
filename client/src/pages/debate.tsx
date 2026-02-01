@@ -13,6 +13,7 @@ import { Send, Clock, User, Bot, Trophy, TrendingUp, TrendingDown, ArrowLeft, Lo
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
+import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 
 interface DebateMessage {
   id: string;
@@ -44,7 +45,7 @@ export default function Debate() {
   const judgeType = params.get("judgeType") as "lay" | "traditional" | "circuit" || "traditional";
   const customPrepTime = parseInt(params.get("prepTime") || "0");
   const customSpeechTimes: Record<string, number> = (() => {
-    try { return JSON.parse(params.get("speechTimes") || "{}"); } 
+    try { return JSON.parse(params.get("speechTimes") || "{}"); }
     catch { return {}; }
   })();
   const voiceMode = params.get("voiceMode") === "true";
@@ -52,10 +53,10 @@ export default function Debate() {
   const opponent = AI_OPPONENTS.find((o) => o.id === opponentId);
   const topic = DEBATE_TOPICS.find((t) => t.id === topicId);
   const format = DEBATE_FORMATS.find((f) => f.id === formatId);
-  
-  const getSpeechTime = (speech: DebateSpeech): number => 
+
+  const getSpeechTime = (speech: DebateSpeech): number =>
     customSpeechTimes[speech.id] ?? speech.defaultMinutes;
-  
+
   const isUserSpeech = (speech: DebateSpeech): boolean => {
     if (side === "pro") return speech.speaker === "aff";
     return speech.speaker === "neg";
@@ -75,7 +76,7 @@ export default function Debate() {
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [showSpeechPanel, setShowSpeechPanel] = useState(true);
-  
+
   // Flow sheet state
   const [showFlowSheet, setShowFlowSheet] = useState(true);
   const [flowEntries, setFlowEntries] = useState<Array<{
@@ -84,7 +85,7 @@ export default function Debate() {
     speaker: "user" | "opponent";
     notes: string;
   }>>([]);
-  
+
   // AI typing simulation state
   const [typingMessage, setTypingMessage] = useState<{
     fullContent: string;
@@ -97,15 +98,17 @@ export default function Debate() {
   const thinkingDelayRef = useRef<NodeJS.Timeout | null>(null);
   const [isThinking, setIsThinking] = useState(false);
   const [completedTypingIds, setCompletedTypingIds] = useState<Set<string>>(new Set());
-  
+  // Ref for synchronous blocking - prevents race conditions with React state batching
+  const isDeliveringOpponentSpeechRef = useRef(false);
+
   // Voice mode state - voice-first debate flow
   const [voiceState, setVoiceState] = useState<"idle" | "listening" | "sending" | "opponent_speaking">("idle");
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [audioMuted, setAudioMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pendingOpponentMessageRef = useRef<DebateMessage | null>(null);
-  const voiceSendRef = useRef<(transcript: string) => void>(() => {});
-  
+  const voiceSendRef = useRef<(transcript: string) => void>(() => { });
+
   // Speech recognition with auto-mode for voice debates
   const speechRecognition = useSpeechRecognition({
     autoMode: voiceMode,
@@ -114,7 +117,7 @@ export default function Debate() {
       voiceSendRef.current(transcript);
     }, []),
   });
-  
+
   // Cross-examination (CX) state
   const [isCxMode, setIsCxMode] = useState(false);
   const [cxQuestioner, setCxQuestioner] = useState<"user" | "opponent" | null>(null);
@@ -122,7 +125,7 @@ export default function Debate() {
   const [cxExchangeCount, setCxExchangeCount] = useState(0);
   const [cxStarted, setCxStarted] = useState(false); // Track if first question has been asked
   const [cxTimedOut, setCxTimedOut] = useState(false); // Track if CX should end due to timeout
-  
+
   // Crossfire race state - who gets to ask first
   const [crossfireRacing, setCrossfireRacing] = useState(false);
   const [crossfireRaceWinner, setCrossfireRaceWinner] = useState<"user" | "opponent" | null>(null);
@@ -133,7 +136,7 @@ export default function Debate() {
   const [crossfirePhase, setCrossfirePhase] = useState<"asking" | "answering" | null>(null);
   const crossfireQuestionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const QUESTION_TIME_LIMIT = 15; // seconds to ask a question before rights transfer
-  
+
   const currentSpeech = format?.speeches[currentSpeechIndex];
   const isUserTurn = currentSpeech ? isUserSpeech(currentSpeech) : false;
   const isDebateComplete = format ? currentSpeechIndex >= format.speeches.length : false;
@@ -175,7 +178,7 @@ export default function Debate() {
     if (format && currentSpeech) {
       setSpeechTimeRemaining(getSpeechTime(currentSpeech) * 60);
       setIsInPrepTime(false);
-      
+
       // Initialize CX mode if this is a cross-examination speech
       if (currentSpeech.type === "cross-examination") {
         setIsCxMode(true);
@@ -191,7 +194,7 @@ export default function Debate() {
         setIsCxMode(false);
         setCxQuestioner(null);
         setCxStarted(false);
-        
+
         if (isUserSpeech(currentSpeech)) {
           setIsTimerRunning(true);
         }
@@ -222,7 +225,7 @@ export default function Debate() {
     // Timer runs when: it's user's turn, OR we're in CX mode (regardless of questioner role)
     const shouldRun = isTimerRunning && !isLoading && !isDebateComplete && (isUserTurn || isCxMode);
     if (!shouldRun) return;
-    
+
     const interval = setInterval(() => {
       if (isInPrepTime) {
         setPrepTimeRemaining(prev => {
@@ -257,35 +260,43 @@ export default function Debate() {
     if (typingMessage && typingMessage.isTyping) {
       const words = typingMessage.fullContent.split(/\s+/);
       const totalWords = words.length;
-      
+
       if (typingMessage.displayedWordCount >= totalWords) {
         // Typing complete - mark this message as completed and clear typing state
         setCompletedTypingIds(prev => new Set(prev).add(typingMessage.messageId));
         setTypingMessage(null);
+        // Clear the blocking ref
+        isDeliveringOpponentSpeechRef.current = false;
+
+        // Trigger completion callback
+        if (onTypingCompleteRef.current) {
+          onTypingCompleteRef.current();
+          onTypingCompleteRef.current = null;
+        }
         return;
       }
-      
+
       // Calculate typing speed based on opponent tier (words per second)
       // Much slower, more realistic: 0.6-1.1 wps base (about 1 word per second)
       // Tier affects speed slightly: Beginner slowest, Master fastest
       const tierSpeeds: Record<string, [number, number]> = {
-        BEGINNER: [0.5, 0.7],
-        INTERMEDIATE: [0.6, 0.8],
-        ADVANCED: [0.7, 0.9],
-        MASTER: [0.8, 1.1],
+        BEGINNER: [2.0, 2.3],
+        INTERMEDIATE: [2.3, 2.6],
+        ADVANCED: [2.6, 2.9],
+        MASTER: [2.9, 3.2],
       };
       const [minWps, maxWps] = tierSpeeds[opponent?.tier || "BEGINNER"] || [0.5, 0.7];
       let wps = minWps + Math.random() * (maxWps - minWps);
-      
+
       // Mode-specific speed multiplier: CX/crossfire 2x faster for quick back-and-forth
       if (typingMessage.mode !== "regular") {
         wps *= 2;
       }
-      
+
       // Add per-word jitter for more natural feel (±20%)
       const jitter = 0.8 + Math.random() * 0.4;
       const interval = (1000 / wps) * jitter;
-      
+
       typingIntervalRef.current = setTimeout(() => {
         setTypingMessage(prev => {
           if (!prev) return null;
@@ -295,7 +306,7 @@ export default function Debate() {
           };
         });
       }, interval);
-      
+
       return () => {
         if (typingIntervalRef.current) {
           clearTimeout(typingIntervalRef.current);
@@ -314,59 +325,44 @@ export default function Debate() {
     return visibleWords.join(" ");
   };
 
-  // Play TTS audio for AI opponent's message
-  const playTTS = useCallback(async (text: string, onComplete?: () => void): Promise<void> => {
-    if (audioMuted) {
+  // Browser-native TTS for opponent voice
+  const ttsCompletionCallbackRef = useRef<(() => void) | null>(null);
+  const speechSynthesis = useSpeechSynthesis({
+    rate: 1.1, // Slightly faster for debate pacing
+    onEnd: () => {
+      setIsAudioPlaying(false);
+      setVoiceState("idle");
+      ttsCompletionCallbackRef.current?.();
+      ttsCompletionCallbackRef.current = null;
+    },
+    onError: (error) => {
+      console.error("TTS error:", error);
+      setIsAudioPlaying(false);
+      setVoiceState("idle");
+      ttsCompletionCallbackRef.current?.();
+      ttsCompletionCallbackRef.current = null;
+    },
+  });
+
+  // Play TTS audio for AI opponent's message (now using browser synthesis)
+  const playTTS = useCallback((text: string, onComplete?: () => void): void => {
+    if (audioMuted || !speechSynthesis.isSupported) {
       onComplete?.();
       return;
     }
-    
-    try {
-      setIsAudioPlaying(true);
-      setVoiceState("opponent_speaking");
-      const response = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, voice: "onyx" }),
-      });
-      
-      if (!response.ok) {
-        console.error("TTS failed:", await response.text());
-        setIsAudioPlaying(false);
-        onComplete?.();
-        return;
-      }
-      
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
-      audio.onended = () => {
-        setIsAudioPlaying(false);
-        URL.revokeObjectURL(audioUrl);
-        onComplete?.();
-      };
-      audio.onerror = () => {
-        setIsAudioPlaying(false);
-        URL.revokeObjectURL(audioUrl);
-        onComplete?.();
-      };
-      audio.play();
-    } catch (error) {
-      console.error("TTS error:", error);
-      setIsAudioPlaying(false);
-      onComplete?.();
-    }
-  }, [audioMuted]);
+
+    setIsAudioPlaying(true);
+    setVoiceState("opponent_speaking");
+    ttsCompletionCallbackRef.current = onComplete || null;
+    speechSynthesis.speak(text);
+  }, [audioMuted, speechSynthesis]);
+
+  // Callback ref for when typing finishes
+  const onTypingCompleteRef = useRef<(() => void) | null>(null);
 
   // Shared helper to add opponent message with mode-specific typing simulation
   // mode: "regular" (full delay), "cx" (fast), "crossfire" (fast)
-  const enqueueAiMessage = (message: DebateMessage, mode: "regular" | "cx" | "crossfire" = "regular") => {
+  const enqueueAiMessage = (message: DebateMessage, mode: "regular" | "cx" | "crossfire" = "regular", onComplete?: () => void) => {
     // Clear any pending typing animation and thinking delay
     if (typingIntervalRef.current) {
       clearTimeout(typingIntervalRef.current);
@@ -376,64 +372,61 @@ export default function Debate() {
       clearTimeout(thinkingDelayRef.current);
       thinkingDelayRef.current = null;
     }
-    
+
+    // Set the completion callback
+    onTypingCompleteRef.current = onComplete || null;
+
     // Clear any existing typing state
     setTypingMessage(null);
-    
+
     // Voice mode: Play TTS only - text NEVER appears for opponent messages
     // User must rely entirely on their flow notes, simulating real debate conditions
     if (voiceMode) {
+      // Set blocking ref to prevent race conditions - same as non-voice mode
+      isDeliveringOpponentSpeechRef.current = true;
+
       pendingOpponentMessageRef.current = message;
       setVoiceState("opponent_speaking");
-      
+
       playTTS(message.content, () => {
+        // Clear blocking ref when TTS completes
+        isDeliveringOpponentSpeechRef.current = false;
+
         // DO NOT add message to visible messages - user must flow by ear only
         pendingOpponentMessageRef.current = null;
-        
+
         // Set to idle - the auto-start useEffect will handle starting listening if it's user's turn
         setVoiceState("idle");
+
+        // Trigger completion callback
+        if (onTypingCompleteRef.current) {
+          onTypingCompleteRef.current();
+          onTypingCompleteRef.current = null;
+        }
       });
       return;
     }
-    
+
     // Non-voice mode: Use typing simulation
-    // Calculate mode-specific "thinking" delay before typing starts
-    const wordCount = message.content.split(/\s+/).length;
-    let thinkTime: number;
-    
-    if (mode === "regular") {
-      // Regular speeches: 3-15 seconds based on content length
-      const baseThinkTime = 3000;
-      const perWordThinkTime = 100;
-      thinkTime = Math.min(baseThinkTime + wordCount * perWordThinkTime, 15000);
-      thinkTime *= (0.8 + Math.random() * 0.4); // Add randomness
-    } else {
-      // CX/crossfire: 300-700ms for quick back-and-forth
-      thinkTime = 300 + Math.random() * 400;
-    }
-    
-    // Show thinking state (message is NOT added to state yet - stays hidden during thinking)
-    setIsThinking(true);
-    
-    // After thinking delay, add message to state and start typing animation
-    thinkingDelayRef.current = setTimeout(() => {
-      setIsThinking(false);
-      
-      // NOW add the message to the list (deferred until thinking is complete)
-      setMessages((prev) => [...prev, message]);
-      
-      // Start typing animation with mode-specific parameters
-      // For CX/crossfire, we start faster (higher initial word count)
-      const initialWordCount = mode === "regular" ? 0 : Math.min(3, message.content.split(/\s+/).length);
-      
-      setTypingMessage({
-        fullContent: message.content,
-        displayedWordCount: initialWordCount,
-        isTyping: true,
-        messageId: message.id,
-        mode,
-      });
-    }, thinkTime);
+    // No thinking delay - start typing immediately when it's opponent's turn
+
+    // Set ref synchronously to block any re-triggers (prevents race conditions)
+    isDeliveringOpponentSpeechRef.current = true;
+
+    // Add the message to the list immediately
+    setMessages((prev) => [...prev, message]);
+
+    // Start typing animation immediately
+    // For CX/crossfire, we start faster (higher initial word count)
+    const initialWordCount = mode === "regular" ? 0 : Math.min(3, message.content.split(/\s+/).length);
+
+    setTypingMessage({
+      fullContent: message.content,
+      displayedWordCount: initialWordCount,
+      isTyping: true,
+      messageId: message.id,
+      mode,
+    });
   };
 
   // Handle crossfire race result
@@ -445,13 +438,13 @@ export default function Debate() {
       setCxQuestioner(null); // Crossfire - both can ask
       setCrossfireQuestionAsker(crossfireRaceWinner);
       setCrossfirePhase("asking");
-      
+
       // Clear any existing question timeout
       if (crossfireQuestionTimeoutRef.current) {
         clearTimeout(crossfireQuestionTimeoutRef.current);
         crossfireQuestionTimeoutRef.current = null;
       }
-      
+
       if (crossfireRaceWinner === "opponent") {
         // AI won - trigger AI's question
         const triggerAiQuestion = async () => {
@@ -473,7 +466,7 @@ export default function Debate() {
             });
 
             const data = await response.json();
-            
+
             const opponentMessage: DebateMessage = {
               id: `opponent-cf-${Date.now()}`,
               role: "opponent",
@@ -499,7 +492,7 @@ export default function Debate() {
           // User didn't ask in time - transfer rights to AI
           setCrossfireQuestionAsker("opponent");
           setCrossfirePhase("asking");
-          
+
           // AI now asks the question
           const triggerAiQuestion = async () => {
             setIsLoading(true);
@@ -520,7 +513,7 @@ export default function Debate() {
               });
 
               const data = await response.json();
-              
+
               const opponentMessage: DebateMessage = {
                 id: `opponent-cf-${Date.now()}`,
                 role: "opponent",
@@ -560,19 +553,19 @@ export default function Debate() {
   // Start a new crossfire race (for subsequent questions after the first)
   const startCrossfireRace = () => {
     if (!currentSpeech || speechTimeRemaining <= 0) return;
-    
+
     // Clear any existing question timeout
     if (crossfireQuestionTimeoutRef.current) {
       clearTimeout(crossfireQuestionTimeoutRef.current);
       crossfireQuestionTimeoutRef.current = null;
     }
-    
+
     setCrossfireRacing(true);
     setCrossfireRaceWinner(null);
     setCrossfireCurrentQuestion(null);
     setCrossfireQuestionAsker(null);
     setCrossfirePhase(null);
-    
+
     // Calculate AI reaction time based on skill tier
     const tierDelays: Record<string, [number, number]> = {
       beginner: [2000, 4000],
@@ -583,7 +576,7 @@ export default function Debate() {
     };
     const [minDelay, maxDelay] = tierDelays[opponent?.tier || "beginner"] || [2000, 4000];
     const aiReactionTime = minDelay + Math.random() * (maxDelay - minDelay);
-    
+
     // Set up AI's attempt to claim question
     crossfireRaceTimeoutRef.current = setTimeout(() => {
       setCrossfireRaceWinner("opponent");
@@ -593,7 +586,7 @@ export default function Debate() {
   // Evaluate if a crossfire answer is complete
   const evaluateCrossfireAnswer = async (question: string, answer: string) => {
     if (!topic) return true;
-    
+
     setIsEvaluatingAnswer(true);
     try {
       const response = await apiRequest("POST", "/api/debate/crossfire/evaluate", {
@@ -602,7 +595,7 @@ export default function Debate() {
         topic: topic.title,
         context: messages.slice(-4).map(m => `${m.role}: ${m.content}`).join("\n"),
       });
-      
+
       const result = await response.json();
       return result.isComplete;
     } catch (error) {
@@ -624,20 +617,22 @@ export default function Debate() {
   };
 
   // Trigger opponent's regular speech OR first CX question if opponent is questioner
+  // Guard: Don't trigger anything while opponent is thinking, typing, or speaking TTS (prevents timing issues)
+  // Uses both state AND ref checks - ref is synchronous and prevents React batching race conditions
   useEffect(() => {
-    if (!isInitializing && !isLoading && format && currentSpeech && !isDebateComplete) {
+    if (!isInitializing && !isLoading && !isThinking && !typingMessage && !isAudioPlaying && !isDeliveringOpponentSpeechRef.current && format && currentSpeech && !isDebateComplete) {
       const speechToDeliver = currentSpeech;
       const indexToAdvance = currentSpeechIndex;
       const isCxSpeech = speechToDeliver.type === "cross-examination";
       const isCfSpeech = speechToDeliver.type === "crossfire";
       const isOpponentSpeech = !isUserSpeech(speechToDeliver);
-      
+
       // Handle Crossfire: Start a race to see who asks the first question
       if (isCfSpeech && !cxStarted && !crossfireRacing) {
         setCrossfireRacing(true);
         setCrossfireRaceWinner(null);
         setIsTimerRunning(true);
-        
+
         // Calculate AI reaction time based on skill tier
         // Beginner: 2-4 seconds, Intermediate: 1.5-3s, Advanced: 1-2s, Expert: 0.5-1.5s, Master: 0.3-1s
         const tierDelays: Record<string, [number, number]> = {
@@ -649,7 +644,7 @@ export default function Debate() {
         };
         const [minDelay, maxDelay] = tierDelays[opponent?.tier || "beginner"] || [2000, 4000];
         const aiReactionTime = minDelay + Math.random() * (maxDelay - minDelay);
-        
+
         // Set up AI's attempt to claim first question
         crossfireRaceTimeoutRef.current = setTimeout(() => {
           // AI wins the race if user hasn't clicked yet
@@ -657,10 +652,10 @@ export default function Debate() {
             setCrossfireRaceWinner("opponent");
           }
         }, aiReactionTime);
-        
+
         return;
       }
-      
+
       // Handle CX mode: user is questioner - set up CX mode and wait for user to ask
       if (isCxSpeech && !isOpponentSpeech && !cxStarted) {
         setCxStarted(true);
@@ -671,7 +666,7 @@ export default function Debate() {
         // Don't trigger AI - wait for user to ask first question
         return;
       }
-      
+
       // Handle CX mode: opponent is questioner and needs to ask first question
       // Check directly from speech type to avoid race conditions with state
       if (isCxSpeech && isOpponentSpeech && !cxStarted) {
@@ -698,7 +693,7 @@ export default function Debate() {
             });
 
             const data = await response.json();
-            
+
             const opponentMessage: DebateMessage = {
               id: `opponent-cx-${Date.now()}`,
               role: "opponent",
@@ -716,16 +711,17 @@ export default function Debate() {
             setIsLoading(false);
           }
         };
-        
+
         triggerCxQuestion();
         return;
       }
-      
+
       // Handle regular opponent speech (non-CX, non-crossfire)
-      if (isOpponentSpeech && !isCxSpeech && !isCfSpeech) {
+      // Guard against re-triggering while AI is thinking or typing (prevents animation interruption)
+      if (isOpponentSpeech && !isCxSpeech && !isCfSpeech && !isThinking && !typingMessage) {
         const triggerOpponentSpeech = async () => {
           setIsLoading(true);
-          
+
           try {
             const response = await apiRequest("POST", "/api/debate/message", {
               message: null,
@@ -742,7 +738,7 @@ export default function Debate() {
             });
 
             const data = await response.json();
-            
+
             const opponentMessage: DebateMessage = {
               id: `opponent-${Date.now()}`,
               role: "opponent",
@@ -752,21 +748,22 @@ export default function Debate() {
             };
 
             // Add message and start typing simulation (non-blocking)
-            enqueueAiMessage(opponentMessage, "regular");
-            
-            // Advance to next speech immediately (don't block on typing animation)
-            setCurrentSpeechIndex(indexToAdvance + 1);
+            // Keep isLoading true until typing completes to prevent CX/crossfire from triggering early
+            enqueueAiMessage(opponentMessage, "regular", () => {
+              // Advance to next speech only after typing/speaking is complete
+              setCurrentSpeechIndex(indexToAdvance + 1);
+              setIsLoading(false);
+            });
           } catch (error) {
             console.error("Error getting opponent speech:", error);
-          } finally {
             setIsLoading(false);
           }
         };
-        
+
         triggerOpponentSpeech();
       }
     }
-  }, [isInitializing, isLoading, currentSpeechIndex, isDebateComplete, cxStarted]);
+  }, [isInitializing, isLoading, isThinking, typingMessage, currentSpeechIndex, isDebateComplete, cxStarted]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -790,7 +787,7 @@ export default function Debate() {
         error: speechRecognition.error
       });
     }
-    
+
     // Only auto-start when:
     // 1. Voice mode is enabled
     // 2. Speech recognition is ready
@@ -799,17 +796,17 @@ export default function Debate() {
     // 5. It's the user's turn
     // 6. Not loading/complete/audio playing
     // 7. No error present
-    const shouldAutoStart = 
-      voiceMode && 
-      speechRecognition.isReady && 
-      voiceState === "idle" && 
+    const shouldAutoStart =
+      voiceMode &&
+      speechRecognition.isReady &&
+      voiceState === "idle" &&
       speechRecognition.state === "idle" &&
-      isUserTurn && 
-      !isLoading && 
-      !isDebateComplete && 
-      !isAudioPlaying && 
+      isUserTurn &&
+      !isLoading &&
+      !isDebateComplete &&
+      !isAudioPlaying &&
       !speechRecognition.error;
-    
+
     if (shouldAutoStart) {
       console.log("[VoiceDebate] Auto-starting speech recognition");
       speechRecognition.startListening();
@@ -847,17 +844,17 @@ export default function Debate() {
       if (isCxMode) {
         if (cxQuestioner === null && isCrossfire) {
           // Crossfire mode with race system
-          
+
           if (crossfirePhase === "asking" && crossfireQuestionAsker === "user") {
             // User is asking their question - clear the timeout
             if (crossfireQuestionTimeoutRef.current) {
               clearTimeout(crossfireQuestionTimeoutRef.current);
               crossfireQuestionTimeoutRef.current = null;
             }
-            
+
             setCrossfireCurrentQuestion(userMessage.content);
             setCrossfirePhase("answering"); // Now waiting for AI's answer
-            
+
             const response = await apiRequest("POST", "/api/debate/message", {
               message: userMessage.content,
               debateId,
@@ -874,7 +871,7 @@ export default function Debate() {
             });
 
             const data = await response.json();
-            
+
             const opponentMessage: DebateMessage = {
               id: `opponent-cf-${Date.now()}`,
               role: "opponent",
@@ -885,7 +882,7 @@ export default function Debate() {
 
             enqueueAiMessage(opponentMessage, "crossfire");
             setCxExchangeCount(prev => prev + 1);
-            
+
             // Evaluate if answer is complete, then start new race
             const isComplete = await evaluateCrossfireAnswer(userMessage.content, data.response);
             if (isComplete && speechTimeRemaining > 0) {
@@ -912,7 +909,7 @@ export default function Debate() {
             });
 
             const data = await response.json();
-            
+
             // If the user asked a question or evaded, AI calls them out and we stay in answering phase
             // If user properly answered, we move to new race
             if (data.isProperAnswer) {
@@ -938,7 +935,7 @@ export default function Debate() {
         } else if (cxQuestioner === "opponent") {
           // User is answering opponent's question - check if they're actually answering or trying to ask
           setCxAwaitingResponse(false);
-          
+
           // First check if user is trying to ask a question instead of answering
           const checkResponse = await apiRequest("POST", "/api/debate/message", {
             message: userMessage.content,
@@ -956,7 +953,7 @@ export default function Debate() {
           });
 
           const checkData = await checkResponse.json();
-          
+
           if (checkData.isProperAnswer) {
             // User properly answered - AI asks follow-up
             const response = await apiRequest("POST", "/api/debate/message", {
@@ -975,7 +972,7 @@ export default function Debate() {
             });
 
             const data = await response.json();
-            
+
             const opponentMessage: DebateMessage = {
               id: `opponent-cx-${Date.now()}`,
               role: "opponent",
@@ -1018,7 +1015,7 @@ export default function Debate() {
           });
 
           const data = await response.json();
-          
+
           const opponentMessage: DebateMessage = {
             id: `opponent-cx-${Date.now()}`,
             role: "opponent",
@@ -1057,7 +1054,7 @@ export default function Debate() {
           });
 
           const data = await response.json();
-          
+
           const opponentMessage: DebateMessage = {
             id: `opponent-${Date.now()}`,
             role: "opponent",
@@ -1066,8 +1063,10 @@ export default function Debate() {
             speechName: nextSpeech.name,
           };
 
-          enqueueAiMessage(opponentMessage, "regular");
-          setCurrentSpeechIndex(newSpeechIndex + 1);
+          // Advance speech index only AFTER typing completes
+          enqueueAiMessage(opponentMessage, "regular", () => {
+            setCurrentSpeechIndex(newSpeechIndex + 1);
+          });
         }
       }
     } catch (error) {
@@ -1080,10 +1079,10 @@ export default function Debate() {
   // Handle advancing from CX to next speech when user clicks End CX
   const handleEndCx = async () => {
     if (!currentSpeech) return;
-    
+
     setIsTimerRunning(false);
     setIsLoading(true);
-    
+
     try {
       // Generate a brief CX summary/transition message
       const response = await apiRequest("POST", "/api/debate/message", {
@@ -1103,7 +1102,7 @@ export default function Debate() {
       });
 
       const data = await response.json();
-      
+
       if (data.response) {
         const transitionMessage: DebateMessage = {
           id: `system-${Date.now()}`,
@@ -1150,10 +1149,10 @@ export default function Debate() {
       });
 
       const result = await response.json();
-      
+
       setDebateResult(result);
       recordDebate(result.won, result.pointsChange);
-      
+
       if (debateId && opponent && topic && format) {
         addDebateToHistory({
           id: debateId,
@@ -1166,7 +1165,7 @@ export default function Debate() {
           side,
         });
       }
-      
+
       setShowResult(true);
     } catch (error) {
       console.error("Error evaluating debate:", error);
@@ -1179,7 +1178,7 @@ export default function Debate() {
       };
       setDebateResult(mockResult);
       recordDebate(mockResult.won, mockResult.pointsChange);
-      
+
       if (debateId && opponent && topic && format) {
         addDebateToHistory({
           id: debateId,
@@ -1192,7 +1191,7 @@ export default function Debate() {
           side,
         });
       }
-      
+
       setShowResult(true);
     } finally {
       setIsEvaluating(false);
@@ -1207,7 +1206,7 @@ export default function Debate() {
       handleSendMessage();
     }
   };
-  
+
   // Wire up voice send ref after handleSendMessage is defined
   useEffect(() => {
     voiceSendRef.current = (transcript: string) => {
@@ -1223,12 +1222,12 @@ export default function Debate() {
   useEffect(() => {
     if (voiceMode) {
       const recognitionState = speechRecognition.state;
-      
+
       // When recognition is actively listening, set voice state to listening
       if (recognitionState === "listening" && voiceState === "idle") {
         console.log("[VoiceDebate] Recognition started listening, updating voice state");
         setVoiceState("listening");
-      } 
+      }
       // When recognition stops (idle) and we were listening, go back to idle
       else if (recognitionState === "idle" && voiceState === "listening") {
         console.log("[VoiceDebate] Recognition stopped, updating voice state to idle");
@@ -1241,14 +1240,14 @@ export default function Debate() {
       }
     }
   }, [voiceMode, speechRecognition.state, voiceState]);
-  
+
   // Ensure flow sheet is always visible in voice mode
   useEffect(() => {
     if (voiceMode && !showFlowSheet) {
       setShowFlowSheet(true);
     }
   }, [voiceMode, showFlowSheet]);
-  
+
   // Reset voice state when loading finishes (after sending)
   useEffect(() => {
     if (!isLoading && voiceState === "sending") {
@@ -1288,9 +1287,9 @@ export default function Debate() {
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setLocation("/practice")}
                 data-testid="button-back"
               >
@@ -1316,19 +1315,19 @@ export default function Debate() {
                 <p className="text-xs text-muted-foreground mb-1">Speech</p>
                 <p className="font-mono font-bold">{Math.min(currentSpeechIndex + 1, format.speeches.length)}/{format.speeches.length}</p>
               </div>
-              
+
               {currentSpeech && !isInPrepTime && (
                 <div className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-lg",
-                  speechTimeRemaining < 60 ? "bg-destructive/10 text-destructive animate-pulse" : 
-                  speechTimeRemaining < 120 ? "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400" : "bg-muted"
+                  speechTimeRemaining < 60 ? "bg-destructive/10 text-destructive animate-pulse" :
+                    speechTimeRemaining < 120 ? "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400" : "bg-muted"
                 )}>
                   <Clock className="h-4 w-4" />
                   <span className="font-mono font-bold text-lg">{formatTime(speechTimeRemaining)}</span>
                   <span className="text-xs text-muted-foreground">Speech</span>
                 </div>
               )}
-              
+
               {isInPrepTime && (
                 <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-tier-intermediate/20 border border-tier-intermediate/40 animate-pulse">
                   <Timer className="h-4 w-4 text-tier-intermediate" />
@@ -1336,10 +1335,10 @@ export default function Debate() {
                   <span className="text-xs text-muted-foreground">Prep</span>
                 </div>
               )}
-              
+
               {!isInPrepTime && prepTimeRemaining > 0 && isUserTurn && (
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={handleRequestPrepTime}
                   className="border-tier-intermediate/50 text-tier-intermediate hover:bg-tier-intermediate/10"
@@ -1351,8 +1350,8 @@ export default function Debate() {
               )}
 
               {!isDebateComplete && messages.length >= 2 && (
-                <Button 
-                  onClick={handleEndDebate} 
+                <Button
+                  onClick={handleEndDebate}
                   disabled={isEvaluating}
                   data-testid="button-end-debate"
                 >
@@ -1386,7 +1385,7 @@ export default function Debate() {
                     <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <h3 className="text-lg font-semibold mb-2">Ready to Debate</h3>
                     <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                      You are arguing <strong>{side === "pro" ? "FOR (Affirmative)" : "AGAINST (Negative)"}</strong> the topic: 
+                      You are arguing <strong>{side === "pro" ? "FOR (Affirmative)" : "AGAINST (Negative)"}</strong> the topic:
                       <br />
                       <em>"{topic.title}"</em>
                     </p>
@@ -1394,13 +1393,13 @@ export default function Debate() {
                       <Badge variant="outline" className={cn(
                         "gap-1",
                         judgeType === "lay" ? "border-tier-beginner text-tier-beginner" :
-                        judgeType === "traditional" ? "border-tier-intermediate text-tier-intermediate" :
-                        "border-tier-advanced text-tier-advanced"
+                          judgeType === "traditional" ? "border-tier-intermediate text-tier-intermediate" :
+                            "border-tier-advanced text-tier-advanced"
                       )}>
                         <Gavel className="h-3 w-3" />
                         {judgeType === "lay" ? "Lay Judge" :
-                         judgeType === "traditional" ? "Traditional Judge" :
-                         "Circuit Judge"}
+                          judgeType === "traditional" ? "Traditional Judge" :
+                            "Circuit Judge"}
                       </Badge>
                     </div>
                     <div className="mt-4 p-3 bg-muted/50 rounded-lg inline-block">
@@ -1417,7 +1416,7 @@ export default function Debate() {
                 {messages.map((message) => {
                   const isTypingThisMessage = typingMessage?.messageId === message.id && typingMessage?.isTyping;
                   const hasCompletedTyping = message.role === "opponent" && completedTypingIds.has(message.id);
-                  
+
                   // Determine visible content:
                   // - User messages: always show full content
                   // - Opponent messages currently typing: show sliding window (disappearing effect)
@@ -1425,7 +1424,7 @@ export default function Debate() {
                   // - Opponent messages not typed yet: show full content
                   let visibleContent: string;
                   let isCollapsed = false;
-                  
+
                   if (message.role === "user") {
                     visibleContent = message.content;
                   } else if (isTypingThisMessage) {
@@ -1438,7 +1437,7 @@ export default function Debate() {
                   } else {
                     visibleContent = message.content;
                   }
-                  
+
                   return (
                     <div
                       key={message.id}
@@ -1452,7 +1451,7 @@ export default function Debate() {
                           <Bot className="h-5 w-5 text-muted-foreground" />
                         </div>
                       )}
-                      
+
                       <div
                         className={cn(
                           "max-w-[80%] rounded-lg px-4 py-3",
@@ -1510,7 +1509,7 @@ export default function Debate() {
             </ScrollArea>
           </div>
         </div>
-        
+
         {showFlowSheet && (
           <div className={cn(
             "border-l bg-background/95 backdrop-blur-sm flex flex-col flex-shrink-0",
@@ -1526,9 +1525,9 @@ export default function Debate() {
                   </Badge>
                 )}
               </div>
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 className="h-7 w-7"
                 onClick={() => setShowFlowSheet(false)}
                 data-testid="button-hide-flow"
@@ -1539,12 +1538,12 @@ export default function Debate() {
             <ScrollArea className="flex-1 p-3">
               <div className="space-y-3">
                 {format?.speeches.slice(0, currentSpeechIndex + 1).map((speech, idx) => (
-                  <div 
+                  <div
                     key={speech.id}
                     className={cn(
                       "p-2 rounded-lg border text-xs",
-                      speech.speaker === "aff" 
-                        ? "bg-tier-beginner/5 border-tier-beginner/20" 
+                      speech.speaker === "aff"
+                        ? "bg-tier-beginner/5 border-tier-beginner/20"
                         : "bg-destructive/5 border-destructive/20"
                     )}
                   >
@@ -1561,8 +1560,8 @@ export default function Debate() {
                       onChange={(e) => {
                         const existing = flowEntries.find(entry => entry.id === speech.id);
                         if (existing) {
-                          setFlowEntries(prev => prev.map(entry => 
-                            entry.id === speech.id 
+                          setFlowEntries(prev => prev.map(entry =>
+                            entry.id === speech.id
                               ? { ...entry, notes: e.target.value }
                               : entry
                           ));
@@ -1583,8 +1582,8 @@ export default function Debate() {
                   <div className="text-center py-8 text-muted-foreground">
                     <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
                     <p className="text-xs">
-                      {voiceMode 
-                        ? "Take notes while your opponent speaks - you won't see their text until they finish!" 
+                      {voiceMode
+                        ? "Take notes while your opponent speaks - you won't see their text until they finish!"
                         : "Flow notes will appear here as the debate progresses"}
                     </p>
                   </div>
@@ -1593,7 +1592,7 @@ export default function Debate() {
             </ScrollArea>
           </div>
         )}
-        
+
         {!showFlowSheet && (
           <Button
             variant="outline"
@@ -1609,7 +1608,7 @@ export default function Debate() {
 
       {!isDebateComplete && currentSpeech && (
         <div className="border-t bg-background">
-          {crossfireRacing ? (
+          {crossfireRacing && !typingMessage ? (
             <div className="p-4">
               <div className="container mx-auto max-w-4xl">
                 <div className="p-6 rounded-lg bg-purple-500/10 border border-purple-500/30 text-center">
@@ -1625,9 +1624,9 @@ export default function Debate() {
                       className="bg-purple-500 hover:bg-purple-600 text-white px-8 py-6 text-lg animate-pulse"
                       data-testid="button-claim-first-question"
                     >
-                      {crossfireRaceWinner === "user" ? "You got it!" : 
-                       crossfireRaceWinner === "opponent" ? `${opponent?.name} was faster!` :
-                       "Claim First Question!"}
+                      {crossfireRaceWinner === "user" ? "You got it!" :
+                        crossfireRaceWinner === "opponent" ? `${opponent?.name} was faster!` :
+                          "Claim First Question!"}
                     </Button>
                   </div>
                   <div className="mt-4 flex items-center justify-center gap-2">
@@ -1645,39 +1644,39 @@ export default function Debate() {
                 <div className={cn(
                   "mb-3 p-3 rounded-lg flex items-center justify-between gap-4",
                   isCxMode ? "bg-purple-500/10 border border-purple-500/30" :
-                  isInPrepTime ? "bg-tier-intermediate/10 border border-tier-intermediate/30" :
-                  speechTimeRemaining <= 0 ? "bg-destructive/10 border border-destructive/30" :
-                  "bg-tier-beginner/10 border border-tier-beginner/30"
+                    isInPrepTime ? "bg-tier-intermediate/10 border border-tier-intermediate/30" :
+                      speechTimeRemaining <= 0 ? "bg-destructive/10 border border-destructive/30" :
+                        "bg-tier-beginner/10 border border-tier-beginner/30"
                 )}>
                   <div className="flex items-center gap-3">
                     <div className={cn(
                       "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
                       isCxMode ? "bg-purple-500 text-white" :
-                      isInPrepTime ? "bg-tier-intermediate text-white" :
-                      speechTimeRemaining <= 0 ? "bg-destructive text-white" :
-                      "bg-tier-beginner text-white"
+                        isInPrepTime ? "bg-tier-intermediate text-white" :
+                          speechTimeRemaining <= 0 ? "bg-destructive text-white" :
+                            "bg-tier-beginner text-white"
                     )}>
                       {currentSpeechIndex + 1}
                     </div>
                     <div>
                       <p className="font-medium text-sm">{currentSpeech.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {isCxMode 
-                          ? (cxQuestioner === null 
-                              ? "Crossfire - both sides can ask and answer questions"
-                              : cxQuestioner === "user" 
-                              ? "You're the questioner - ask one question at a time" 
+                        {isCxMode
+                          ? (cxQuestioner === null
+                            ? "Crossfire - both sides can ask and answer questions"
+                            : cxQuestioner === "user"
+                              ? "You're the questioner - ask one question at a time"
                               : "Answer the question, then wait for the next one")
-                          : isInPrepTime ? "Prep time - speech timer paused" 
-                          : speechTimeRemaining <= 0 ? "Time expired! Submit now or use prep time" 
-                          : currentSpeech.description}
+                          : isInPrepTime ? "Prep time - speech timer paused"
+                            : speechTimeRemaining <= 0 ? "Time expired! Submit now or use prep time"
+                              : currentSpeech.description}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     {isCxMode && (
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="outline"
                         onClick={handleEndCx}
                         disabled={isLoading}
@@ -1688,8 +1687,8 @@ export default function Debate() {
                       </Button>
                     )}
                     {isInPrepTime && (
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         onClick={handleResumeSpeech}
                         className="bg-tier-intermediate hover:bg-tier-intermediate/90"
                         data-testid="button-resume-speech"
@@ -1717,10 +1716,10 @@ export default function Debate() {
                       // Block if user is asking but in answering phase (waiting for AI response)
                       (crossfirePhase === "answering" && crossfireQuestionAsker === "user" && isLoading)
                     );
-                    
-                    const inputDisabled = isLoading || isCrossfireInputBlocked || 
+
+                    const inputDisabled = isLoading || isCrossfireInputBlocked ||
                       (speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining <= 0 && !isCxMode);
-                    
+
                     const getPlaceholder = () => {
                       if (isCrossfire && isCxMode) {
                         if (crossfireRacing) return "Race to ask the next question...";
@@ -1744,7 +1743,7 @@ export default function Debate() {
                       if (isInPrepTime) return "Take your time to prepare your argument...";
                       return `Your ${currentSpeech.name}...`;
                     };
-                    
+
                     return (
                       voiceMode ? (
                         <div className="flex-1 flex flex-col items-center justify-center gap-4 py-4">
@@ -1753,8 +1752,8 @@ export default function Debate() {
                               <div className="flex items-center gap-3">
                                 <div className="w-4 h-4 rounded-full bg-primary animate-pulse" />
                                 <p className="text-lg font-medium text-primary">
-                                  {speechRecognition.isListening ? "Listening..." : 
-                                   speechRecognition.error ? "Microphone Error" : "Preparing Microphone..."}
+                                  {speechRecognition.isListening ? "Listening..." :
+                                    speechRecognition.error ? "Microphone Error" : "Preparing Microphone..."}
                                 </p>
                               </div>
                               {speechRecognition.error && (
@@ -1768,7 +1767,7 @@ export default function Debate() {
                                 </p>
                               )}
                               <p className="text-sm text-muted-foreground text-center max-w-md">
-                                {speechRecognition.transcript || speechRecognition.interimTranscript 
+                                {speechRecognition.transcript || speechRecognition.interimTranscript
                                   ? (speechRecognition.transcript + " " + speechRecognition.interimTranscript).trim()
                                   : "Speak your argument. It will send automatically when you pause."}
                               </p>
@@ -1857,35 +1856,35 @@ export default function Debate() {
                                   <div className="flex items-center gap-2 text-destructive">
                                     <Mic className="h-5 w-5" />
                                     <p className="font-medium" data-testid="text-microphone-error">
-                                      {speechRecognition.error === "microphone-timeout" 
-                                        ? "Microphone failed to start" 
+                                      {speechRecognition.error === "microphone-timeout"
+                                        ? "Microphone failed to start"
                                         : speechRecognition.error === "not-allowed"
-                                        ? "Microphone access denied"
-                                        : speechRecognition.error === "network-error"
-                                        ? "Connection error"
-                                        : speechRecognition.error === "start-failed"
-                                        ? "Failed to start microphone"
-                                        : speechRecognition.error === "no-microphone"
-                                        ? "No microphone found"
-                                        : speechRecognition.error === "service-not-allowed"
-                                        ? "Speech service unavailable"
-                                        : "Microphone error"}
+                                          ? "Microphone access denied"
+                                          : speechRecognition.error === "network-error"
+                                            ? "Connection error"
+                                            : speechRecognition.error === "start-failed"
+                                              ? "Failed to start microphone"
+                                              : speechRecognition.error === "no-microphone"
+                                                ? "No microphone found"
+                                                : speechRecognition.error === "service-not-allowed"
+                                                  ? "Speech service unavailable"
+                                                  : "Microphone error"}
                                     </p>
                                   </div>
                                   <p className="text-sm text-muted-foreground text-center max-w-sm">
                                     {speechRecognition.error === "not-allowed"
                                       ? "Please allow microphone access in your browser settings and try again."
                                       : speechRecognition.error === "network-error"
-                                      ? "Speech recognition requires an internet connection. Please check your network and try again."
-                                      : speechRecognition.error === "microphone-timeout"
-                                      ? "The microphone didn't respond in time. Please check your browser's microphone permissions and try again."
-                                      : speechRecognition.error === "start-failed"
-                                      ? "Something went wrong starting the microphone. Please try again."
-                                      : speechRecognition.error === "no-microphone"
-                                      ? "No microphone was detected. Please connect a microphone and try again."
-                                      : speechRecognition.error === "service-not-allowed"
-                                      ? "The speech recognition service is not available. Try using Chrome or Edge browser."
-                                      : "There was a problem accessing your microphone. Please check your browser permissions."}
+                                        ? "Speech recognition requires an internet connection. Please check your network and try again."
+                                        : speechRecognition.error === "microphone-timeout"
+                                          ? "The microphone didn't respond in time. Please check your browser's microphone permissions and try again."
+                                          : speechRecognition.error === "start-failed"
+                                            ? "Something went wrong starting the microphone. Please try again."
+                                            : speechRecognition.error === "no-microphone"
+                                              ? "No microphone was detected. Please connect a microphone and try again."
+                                              : speechRecognition.error === "service-not-allowed"
+                                                ? "The speech recognition service is not available. Try using Chrome or Edge browser."
+                                                : "There was a problem accessing your microphone. Please check your browser permissions."}
                                   </p>
                                   <div className="flex gap-2">
                                     <Button
@@ -1958,8 +1957,8 @@ export default function Debate() {
                               data-testid="input-message"
                             />
                           </div>
-                          <Button 
-                            onClick={() => handleSendMessage()} 
+                          <Button
+                            onClick={() => handleSendMessage()}
                             disabled={!inputValue.trim() || inputDisabled}
                             className="h-auto"
                             data-testid="button-send"
@@ -1974,8 +1973,8 @@ export default function Debate() {
                 {!voiceMode && (
                   <div className="flex justify-between mt-2 text-xs text-muted-foreground">
                     <span>
-                      {speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining > 0 
-                        ? "Click 'Prep' button above to get more time" 
+                      {speechTimeRemaining <= 0 && !isInPrepTime && prepTimeRemaining > 0
+                        ? "Click 'Prep' button above to get more time"
                         : "Press Enter to send, Shift+Enter for new line"}
                     </span>
                     <span>{inputValue.length} characters</span>
@@ -2069,15 +2068,15 @@ export default function Debate() {
           )}
 
           <DialogFooter className="flex-shrink-0 flex-col sm:flex-row gap-2 pt-2 border-t">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => setLocation("/history")}
               data-testid="button-view-history"
             >
               View History
             </Button>
-            <Button 
+            <Button
               size="sm"
               onClick={() => setLocation("/practice")}
               data-testid="button-debate-again"

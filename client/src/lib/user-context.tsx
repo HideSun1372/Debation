@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { getSkillTier, getTierProgress, SKILL_TIERS, type ExperienceLevel, getPlacementUnit, getAllLessons } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
 import { useAdmin } from "@/hooks/use-admin";
@@ -178,10 +178,24 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const [localUser, setLocalUser] = useState<UserState>(getLocalStorageUser);
 
+  // Track if we were previously authenticated to handle logout correctly
+  const wasAuthenticated = useRef(false);
+
+  // Reset local user state only when auth user logs out (transition from auth to no auth)
+  useEffect(() => {
+    if (isAuthenticated) {
+      wasAuthenticated.current = true;
+    } else if (wasAuthenticated.current && !isAuthenticated && !authUser) {
+      // User logged out
+      setLocalUser(defaultUser);
+      wasAuthenticated.current = false;
+    }
+  }, [isAuthenticated, authUser]);
+
   // Fetch progress from database when authenticated
   const { data: dbProgress, isLoading: isProgressLoading } = useQuery<LessonProgressData>({
-    queryKey: ["/api/progress"],
-    enabled: isAuthenticated && !isAuthLoading,
+    queryKey: ["/api/progress", authUser?.id],
+    enabled: isAuthenticated && !isAuthLoading && !!authUser?.id,
     staleTime: 1000 * 60 * 5,
   });
 
@@ -192,23 +206,44 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/progress", authUser?.id] });
     },
   });
 
-  // Merge auth user data with progress (ensure new fields have defaults)
-  // Also merge local completedLessonIds for optimistic updates before DB refreshes
+  // Fetch debates history from database when authenticated
+  const { data: dbDebates } = useQuery<DebateHistoryItem[]>({
+    queryKey: ["/api/debates"],
+    enabled: isAuthenticated && !isAuthLoading && !!authUser?.id,
+    staleTime: 1000 * 60 * 5,
+    select: (data: any[]) => {
+      return data.map((d: any) => ({
+        id: d.id,
+        date: d.completedAt || d.startedAt,
+        opponentId: d.opponentId,
+        topicId: d.topicId,
+        formatId: d.formatId,
+        result: d.result as "win" | "loss",
+        pointsChange: d.pointsChange || 0,
+        side: d.userSide as "pro" | "con",
+      }));
+    },
+  });
+
+  // Merge auth user data with progress and history
   const mergedProgress: LessonProgressData = dbProgress ? {
     ...defaultLessonProgress,
     ...dbProgress,
     learnXp: Math.max(dbProgress.learnXp ?? 0, localUser.lessonProgress.learnXp),
     learnLevel: Math.max(dbProgress.learnLevel ?? 1, localUser.lessonProgress.learnLevel),
-    // Merge completed lessons from both sources for optimistic updates
     completedLessonIds: Array.from(new Set([
       ...(dbProgress.completedLessonIds || []),
       ...localUser.lessonProgress.completedLessonIds,
     ])),
   } : localUser.lessonProgress;
+
+  const mergedHistory = (isAuthenticated && authUser)
+    ? (dbDebates || []) // If authenticated, trust DB (or empty if loading/empty), never fallback to local
+    : localUser.debateHistory;
 
   const user: UserState = isAuthenticated && authUser ? {
     id: authUser.id,
@@ -217,7 +252,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     totalDebates: authUser.totalDebates,
     wins: authUser.wins,
     losses: authUser.losses,
-    debateHistory: localUser.debateHistory,
+    debateHistory: mergedHistory,
     lessonProgress: mergedProgress,
   } : localUser;
 
@@ -244,6 +279,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const recordDebate = useCallback((won: boolean, pointsChange: number) => {
+    // Invalidate user queries to fetch updated stats from server
+    if (isAuthenticated && authUser?.id) {
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/debates"] });
+    }
+
     setLocalUser((prev) => {
       const newUser = {
         ...prev,
@@ -255,9 +296,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("debate-user", JSON.stringify(newUser));
       return newUser;
     });
-  }, []);
+  }, [isAuthenticated, queryClient]);
 
   const addDebateToHistory = useCallback((debate: DebateHistoryItem) => {
+    if (isAuthenticated && authUser?.id) {
+      queryClient.invalidateQueries({ queryKey: ["/api/debates"] });
+    }
     setLocalUser((prev) => {
       const newUser = {
         ...prev,
@@ -266,7 +310,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("debate-user", JSON.stringify(newUser));
       return newUser;
     });
-  }, []);
+  }, [isAuthenticated, queryClient]);
 
   const getSkillTierName = useCallback(() => {
     const tier = getSkillTier(user.skillPoints);

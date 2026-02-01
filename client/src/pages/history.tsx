@@ -16,45 +16,12 @@ export default function History() {
   const [filter, setFilter] = useState<string>("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const { data: backendDebates, isLoading: isLoadingBackend } = useQuery<Debate[]>({
-    queryKey: ["/api/debates", { userId: user.id }],
-    staleTime: 30000,
+  // UserContext now handles fetching from API and merging with local history
+  const combinedHistory = user.debateHistory.sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return dateB - dateA;
   });
-
-  const localHistory = user.debateHistory || [];
-  
-  const combinedHistory: DebateHistoryItem[] = (() => {
-    const seen = new Set<string>();
-    const combined: DebateHistoryItem[] = [];
-    
-    localHistory.forEach((item) => {
-      seen.add(item.id);
-      combined.push(item);
-    });
-    
-    if (backendDebates) {
-      backendDebates
-        .filter((d) => d.status === "completed" && !seen.has(d.id))
-        .forEach((d) => {
-          combined.push({
-            id: d.id,
-            date: new Date(d.startedAt).toLocaleDateString(),
-            opponentId: d.opponentId,
-            topicId: d.topicId,
-            formatId: d.formatId,
-            result: d.result as "win" | "loss",
-            pointsChange: d.pointsChange || 0,
-            side: d.userSide as "pro" | "con",
-          });
-        });
-    }
-    
-    return combined.sort((a, b) => {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
-      return dateB - dateA;
-    });
-  })();
 
   const filteredHistory = combinedHistory.filter((item) => {
     if (filter === "all") return true;
@@ -69,7 +36,7 @@ export default function History() {
   const totalLosses = combinedHistory.filter((h) => h.result === "loss").length;
   const netPoints = combinedHistory.reduce((acc, h) => acc + h.pointsChange, 0);
 
-  if (isLoadingBackend && localHistory.length === 0) {
+  if (!user) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="mb-8">
@@ -100,7 +67,7 @@ export default function History() {
             <HistoryIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">No debate history yet</h3>
             <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              Once you complete your first debate, you'll be able to see all your past matches here, 
+              Once you complete your first debate, you'll be able to see all your past matches here,
               including opponents, topics, results, and points changes.
             </p>
             <Link href="/practice">
@@ -182,13 +149,19 @@ export default function History() {
 
                       return (
                         <>
-                          <TableRow 
+                          <TableRow
                             key={item.id}
                             className="cursor-pointer"
                             onClick={() => setExpandedId(isExpanded ? null : item.id)}
                             data-testid={`row-debate-${item.id}`}
                           >
-                            <TableCell className="font-medium">{item.date}</TableCell>
+                            <TableCell className="font-medium">
+                              {new Date(item.date).toLocaleDateString("en-US", {
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
+                            </TableCell>
                             <TableCell>{opponent?.name || "Unknown"}</TableCell>
                             <TableCell className="hidden md:table-cell">
                               {format?.name || "Unknown"}
@@ -197,7 +170,7 @@ export default function History() {
                               {topic?.title || "Unknown"}
                             </TableCell>
                             <TableCell>
-                              <Badge 
+                              <Badge
                                 variant={item.result === "win" ? "default" : "destructive"}
                                 className={item.result === "win" ? "bg-tier-beginner" : ""}
                               >
@@ -205,9 +178,8 @@ export default function History() {
                               </Badge>
                             </TableCell>
                             <TableCell className="text-right">
-                              <span className={`flex items-center justify-end gap-1 font-mono ${
-                                item.pointsChange > 0 ? "text-tier-beginner" : "text-destructive"
-                              }`}>
+                              <span className={`flex items-center justify-end gap-1 font-mono ${item.pointsChange > 0 ? "text-tier-beginner" : "text-destructive"
+                                }`}>
                                 {item.pointsChange > 0 ? (
                                   <TrendingUp className="h-4 w-4" />
                                 ) : (

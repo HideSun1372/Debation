@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
 // State machine states for speech recognition
-type RecognitionState = 
+type RecognitionState =
   | "idle"           // Not listening, ready to start
   | "starting"       // Called start(), waiting for onstart
   | "listening"      // Active and listening
@@ -78,13 +78,13 @@ declare global {
 }
 
 export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}): UseSpeechRecognitionReturn {
-  const { 
-    silenceTimeout = 1500, 
-    onSpeechEnd, 
+  const {
+    silenceTimeout = 1500,
+    onSpeechEnd,
     autoMode = false,
     startupTimeout = 3000 // 3 second timeout for microphone to start
   } = options;
-  
+
   // Core state
   const [state, setState] = useState<RecognitionState>("idle");
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -92,7 +92,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isReady, setIsReady] = useState(false);
-  
+
   // Refs for mutable state
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -103,13 +103,15 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   const stateRef = useRef<RecognitionState>("idle");
   const instanceIdRef = useRef(0);
   const lastStartAttemptRef = useRef(0);
+  const networkRetryCountRef = useRef(0);
+  const maxNetworkRetries = 3;
 
   // Keep stateRef in sync
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
 
-  const isSupported = typeof window !== "undefined" && 
+  const isSupported = typeof window !== "undefined" &&
     ("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
 
   // Cleanup all timers
@@ -160,7 +162,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   const handleStartupTimeout = useCallback(() => {
     if (stateRef.current === "starting") {
       console.error("[SpeechRecognition] Startup timeout - microphone failed to start within", startupTimeout, "ms");
-      
+
       // Abort any pending recognition
       if (recognitionRef.current) {
         try {
@@ -169,7 +171,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
           // Ignore abort errors
         }
       }
-      
+
       setError("microphone-timeout");
       setState("error");
     }
@@ -195,15 +197,18 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
         console.log("[SpeechRecognition] Ignoring onstart from old instance");
         return;
       }
-      
+
       console.log("[SpeechRecognition] Started successfully");
-      
+
       // Clear startup timeout - we started successfully
       if (startupTimerRef.current) {
         clearTimeout(startupTimerRef.current);
         startupTimerRef.current = null;
       }
-      
+
+      // Reset network retry counter on successful start
+      networkRetryCountRef.current = 0;
+
       setState("listening");
       setError(null);
       hasSpokenRef.current = false;
@@ -215,7 +220,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
     recognition.onresult = (event: ISpeechRecognitionEvent) => {
       if (instanceIdRef.current !== currentInstanceId) return;
-      
+
       let finalTranscript = "";
       let currentInterim = "";
 
@@ -256,17 +261,17 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
         console.log("[SpeechRecognition] Ignoring error from old instance:", event.error);
         return;
       }
-      
+
       console.error("[SpeechRecognition] Error:", event.error, event.message || "");
-      
+
       // Clear all timers on error
       clearAllTimers();
-      
+
       // Handle "no-speech" - this is not a real error, just continue
       if (event.error === "no-speech") {
         return;
       }
-      
+
       // Handle "aborted" - this is usually triggered by us, don't overwrite existing errors
       if (event.error === "aborted") {
         // Only set error state if we don't already have one
@@ -275,7 +280,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
         }
         return;
       }
-      
+
       // Map error types to user-friendly errors
       let errorType: string;
       switch (event.error) {
@@ -284,6 +289,30 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
           errorType = "not-allowed";
           break;
         case "network":
+          // Auto-retry on network errors up to maxNetworkRetries times
+          if (networkRetryCountRef.current < maxNetworkRetries) {
+            networkRetryCountRef.current++;
+            console.log(`[SpeechRecognition] Network error, retrying (${networkRetryCountRef.current}/${maxNetworkRetries})...`);
+
+            // Create fresh instance and retry after backoff
+            const backoffMs = Math.min(1000 * Math.pow(2, networkRetryCountRef.current - 1), 4000);
+            setTimeout(() => {
+              if (stateRef.current === "error" || stateRef.current === "idle") {
+                recognitionRef.current = createRecognitionInstance();
+                setState("starting");
+                try {
+                  recognitionRef.current?.start();
+                } catch (e) {
+                  console.error("[SpeechRecognition] Retry failed:", e);
+                  setError("network-error");
+                  setState("error");
+                }
+              }
+            }, backoffMs);
+
+            setState("idle"); // Temporarily idle while retrying
+            return;
+          }
           errorType = "network-error";
           break;
         case "audio-capture":
@@ -295,7 +324,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
         default:
           errorType = event.error || "unknown-error";
       }
-      
+
       setError(errorType);
       setState("error");
       setIsSpeaking(false);
@@ -306,12 +335,12 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
         console.log("[SpeechRecognition] Ignoring onend from old instance");
         return;
       }
-      
+
       console.log("[SpeechRecognition] Ended");
-      
+
       // Clear all timers
       clearAllTimers();
-      
+
       // Finalize any interim transcript
       setInterimTranscript((prevInterim) => {
         if (prevInterim.trim()) {
@@ -323,9 +352,9 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
         }
         return "";
       });
-      
+
       setIsSpeaking(false);
-      
+
       // Only transition to idle if we're not already in error state
       if (stateRef.current !== "error") {
         setState("idle");
@@ -375,7 +404,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
 
     // Clear any previous error
     setError(null);
-    
+
     // Reset transcript
     setTranscript("");
     setInterimTranscript("");
@@ -406,16 +435,16 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
     } catch (e: unknown) {
       console.error("[SpeechRecognition] Failed to start:", e);
       clearAllTimers();
-      
+
       const errorMessage = e instanceof Error ? e.message : String(e);
-      
+
       // Handle "already started" case
       if (errorMessage.includes("already started")) {
         console.log("[SpeechRecognition] Already started, treating as listening");
         setState("listening");
         return;
       }
-      
+
       // Create fresh instance for next attempt
       recognitionRef.current = createRecognitionInstance();
       setError("start-failed");
@@ -426,9 +455,9 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   // Stop listening
   const stopListening = useCallback(() => {
     console.log("[SpeechRecognition] Stopping...");
-    
+
     clearAllTimers();
-    
+
     if (recognitionRef.current && (stateRef.current === "listening" || stateRef.current === "starting")) {
       setState("stopping");
       try {
