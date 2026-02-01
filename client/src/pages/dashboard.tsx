@@ -99,22 +99,7 @@ export default function Dashboard() {
                 </Card>
 
 
-                {/* Subscription Status */}
-                <Card className="mb-8 border-primary/20 bg-primary/5">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <div>
-                            <CardTitle className="text-xl">Subscription</CardTitle>
-                            <CardDescription>
-                                {user.subscriptionTier === "pro" ? "You are on the Pro Plan" : "Upgrade to unlock all features"}
-                            </CardDescription>
-                        </div>
-                        <Link href="/pricing">
-                            <Button variant={user.subscriptionTier === "pro" ? "outline" : "default"}>
-                                {user.subscriptionTier === "pro" ? "Manage Subscription" : "Upgrade to Pro"}
-                            </Button>
-                        </Link>
-                    </CardHeader>
-                </Card>
+
                 <h2 className="text-2xl font-bold mb-4">Quick Access</h2>
                 <div className="grid md:grid-cols-2 gap-4 mb-8">
                     {features.map((feature) => {

@@ -101,9 +101,6 @@ export interface UserState {
   losses: number;
   debateHistory: DebateHistoryItem[];
   lessonProgress: LessonProgressData;
-  subscriptionTier?: "free" | "pro";
-  subscriptionStatus?: string;
-  stripeCustomerId?: string | null;
 }
 
 interface UserContextType {
@@ -147,7 +144,6 @@ const defaultUser: UserState = {
   losses: 0,
   debateHistory: [],
   lessonProgress: defaultLessonProgress,
-  subscriptionTier: "free",
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -223,9 +219,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     losses: authUser.losses,
     debateHistory: localUser.debateHistory,
     lessonProgress: mergedProgress,
-    subscriptionTier: (authUser.subscriptionTier as "free" | "pro") || "free",
-    subscriptionStatus: authUser.subscriptionStatus || "inactive",
-    stripeCustomerId: authUser.stripeCustomerId,
   } : localUser;
 
   const saveLocalUser = useCallback((newUser: UserState) => {

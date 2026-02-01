@@ -1,35 +1,9 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Loader2 } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
-import { apiRequest } from "@/lib/queryClient";
+import { Check } from "lucide-react";
 import { Navbar } from "@/components/navbar";
-import { useState } from "react";
-import { useLocation } from "wouter";
 
 export default function Pricing() {
-    const { user } = useAuth();
-    const [isLoading, setIsLoading] = useState(false);
-    const [location, setLocation] = useLocation();
-
-    const handleSubscribe = async () => {
-        try {
-            setIsLoading(true);
-            const res = await apiRequest("POST", "/api/create-checkout-session", {});
-            const data = await res.json();
-            if (data.url) {
-                window.location.href = data.url;
-            }
-        } catch (error) {
-            console.error("Failed to start checkout:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const currentTier = user?.subscriptionTier || "free";
-    const isPro = currentTier === "pro";
-
     return (
         <div className="min-h-screen bg-background">
             <Navbar />
@@ -112,20 +86,9 @@ export default function Pricing() {
                             </ul>
                         </CardContent>
                         <CardFooter>
-                            {isPro ? (
-                                <Button className="w-full" variant="secondary" disabled>
-                                    Active
-                                </Button>
-                            ) : (
-                                <Button
-                                    className="w-full"
-                                    onClick={handleSubscribe}
-                                    disabled={isLoading}
-                                >
-                                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Upgrade to Pro
-                                </Button>
-                            )}
+                            <Button className="w-full" disabled>
+                                Coming Soon
+                            </Button>
                         </CardFooter>
                     </Card>
                 </div>
