@@ -7,8 +7,11 @@ import { createServer } from "http";
 
 const app = express();
 app.use(cors({
-  origin: 'https://debation.vercel.app', // Replace with your actual Vercel URL
-  credentials: true
+  origin: 'https://debation.vercel.app', // Replace with YOUR actual Vercel URL
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['set-cookie']
 }));
 const httpServer = createServer(app);
 

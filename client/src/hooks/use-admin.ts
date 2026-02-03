@@ -13,7 +13,7 @@ export function useAdmin() {
   const { data, isLoading } = useQuery<AdminStatus>({
     queryKey: ["/api/auth/admin", user?.id],
     queryFn: async () => {
-      const res = await fetch(apiUrl("/api/auth/admin"));
+      const res = await fetch(apiUrl("/api/auth/admin"), { credentials: "include" });
       if (!res.ok) throw new Error("Failed to fetch admin status");
       return res.json();
     },
