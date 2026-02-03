@@ -37,6 +37,26 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
             },
             {
                 type: "content",
+                title: "Types of Special Pleading",
+                content: "Special pleading takes many forms:\n\n**Personal Exception:**\n'The rules apply to everyone else, but I'm special.'\n\n**Group Exception:**\n'That criticism applies to other groups, but not to ours.'\n\n**Situational Exception:**\n'Normally I'd agree, but this situation is different.' [Without explaining  how.]\n\n**Double Standard:**\n'It's wrong when they do it, but acceptable when we do it.'\n\n**The Common Thread:**\nAll versions claim exemption without principled justification.\n\n**Detection:**\nAsk: 'What specifically makes this case different?' If there's no good answer, it's special pleading.",
+                keyPoints: [
+                    "Personal, group, and situational exceptions",
+                    "Double standards for self vs. others",
+                    "Ask what specifically makes the case different",
+                ],
+            },
+            {
+                type: "content",
+                title: "Special Pleading in Debate",
+                content: "Watch for this fallacy in debates:\n\n**Standard Shifting:**\n'Their evidence needs to be peer-reviewed, but our anecdotes are fine.'\n\n**Evidence Double Standards:**\n'Their source is biased, but ours with the same conflict of interest is reliable.'\n\n**Logic Double Standards:**\n'Their correlation doesn't prove causation, but ours does.'\n\n**Calling It Out:**\n'They're applying different standards to their case than to ours. That's special pleading. Either the standard applies universally or they need to explain the relevant distinction.'\n\n**Testing Yourself:**\nBefore criticizing opponent evidence or logic, ask: 'Would I accept this criticism if applied to my own arguments?'",
+                keyPoints: [
+                    "Standard shifting between sides is special pleading",
+                    "Call it out explicitly in debate",
+                    "Test your own criticisms for consistency",
+                ],
+            },
+            {
+                type: "content",
                 title: "Responding to Special Pleading",
                 content: "Demand consistency:\n\n**Ask for Justification:**\n'You're claiming an exception. What makes your case different from others where this principle applies?'\n\n**Apply Their Standard:**\n'If we applied your standard consistently, it would also mean [consequence you'd reject]. Why does it apply there but not here?'\n\n**Highlight Inconsistency:**\n'You've criticized opponents for X while doing X yourself. That's special pleading.'\n\n**Demand Principles:**\n'What's your principle for when this rule applies? It can't just be \"when it helps me.\"'\n\n**Mirror:**\n'If I claimed the same exception as you, would you accept it? If not, why should we accept it from you?'",
                 keyPoints: [
@@ -61,11 +81,11 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 question: "How can you prevent accusations of special pleading in your own arguments?",
                 options: [
                     { id: "a", text: "Never use general principles" },
-                    { id: "b", text: "Apply your standards consistently to both sides and explain any distinctions explicitly" },
-                    { id: "c", text: "Ignore consistency concerns" },
-                    { id: "d", text: "Claim more exceptions" }
+                    { id: "b", text: "Ignore consistency concerns" },
+                    { id: "c", text: "Claim more exceptions" },
+                    { id: "d", text: "Apply your standards consistently to both sides and explain any distinctions explicitly" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Prevent special pleading accusations by applying your standards consistently. If you need to distinguish cases, explain the relevant difference explicitly. 'Our situation differs because [specific reason]' is not special pleading; 'We're just different' is.",
             },
             {
@@ -76,6 +96,49 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                     "Claim exceptions only with explicit justification",
                     "Consistent application builds credibility",
                     "Test your own reasoning for special pleading",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Self-Refutation' Test",
+                content: "A powerful way to check for special pleading:\n\n**The Method:**\nImagine the principle you're using was applied against you. Does it refute your own case?\n\n**Example:**\nDebater argues: 'Expert consensus is always right' to support their point. But expert consensus opposes their second contention.\n\n**The Fix:**\nRefine the principle: 'Expert consensus is reliable mainly in settled science, but less so in policy prediction.' This avoids the contradiction (and the special pleading accusation).\n\n**Strategic Value:**\nSelf-testing pre-empts opponent attacks.",
+                keyPoints: [
+                    "Test your principles against your own case",
+                    "Refine broad principles to avoid contradictions",
+                    "Pre-emption is better than defense",
+                ],
+            },
+            {
+                type: "content",
+                title: "Nuance vs. Inconsistency",
+                content: "Distinguishing valid nuance from invalid inconsistency:\n\n**Nuance:**\n'Free speech is vital, but incitement to violence is different because it causes immediate physical harm.' (Clear principle for the distinction).\n\n**Inconsistency:**\n'Free speech protects my unpopular views but shouldn't protect theirs.' (No principle).\n\n**Debate Tip:**\nWhen accusing opponents of special pleading, listen for their principle. If they give one, argue against the principle. If they don't, argue against the inconsistency.",
+                keyPoints: [
+                    "Nuance relies on principled distinctions",
+                    "Inconsistency lacks justifying principles",
+                    "Attack the lack of principle in special pleading",
+                ],
+            },
+            {
+                type: "question",
+                id: "l19-01-q3",
+                question: "Which of the following is an example of valid nuance rather than special pleading?",
+                options: [
+                    { id: "a", text: "'I can speed because I'm a good driver'" },
+                    { id: "b", text: "'Taxation is theft, except when it pays for things I use'" },
+                    { id: "c", text: "'Freedom of movement is a right, but prisons are justified to prevent immediate harm to others'" },
+                    { id: "d", text: "'Everyone should tell the truth, except me right now'" }
+                ],
+                correctAnswer: "c",
+                explanation: "Option C provides a principled distinction (preventing immediate harm) to justify the exception to freedom of movement. The others claim exceptions based on self-interest or lack of justification.",
+            },
+            {
+                type: "content",
+                title: "Advanced: Strategic Standard Shifting",
+                content: "Using standards offensively:\n\n**The Move:**\n'My opponent demands 100% certainty for my plan. By that standard, their counter-plan also fails, because nothing is 100% certain. But looking at probability (the reasonable standard), my plan works.'\n\n**Why It Works:**\nIt exposes their unreasonable standard (Special Pleading) and re-establishes a reasonable one.\n\n**The 'Tu Quoque' Relation:**\nSpecial pleading accusations are often a sophisticated form of 'You too'—showing that if their criticism were valid, it would hurt them too.",
+                keyPoints: [
+                    "Hold opponents to their own excessive standards",
+                    "Re-establish reasonable standards via comparison",
+                    "Use their standards to defeat their own arguments",
                 ],
             },
         ],
@@ -103,13 +166,33 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 id: "l19-02-q1",
                 question: "Opponent makes a technically true argument that's very minor compared to the overall issues. What refutation type fits best?",
                 options: [
-                    { id: "a", text: "Direct denial—claim it's false" },
-                    { id: "b", text: "Minimization—concede the point but show it's insignificant" },
-                    { id: "c", text: "Turn—flip it to your side" },
+                    { id: "a", text: "Minimization—concede the point but show it's insignificant" },
+                    { id: "b", text: "Turn—flip it to your side" },
+                    { id: "c", text: "Direct denial—claim it's false" },
                     { id: "d", text: "Ad hominem attack" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Minimization is appropriate for true but minor points. 'Yes, this is accurate. But it's insignificant compared to [larger issues].' You don't fight the truth; you fight the importance.",
+            },
+            {
+                type: "content",
+                title: "Refutation Complexity Ladder",
+                content: "Choose based on argument strength:\n\n**Weak Arguments:**\nSimple denial or quick dismissal.\n\n**Moderate Arguments:**\nWarrant attack or minimization.\n\n**Strong Arguments:**\nTurn (create offense) or outweigh with comparative analysis.\n\n**Critical Arguments:**\nFull layered defense: multiple techniques combined.\n\n**The Principle:**\nMatching response complexity to argument strength conserves time for what matters.\n\n**Don't Over-Respond:**\nSpending 2 minutes on a 10-second point wastes time.\n\n**Don't Under-Respond:**\nQuick dismissal of their central argument won't convince.",
+                keyPoints: [
+                    "Match response complexity to argument importance",
+                    "Reserve extensive refutation for key arguments",
+                    "Quick dismissal for minor points; full defense for critical ones",
+                ],
+            },
+            {
+                type: "content",
+                title: "Adapting Mid-Round",
+                content: "Refutation strategy evolves as debates progress:\n\n**Early Round:**\nAssess opponent's case. Identify which arguments are most threatening.\n\n**Mid-Round:**\nNote what's working and what isn't. Adjust technique choices.\n\n**Late Round:**\nFocus on what remains contested. The arguments that matter have narrowed.\n\n**Adaptive Signals:**\n• Judge reactions (confusion, nodding, note-taking)\n• Opponent struggles to respond to certain techniques\n• Time remaining forces prioritization\n\n**The Skill:**\nFlexibility—being able to switch techniques based on what the debate needs.",
+                keyPoints: [
+                    "Strategy should evolve as the debate progresses",
+                    "Read judge reactions and opponent struggles",
+                    "Flexibility is key to effective refutation",
+                ],
             },
             {
                 type: "content",
@@ -137,11 +220,11 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 question: "When should you consider using a turn rather than simple refutation?",
                 options: [
                     { id: "a", text: "When you want to take longer" },
-                    { id: "b", text: "When you can flip their argument to actually support your position—creating offense rather than just defense" },
-                    { id: "c", text: "Always—turns are always better" },
+                    { id: "b", text: "Always—turns are always better" },
+                    { id: "c", text: "When you can flip their argument to actually support your position—creating offense rather than just defense" },
                     { id: "d", text: "When you have no other options" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "Turns are valuable when you can genuinely flip opponent reasoning to support you. This creates offense rather than just defense. If you can't legitimately flip it, turns don't apply—use other techniques.",
             },
             {
@@ -152,6 +235,49 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                     "Match refutation type to argument type",
                     "Layer techniques for resilience",
                     "Consider resources and strategic needs",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Double-Bind' Strategy",
+                content: "Using refutation selection to trap opponents:\n\n**The Tactic:**\nPresent two responses where escaping one leads into the other.\n\n**Example:**\n'Either their plan is effective (in which case it causes this massive cost), OR it avoids the cost (in which case it's ineffective). They can't have it both ways.'\n\n**Technique Mix:**\nMatches a 'Link Turn' (it causes cost) with a 'Solvency Attack' (it doesn't work).\n\n**Power:**\nForces the opponent to concede one of your points to save their argument.",
+                keyPoints: [
+                    "Create dilemmas where any escape helps you",
+                    "Combine solvency attacks with disadvantage links",
+                    "Force hard choices on the opponent",
+                ],
+            },
+            {
+                type: "content",
+                title: "Refuting Definitions",
+                content: "When to attack words vs. ideas:\n\n**Technique:**\nRedefinition or contextual definition.\n\n**When to Use:**\nWhen their whole argument relies on a twisted meaning of a word.\n\n**When NOT to Use:**\nWhen definitions are standard and you just dislike the conclusion. Don't fight helpful definitions.\n\n**Standard:**\n'The best definition provides the fairest ground for debate.'",
+                keyPoints: [
+                    "Attack definitions only when they skew the debate",
+                    "Propose clearer or fairer alternatives",
+                    "Don't quibble over standard terms",
+                ],
+            },
+            {
+                type: "question",
+                id: "l19-02-q3",
+                question: "What is a 'Double-Bind' in refutation?",
+                options: [
+                    { id: "a", text: "Refuting the same argument twice" },
+                    { id: "b", text: "Presenting two options where both hurt the opponent's position" },
+                    { id: "c", text: "Getting tied up in your own logic" },
+                    { id: "d", text: "Agreeing with the opponent" }
+                ],
+                correctAnswer: "b",
+                explanation: "A double-bind presents a dilemma: 'Either A or B. If A, you lose because X. If B, you lose because Y.' It effectively covers all bases and traps the opponent.",
+            },
+            {
+                type: "content",
+                title: "Grouping and Triage",
+                content: "Handling volume:\n\n**Scenario:**\nOpponent dumps 7 arguments in 4 minutes.\n\n**Response Strategy:**\n1. Group 4 of them as 'Implementation Speculation'. Refute the group.\n2. Minimization on 2 minor points.\n3. Turn the 1 strong argument.\n\n**Result:**\n7 arguments handled efficiently. Grouping is a survival skill in fast debates.",
+                keyPoints: [
+                    "Group weak arguments to save time",
+                    "Focus energy on turning the strong argument",
+                    "Efficiency beats volume",
                 ],
             },
         ],
@@ -179,13 +305,33 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 id: "l19-03-q1",
                 question: "Why does poor signposting hurt you in a debate?",
                 options: [
-                    { id: "a", text: "Judges prefer complicated speeches" },
-                    { id: "b", text: "Judges might not credit your responses if they can't tell what you're addressing" },
-                    { id: "c", text: "Opponents will signpost better" },
+                    { id: "a", text: "Judges might not credit your responses if they can't tell what you're addressing" },
+                    { id: "b", text: "Opponents will signpost better" },
+                    { id: "c", text: "Judges prefer complicated speeches" },
                     { id: "d", text: "It doesn't hurt you" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Without clear signposting, judges might not connect your responses to opponent arguments. You could make a good response but not get credit because the judge didn't know what you were addressing.",
+            },
+            {
+                type: "content",
+                title: "Signposting Structure Templates",
+                content: "Useful patterns for different situations:\n\n**Constructive Speech:**\n'I have three contentions. Contention One: [title]... Contention Two: [title]... Contention Three: [title]...'\n\n**Rebuttal Speech:**\n'On their first argument about X... On their second point regarding Y... On their final contention...'\n\n**Response Layers:**\n'I have two responses. First... Second...'\n\n**Moving Between Flows:**\n'Moving from their case to my own...' 'Returning to our constructive case...'\n\n**Crystallization:**\n'The debate comes down to two issues: X and Y. On X... On Y...'\n\n**Summary:**\n'To summarize, we've shown [main points]. Therefore...'",
+                keyPoints: [
+                    "Templates provide reliable structures",
+                    "Adapt templates to your actual speech needs",
+                    "Consistency helps both you and judges",
+                ],
+            },
+            {
+                type: "content",
+                title: "Signposting for Different Judges",
+                content: "Adapt to your audience:\n\n**Flow Judges:**\nThese judges track everything on paper. Be precise about which argument you're addressing. Label clearly.\n\n**Holistic Judges:**\nThese judges form overall impressions. Signposting still matters for clarity but can be slightly less granular.\n\n**Experienced Judges:**\nKnow debate conventions. Can use technical signposting like 'cross-apply' or 'extend with new analysis.'\n\n**Lay Judges:**\nAvoid jargon. Use plain language: 'On their first point...' rather than 'On the A1.'\n\n**Universal Rule:**\nWhen in doubt, be clearer. Over-signposting is rarely penalized; under-signposting costs you credit.",
+                keyPoints: [
+                    "Adapt signposting precision to judge type",
+                    "Flow judges need precise labels; lay judges need plain language",
+                    "When in doubt, be clearer",
+                ],
             },
             {
                 type: "content",
@@ -213,11 +359,11 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 question: "What's wrong with saying 'On their argument, I respond...' without further specification?",
                 options: [
                     { id: "a", text: "Nothing—it's fine" },
-                    { id: "b", text: "It's too vague—which argument? The judge needs specificity to track your response" },
-                    { id: "c", text: "It's too long" },
-                    { id: "d", text: "Arguments shouldn't be addressed" }
+                    { id: "b", text: "It's too long" },
+                    { id: "c", text: "Arguments shouldn't be addressed" },
+                    { id: "d", text: "It's too vague—which argument? The judge needs specificity to track your response" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Vague signposting doesn't help judges track responses. 'On their economic harm argument...' or 'On their second contention...' is much clearer than just 'On their argument.'",
             },
             {
@@ -228,6 +374,49 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                     "Clear signposting ensures credit for responses",
                     "Specific references beat vague ones",
                     "Consistent structure markers aid comprehension",
+                ],
+            },
+            {
+                type: "content",
+                title: "Internal Summaries",
+                content: "Micro-signposting within points:\n\n**The Technique:**\nAfter a complex explanation, summarize it in one sentence before moving on.\n\n**Example:**\n'...[Complex economic logic]... So, in short: raising rates lowers inflation. Now, how does this affect employment?'\n\n**Why:**\nIt locks in the point's understanding before adding the next layer. It serves as a checkpoint for the judge.",
+                keyPoints: [
+                    "Summarize complex points briefly before moving on",
+                    "Locks in understanding",
+                    "Acts as a cognitive checkpoint",
+                ],
+            },
+            {
+                type: "content",
+                title: "Roadmaps in Rebuttal",
+                content: "Mapping the chaos:\n\n**Challenge:**\nRebuttals are messy. Opponent arguments are scattered.\n\n**Solution:**\n'Off-Case, then On-Case.' or 'I'll follow the order of their speech.'\n\n**The 'Cluster' Roadmap:**\n'I'll address the Economy, then the Environment, then the Voting Issue.' (Grouping disparate arguments into themes).\n\n**Value:**\nIf you impose structure on a messy round, you look like the one in control.",
+                keyPoints: [
+                    " impose structure on chaotic rounds",
+                    "Group arguments into themes for roadmaps",
+                    "Control the flow, control the round",
+                ],
+            },
+            {
+                type: "question",
+                id: "l19-03-q3",
+                question: "What is an 'Internal Summary'?",
+                options: [
+                    { id: "a", text: "Summarizing the whole debate at the end" },
+                    { id: "b", text: "Summarizing a specific point before moving to the next one" },
+                    { id: "c", text: "Thinking silently" },
+                    { id: "d", text: "Writing notes to yourself" }
+                ],
+                correctAnswer: "b",
+                explanation: "An internal summary captures the essence of a specific point you just made ('So, X leads to Y') before moving to the next point. It helps judges digest complex arguments.",
+            },
+            {
+                type: "content",
+                title: "Verbal Formatting",
+                content: "Using your voice to signpost:\n\n**Tone Shift:**\nSlightly pause and lower pitch when starting a new contention.\n\n**Volume:**\nEmphasizing the NUMBER of the point. 'Second...' (Louder, then normal).\n\n**Pacing:**\nSlow down for the signpost. Speed up for the details.\n\n**Integration:**\nVerbal cues reinforce the structural words. Even if a judge misses the word 'Next', they hear the tone shift.",
+                keyPoints: [
+                    "Voice modulation reinforces structure",
+                    "Pause before transitions",
+                    "Emphasize numbers and headers",
                 ],
             },
         ],
@@ -257,11 +446,31 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 options: [
                     { id: "a", text: "It takes more time" },
                     { id: "b", text: "If one refutation line fails, others remain; comprehensive attack is harder to defend" },
-                    { id: "c", text: "Judges prefer longer responses" },
-                    { id: "d", text: "It's not actually more effective" }
+                    { id: "c", text: "It's not actually more effective" },
+                    { id: "d", text: "Judges prefer longer responses" }
                 ],
                 correctAnswer: "b",
                 explanation: "Layered refutation provides resilience. If the judge doesn't buy your evidence attack, maybe they accept your warrant attack. Multiple lines of defense accumulate and are harder to fully overcome.",
+            },
+            {
+                type: "content",
+                title: "Sequencing Refutation Layers",
+                content: "Order matters for layered refutation:\n\n**Standard Sequence:**\n1. Strongest argument first (don't bury the lead)\n2. Evidence attack (challenge their foundation)\n3. Logic attack (challenge their reasoning)\n4. Impact minimization (even if true, it's minor)\n5. Outweighing (even if major, we still win)\n\n**'Even If' Chaining:**\nEach layer becomes a fallback: 'Even if you don't buy that, consider this...'\n\n**Alternative Sequence:**\nSometimes lead with the attack that fits the debate's current focus.\n\n**Time Allocation:**\nSpend most time on your strongest layer; brief mentions for backups.\n\n**The Goal:**\nJudge has multiple reasons to vote your way; opponents must defeat all of them.",
+                keyPoints: [
+                    "Lead with your strongest layer",
+                    "'Even if' chaining creates fallback positions",
+                    "Spend most time on your best argument",
+                ],
+            },
+            {
+                type: "content",
+                title: "Defensive vs. Offensive Layers",
+                content: "Distinguish the types of responses:\n\n**Defensive Layers:**\n• Their claim is false (denial)\n• Their evidence doesn't prove their claim (warrant attack)\n• Their impact is minor (minimization)\n\n**These prevent the argument from winning for them but don't win for you.**\n\n**Offensive Layers:**\n• Turn: their argument actually supports us\n• Counter-argument: independent reason to vote our way\n• Outweighing: our argument beats theirs\n\n**These create reasons to vote for you, not just against them.**\n\n**The Balance:**\nBest responses combine defensive (stop their offense) and offensive (create your own) layers.",
+                keyPoints: [
+                    "Defensive layers stop their offense",
+                    "Offensive layers create your own offense",
+                    "Best responses combine both",
+                ],
             },
             {
                 type: "content",
@@ -289,11 +498,11 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 question: "How can you combine denial ('it's false') with minimization ('even if true, it's minor') without sounding contradictory?",
                 options: [
                     { id: "a", text: "You can't—they're incompatible" },
-                    { id: "b", text: "Frame clearly: 'This is primarily false. But even in the unlikely event I'm wrong, it remains a minor point.'" },
-                    { id: "c", text: "Say them at the same time quickly" },
+                    { id: "b", text: "Say them at the same time quickly" },
+                    { id: "c", text: "Frame clearly: 'This is primarily false. But even in the unlikely event I'm wrong, it remains a minor point.'" },
                     { id: "d", text: "Use them in different speeches" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "The 'even if' framing resolves the tension. You're presenting denial as primary and minimization as backup: 'I believe it's false, but hypothetically, even if you disagree, it still doesn't matter much.' Clear framing avoids the contradiction.",
             },
             {
@@ -304,6 +513,49 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                     "Layer compatible techniques for resilient defense",
                     "Avoid contradictory combinations",
                     "Use 'even if' framing to handle tension",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Pincer' Movement",
+                content: "Advanced combinations:\n\n**Concept:**\nAttacking from two sides that meet in the middle.\n\n**Example:**\n'They claim the problem is huge (A) and their plan solves it (B). Pincer: Actually, the problem is small (Minimization on A) AND the plan wouldn't fix it anyway (Solvency on B).'\n\n**Effect:**\nEven if the problem is real, they assume no solvency. Even if the plan works, there's no problem. They lose either way.\n\n**Difference from Contradiction:**\nThese don't contradict. A problem can be small AND a plan can be ineffective. They are independent defensive layers.",
+                keyPoints: [
+                    "Attack both Significance and Solvency",
+                    "Independent layers don't contradict",
+                    "Reduces opponent's path to victory",
+                ],
+            },
+            {
+                type: "content",
+                title: "Pre-Emptive Combinations",
+                content: "Answering before they ask:\n\n**Technique:**\n'They will likely say X. But that fails because Y. And even if X were true, Z.'\n\n**Benefits:**\n• Steals their thunder\n• Shows deep preparation\n• Forces them off their script\n\n**Risk:**\nDon't make better arguments for them than they would make for themselves. Only pre-empt obvious or strong arguments.",
+                keyPoints: [
+                    "Anticipate and refute opponent moves",
+                    "Demonstrates command of the topic",
+                    "Don't build their case for them",
+                ],
+            },
+            {
+                type: "question",
+                id: "l19-04-q3",
+                question: "Which combination is a valid 'Pincer' attack?",
+                options: [
+                    { id: "a", text: "It's not a problem AND your plan causes the problem" },
+                    { id: "b", text: "The problem is small AND your plan doesn't solve it" },
+                    { id: "c", text: "It won't happen AND it will be good" },
+                    { id: "d", text: "I agree AND I disagree" }
+                ],
+                correctAnswer: "b",
+                explanation: "Minimizing the problem ('it's small') and attacking solvency ('plan won't work') are compatible defensive layers. They squeeze the argument from both ends without contradiction.",
+            },
+            {
+                type: "content",
+                title: "Integration Drill",
+                content: "Practice combining:\n\n**The Argument:**\n'Universal Basic Income destroys work ethic.'\n\n**Combined Response:**\n1. **Evidence:** 'Studies from pilot programs show work hours barely drop.'\n2. **Turn:** 'Actually, it increases entrepreneurship, creating NEW work.'\n3. **Outweigh:** 'Even if work hours drop 5%, ending poverty is more important.'\n\n**Result:**\nEvidence defense + Link Turn + Impact Outweigh. A complete package.",
+                keyPoints: [
+                    "Practice layering on common arguments",
+                    "Ensure layers flow logically",
+                    "End with the impact comparison",
                 ],
             },
         ],
@@ -331,13 +583,33 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 id: "l19-05-q1",
                 question: "'You can't prove my policy won't work, so you should support it.' What's wrong with this reasoning?",
                 options: [
-                    { id: "a", text: "Nothing—it's good logic" },
-                    { id: "b", text: "Burden reversal—the proposer must prove the policy works, not demand opponents prove it won't" },
-                    { id: "c", text: "The policy definitely won't work" },
+                    { id: "a", text: "Burden reversal—the proposer must prove the policy works, not demand opponents prove it won't" },
+                    { id: "b", text: "The policy definitely won't work" },
+                    { id: "c", text: "Nothing—it's good logic" },
                     { id: "d", text: "It's too confident" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "This is burden reversal. The proposer bears the burden to prove the policy works. You can't shift that burden by demanding others prove it won't. Inability to disprove doesn't constitute proof.",
+            },
+            {
+                type: "content",
+                title: "Common Burden Manipulation Tactics",
+                content: "Watch for these burden tricks:\n\n**Argument from Ignorance:**\n'You can't prove X is false, so X must be true.'\nResponse: Burden lies with the person claiming X.\n\n**Demanding Proof of Negative:**\n'Prove this has never happened.'\nResponse: Negatives are often impossible to prove. Burden is on the one claiming it happened.\n\n**The Gish Gallop:**\nMaking so many claims you can't possibly respond to all.\nResponse: Point out unbacked assertions can be dismissed; address the strongest claims.\n\n**Appeals to Future Evidence:**\n'Evidence will eventually prove me right.'\nResponse: We judge based on current evidence, not hopes for future evidence.\n\n**The Pattern:**\nAll of these try to avoid meeting their own burden. Call it out.",
+                keyPoints: [
+                    "Argument from ignorance reverses burden",
+                    "Demanding proof of negative is often impossible",
+                    "Call out unbacked assertions",
+                ],
+            },
+            {
+                type: "content",
+                title: "Burden Allocation in Different Debate Formats",
+                content: "Burdens vary by format:\n\n**Policy Debate:**\nAffirmative: prove a policy change is needed and would work (stock issues).\nNegative: disprove any one stock issue, OR prove the plan has disadvantages, OR prove an alternative is better.\n\n**Lincoln-Douglas:**\nAffirmative: prove the resolution is true under the value/criterion.\nNegative: prove it's false, OR prove a better value/criterion, OR prove Aff fails under their own framework.\n\n**Public Forum:**\nPro: prove the resolution is correct on balance.\nCon: prove it's incorrect on balance.\n\n**The Key:**\nKnow what you need to prove in your format. Build your case to meet those specific burdens.",
+                keyPoints: [
+                    "Different formats have different burden structures",
+                    "Know what you specifically need to prove",
+                    "Build cases that meet format-specific burdens",
+                ],
             },
             {
                 type: "content",
@@ -382,6 +654,49 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                     "Meet your own burdens proactively",
                 ],
             },
+            {
+                type: "content",
+                title: "Presumption",
+                content: "The tie-breaker of burdens:\n\n**Concept:**\nPresumption lies against the change. If the debate is a perfect tie—neither side proved their case—who wins?\n\n**Default:**\nUsually the Negative (Status Quo). We stick with what we have unless there's a good reason to switch.\n\n**Flipping Presumption:**\n'The status quo is killing people. Presumption should be for change.' (A strategic argument).\n\n**Use:**\n'They haven't met their burden. Since they're proposing change, the tie goes to us.'",
+                keyPoints: [
+                    "Presumption usually favors the status quo",
+                    "A tie goes to the side with presumption",
+                    "Use unmet burdens to claim presumption ground",
+                ],
+            },
+            {
+                type: "content",
+                title: "Burden in Real World vs Debate",
+                content: "Context differences:\n\n**Science:**\nBurden is intense (p < 0.05). Heavy proof required.\n\n**Law:**\n'Preponderance of evidence' (Civil) vs 'Beyond reasonable doubt' (Criminal).\n\n**Debate:**\nUsually 'Preponderance' (51%). You just have to be slightly better than the opponent.\n\n**Strategy:**\nDon't let them hold you to a Criminal Court standard in a policy debate. 'We don't need absolute certainty, just that it's more likely than not.'",
+                keyPoints: [
+                    "Debate standard is usually 'more likely than not'",
+                    "Don't accept impossible standards of proof",
+                    "Clarify the winning threshold",
+                ],
+            },
+            {
+                type: "question",
+                id: "l19-05-q3",
+                question: "In most debates, what is the standard of proof required?",
+                options: [
+                    { id: "a", text: "Beyond a reasonable doubt (100% certainty)" },
+                    { id: "b", text: "Preponderance of evidence (More likely than not)" },
+                    { id: "c", text: "Absolute truth" },
+                    { id: "d", text: "Personal belief" }
+                ],
+                correctAnswer: "b",
+                explanation: "Most debates operate on 'preponderance of evidence'—is it more likely true than false? Demanding 100% certainty (beyond reasonable doubt) is an unreasonable burden in policy topics.",
+            },
+            {
+                type: "content",
+                title: "Handling the 'Not Disproven' Trap",
+                content: "When they say 'You haven't proven me wrong':\n\n**The Trap:**\nThey state a wild theory. You have no evidence on it (because it's wild). They claim victory.\n\n**The Escape:**\n'Hitchens's Razor: What can be asserted without evidence can be dismissed without evidence.'\n\n**Application:**\nDon't scramble to disprove. Calmly state: 'They have provided zero evidence. Therefore, this argument carries zero weight. I don't need to disprove a fantasy.'",
+                keyPoints: [
+                    "Hitchens's Razor: Assertions without evidence require no refutation",
+                    "Don't accept the burden to disprove wild claims",
+                    "Dismiss, don't engage, if evidence is zero",
+                ],
+            },
         ],
     },
     {
@@ -407,13 +722,33 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 id: "l19-06-q1",
                 question: "Why do good transitions improve persuasiveness?",
                 options: [
-                    { id: "a", text: "They make speeches longer" },
-                    { id: "b", text: "They show logical connection between points, making arguments feel unified and well-constructed" },
-                    { id: "c", text: "Judges are told to prefer transitions" },
-                    { id: "d", text: "They don't improve persuasiveness" }
+                    { id: "a", text: "Judges are told to prefer transitions" },
+                    { id: "b", text: "They leave the judge confused" },
+                    { id: "c", text: "They make speeches longer" },
+                    { id: "d", text: "They show logical connection between points, making arguments feel unified and well-constructed" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Transitions like 'therefore,' 'building on this,' and 'as a result' show logical relationships between points. This makes your argument feel like a unified case rather than disconnected assertions.",
+            },
+            {
+                type: "content",
+                title: "Building Transition Habits",
+                content: "Make transitions automatic:\n\n**Preparation:**\nPlan transitions in advance. Know how each section connects to the next.\n\n**Practice:**\nDeliberately practice transitions during prep. Record yourself and listen.\n\n**Templates:**\nHave go-to phrases ready: 'Building on this...' 'Moving to their second point...' 'Therefore...'\n\n**Mental Model:**\nThink of your speech as a series of connected nodes, not isolated points.\n\n**Common Fix:**\nIf you catch yourself saying 'Um, next...' or 'Also...' too often, consciously replace with meaningful transitions.\n\n**The Goal:**\nSmooth, automatic transitions that require no conscious effort during speeches.",
+                keyPoints: [
+                    "Plan transitions during preparation",
+                    "Have go-to phrases ready",
+                    "Practice until transitions are automatic",
+                ],
+            },
+            {
+                type: "content",
+                title: "Advanced Transition Techniques",
+                content: "Beyond basic transitions:\n\n**Callback Transitions:**\n'Remember when I said X? That connects to Y because...'\n\n**Opponent Integration:**\n'They mentioned Z. That actually supports my point about...'\n\n**Structural Transitions:**\n'Having established the problem, now let me address the solution...'\n\n**Concession Transitions:**\n'Granting their point about X, this actually strengthens our position because...'\n\n**Crystallization Transitions:**\n'Everything I've said leads to one conclusion...'\n\n**The Effect:**\nAdvanced transitions demonstrate sophisticated argumentation and help judges see connections they might miss.",
+                keyPoints: [
+                    "Callback transitions link to earlier points",
+                    "Integrate opponent content into your flow",
+                    "Crystallization transitions draw conclusions",
+                ],
             },
             {
                 type: "content",
@@ -441,11 +776,11 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 question: "Which transition is appropriate when moving from a claim to its logical consequence?",
                 options: [
                     { id: "a", text: "'However...' " },
-                    { id: "b", text: "'Therefore...' or 'As a result...'" },
-                    { id: "c", text: "'Next...' " },
+                    { id: "b", text: "'Next...' " },
+                    { id: "c", text: "'Therefore...' or 'As a result...'" },
                     { id: "d", text: "'In contrast...'" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "'Therefore' and 'As a result' indicate logical consequence—the conclusion follows from the premises. Use these when showing what results from or follows from what you've established.",
             },
             {
@@ -456,6 +791,49 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                     "Transitions signal logical relationships",
                     "Match type to relationship; vary for interest",
                     "Brief, natural transitions improve overall delivery",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Therefore' Test",
+                content: "Checking your logic flow:\n\n**The Test:**\nCan you put 'Therefore' between your points? does it make sense?\n\n**Pass:**\n'Economy is down. Therefore, we need stimulus.' (Logical).\n\n**Fail:**\n'Economy is down. Therefore, penguins are birds.' (Illogical sequence).\n\n**Value:**\nIf 'Therefore' doesn't fit, your case structure might be disjointed. You might need a bridge explanation: 'Economy is down. This affects zoos. Therefore, penguins...'",
+                keyPoints: [
+                    "Use 'Therefore' to test logical connection",
+                    "Disjointed points need explanatory bridges",
+                    "Coherence relies on invisible logical links",
+                ],
+            },
+            {
+                type: "content",
+                title: "Micro-Transitions in Rebuttal",
+                content: "Speed transitions:\n\n**The Problem:**\nFull sentences take too long in fast rebuttal.\n\n**The Fix:**\nTaglines as transitions. 'Now: Solvency.' 'Next: Impact.'\n\n**Efficiency:**\nReplacing 'Now I would like to move on to their solvency argument' (11 words) with 'On Solvency:' (2 words).\n\n**Clarity:**\nThe tone shift and the header word do the work.",
+                keyPoints: [
+                    "Use tags for high-speed transitions",
+                    "Save seconds for argumentation",
+                    "Tone shift replaces connecting words",
+                ],
+            },
+            {
+                type: "question",
+                id: "l19-06-q3",
+                question: "What is the 'Therefore Test' used for?",
+                options: [
+                    { id: "a", text: "Checking if a transition is grammatical" },
+                    { id: "b", text: "Checking if there is a logical connection between points" },
+                    { id: "c", text: "Seeing if you are speaking too fast" },
+                    { id: "d", text: "Testing microphone volume" }
+                ],
+                correctAnswer: "b",
+                explanation: "The Therefore Test checks logic. If you can't logically say 'Therefore' between two points, they don't flow from one another, and you need to explain the connection or reorder them.",
+            },
+            {
+                type: "content",
+                title: "Linking Disparate Ideas",
+                content: "How to connect unrelated arguments:\n\n**The Bridge:**\nFind a common theme.\n\n**Example:**\nMoving from 'Economic Cost' to 'Moral Duty'.\n\n**Transition:**\n'We've seen the practical cost is high. But even more importantly, the moral cost is unacceptable.'\n\n**The Link:**\nComparison of 'Cost' (Practical vs Moral). This feels smoother than just 'Next point conflict.'",
+                keyPoints: [
+                    "Find common themes to bridge unrelated points",
+                    "Use comparison as a transition tool",
+                    "Smooth jumps between different types of arguments",
                 ],
             },
         ],
@@ -493,13 +871,33 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                 id: "l19-07-q1",
                 question: "What distinguishes special pleading from a legitimate distinction?",
                 options: [
-                    { id: "a", text: "There's no difference" },
-                    { id: "b", text: "Legitimate distinctions explain what makes the case different; special pleading claims exemption without justification" },
-                    { id: "c", text: "Special pleading is always correct" },
-                    { id: "d", text: "Legitimate distinctions are longer" }
+                    { id: "a", text: "Legitimate distinctions explain what makes the case different; special pleading claims exemption without justification" },
+                    { id: "b", text: "Special pleading is always correct" },
+                    { id: "c", text: "Legitimate distinctions are longer" },
+                    { id: "d", text: "There's no difference" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "The key difference is justification. Legitimate distinctions explain what makes your case different and why the standard shouldn't apply. Special pleading just claims exemption without explaining the relevant difference.",
+            },
+            {
+                type: "content",
+                title: "Integrating Unit 19 Skills",
+                content: "These skills work together:\n\n**Example Scenario:**\nYou're addressing a complex opponent argument:\n1. Signpost clearly: 'On their economic harm argument...'\n2. Select appropriate refutation: their evidence is weak → source criticism\n3. Layer defenses: source + warrant + minimization\n4. Transition smoothly: 'Having addressed that, moving now to...'\n5. Watch for special pleading: are you applying consistent standards?\n6. Manage burdens: meet yours proactively\n\n**The Compound Effect:**\nEach skill is valuable alone. Together, they create polished, effective debate performance.\n\n**Practice Focus:**\nWork on integrating all these skills until they're automatic.",
+                keyPoints: [
+                    "These skills compound when used together",
+                    "Signposting + refutation selection + layering + transitions",
+                    "Practice integration until automatic",
+                ],
+            },
+            {
+                type: "content",
+                title: "Practice Scenarios for Unit 19",
+                content: "Apply these skills:\n\n**Scenario 1:**\nOpponent applies a standard to you but claims exemption for themselves.\n→ Call out special pleading. Demand justification.\n\n**Scenario 2:**\nYou face 5 opponent arguments with limited time.\n→ Refutation selection: identify which need full layered defense vs. quick dismissal.\n\n**Scenario 3:**\nJudge seems lost in your rebuttal.\n→ Improve signposting. Be more explicit about what you're addressing.\n\n**Scenario 4:**\nOpponent says 'You can't prove it won't work.'\n→ Burden reversal. They must prove it will work.\n\n**Scenario 5:**\nYour speech feels choppy.\n→ Work on transitions between points.",
+                keyPoints: [
+                    "Recognize which skill each situation requires",
+                    "Practice applying skills in realistic scenarios",
+                    "Reflection builds application instincts",
+                ],
             },
             {
                 type: "question",
@@ -522,6 +920,49 @@ export const UNIT_19_LESSONS: MultiPageLesson[] = [
                     "Integrate skills: knowing when and how to use each",
                     "Execution details compound into polished performance",
                     "Practice combining techniques in actual debates",
+                ],
+            },
+            {
+                type: "content",
+                title: "Section 2 Final Exam Prep",
+                content: "Prepare for the Section 2 assessment:\n\n**Key Areas:**\n• Detecting advanced fallacies (Straw Man, Ad Hominem, Circular, etc.)\n• Naming the correct refutation technique for a situation\n• Organizing a rebuttal speech (Signposting)\n• Identifying burdens of proof\n\n**Study Tip:**\nReview the 'Key Takeaways' from Units 11-20. Can you explain each concept in one sentence?\n\n**Simulation:**\nImagine an opponent argument. Rapid-fire: Name the Fallacy, Name the Refutation, Signpost the response.",
+                keyPoints: [
+                    "Review all advanced fallacies",
+                    "Test valid vs invalid logic",
+                    "Practice rapid identification",
+                ],
+            },
+            {
+                type: "content",
+                title: "Integration Challenges",
+                content: "Where students struggle:\n\n**The Overload:**\nCreating a layered response but forgetting to signpost it.\n\n**The Drift:**\nResponding well but losing track of the thesis.\n\n**The Fix:**\nDrills. Focus on ONE skill at a time, then TWO. Don't try to do all 5 at once until you've mastered them individually.\n\n**Example:**\nDrill 1: Just Signposting. Drill 2: Just Layering. Drill 3: Both.",
+                keyPoints: [
+                    "Don't overload your cognitive capacity",
+                    "Master skills individually, then combine",
+                    "Drill specific weaknesses",
+                ],
+            },
+            {
+                type: "question",
+                id: "l19-07-q3",
+                question: "What is the best way to master the integration of multiple debate skills?",
+                options: [
+                    { id: "a", text: "Try to do everything at once immediately" },
+                    { id: "b", text: "Master each skill individually, then combine them progressively" },
+                    { id: "c", text: "Watch videos only" },
+                    { id: "d", text: "Give up on structure" }
+                ],
+                correctAnswer: "b",
+                explanation: "Cognitive overload is real. Master signposting. Then master layering. Then combine them. Trying to juggle too many new skills simultaneously usually leads to failure in all of them.",
+            },
+            {
+                type: "content",
+                title: "Moving Forward",
+                content: "The bridge to Advanced Debate:\n\n**From Mechanics to Strategy:**\nSection 2 taught you the *mechanics* (how to refute, how to organize). Section 3 will teach you *strategy* (how to win tournaments, judge adaptation, case construction theory).\n\n**Foundation:**\nYou can't win strategically if you can't execute mechanically. Verify your Section 2 skills are solid before moving on.",
+                keyPoints: [
+                    "Section 2 = Mechanics",
+                    "Section 3 = Strategy",
+                    "Mechanics are the foundation of strategy",
                 ],
             },
         ],

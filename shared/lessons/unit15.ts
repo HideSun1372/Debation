@@ -23,16 +23,36 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Deconstructing Examples",
+                content: "Let's break down how to spot the trap in everyday language:\n\n**Example 1: The 'Why' Trap**\n'Why is your idea so dangerous?'\n\n*Assumption:* Your idea is dangerous.\n*Trap:* Explaining 'why' accepts the danger.\n*Fix:* 'I don't agree it's dangerous. Let me explain its safety features.'\n\n**Example 2: The 'Still' Trap**\n'Are you still ignoring the data?'\n\n*Assumption:* You were ignoring data before.\n*Trap:* 'No' implies you stopped (but did it before). 'Yes' implies you are doing it now.\n*Fix:* 'I haven't ignored any data. I've analyzed it differently.'\n\n**Example 3: The False Dichotomy Load**\n'Will you cut taxes or continue destroying the economy?'\n\n*Assumption:* Not cutting taxes destroys the economy.\n*Trap:* Choosing either option accepts the framing.\n*Fix:* 'That's a false choice. Maintaining current rates supports stability, not destruction.'",
+                keyPoints: [
+                    "Spot 'Why' questions that assume facts",
+                    "Watch out for 'Still' questions implying past guilt",
+                    "Identify false choices loaded with negative framing",
+                ],
+            },
+            {
+                type: "content",
+                title: "Practice: Spotting the Assumption",
+                content: "Train your ear to hear the hidden premise:\n\n**Statement:** 'When will the opposition stop lying to the public?'\n**Hidden Premise:** The opposition is currently lying.\n\n**Statement:** 'Why do you hate progress?'\n**Hidden Premise:** Your position equates to hating progress.\n\n**Statement:** 'Does your plan account for its inevitable failure?'\n**Hidden Premise:** Failure is inevitable.\n\n**Drill:**\nIn your next practice round, listen for questions that make you feel defensive instantly. Pause and ask: 'What is this question assuming that I haven't agreed to?'",
+                keyPoints: [
+                    "Identify the hidden premise before answering",
+                    "Pause when you feel defensive—it's likely a loaded question",
+                    "Practice separating the question from the assumption",
+                ],
+            },
+            {
                 type: "question",
                 id: "l15-01-q1",
                 question: "'Why are you unwilling to compromise?' is a loaded question because:",
                 options: [
                     { id: "a", text: "It's too long" },
-                    { id: "b", text: "It assumes unwillingness to compromise, making any direct answer accept that characterization" },
-                    { id: "c", text: "It's grammatically incorrect" },
+                    { id: "b", text: "It's grammatically incorrect" },
+                    { id: "c", text: "It assumes unwillingness to compromise, making any direct answer accept that characterization" },
                     { id: "d", text: "It's not actually a question" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "This question assumes you're unwilling to compromise. Answering directly—even 'I'm not unwilling'—engages with that framing. The proper response challenges the assumption: 'I reject your characterization. I've proposed X, Y, and Z compromises.'",
             },
             {
@@ -56,16 +76,26 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Advanced Nuance: The Subtle Load",
+                content: "Not all loaded questions are aggressive. Some are subtle framing devices:\n\n**The 'Standard' Load:**\n' given the high standards we all agree on...'\n(Subtly assumes your definitions of standards are universal)\n\n**The 'Consensus' Load:**\n'As most reasonable people think...'\n(Implies disagreement is unreasonable)\n\n**The 'Efficiency' Load:**\n'To save us time, can you just admit...'\n(Frames resistance as time-wasting)\n\n**Countering Subtlety:**\nCall it out gently. 'I'm not sure we do all agree on that standard. Let's define it first.' This shows you are paying close attention and cannot be easily manipulated.",
+                keyPoints: [
+                    "Watch for subtle framing like 'we all agree'",
+                    "Identify appeals to consensus or efficiency that hide assumptions",
+                    "Gently challenge subtle loads to show alertness",
+                ],
+            },
+            {
                 type: "question",
                 id: "l15-01-q2",
                 question: "What's the most effective response if an opponent asks: 'Why does your plan ignore rural communities?'",
                 options: [
-                    { id: "a", text: "Answer with reasons why rural communities were ignored" },
-                    { id: "b", text: "Challenge the assumption: 'Our plan doesn't ignore rural communities. In fact, here's specifically how it addresses them...'" },
+                    { id: "a", text: "Challenge the assumption: 'Our plan doesn't ignore rural communities. In fact, here's specifically how it addresses them...'" },
+                    { id: "b", text: "Answer with reasons why rural communities were ignored" },
                     { id: "c", text: "Refuse to answer entirely" },
                     { id: "d", text: "Ask them a loaded question back" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Challenge the false assumption rather than accepting it. Explain how your plan actually addresses rural communities, turning their attack into an opportunity to present positive content. Answering the question directly would accept that you ignored rural communities.",
             },
             {
@@ -99,16 +129,36 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Deepfakes and Audio Context",
+                content: "In the modern era, context isn't just text—it's audio and video.\n\n**The 'Clip' Problem:**\nA 10-second video clip can make a calm person look angry or a joke look like a threat. This is a visual form of out-of-context quoting.\n\n**Deepfakes:**\nAI can now generate quotes that were never said. The ultimate 'out of context' is 'out of reality.'\n\n**Defense:**\n• Verify source authenticity.\n• Demand the full unedited file if something looks suspicious.\n• Check multiple independent sources.\n\n**In Debate:**\nIf an opponent plays a short clip that seems damning, ask: 'Do you have the full minute before and after this? I'd like to see the context.'",
+                keyPoints: [
+                    "Video/audio clips are easily decontextualized",
+                    "Be aware of AI-generated fabrications",
+                    "Always ask for the full unedited context",
+                ],
+            },
+            {
+                type: "content",
+                title: "The Quotation Sandwich",
+                content: "Ensure your own quotes are contextualized using the 'Sandwich' method:\n\n**Top Bun (Introduction):**\nWho said it, when, and what they were addressing. 'In a 2023 study on climate affecting agriculture, Dr. Smith noted...'\n\n**Meat (The Quote):**\nThe actual evidence. '...yields could drop by 20%.'\n\n**Bottom Bun (Explanation):**\nWhat it means for your argument. 'This shows that food insecurity is a direct result of warming.'\n\n**Why It Works:**\nThis structure proves you understand the context. Opponents can't easily claim you're misrepresenting the source when you've explicitly framed it.",
+                keyPoints: [
+                    "Introduce the source and context first",
+                    "Deliver the quote clearly",
+                    "Explain the implication immediately after",
+                ],
+            },
+            {
                 type: "question",
                 id: "l15-02-q1",
                 question: "An author writes: 'Some claim this policy helps the poor. But evidence shows otherwise.' An opponent quotes only 'this policy helps the poor.' What happened?",
                 options: [
                     { id: "a", text: "Fair use of the quote" },
-                    { id: "b", text: "The quote removes context showing the author was presenting and then rejecting that claim" },
-                    { id: "c", text: "The author changed their mind" },
-                    { id: "d", text: "This is valid paraphrasing" }
+                    { id: "b", text: "The author changed their mind" },
+                    { id: "c", text: "This is valid paraphrasing" },
+                    { id: "d", text: "The quote removes context showing the author was presenting and then rejecting that claim" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "The full context shows the author was presenting a claim they then rejected. The quote removes this critical context, making it appear the author endorsed the claim when they actually argued against it. This is deeply misleading.",
             },
             {
@@ -129,6 +179,16 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                     "Represent the author's meaning, not just their words",
                     "Include qualifications; don't remove context that changes meaning",
                     "Honest quotation builds credibility; distortion destroys it",
+                ],
+            },
+            {
+                type: "content",
+                title: "Ethical Checklist for Evidence",
+                content: "Before reading a card (piece of evidence) in a round, run this mental checklist:\n\n1. **Does this represent the author's conclusion?** (Or just a premise?)\n2. **Have I removed any 'except' or 'however'?** (Qualifiers matter)\n3. **Is the timeline relevant?** (Is 'current' actually 1995?)\n4. **would the author agree with how I'm using this?**\n\n**The 'Author in the Room' Test:**\nIf the author were standing next to you, would they nod or shake their head? If they'd shake their head, you are misrepresenting them, even if the words are technically accurate.",
+                keyPoints: [
+                    "Check if you've preserved the author's conclusion",
+                    "Don't remove critical qualifiers",
+                    "Applying the 'Author in the Room' test ensures integrity",
                 ],
             },
             {
@@ -175,17 +235,37 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Deep Dive: The Double Turn",
+                content: "Why is the double turn so dangerous? It effectively concedes the opponent's argument.\n\n**Scenario:**\nOpponent: 'A leads to B, and B is bad.'\nYou say 1: 'A prevents B' (Link Turn)\nYou say 2: 'B is actually good' (Impact Turn)\n\n**The Result:**\nYou just argued that 'A prevents B' AND 'B is good.'\nTherefore, **A prevents something good.**\n\n**You have just argued against yourself.** You proved your own policy prevents a benefit. The opponent can simply concede your arguments and win: 'They admit B is good, and they admit their plan prevents it. Vote for us to get B!'",
+                keyPoints: [
+                    "Double turns create a logical contradiction",
+                    "You end up proving your plan prevents a benefit",
+                    "Opponents can concede your arguments to win instantly",
+                ],
+            },
+            {
+                type: "content",
+                title: "Selecting the Right Turn",
+                content: "How to choose between Link and Impact turns:\n\n**Choose Link Turn If:**\n• The impact is objectively bad (e.g., nuclear war, poverty). You can't argue these are good.\n• You have strong scientific or empirical data showing the reverse effect.\n\n**Choose Impact Turn If:**\n• The link is undeniable (e.g., 'Spending will go up'). You grant it but redefine the value ('Spending is stimulus').\n• The impact is normative or subjective (e.g., 'loss of tradition'—you can argue change is good).\n\n**Rule of Thumb:**\nIf the outcome is universally hated, turn the link. If the outcome is debatable, turn the impact.",
+                keyPoints: [
+                    "Turn the Link for universally bad outcomes (war, death)",
+                    "Turn the Impact for debatable or subjective outcomes (spending, change)",
+                    "Match the turn type to the nature of the argument",
+                ],
+            },
+            {
                 type: "question",
                 id: "l15-03-q1",
                 question: "Opponent argues: 'Free trade leads to job losses.' Which is an impact turn?",
                 options: [
                     { id: "a", text: "'Free trade actually creates more jobs than it eliminates'" },
-                    { id: "b", text: "'Some job displacement is necessary for economic progress and overall prosperity'" },
-                    { id: "c", text: "'Our research shows the opposite effect'" },
-                    { id: "d", text: "'Your evidence is outdated'" }
+                    { id: "b", text: "'Your evidence is outdated'" },
+                    { id: "c", text: "'Some job displacement is necessary for economic progress and overall prosperity'" },
+                    { id: "d", text: "'Our research shows the opposite effect'" }
                 ],
-                correctAnswer: "b",
-                explanation: "An impact turn accepts the link (job losses) but argues the outcome is beneficial (economic progress). Option A is a link turn (opposite effect occurs). Option B accepts jobs are lost but argues this is actually positive—that's an impact turn.",
+                correctAnswer: "c",
+                explanation: "An impact turn accepts the link (job losses) but argues the outcome is beneficial (economic progress). Option A is a link turn (opposite effect occurs). Option C accepts jobs are lost but argues this is actually positive—that's an impact turn.",
             },
             {
                 type: "content",
@@ -195,6 +275,16 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                     "Turns need evidence explaining why the opposite is true",
                     "Explain the causal mechanism for the turn",
                     "Signal clearly that their argument now supports you",
+                ],
+            },
+            {
+                type: "content",
+                title: "Turning vs. Weighing",
+                content: "Don't confuse turns with weighing.\n\n**Weighing:**\n'Their argument is true, but ours is more important.' (e.g., Environment > Economy)\n\n**Turning:**\n'Their argument actually helps us.' (e.g., Their plan hurts the economy, ours helps it using their own logic)\n\n**Integration:**\nThe most powerful strategy is to Turn THEN Weigh.\n1. Turn: 'Actually, we create better economic growth.'\n2. Weigh: 'And economic growth is the prerequisite for all their other impacts.'\n\nThis gives you two paths to victory: winning the turn, or winning the original weighing.",
+                keyPoints: [
+                    "Weighing compares importance; Turning reverses direction",
+                    "Turn THEN Weigh for maximum impact",
+                    "Create multiple paths to victory",
                 ],
             },
             {
@@ -251,16 +341,36 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The 'Even If' Structure",
+                content: "The golden phrase for minimization is 'Even If.' This creates a 'layered' defense:\n\n**Layer 1: Denial**\n'First, their claim is false because [Evidence A].'\n\n**Layer 2: Minimization (The 'Even If')**\n'But even if you believe their evidence, the impact is minimal because [Reason B].'\n\n**Layer 3: Outweighing (The Second 'Even If')**\n'And even if it were significant, it is outweighed by [Benefit C].'\n\n**Why This Works:**\nThe judge has to agree with you on *only one* layer for you to win the point. The opponent has to win *all three* layers to make their argument stick.",
+                keyPoints: [
+                    "Use 'Even If' to create layers of defense",
+                    "Layer denial, minimization, and weighing",
+                    "Judge only needs to buy one layer for you to win",
+                ],
+            },
+            {
+                type: "content",
+                title: "Minimization in Crossfire",
+                content: "Crossfire is a great place to set up minimization.\n\n**Question:** 'Does your evidence account for X?'\n**Purpose:** If they say no, you minimize validity. If they say yes, you minimize scope.\n\n**Question:** 'How many people are actually affected by this?'\n**Purpose:** Force them to admit a small number, which you can then exploit in speeches.\n\n**Question:** 'Has this ever happened before?'\n**Purpose:** If no, minimize probability. 'So this is a theoretical risk with no historical precedent?'",
+                keyPoints: [
+                    "Use crossfire questions to expose small scope or probability",
+                    "Lock opponents into admitting limitations",
+                    "Use their admissions to minimize in later speeches",
+                ],
+            },
+            {
                 type: "question",
                 id: "l15-04-q1",
                 question: "Opponent shows your policy has a small unintended cost. Which is refutation by minimization?",
                 options: [
-                    { id: "a", text: "'Your evidence is wrong; there's no cost'" },
-                    { id: "b", text: "'That cost affects few people briefly and is far outweighed by our benefits'" },
+                    { id: "a", text: "'That cost affects few people briefly and is far outweighed by our benefits'" },
+                    { id: "b", text: "'Your evidence is wrong; there's no cost'" },
                     { id: "c", text: "'The cost is actually a benefit'" },
                     { id: "d", text: "'Costs don't matter in debate'" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Minimization concedes the point (there is a cost) while reducing its significance (few people, briefly, outweighed by benefits). You're not denying the argument—you're showing it doesn't matter enough to change the decision.",
             },
             {
@@ -271,6 +381,16 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                     "Quantify: show actual scale is small",
                     "Compare: show other considerations are larger",
                     "Evidence strengthens minimization claims",
+                ],
+            },
+            {
+                type: "content",
+                title: "Strategic Concession",
+                content: "Minimization often involves intentional concession. This scares beginners but empowers experts.\n\n**The Power Move:**\n'We grant their contention 2. It's true. But here is why it doesn't justify a vote for them.'\n\n**Benefits:**\n1. **Credibility:** You look reasonable and honest.\n2. **Focus:** You stop wasting time on losing battles.\n3. **Surprise:** Opponents often prepare for a fight; they stumble when you simply say 'Yes, and?'\n\n**Warning:**\nOnly concede what you can afford to lose. Never concede a link to a nuclear war impact unless you can absolutely crush the impact itself.",
+                keyPoints: [
+                    "Strategic concession builds credibility and saves time",
+                    "Don't fight losing battles; pivot to weighing",
+                    "Only concede when you can overwhelm the impact elsewhere",
                 ],
             },
             {
@@ -289,11 +409,11 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 question: "When should you NOT use minimization?",
                 options: [
                     { id: "a", text: "When opponent evidence is hard to challenge" },
-                    { id: "b", text: "When the argument is truly devastating—minimizing would look like denial" },
-                    { id: "c", text: "When you want to build credibility" },
-                    { id: "d", text: "When you have stronger arguments elsewhere" }
+                    { id: "b", text: "When you want to build credibility" },
+                    { id: "c", text: "When you have stronger arguments elsewhere" },
+                    { id: "d", text: "When the argument is truly devastating—minimizing would look like denial" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Don't minimize truly devastating arguments—this makes you look disconnected from reality. If an argument is genuinely round-winning for your opponent, you need to defeat it, not minimize it. Minimization is for points that are true but not determinative.",
             },
             {
@@ -327,6 +447,26 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Presupposition Analysis",
+                content: "Complex questions rely on 'presupposition'—linguistic triggers that assume truth.\n\n**The 'When' Trigger:**\n'When did you stop caring?' -> Presupposes you stopped.\n\n**The 'Why' Trigger:**\n'Why is X failing?' -> Presupposes X is failing.\n\n**The Definition Trigger:**\n'Do you support the *undemocratic* proposal?' -> Embeds definition into the object.\n\n**Detection Drill:**\nWhen you hear a question, strip away the question word (Who/What/Where). Look at the statement that remains. Is that statement true? If not, it's a complex question.",
+                keyPoints: [
+                    "Identify linguistic triggers: When, Why, Adjectives",
+                    "Strip the question word to reveal the statement",
+                    "Challenge the underlying statement if it's false",
+                ],
+            },
+            {
+                type: "content",
+                title: "Unpacking Examples",
+                content: "Watch how a pro unpacks a trap:\n\n**Trap:**\n'Given the budget crisis, why are you proposing expensive new programs?'\n\n**Unpacking:**\n1. Premise A: There is a budget crisis.\n2. Premise B: My programs are expensive.\n3. Link: We shouldn't spend during a crisis.\n\n**Response:**\n'I need to unpack that. First, the budget isn't in crisis—revenue is up. Second, my programs are revenue-neutral, not expensive. So the premise of the question doesn't hold.'",
+                keyPoints: [
+                    "Identify every single embedded premise (A, B, C...)",
+                    "Address them sequentially",
+                    "Show how the question collapses when premises are removed",
+                ],
+            },
+            {
                 type: "question",
                 id: "l15-05-q1",
                 question: "'Is your ineffective and expensive plan worth the risk?' contains how many embedded claims?",
@@ -357,6 +497,16 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                     "Separate questions that embed multiple issues",
                     "Establish premises before asking dependent questions",
                     "Fair questioning builds credibility",
+                ],
+            },
+            {
+                type: "content",
+                title: "Is It Ever Okay?",
+                content: "Can you ever ask complex questions validly?\n\n**The Exception:**\nIt is okay ONLY if the premises have been explicitly conceded or established earlier in the round.\n\nIf the opponent admitted 'Yes, cost is high' earlier, you can ask 'Since cost is high...'.\n\n**The Danger:**\nIf you assume something they haven't admitted, you look slippery. If you are unsure, ask the confirming question first: 'We agreed X, right?' THEN ask the complex question. This is safer and more polite.",
+                keyPoints: [
+                    "Only include premises that are already established/conceded",
+                    "If unsure, confirm the premise first",
+                    "Don't sneak new assumptions into old agreements",
                 ],
             },
             {
@@ -404,6 +554,26 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
             },
             {
                 type: "content",
+                title: "Psychology: Stealing Thunder",
+                content: "In psychology, 'Stealing Thunder' creates credibility. When you admit a fast yourself, it hurts less than when an opponent reveals it.\n\n**The Effect:**\nJurors (and judges) trust speakers who admit weaknesses. It suggests you have nothing to hide.\n\n**Application:**\n'Now, you might worry about the cost. We acknowledge it's an investment. But here's why it pays off...'\n\nThis is disarming. The opponent can no longer have the 'Gotcha!' moment of revealing the cost. You already owned it.",
+                keyPoints: [
+                    "Admitting weaknesses yourself reduces their impact",
+                    "Eliminates the opponent's 'Gotcha!' moment",
+                    "Builds trust and perception of honesty",
+                ],
+            },
+            {
+                type: "content",
+                title: "Preempting Specific Fallacies",
+                content: "You can even preempt fallacies:\n\n**Preempting Slippery Slope:**\n'Opponents might argue this leads to extremes. But note—our policy has a clear cutoff mechanism, preventing any slope.'\n\n**Preempting Strawman:**\n'To be clear, we are NOT arguing for X. We are arguing strictly for Y. Don't let them confuse the two.'\n\n**Preempting Ad Hominem:**\n'Let's focus on the data, not the authors. Regardless of source...'\n\nThis 'inoculates' the judge. If the opponent uses the fallacy later, the judge remembers: 'Ah, they warned me about this.'",
+                keyPoints: [
+                    "Inoculate judges against specific fallacies",
+                    "Define your boundaries to prevent Strawman attacks",
+                    "Show the judge exactly what to watch out for",
+                ],
+            },
+            {
+                type: "content",
                 title: "Identifying What to Preempt",
                 content: "Not all arguments should be preempted:\n\n**Preempt When:**\n• The attack is highly likely and predictable\n• The response strengthens your case\n• Addressing it shows thorough thinking\n• The argument would be devastating if unanswered\n\n**Don't Preempt When:**\n• The attack might not be made (don't give them ideas)\n• Your response is weak (you might advertise vulnerability)\n• It distracts from your affirmative case\n• Time is better spent on positive content\n\n**Research-Based Anticipation:**\n• What arguments do opponents typically make on this topic?\n• What are the obvious objections to your position?\n• What would you argue if you were on the other side?\n\n**Prioritize:**\nPreempt the most likely and most dangerous arguments. You can't address everything.",
                 keyPoints: [
@@ -426,6 +596,19 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 explanation: "Don't preempt arguments opponents might not think of—you'd be giving them ideas and potentially highlighting your weaknesses. Preemption is for predictable attacks, not for advertising every possible vulnerability.",
             },
             {
+                type: "question",
+                id: "l15-06-q1",
+                question: "What is the psychological effect of 'Stealing Thunder' in debate?",
+                options: [
+                    { id: "a", text: "It makes you look weak and defensive by admitting flaws" },
+                    { id: "b", text: "It builds credibility and reduces the impact of an attack by addressing it yourself first" },
+                    { id: "c", text: "It confuses the judge about which side you are on" },
+                    { id: "d", text: "It makes the opponent feel sorry for you" }
+                ],
+                correctAnswer: "b",
+                explanation: "Stealing thunder builds credibility. By voluntarily addressing a weakness (like cost), you signal honesty and confidence. It removes the sting of the opponent's attack because you've already framed it on your terms.",
+            },
+            {
                 type: "content",
                 title: "Integrating Preemption Effectively",
                 content: "How to preempt well:\n\n**Smooth Integration:**\nPreemption should flow naturally in your case, not feel tacked on.\n\n'Some might wonder about cost. Our analysis shows [cost is manageable because...]'\n\n**Fair Characterization:**\nState the objection fairly, not as a strawman. Strong preemption addresses the real argument.\n\n**Complete Response:**\nDon't just mention the objection—fully refute it. An incomplete preemption may highlight the problem without solving it.\n\n**Signposting:**\n'Addressing a likely concern...' or 'One might object that...' signals you're preempting.\n\n**Follow Through:**\nWhen opponents make the anticipated argument, reference your preemption: 'As I addressed in my case, we've already responded to this concern...'\n\n**Don't Overdo It:**\nToo much preemption can make your case seem defensive. Balance with positive content.",
@@ -441,11 +624,11 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 question: "Why should preemptive refutation characterize the objection fairly?",
                 options: [
                     { id: "a", text: "To be polite to hypothetical opponents" },
-                    { id: "b", text: "Addressing a strawman version means the real objection remains unanswered" },
-                    { id: "c", text: "Judges award extra points for fairness" },
+                    { id: "b", text: "Judges award extra points for fairness" },
+                    { id: "c", text: "Addressing a strawman version means the real objection remains unanswered" },
                     { id: "d", text: "It takes more time, which fills speeches" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "If you preempt a weak version of the argument, the real objection remains unanswered. When opponents make the stronger version, your preemption looks inadequate. Address the strongest form of likely objections.",
             },
             {
@@ -480,6 +663,26 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
             },
             {
                 type: "content",
+                title: "Synthesis: The Master Refuter",
+                content: "Real debate proficiency comes from combining these tools.\n\n**Scenario:**\nOpponent asks a loaded, complex question based on an out-of-context quote.\n\n**The Response:**\n1. **Call out the Load:** 'That question assumes X, which is false.'\n2. **Correct the Quote:** 'In fact, the author actually concludes Y.'\n3. **Turn the Argument:** 'So not only is your premise wrong, the evidence actually supports MY side.'\n\nThis is total domination. You didn't just answer; you dismantled the entire attack vector layer by layer.",
+                keyPoints: [
+                    "Combine techniques for powerful responses",
+                    "Layer your defense: Call out -> Correct -> Turn",
+                    "Dismantle the attack's foundation, not just the claim",
+                ],
+            },
+            {
+                type: "content",
+                title: "Final Quiz Preparation",
+                content: "As you move to the final assessment for this unit, remember:\n\n• **Precision:** Know exactly *why* something is a fallacy (e.g., 'because it implies X without proof').\n• **Strategy:** Know *when* to use a turn vs. minimization.\n• **Ethics:** Remember that credibility is your most valuable resource. Don't sacrifice it for a cheap point.\n\nReview the definitions of Link Turn, Impact Turn, and Minimization one last time. Good luck!",
+                keyPoints: [
+                    "Focus on the 'why' behind fallacies",
+                    "Review strategic selection criteria",
+                    "Prioritize long-term credibility over short-term tricks",
+                ],
+            },
+            {
+                type: "content",
                 title: "Review: Offensive and Defensive Techniques",
                 content: "**Turning Arguments:**\n• Link turn: opposite effect actually occurs\n• Impact turn: effect occurs but is actually beneficial\n• Never double turn (both link and impact)—it's contradictory\n• Turns convert opponent arguments into your advantages\n\n**Refutation by Minimization:**\n• Concede truth while reducing significance\n• Use when opponent evidence is solid but point is minor\n• Don't minimize truly devastating arguments\n• Combine with weighing for maximum effect\n\n**Preemptive Refutation:**\n• Address likely attacks before opponents make them\n• Preempt predictable, dangerous arguments\n• Don't preempt unlikely arguments—avoid giving ideas\n• Characterize objections fairly and completely refute",
                 keyPoints: [
@@ -494,11 +697,11 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 question: "Your opponent claims your policy reduces employment. You argue reduced employment in this sector frees workers for more productive industries. What type of turn is this?",
                 options: [
                     { id: "a", text: "Link turn—you're saying employment doesn't decrease" },
-                    { id: "b", text: "Impact turn—you accept employment decreases but argue this is beneficial" },
-                    { id: "c", text: "Double turn" },
-                    { id: "d", text: "Not a turn at all" }
+                    { id: "b", text: "Double turn" },
+                    { id: "c", text: "Not a turn at all" },
+                    { id: "d", text: "Impact turn—you accept employment decreases but argue this is beneficial" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "This is an impact turn. You're accepting the link (employment does decrease in that sector) but turning the impact (this is beneficial because workers move to more productive industries). You're not disputing their causal claim—you're disputing whether it's bad.",
             },
             {
@@ -513,6 +716,19 @@ export const UNIT_15_LESSONS: MultiPageLesson[] = [
                 ],
                 correctAnswer: "b",
                 explanation: "Minimization is best when opponent evidence is hard to challenge directly but the point isn't determinative. You concede the point while winning on significance. For truly devastating arguments, you need to defeat them, not minimize them.",
+            },
+            {
+                type: "question",
+                id: "l15-07-q2",
+                question: "In the 'Sandwich' method of quoting, what comes last?",
+                options: [
+                    { id: "a", text: "The quote itself" },
+                    { id: "b", text: "The explanation of what the quote means for your argument" },
+                    { id: "c", text: "The citation name" },
+                    { id: "d", text: "An attack on the opponent" }
+                ],
+                correctAnswer: "b",
+                explanation: "The 'Bottom Bun' of the sandwich is the explanation. After reading the quote, you must immediately explain its significance and how it supports your argument. Leaving a quote hanging without explanation is a missed opportunity.",
             },
             {
                 type: "content",

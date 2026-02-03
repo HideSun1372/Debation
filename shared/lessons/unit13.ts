@@ -20,16 +20,36 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Refutation Drill: The 4-Step Method",
+                content: "Practice the structure: They Say -> But -> Because -> Therefore.\n\n**Argument:** 'Banning cars reduces pollution.'\n\n**Refutation:**\n1. **They Say:** 'Banning cars reduces pollution.'\n2. **But:** 'This ignores the pollution from manufacturing electric alternatives and battery disposal.'\n3. **Because:** 'Studies show mining lithium creates massive local toxicity.'\n4. **Therefore:** 'The environmental benefit is negated by displacement.'\n\n**Drill:**\nTake an argument you disagree with. Force yourself to write it out in exactly these four steps. It clears up muddy thinking instantly.",
+                keyPoints: [
+                    "Rigid structure forces clarity",
+                    "Ensure the 'Because' step has actual warrants",
+                    "Link back to the round impact in 'Therefore'",
+                ],
+            },
+            {
+                type: "content",
+                title: "Handling the 'Spread'",
+                content: "What if they make 20 arguments in 4 minutes?\n\n**Grouping:**\nDon't answer 20 arguments. Group them.\n'They make 5 arguments about cost. My response to all of them is...'\n\n**Cross-Apply:**\n'This evidence about efficiency answers their points 1, 3, and 7.'\n\n**Prioritize:**\nIdentify the 3 arguments that actually matter. Win those. Concede the 17 that don't imply a ballot for them.\n\n**Don't Panic:**\nSpeed is a tactic to overwhelm you. Clarity and grouping are the antidotes.",
+                keyPoints: [
+                    "Group similar arguments to answer efficiently",
+                    "Cross-apply strong answers to multiple points",
+                    "Prioritize the 'winning' arguments; ignore noise",
+                ],
+            },
+            {
                 type: "question",
                 id: "l13-01-q1",
                 question: "You accept that a policy increases costs but argue the benefits still exceed them. What type of refutation is this?",
                 options: [
                     { id: "a", text: "Denial" },
-                    { id: "b", text: "Turn" },
-                    { id: "c", text: "Outweigh" },
+                    { id: "b", text: "Outweigh" },
+                    { id: "c", text: "Turn" },
                     { id: "d", text: "Take-out" }
                 ],
-                correctAnswer: "c",
+                correctAnswer: "b",
                 explanation: "This is outweighing—you accept the opponent's argument (increased costs) but argue that other considerations (benefits) are more important. You're not denying the claim or turning it to your advantage; you're saying it matters less than your side's arguments.",
             },
             {
@@ -41,6 +61,29 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                     "Time constraints require strategic choices",
                     "Use the 'so what' test to assess argument importance",
                 ],
+            },
+            {
+                type: "content",
+                title: "Grouping Arguments",
+                content: "Strategic grouping saves time and highlights logical flaws.\n\n**By Theme:**\n'They make three arguments about economic harm. I will address the Economy Group.'\n\n**By Logical Flaw:**\n'Their first four points all rely on the same outdated study. One evidence take-out defeats this entire block.'\n\n**By Impact:**\n'All their arguments lead to a recession impact. I will simply outweigh the recession impact.'\n\n**Effect:**\nThis makes you look organized and in control, while making their 'spread' look messy and repetitive.",
+                keyPoints: [
+                    "Group by theme, flaw, or impact",
+                    "Defeat entire blocks with single well-placed arguments",
+                    "Organization projects dominance and control",
+                ],
+            },
+            {
+                type: "question",
+                id: "l13-01-q2",
+                question: "Why is it important to state 'They Say' before making your refutation?",
+                options: [
+                    { id: "a", text: "It takes up time" },
+                    { id: "b", text: "It's not important" },
+                    { id: "c", text: "It helps the judge understand which argument you're addressing and ensures fair engagement" },
+                    { id: "d", text: "It intimidates opponents" }
+                ],
+                correctAnswer: "c",
+                explanation: "Stating 'They Say' first helps judges follow your refutation by clearly identifying which argument you're addressing. It also demonstrates fair engagement—you're not caricaturing their position before attacking it. This organization makes your attacks more persuasive and easier to evaluate.",
             },
             {
                 type: "content",
@@ -96,16 +139,46 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Double Turn Practice",
+                content: "Spot the error:\n\n**Argument:** 'Sanctions cause starvation.'\n**Your Response:** '1. Sanctions don't cause starvation (Link Turn). 2. Starvation is actually good (Impact Turn).'\n\n**Analysis:**\nWhoops! You just said sanctions PREVENT a GOOD thing.\nYou argued sanctions prevent starvation, and starvation is good. So sanctions prevent good.\n\n**Fix:**\nPick ONE. Either 'Sanctions feed people' OR 'Starvation builds character' (Okay, don't run that second one, but you get the logic).",
+                keyPoints: [
+                    "Running both turns creates a logical contradiction",
+                    "You end up proving your own policy prevents a benefit",
+                    "Commit to the strongest turn path",
+                ],
+            },
+            {
+                type: "content",
+                title: "Partial Turns vs. Straight Turns",
+                content: "Not all turns are total reversals.\n\n**Straight Turn:**\n'You say X hurts Y. Actually X helps Y massively.'\n(Total reversal of the link).\n\n**Partial Turn:**\n'You say X hurts Y. In the short term, maybe. But in the long term, it stabilizes Y.'\n(Nuanced reversal).\n\n**Strategic Value:**\nStraight turns are rare but devastating. Partial turns are more common and credible. Don't force a straight turn if the evidence only supports a nuanced one.",
+                keyPoints: [
+                    "Straight turns completely reverse the argument",
+                    "Partial turns add nuance or timeframe distinctions",
+                    "Credibility matters more than absolute reversal",
+                ],
+            },
+            {
+                type: "content",
+                title: "Turning Philosophical Arguments",
+                content: "You can turn values too.\n\n**Argument:** 'Liberty is the highest value.'\n**Response:** 'Agreed. But your plan reduces liberty by allowing unchecked corporate dominance. My regulation actually protects liberty.'\n\n**The Move:**\nDon't fight their value. *Co-opt* their value. Show you achieve their goal better than they do. This is often more persuasive than arguing 'Safety > Liberty.'",
+                keyPoints: [
+                    "Co-opt the opponent's values",
+                    "Argue you achieve *their* goal better than they do",
+                    "Avoids messy value debates; wins on their own terms",
+                ],
+            },
+            {
                 type: "question",
                 id: "l13-02-q1",
                 question: "Opponent argues: 'This policy increases government spending, and government spending is wasteful.' You respond: 'Government spending isn't wasteful—it creates valuable public goods.' What type of turn is this?",
                 options: [
-                    { id: "a", text: "Link turn" },
-                    { id: "b", text: "Impact turn" },
+                    { id: "a", text: "Impact turn" },
+                    { id: "b", text: "Link turn" },
                     { id: "c", text: "Take-out" },
                     { id: "d", text: "Denial" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "This is an impact turn. You accept the link (the policy increases spending) but turn the impact (you argue spending isn't wasteful, it's beneficial). You're not disputing the cause-effect; you're reversing the evaluation of the effect.",
             },
             {
@@ -134,11 +207,11 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 question: "Why can you NOT run both a link turn and impact turn on the same argument?",
                 options: [
                     { id: "a", text: "It takes too much time" },
-                    { id: "b", text: "They're contradictory—one says the effect doesn't happen, the other says it's good" },
-                    { id: "c", text: "Judges don't like it" },
-                    { id: "d", text: "Rules prohibit it" }
+                    { id: "b", text: "Judges don't like it" },
+                    { id: "c", text: "Rules prohibit it" },
+                    { id: "d", text: "They're contradictory—one says the effect doesn't happen, the other says it's good" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Link and impact turns on the same argument are contradictory. A link turn says 'X doesn't cause Y, it causes the opposite.' An impact turn says 'X does cause Y, but Y is actually good.' You can't simultaneously claim the effect doesn't happen AND claim the effect is good—pick one.",
             },
             {
@@ -169,6 +242,36 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                     "Evidence quality attacks challenge the source",
                     "Logical gap attacks challenge the inference",
                     "Scope attacks challenge the applicability",
+                ],
+            },
+            {
+                type: "content",
+                title: "Indicting Methodology",
+                content: "Deep take-outs attack the study design:\n\n**Sample Size:** 'They surveyed 10 people.' (Too small)\n**Selection Bias:** 'They only surveyed happy customers.' (Not representative)\n**Duration:** 'The study lasted 2 weeks.' (No long term data)\n**Control:** 'There was no control group.' (Correlation, not causation)\n\n**Why This Wins:**\nYou aren't just saying 'My study is better.' You are proving their study is *invalid*. It destroys their claim at the root.",
+                keyPoints: [
+                    "Attack sample size, duration, and control groups",
+                    "Identify selection bias",
+                    "Invalidating methodology is more powerful than counter-evidence",
+                ],
+            },
+            {
+                type: "content",
+                title: "The Null Hypothesis",
+                content: "In science, the default is 'no effect' (Null Hypothesis) until proven otherwise. If you show their evidence is flawed, you don't need counter-evidence. The default returns to 'we don't know.'\n\n**Debate Application:**\n'Since I've shown their evidence is methodologically flawed, they have failed their burden of proof. You don't need to believe me; you just need to disbelieve them.'",
+                keyPoints: [
+                    "Burden of proof rests on the claimant",
+                    "Destroying their evidence resets to the Null Hypothesis",
+                    "You win by default if they fail to prove their case",
+                ],
+            },
+            {
+                type: "content",
+                title: "Timeframe Attacks",
+                content: "Facts change. What was true in 2010 might be false in 2024.\n\n**Technological Change:** Data on solar/batteries from 2015 is useless now.\n**Geopolitical Change:** Alliances shift. Pre-war data doesn't apply post-war.\n**Economic Cycles:** Inflation data from 2020 doesn't apply to 2024.\n\n**The Argument:**\n'This evidence isn't wrong; it's historic. It describes a world that no longer exists.'",
+                keyPoints: [
+                    "Identify dynamic fields (tech, econ, politics) where time matters",
+                    "Distinguish between 'wrong' and 'outdated'",
+                    "Paint their case as a history lesson, not a policy guide",
                 ],
             },
             {
@@ -248,6 +351,39 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Meta-Weighing",
+                content: "Weighing the weighing mechanisms themselves.\n\n**Scenario:**\nYou argue Magnitude (millions die). They argue Probability (100% chance of small harm).\n\n**The Meta-Argument:**\n'Probability > Magnitude here. We can't make policy based on 0.001% risks of infinite harm (Pascal's Wager), or we'd never leave the house. We must prioritize certain impacts.'\n\nOR\n\n'Magnitude > Probability. Even a 1% chance of extinction outweighs everything, because extinction means no future probability of anything.'\n\n**The Lesson:**\nDon't just use the mechanisms. Argue WHY your mechanism is the correct way to view the round.",
+                keyPoints: [
+                    "Argue why your weighing criteria is superior",
+                    "Pascal's Wager attacks (ignoring low prob/high mag)",
+                    "Precautionary Principle defense (prioritizing existential risk)",
+                ],
+            },
+            {
+                type: "content",
+                title: "Probability vs. Magnitude Matrices",
+                content: "When comparing:\n\n• **High Prob/High Mag:** Always wins.\n• **Low Prob/Low Mag:** Always loses.\n• **High Prob/Low Mag vs. Low Prob/High Mag:** The danger zone.\n\n**Winning the Danger Zone:**\n1. Attack the internal link (reduce their prob to zero).\n2. Timeframe (my small impact helps us solve the big one later).\n3. Reversibility (we can fix my small mess; we can't fix their big catastrophe).\n\n**Visualizing:**\nMake the judge see the trade-off. 'Would you bet your life savings on a lottery ticket? No. So don't bet the economy on their speculative boom.'",
+                keyPoints: [
+                    "Identify the trade-off zone",
+                    "Use secondary weighing mechanisms (timeframe, reversibility) to break the tie",
+                    "Use analogies to clarify the risk profile",
+                ],
+            },
+            {
+                type: "question",
+                id: "l13-04-q1",
+                question: "One side argues economic benefits (likely, moderate); the other argues existential risk (unlikely, severe). How do you weigh probability against magnitude?",
+                options: [
+                    { id: "a", text: "It depends—even low-probability extreme magnitude effects may outweigh certain moderate ones" },
+                    { id: "b", text: "Probability always wins" },
+                    { id: "c", text: "Magnitude always wins" },
+                    { id: "d", text: "They cancel out" }
+                ],
+                correctAnswer: "a",
+                explanation: "Weighing probability against magnitude requires judgment. A 1% risk of extinction might outweigh a 90% chance of moderate economic gain because the stakes are so asymmetric. But a 0.001% risk might not. Debaters must make explicit arguments about where the balance lies.",
+            },
+            {
                 type: "question",
                 id: "l13-04-q1",
                 question: "One side argues economic benefits (likely, moderate); the other argues existential risk (unlikely, severe). How do you weigh probability against magnitude?",
@@ -281,16 +417,26 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Short vs. Long Term Scenarios",
+                content: "The Timeframe Clash:\n\n**Short Term Argument:**\n'People are suffering NOW. We can't sacrifice the current generation for speculative future.'\n\n**Long Term Argument:**\n'Short term pain is worth long term gain. Avoiding structural fixes ensures suffering continues forever.'\n\n**Winning This:**\n• If arguing Short Term: Emphasize certainty and urgency.\n• If arguing Long Term: Emphasize 'Structural Violence' and sustainability. 'Feeding them today just to starve them tomorrow isn't a solution.'",
+                keyPoints: [
+                    "Short term: Urgency, certainty, moral obligation to now",
+                    "Long term: Sustainability, structural repair, cumulative benefit",
+                    "Frame the opponent's view as myopic or unsustainable",
+                ],
+            },
+            {
                 type: "question",
                 id: "l13-04-q2",
                 question: "Why is explicit weighing better than implicit weighing?",
                 options: [
                     { id: "a", text: "It takes more time" },
-                    { id: "b", text: "Judges may miss implicit weighing; explicit comparison ensures they apply your framework" },
-                    { id: "c", text: "Implicit weighing is always wrong" },
-                    { id: "d", text: "Rules require explicit weighing" }
+                    { id: "b", text: "Implicit weighing is always wrong" },
+                    { id: "c", text: "Rules require explicit weighing" },
+                    { id: "d", text: "Judges may miss implicit weighing; explicit comparison ensures they apply your framework" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Judges can miss implicit weighing—they might not realize you're trying to compare impacts. Explicit weighing ('My impact is larger because...') ensures judges understand your comparison and apply your framework. Don't leave important comparisons to chance.",
             },
             {
@@ -334,6 +480,36 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Power Tagging",
+                content: "The 'Tag' is the one-sentence summary you read before the evidence.\n\n**Weak Tag:**\n'This evidence speaks to the economy.'\n\n**Power Tag:**\n'Smith 23 proves that a 2% tariff hike triggers a global recession.'\n\n**Why It Matters:**\nThe Power Tag tells the judge the *logic* and the *impact* before you read the text. It primes their brain to accept your conclusion. It makes your flow (notes) look cleaner.",
+                keyPoints: [
+                    "Tags should summarize the specific claim and impact",
+                    "Prime the judge's listening",
+                    "Strong tags make for strong memory",
+                ],
+            },
+            {
+                type: "content",
+                title: "Cutting Cards Effectively",
+                content: "How to prepare evidence:\n• **Selection:** Find the paragraph where they explain the mechanism.\n• **Highlighting:** Only read the essential words to maintain flow. (But don't distort meaning!).\n• **Shrinking:** Reduce font size of unread parts so you don't get lost visually.\n\n**Ethical Note:**\nYou must have the full paragraph available. You can highlight specific words, but you cannot change the meaning by skipping 'not' or 'however.'",
+                keyPoints: [
+                    "Highlight for efficiency",
+                    "Preserve context for ethics",
+                    "Visual clarity aids delivery",
+                ],
+            },
+            {
+                type: "content",
+                title: "The Ethics of Ellipses",
+                content: "Using '...' to skip text:\n• **Okay:** Skipping irrelevant side-points or examples to save time.\n• **Not Okay:** Skipping periods to merge sentences that weren't connected.\n• **Not Okay:** Skipping qualifiers ('rarely,' 'sometimes').\n\n**Golden Rule:**\nIf the author read your version, would they say 'Yes, that's what I meant'? If no, you are cheating.",
+                keyPoints: [
+                    "Ellipses must not alter meaning",
+                    "Never merge separate thoughts into one false logic chain",
+                    "The 'Author Test' applies here too",
+                ],
+            },
+            {
                 type: "question",
                 id: "l13-05-q1",
                 question: "Why should you explain evidence after reading it, not just read and move on?",
@@ -362,11 +538,11 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 question: "What is 'orphan evidence' and why is it problematic?",
                 options: [
                     { id: "a", text: "Evidence without an author" },
-                    { id: "b", text: "Evidence that isn't integrated into argument structure, so it has little impact" },
-                    { id: "c", text: "Evidence from obscure sources" },
+                    { id: "b", text: "Evidence from obscure sources" },
+                    { id: "c", text: "Evidence that isn't integrated into argument structure, so it has little impact" },
                     { id: "d", text: "Inherited evidence from past debates" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "Orphan evidence is evidence that exists in your speech but isn't connected to your argument structure. It sits alone without clear claims or implications. Judges don't know what to do with it. Effective evidence use integrates every piece into your case structure.",
             },
             {
@@ -413,6 +589,19 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 explanation: "Pure defense only neutralizes their arguments—it doesn't provide reasons to vote for you. If both sides have no offense, there's no winner. You need independent reasons why your position is desirable, not just answers to their attacks.",
             },
             {
+                type: "question",
+                id: "l13-06-q1",
+                question: "If you only run defensive arguments—taking out all opponent attacks—why haven't you won the debate yet?",
+                options: [
+                    { id: "a", text: "You've only shown they shouldn't win, not why you should—you need affirmative reasons for your side" },
+                    { id: "b", text: "The judge is biased" },
+                    { id: "c", text: "You have won the debate" },
+                    { id: "d", text: "Defense isn't allowed in debate" }
+                ],
+                correctAnswer: "a",
+                explanation: "Pure defense only neutralizes their arguments—it doesn't provide reasons to vote for you. If both sides have no offense, there's no winner. You need independent reasons why your position is desirable, not just answers to their attacks.",
+            },
+            {
                 type: "content",
                 title: "When to Emphasize Defense",
                 content: "Strategic use of defensive arguments:\n\n**When Behind:**\nIf opponents have strong offense and you're behind on impact comparison, play defense to neutralize their advantages before extending your own.\n\n**On Strong Attacks:**\nWhen an attack threatens your core case, you must defend before moving on. Undefended arguments can be 'dropped' and held against you.\n\n**Time Pressure:**\nIn final rebuttals, you might not have time for new offense. Defense on key issues may be all you can do.\n\n**Risk Management:**\nIf your offense is speculative but their offense is real, solid defense might be safer than doubling down on weak offense.\n\n**However:**\nPure defense is rarely a winning strategy. Even when emphasizing defense, maintain some offense.\n\n**The Minimum Standard:**\nAnswer significant attacks on your case. Don't let major arguments go unanswered. But balance this with extending your reasons to win.",
@@ -433,16 +622,46 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The 'Collapsed Round' Strategy",
+                content: "In the final speech, you can't cover everything. You must 'collapse' down to the 1-2 winning issues.\n\n**How to Collapse:**\n1. Identify your strongest offensive argument.\n2. Identify their strongest offensive argument.\n3. Explain why yours outweighs or defeats theirs.\n4. Explicitly tell the judge: 'I am not going for X or Y argument anymore. The round comes down to Z.'\n\n**Benefit:**\nThis gives you deep time to explain the winning issue, while the opponent spreads themselves thin trying to cover everything.",
+                keyPoints: [
+                    "Focus on 1-2 winning issues in the final speech",
+                    "Explicitly drop less important arguments",
+                    "Depth beats breadth in rebuttals",
+                ],
+            },
+            {
+                type: "content",
+                title: "Kick-Out Moves",
+                content: "Sometimes you need to abandon a sinking ship.\n\n**The Kick-Out:**\n'They spent 3 minutes attacking my Contention 1. I'm going to kick it out (drop it) and focus entirely on Contention 2, which they mishandled.'\n\n**Strategic Value:**\nYou wasted their time. They spent precious minutes attacking something you don't even need to win. This is advanced time management.",
+                keyPoints: [
+                    "Strategically drop arguments to invalidate opponent time investment",
+                    "Only kick out arguments you don't need to win",
+                    "Pivot to where you are strongest",
+                ],
+            },
+            {
+                type: "content",
+                title: "Different Roles: 2NR vs 2AR",
+                content: "In Policy/LD debate terms:\n\n**Negative Final (2NR):**\nMust likely close doors. 'Close out' the round by proving the Aff failed.\n\n**Affirmative Final (2AR):**\nMust open doors. Tell the story of the Aff world. The last word is powerful—use it to paint a big picture comparison.\n\n**The takeaway:**\nThe final defensive speech needs to be airtight. The final offensive speech needs to be inspiring.",
+                keyPoints: [
+                    "Negative speeches often focus on closing options/defense",
+                    "Affirmative speeches focus on opening possibilities/story",
+                    "Use the final speech for big picture narrative",
+                ],
+            },
+            {
                 type: "question",
                 id: "l13-06-q2",
                 question: "Your opponent's main attack on your case is weak. What's the best time allocation?",
                 options: [
                     { id: "a", text: "Spend most time on extensive defense against the weak attack" },
                     { id: "b", text: "Ignore the attack entirely" },
-                    { id: "c", text: "Answer efficiently and devote more time to extending your offense" },
-                    { id: "d", text: "Only respond in cross-examination" }
+                    { id: "c", text: "Only respond in cross-examination" },
+                    { id: "d", text: "Answer efficiently and devote more time to extending your offense" }
                 ],
-                correctAnswer: "c",
+                correctAnswer: "d",
                 explanation: "When their attack is weak, a brief, efficient answer is sufficient. Spending extensive time on weak attacks is wasteful. Better to answer efficiently and invest remaining time in extending your own reasons to win—that's what ultimately decides debates.",
             },
             {
@@ -514,11 +733,11 @@ export const UNIT_13_LESSONS: MultiPageLesson[] = [
                 question: "When should you emphasize defensive arguments over offensive ones?",
                 options: [
                     { id: "a", text: "Always—defense is what wins debates" },
-                    { id: "b", text: "When their attacks threaten your core case or when you're behind and need to neutralize their advantages" },
-                    { id: "c", text: "Never—only offense matters" },
+                    { id: "b", text: "Never—only offense matters" },
+                    { id: "c", text: "When their attacks threaten your core case or when you're behind and need to neutralize their advantages" },
                     { id: "d", text: "Only in the first speech" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "Emphasize defense when you're behind and need to neutralize their offense, or when significant attacks threaten your core case. Unanswered attacks can be held against you. But even then, maintain some offense—pure defense can't win rounds.",
             },
             {

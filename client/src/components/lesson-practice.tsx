@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { 
-  Loader2, 
-  Send, 
-  RefreshCw, 
-  CheckCircle2, 
+import {
+  Loader2,
+  Send,
+  RefreshCw,
+  CheckCircle2,
   AlertCircle,
   Lightbulb,
   Target,
@@ -18,11 +17,11 @@ import {
   Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { 
-  LessonPracticePage, 
-  PracticeType, 
+import type {
+  LessonPracticePage,
+  PracticeType,
   DifficultyLevel,
-  PracticeConfig 
+  PracticeConfig
 } from "@shared/lessons/types";
 import { getDifficultyFromLevel } from "@shared/lessons/types";
 import { apiRequest } from "@/lib/queryClient";
@@ -49,30 +48,12 @@ interface LessonPracticeProps {
   onSkip?: () => void;
 }
 
-const CLAIM_TYPES = [
-  { id: "fact", label: "Claim of Fact", description: "Asserts something is true or false" },
-  { id: "value", label: "Claim of Value", description: "Asserts something is good/bad, right/wrong" },
-  { id: "policy", label: "Claim of Policy", description: "Asserts something should or shouldn't be done" },
-];
-
-const FALLACY_TYPES = [
-  { id: "ad_hominem", label: "Ad Hominem", description: "Attacking the person instead of the argument" },
-  { id: "strawman", label: "Strawman", description: "Misrepresenting the opponent's argument" },
-  { id: "false_dichotomy", label: "False Dichotomy", description: "Presenting only two options when more exist" },
-  { id: "slippery_slope", label: "Slippery Slope", description: "Claiming one thing will lead to extreme consequences" },
-  { id: "appeal_to_authority", label: "Appeal to Authority", description: "Misusing expert opinion" },
-  { id: "hasty_generalization", label: "Hasty Generalization", description: "Drawing conclusions from insufficient evidence" },
-  { id: "circular_reasoning", label: "Circular Reasoning", description: "Using the conclusion as a premise" },
-  { id: "red_herring", label: "Red Herring", description: "Introducing an irrelevant topic" },
-  { id: "appeal_to_emotion", label: "Appeal to Emotion", description: "Using emotion instead of logic" },
-  { id: "bandwagon", label: "Bandwagon", description: "Arguing something is true because many believe it" },
-];
+// All practice types now require written explanations for deeper learning
 
 export function LessonPractice({ practice, practiceId, userLevel, onComplete, onSkip }: LessonPracticeProps) {
   const [stage, setStage] = useState<"loading" | "prompt" | "responding" | "evaluating" | "feedback">("loading");
   const [aiPrompt, setAiPrompt] = useState<PracticePrompt | null>(null);
   const [userResponse, setUserResponse] = useState("");
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<PracticeFeedback | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -86,8 +67,8 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
     setStage("loading");
     setError(null);
     setUserResponse("");
-    setSelectedOption(null);
     setFeedback(null);
+    setCurrentHint(null); // Reset hint
 
     try {
       const response = await apiRequest("POST", "/api/practice/generate", {
@@ -96,7 +77,7 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
         topic: practice.topic,
         targetSkill: practice.targetSkill,
       });
-      
+
       const prompt = await response.json();
       setAiPrompt(prompt);
       setStage("prompt");
@@ -107,12 +88,31 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
     }
   };
 
+  const [currentHint, setCurrentHint] = useState<string | null>(null);
+  const [hintLoading, setHintLoading] = useState(false);
+
+  const generateHint = async () => {
+    if (!aiPrompt) return;
+    setHintLoading(true);
+    try {
+      const response = await apiRequest("POST", "/api/practice/hint", {
+        practiceType: practice.type,
+        difficulty,
+        context: aiPrompt
+      });
+      const data = await response.json();
+      setCurrentHint(data.hint);
+    } catch (err) {
+      console.error("Failed to generate hint:", err);
+    } finally {
+      setHintLoading(false);
+    }
+  };
+
   const submitResponse = async () => {
     if (!aiPrompt) return;
 
-    const responseText = practice.type === "claim-classifier" || practice.type === "fallacy-spotter"
-      ? selectedOption || ""
-      : userResponse.trim();
+    const responseText = userResponse.trim();
 
     if (!responseText) return;
 
@@ -196,17 +196,9 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
                 <p className="font-medium text-lg">"{aiPrompt.claim}"</p>
               </div>
             )}
-            <RadioGroup value={selectedOption || ""} onValueChange={setSelectedOption} className="space-y-3">
-              {CLAIM_TYPES.map((type) => (
-                <div key={type.id} className="flex items-start space-x-3 p-3 border rounded-lg hover-elevate cursor-pointer">
-                  <RadioGroupItem value={type.id} id={type.id} className="mt-1" />
-                  <Label htmlFor={type.id} className="flex-1 cursor-pointer">
-                    <span className="font-medium">{type.label}</span>
-                    <p className="text-sm text-muted-foreground">{type.description}</p>
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
+            <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+              <p className="text-sm text-muted-foreground">Identify whether this is a claim of fact, value, or policy, and explain your reasoning.</p>
+            </div>
           </div>
         );
 
@@ -223,16 +215,9 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
                 <p className="italic">"{aiPrompt.argument}"</p>
               </div>
             )}
-            <RadioGroup value={selectedOption || ""} onValueChange={setSelectedOption} className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {FALLACY_TYPES.map((type) => (
-                <div key={type.id} className="flex items-start space-x-2 p-2 border rounded-lg hover-elevate cursor-pointer">
-                  <RadioGroupItem value={type.id} id={type.id} className="mt-1" />
-                  <Label htmlFor={type.id} className="flex-1 cursor-pointer text-sm">
-                    <span className="font-medium">{type.label}</span>
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
+            <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+              <p className="text-sm text-muted-foreground">Name the fallacy and explain why this argument is logically flawed.</p>
+            </div>
           </div>
         );
 
@@ -264,7 +249,7 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
     }
   };
 
-  const needsTextResponse = !["claim-classifier", "fallacy-spotter"].includes(practice.type);
+  const needsTextResponse = true; // All practice types require written explanations
 
   return (
     <Card className="w-full max-w-3xl mx-auto">
@@ -300,7 +285,7 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
             ) : (
               <>
                 {renderPromptContent()}
-                
+
                 {needsTextResponse && (
                   <div className="space-y-2">
                     <Label htmlFor="response">Your Response:</Label>
@@ -318,13 +303,31 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
                   </div>
                 )}
 
-                {practice.exampleResponse && (
-                  <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Lightbulb className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-medium">Hint</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{practice.exampleResponse}</p>
+                {stage === "prompt" && (
+                  <div className="mt-2 text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={generateHint}
+                      disabled={hintLoading || !!currentHint}
+                      className="text-xs text-muted-foreground hover:text-primary"
+                    >
+                      {hintLoading ? (
+                        <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                      ) : (
+                        <Lightbulb className="h-3 w-3 mr-1" />
+                      )}
+                      {currentHint ? "Hint revealed" : "Need a hint?"}
+                    </Button>
+                    {currentHint && (
+                      <div className="mt-2 p-3 bg-primary/5 border border-primary/20 rounded-lg text-left">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Lightbulb className="h-4 w-4 text-primary" />
+                          <span className="text-sm font-medium">Hint</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{currentHint}</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </>
@@ -367,7 +370,7 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
                     strokeDasharray={`${feedback.score * 2.51} 251`}
                     className={cn(
                       feedback.score >= 70 ? "text-green-500" :
-                      feedback.score >= 50 ? "text-yellow-500" : "text-red-500"
+                        feedback.score >= 50 ? "text-yellow-500" : "text-red-500"
                     )}
                   />
                 </svg>
@@ -433,9 +436,9 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
                 <RefreshCw className="h-4 w-4 mr-2" />
                 New Prompt
               </Button>
-              <Button 
+              <Button
                 onClick={submitResponse}
-                disabled={needsTextResponse ? !userResponse.trim() : !selectedOption}
+                disabled={!userResponse.trim()}
                 data-testid="button-submit-practice"
               >
                 <Send className="h-4 w-4 mr-2" />

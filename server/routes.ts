@@ -638,6 +638,24 @@ Respond with a JSON object:
     }
   });
 
+  app.post("/api/practice/hint", async (req, res) => {
+    try {
+      const { practiceType, difficulty, context } = req.body;
+      const { generatePracticeHint } = await import("./practice");
+
+      const hint = await generatePracticeHint(
+        practiceType,
+        difficulty,
+        context
+      );
+
+      res.json({ hint });
+    } catch (error) {
+      console.error("Error generating hint:", error);
+      res.status(500).json({ error: "Failed to generate hint" });
+    }
+  });
+
   app.post("/api/practice/evaluate", async (req, res) => {
     try {
       const parseResult = practiceEvaluateSchema.safeParse(req.body);

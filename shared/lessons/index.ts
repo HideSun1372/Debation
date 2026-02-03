@@ -20,6 +20,16 @@ export { UNIT_17_LESSONS } from "./unit17";
 export { UNIT_18_LESSONS } from "./unit18";
 export { UNIT_19_LESSONS } from "./unit19";
 export { UNIT_20_LESSONS } from "./unit20";
+export { UNIT_21_LESSONS } from "./unit21";
+export { UNIT_22_LESSONS } from "./unit22";
+export { UNIT_23_LESSONS } from "./unit23";
+export { UNIT_24_LESSONS } from "./unit24";
+export { UNIT_25_LESSONS } from "./unit25";
+export { UNIT_26_LESSONS } from "./unit26";
+export { UNIT_27_LESSONS } from "./unit27";
+export { UNIT_28_LESSONS } from "./unit28";
+export { UNIT_29_LESSONS } from "./unit29";
+export { UNIT_30_LESSONS } from "./unit30";
 
 import { MultiPageLesson } from "./types";
 import { UNIT_01_LESSONS } from "./unit01";
@@ -42,8 +52,18 @@ import { UNIT_17_LESSONS } from "./unit17";
 import { UNIT_18_LESSONS } from "./unit18";
 import { UNIT_19_LESSONS } from "./unit19";
 import { UNIT_20_LESSONS } from "./unit20";
+import { UNIT_21_LESSONS } from "./unit21";
+import { UNIT_22_LESSONS } from "./unit22";
+import { UNIT_23_LESSONS } from "./unit23";
+import { UNIT_24_LESSONS } from "./unit24";
+import { UNIT_25_LESSONS } from "./unit25";
+import { UNIT_26_LESSONS } from "./unit26";
+import { UNIT_27_LESSONS } from "./unit27";
+import { UNIT_28_LESSONS } from "./unit28";
+import { UNIT_29_LESSONS } from "./unit29";
+import { UNIT_30_LESSONS } from "./unit30";
 
-// Combined lessons for Units 1-20 (140 lessons total - Beginner + Intermediate sections)
+// Combined lessons for Units 1-30 (Beginner + Intermediate + Advanced)
 export const ALL_MULTI_PAGE_LESSONS: MultiPageLesson[] = [
   ...UNIT_01_LESSONS,
   ...UNIT_02_LESSONS,
@@ -65,4 +85,14 @@ export const ALL_MULTI_PAGE_LESSONS: MultiPageLesson[] = [
   ...UNIT_18_LESSONS,
   ...UNIT_19_LESSONS,
   ...UNIT_20_LESSONS,
+  ...UNIT_21_LESSONS,
+  ...UNIT_22_LESSONS,
+  ...UNIT_23_LESSONS,
+  ...UNIT_24_LESSONS,
+  ...UNIT_25_LESSONS,
+  ...UNIT_26_LESSONS,
+  ...UNIT_27_LESSONS,
+  ...UNIT_28_LESSONS,
+  ...UNIT_29_LESSONS,
+  ...UNIT_30_LESSONS,
 ];

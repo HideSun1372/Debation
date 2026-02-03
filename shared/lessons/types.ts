@@ -5,6 +5,7 @@ export interface LessonContentPage {
   title: string;
   content: string;
   keyPoints?: string[];
+  tip?: string;
 }
 
 export interface LessonQuestionPage {
@@ -14,16 +15,20 @@ export interface LessonQuestionPage {
   options: Array<{ id: string; text: string }>;
   correctAnswer: string;
   explanation: string;
+  tip?: string;
 }
 
 // Practice page types for interactive AI-powered exercises
-export type PracticeType = 
+export type PracticeType =
   | "argument-builder"      // Build Claim-Evidence-Reasoning arguments
   | "refutation"            // Refute an AI argument using 4 S's or direct attack
   | "claim-classifier"      // Identify claim types (fact, value, policy)
   | "evidence-defense"      // Present/defend evidence against AI challenges
   | "fallacy-spotter"       // Identify logical fallacies in AI arguments
-  | "warrant-builder";      // Build and defend warrants
+  | "warrant-builder"       // Build and defend warrants
+  | "speech"                // Practice delivery (speech to text)
+  | "text-edit"             // Edit text to improve it
+  | "text-analysis";        // Analyze text for specific features
 
 export interface PracticeConfig {
   type: PracticeType;
@@ -32,6 +37,7 @@ export interface PracticeConfig {
   instructions: string;     // What the student should do
   exampleResponse?: string; // Optional example of a good response
   successCriteria: string[]; // What makes a good response
+  text?: string;            // Text for editing/analysis
 }
 
 export interface LessonPracticePage {

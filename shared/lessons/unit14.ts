@@ -23,6 +23,26 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Real World Examples",
+                content: "See how this plays out in real debates:\n\n**Example 1: The 'Industry' dismissal**\nArgument: 'This drug study shows safety.'\nResponse: 'Big Pharma funded it!'\n*Analysis:* This is genetic fallacy. The funding is a reason to check the methdology, but if the methodology is sound (double-blind, peer-reviewed), the finding stands regardless of funding.\n\n**Example 2: The 'Partisan' dismissal**\nArgument: 'The economy grew by 4%.'\nResponse: 'That's a Republican/Democrat talking point.'\n*Analysis:* Economic data is either true or false. The political affiliation of the person citing it is irrelevant to the math.\n\n**Example 3: The 'Character' dismissal**\nArgument: 'We should improve infrastructure.'\nResponse: 'The person proposing this cheated on their taxes.'\n*Analysis:* Tax cheating is bad, but it has no logical bearing on whether bridges need repair.",
+                keyPoints: [
+                    "Distinguish between the source's character and the argument's validity",
+                    "Funding justification requires methodological critique, not just dismissal",
+                    "Political origin doesn't alter factual data",
+                ],
+            },
+            {
+                type: "content",
+                title: "Valid vs. Invalid Criticism",
+                content: "How do you criticize a source WITHOUT committing the fallacy?\n\n**Invalid (Genetic Fallacy):**\n'Source X is biased, therefore their claim is false.'\n\n**Valid (Source Critique):**\n'Source X is biased, which likely led them to select this specific sample group (methodology flaw). Because of that flaw, the claim is unsupported.'\n\n**The Difference:**\nValid criticism connects the source's nature to a specific flaw in the argument's construction. Invalid criticism stops at the source's name.",
+                keyPoints: [
+                    "Connect source bias to specific methodological flaws",
+                    "Don't stop at naming the source; explain the resulting error",
+                    "Critique the process, not just the person",
+                ],
+            },
+            {
                 type: "question",
                 id: "l14-01-q1",
                 question: "Someone dismisses climate research because some studies were funded by environmental organizations. Is this the genetic fallacy?",
@@ -61,11 +81,11 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 question: "How should you properly challenge evidence from a potentially biased source?",
                 options: [
                     { id: "a", text: "Simply point out the source is biased, and the evidence is automatically invalid" },
-                    { id: "b", text: "Show how the bias may have affected methodology or interpretation, with specific concerns" },
-                    { id: "c", text: "Ignore the source entirely" },
-                    { id: "d", text: "Accept the evidence without question" }
+                    { id: "b", text: "Ignore the source entirely" },
+                    { id: "c", text: "Accept the evidence without question" },
+                    { id: "d", text: "Show how the bias may have affected methodology or interpretation, with specific concerns" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Proper source criticism explains how potential bias might have affected the specific evidence—through methodology, sampling, interpretation, or selective reporting. General claims of bias without specific concerns commit the genetic fallacy.",
             },
             {
@@ -99,16 +119,36 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The 'Truth Sandwich'",
+                content: "When refuting misinformation, avoid repeating it (which reinforces it). Use the Truth Sandwich:\n\n**1. Truth:** Start with the factual reality.\n'Vaccines have successfully eradicated polio and smallpox.'\n\n**2. Lie:** Briefly mention the misinformation.\n'Some claim they cause harm due to a debunked 1998 paper.'\n\n**3. Truth:** Return to the fact and explain the error.\n'That paper was retracted for fraud, and millions of subsequent cases confirm safety.'\n\n**Why It Works:**\nListeners remember what they hear first and last. The lie is contained in the middle, framed by truth.",
+                keyPoints: [
+                    "Start and end with the truth",
+                    "Briefly contain the lie in the middle",
+                    "Avoid reinforcing the misinformation by repeating it first",
+                ],
+            },
+            {
+                type: "content",
+                title: "Algorithmic Amplification",
+                content: "Why does misinformation spread so fast?\n\n**Engagement loops:** Algorithms prioritize content that gets reactions (likes, shares, comments). Fear and outrage generate more reaction than nuance.\n\n**The Silo Effect:** Once you click one misinformation link, algorithms feed you more of the same, creating a 'filter bubble' where false information seems universal.\n\n**In Debate:**\nBe aware that your opponent (and judge) may live in a different information ecosystem. Citing high-quality, neutral sources is the only bridge across these silos.",
+                keyPoints: [
+                    "Algorithms favor outrage over accuracy",
+                    "Filter bubbles distort perception of consensus",
+                    "Neutral sources are essential credibility bridges",
+                ],
+            },
+            {
                 type: "question",
                 id: "l14-02-q1",
                 question: "What distinguishes disinformation from misinformation?",
                 options: [
-                    { id: "a", text: "Disinformation is more widely spread" },
-                    { id: "b", text: "Disinformation is deliberately created to deceive, while misinformation is spread without intent to mislead" },
+                    { id: "a", text: "Disinformation is deliberately created to deceive, while misinformation is spread without intent to mislead" },
+                    { id: "b", text: "Disinformation is more widely spread" },
                     { id: "c", text: "Misinformation is always political" },
                     { id: "d", text: "There is no meaningful difference" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "The key distinction is intent. Disinformation is deliberately false, created with the intention to deceive. Misinformation is also false but spread by people who believe it's true or don't realize it's false. Both are problematic but require different responses.",
             },
             {
@@ -137,11 +177,11 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 question: "Why is lateral reading (checking what other sources say about a source) effective for verification?",
                 options: [
                     { id: "a", text: "It takes less time than reading the original" },
-                    { id: "b", text: "External sources can reveal credibility issues, bias, or track record that the source itself won't disclose" },
-                    { id: "c", text: "All sources agree with each other" },
+                    { id: "b", text: "All sources agree with each other" },
+                    { id: "c", text: "External sources can reveal credibility issues, bias, or track record that the source itself won't disclose" },
                     { id: "d", text: "It's not actually effective" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "Lateral reading works because sources don't disclose their own reliability problems. By checking what independent sources say about a publication or author, you can discover credibility issues, documented biases, or history of inaccuracy that wouldn't be apparent from reading the source alone.",
             },
             {
@@ -175,16 +215,36 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The 'Box Score' Method",
+                content: "To defeat cherry-picking, demand the 'Box Score'—the total record.\n\n**Scenario:** Opponent cites 2 studies showing the policy failed.\n**Response:** 'They showed you 2 losses. They hid the 98 wins. In a meta-analysis of 100 studies, 98 found positive results.'\n\n**The Concept:**\nIf you only watch the highlights of a losing team's few goals, they look like champions. You must look at the final score (the aggregate data) to know the truth.\n\n**Application:**\nAlways ask for meta-analyses or systematic reviews, which aggregate all available data, rather than individual studies which can be outliers.",
+                keyPoints: [
+                    "Individual studies can be outliers; aggregate data is superior",
+                    "Demand the 'Box Score' (the full record)",
+                    "Meta-analyses are the best defense against cherry-picking",
+                ],
+            },
+            {
+                type: "content",
+                title: "Statistical Significance 101",
+                content: "Sometimes cherry-picking involves citing result that are 'noise.'\n\n**Signal vs. Noise:**\nSmall variations happen by chance. A result is 'statistically significant' only if it likely didn't happen by chance.\n\n**The Trick:**\nIf you run 20 comparisons, odds are 1 will appear significant just by random chance (the P-value problem). Dishonest researchers publish that 1 and hide the 19 failures.\n\n**Defense:**\n'Has this result been replicated?' If it's a one-off finding that contradicts established science, it's likely a statistical fluke (cherry-picked from the noise).",
+                keyPoints: [
+                    "One-off findings may be random statistical noise",
+                    "Replication is the test of true significance",
+                    "Beware of isolated studies contesting established consensus",
+                ],
+            },
+            {
                 type: "question",
                 id: "l14-03-q1",
                 question: "An article claims a stock is a great investment, showing it rose 50% this year. What question should you ask?",
                 options: [
-                    { id: "a", text: "No questions—50% is impressive" },
-                    { id: "b", text: "What happened in previous years? What's the overall trend and comparison to alternatives?" },
+                    { id: "a", text: "What happened in previous years? What's the overall trend and comparison to alternatives?" },
+                    { id: "b", text: "No questions—50% is impressive" },
                     { id: "c", text: "Who wrote the article?" },
                     { id: "d", text: "What stock is it?" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "This could be cherry-picking. The stock might have dropped 80% the previous year, making the 50% gain a partial recovery, not a success story. You need broader context: previous years' performance, comparison to market averages, and long-term trends.",
             },
             {
@@ -213,11 +273,11 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 question: "Why does acknowledging counter-evidence actually strengthen your position?",
                 options: [
                     { id: "a", text: "It doesn't—it weakens your case" },
-                    { id: "b", text: "It builds credibility and shows you've considered the full picture, making your conclusions more trustworthy" },
-                    { id: "c", text: "Judges require it in the rules" },
-                    { id: "d", text: "It confuses your opponent" }
+                    { id: "b", text: "Judges require it in the rules" },
+                    { id: "c", text: "It confuses your opponent" },
+                    { id: "d", text: "It builds credibility and shows you've considered the full picture, making your conclusions more trustworthy" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Acknowledging counter-evidence builds credibility because it shows intellectual honesty. Judges trust debaters who engage with complexity rather than pretending it doesn't exist. Your conclusions are more persuasive when they emerge from fair consideration of all evidence.",
             },
             {
@@ -251,16 +311,36 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The 'Black Swan' Theory",
+                content: "Philosopher Nassim Taleb popularized the Black Swan problem:\n\n**The Claim:** 'All swans are white.'\n**The Evidence:** Humans saw millions of white swans for thousands of years. The evidence was massive.\n**The Discovery:** One day, they went to Australia and saw a black swan.\n**The Result:** The universal claim was instantly destroyed.\n\n**The Debate Lesson:**\nNo amount of confirming evidence can prove a universal claim ('It will always work'). But a single 'Black Swan' (counterexample) can disprove it. Be the hunter of Black Swans.",
+                keyPoints: [
+                    "Massive confirming evidence cannot protect a universal claim from one exception",
+                    "Seek the single case that breaks the opponent's rule",
+                    "Never claim 'All' when you mean 'Most'",
+                ],
+            },
+            {
+                type: "content",
+                title: "Refining Your Claims",
+                content: "How to bulletproof your case against counterexamples:\n\n**Don't say:** 'Capitalism always leads to freedom.'\n(One authoritarian capitalist state disproves this.)\n\n**Do say:** 'Capitalism creates strong structural incentives for freedom.'\n(This allows for exceptions while maintaining the core argument.)\n\n**The 'Tendency' Defense:**\nWhen an opponent cites a counterexample to your 'Tendency' claim, you say: 'Exactly. That is the exception that proves the rule. The fact that you had to find such an obscure example highlights how rare it is.'",
+                keyPoints: [
+                    "Shift from Universal (Always) to Propensity (Incentivizes/Tends to)",
+                    "Turn exceptions into proof of rarity",
+                    "Pre-qualify your claims to disarm counterexamples",
+                ],
+            },
+            {
                 type: "question",
                 id: "l14-04-q1",
                 question: "Which claim can be refuted by a single counterexample?",
                 options: [
                     { id: "a", text: "Most democracies are stable" },
-                    { id: "b", text: "Renewable energy is often cost-effective" },
-                    { id: "c", text: "Private companies never provide public services efficiently" },
+                    { id: "b", text: "Private companies never provide public services efficiently" },
+                    { id: "c", text: "Renewable energy is often cost-effective" },
                     { id: "d", text: "Foreign aid sometimes helps development" }
                 ],
-                correctAnswer: "c",
+                correctAnswer: "b",
                 explanation: "The claim 'private companies NEVER provide public services efficiently' is universal (never = no exceptions). One example of a private company efficiently providing public services refutes it. The other claims use 'most,' 'often,' or 'sometimes,' which already allow for exceptions.",
             },
             {
@@ -327,16 +407,36 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The Overton Window",
+                content: "False compromise can be manipulated by shifting the 'Overton Window' (the range of acceptable ideas).\n\n**The Strategy:**\nExtremists propose something radical (Position A) to make their actual goal (Position B) look like the 'moderate middle' compromise.\n\n**The Defense:**\nDon't fall for the 'middle' of the current conversation. Anchor yourself to objective reality or established principles. Ask: 'Is this compromise actually reasonable, or is it just the middle point between sanity and insanity?'",
+                keyPoints: [
+                    "Beware of manufactured extremes designed to shift the middle",
+                    "Judge positions by merit, not their position on the spectrum",
+                    "The middle of a skewed spectrum is still skewed",
+                ],
+            },
+            {
+                type: "content",
+                title: "False Balance in Media",
+                content: "Media often creates false compromise by giving equal time to unequal sides ('Bothsidesism').\n\n**Example:**\nA debate on gravity featuring a physicist and a levitation theorist.\n\n**The Impression:**\nViewers think 'There is a controversy' or 'The truth is unclear.'\n\n**The Reality:**\nOne side has evidence; the other doesn't. Giving them equal platform creates a false impression of a split middle. Call this out in debate: 'My opponent is creating a false equivalence. The expert consensus is 99% to 1%. There is no middle ground here.'",
+                keyPoints: [
+                    "Identify 'Bothsidesism' that elevates unsupported fringe views",
+                    "Call out false equivalencies in evidence weight",
+                    "Reject the premise that every issue has two valid equal sides",
+                ],
+            },
+            {
                 type: "question",
                 id: "l14-05-q1",
                 question: "Someone argues: 'Experts say vaccines are safe; some claim they're dangerous. The truth is probably that they're somewhat risky.' Is this reasoning valid?",
                 options: [
                     { id: "a", text: "Yes—moderation is always wisest" },
-                    { id: "b", text: "No—this is the middle ground fallacy. The evidence overwhelmingly supports vaccine safety; splitting the difference ignores that evidence" },
-                    { id: "c", text: "Yes—both sides should be given equal weight" },
-                    { id: "d", text: "No—vaccines are definitely dangerous" }
+                    { id: "b", text: "Yes—both sides should be given equal weight" },
+                    { id: "c", text: "No—vaccines are definitely dangerous" },
+                    { id: "d", text: "No—this is the middle ground fallacy. The evidence overwhelmingly supports vaccine safety; splitting the difference ignores that evidence" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "This is the middle ground fallacy. The evidence strongly favors one position (vaccine safety). Splitting the difference treats both positions as equally credible when they're not. The moderate-sounding conclusion actually misrepresents the evidence.",
             },
             {
@@ -403,16 +503,36 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The 'So What?' Test",
+                content: "The easiest way to find a warrant is the 'So What?' test.\n\n**Opponent:** 'Our plan saves $10 million.'\n**You:** 'So what?'\n**Opponent (implied):** 'Saving money is good.'\n\n**The Attack:**\nNow you found the value warrant. You can attack it: 'In this context, saving money is bad because it reduces essential services.'\n\n**Opponent:** 'Polls show people want this.'\n**You:** 'So what?'\n**Opponent (implied):** 'We should do what polls say.'\n**Attack:** 'Popularity doesn't equal morality. Slavery was once popular.'",
+                keyPoints: [
+                    "Use 'So What?' to surface the hidden assumption",
+                    "Attack the implied value or logic once exposed",
+                    "Force opponents to defend their underlying philosophy",
+                ],
+            },
+            {
+                type: "content",
+                title: "Unmasking Hidden Values",
+                content: "Every policy argument rests on a hierarchy of values (e.g., Freedom > Safety, or Efficiency > Equity).\n\n**The Move:**\nIdentify the conflict. 'Their plan works ONLY if you value efficiency over equity. But in healthcare, equity is the primary goal.'\n\n**Why It Wins:**\nYou don't have to disprove their stats. You just show they are solving the wrong problem. You win the 'Value Framework' debate, which supersedes the 'Data' debate.",
+                keyPoints: [
+                    "Identify the value hierarchy (X > Y)",
+                    "Challenge the hierarchy itself",
+                    "Win the framework to render their data irrelevant",
+                ],
+            },
+            {
                 type: "question",
                 id: "l14-06-q1",
                 question: "An argument states: 'Country A grew economically after cutting taxes. We should cut taxes.' What's the unstated warrant?",
                 options: [
-                    { id: "a", text: "Taxes are always bad" },
-                    { id: "b", text: "Tax cuts caused the growth, and our situation is similar enough for the same result" },
+                    { id: "a", text: "Tax cuts caused the growth, and our situation is similar enough for the same result" },
+                    { id: "b", text: "Taxes are always bad" },
                     { id: "c", text: "Country A is a model for all policies" },
                     { id: "d", text: "Economic growth is the only goal" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "The unstated warrant assumes causation (tax cuts caused the growth, not just correlation with other factors) and generalization (our situation is similar enough to expect the same outcome). Both assumptions are challengeable.",
             },
             {
@@ -480,6 +600,26 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
             },
             {
                 type: "content",
+                title: "Synthesis: The Skeptic's Toolkit",
+                content: "Unit 14 has equipped you to be a professional skeptic.\n\nYou now know that:\n1. **Sources** aren't truth (Genetic Fallacy)\n2. **Headlines** aren't reality (Misinformation)\n3. **Snippets** aren't data (Cherry-picking)\n4. **Rules** aren't universal (Counterexamples)\n5. **Middle** isn't always right (False Compromise)\n6. **Evidence** isn't proof (Warrants)\n\nThese are the layers of defense. A good debater filters every argument through these six sieves before accepting it.",
+                keyPoints: [
+                    "Apply the six filters to every argument you hear",
+                    "Skepticism is an active process of multiple checks",
+                    "Layered defense makes you nearly impossible to fool",
+                ],
+            },
+            {
+                type: "content",
+                title: "Final Exam Preparation",
+                content: "Prepare for your assessment:\n\n• **Review definitions:** Know the difference between Misinformation and Disinformation.\n• **Check logic:** Be able to spot a 'So What?' gap in a warrant.\n• **Analyze scenarios:** If given a graph, check the dates (Cherry-picking). If given a quote, check the source (Genetic).\n\nGo forth and demand better arguments!",
+                keyPoints: [
+                    "Review core definitions and distinction",
+                    "Practice spotting logical gaps in warrant scenarios",
+                    "Check dates, sources, and context automatically",
+                ],
+            },
+            {
+                type: "content",
                 title: "Review: Refutation Techniques",
                 content: "**Counterexamples:**\n• One genuine exception refutes universal claims (all, never, always)\n• Examples must be relevant, specific, and well-documented\n• Defend by avoiding absolutes or distinguishing circumstances\n\n**Middle Ground Fallacy:**\n• Assumes truth always lies between positions\n• Appropriate for value trade-offs, not factual questions\n• Sometimes one side is simply correct\n\n**Attacking Warrants:**\n• Target the logical connection between evidence and claim\n• Accept evidence while challenging the reasoning\n• Can't be fixed by reading more evidence\n• Target causation, generalizability, and hidden assumptions",
                 keyPoints: [
@@ -493,12 +633,12 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 id: "l14-07-q1",
                 question: "Which fallacy dismisses evidence based on its source rather than evaluating its merits?",
                 options: [
-                    { id: "a", text: "Cherry-picking" },
-                    { id: "b", text: "Middle ground fallacy" },
-                    { id: "c", text: "Genetic fallacy" },
+                    { id: "a", text: "Genetic fallacy" },
+                    { id: "b", text: "Cherry-picking" },
+                    { id: "c", text: "Middle ground fallacy" },
                     { id: "d", text: "False dilemma" }
                 ],
-                correctAnswer: "c",
+                correctAnswer: "a",
                 explanation: "The genetic fallacy judges arguments by their origin rather than their merit. It dismisses (or accepts) evidence based on who produced it rather than evaluating the evidence itself. Origins may warrant scrutiny but don't determine truth.",
             },
             {
@@ -507,11 +647,11 @@ export const UNIT_14_LESSONS: MultiPageLesson[] = [
                 question: "You accept opponent's evidence but argue it doesn't prove their claim. What are you attacking?",
                 options: [
                     { id: "a", text: "Their evidence quality" },
-                    { id: "b", text: "Their warrant (the logical connection)" },
-                    { id: "c", text: "Their source credibility" },
-                    { id: "d", text: "Their speaking style" }
+                    { id: "b", text: "Their source credibility" },
+                    { id: "c", text: "Their speaking style" },
+                    { id: "d", text: "Their warrant (the logical connection)" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "When you accept evidence but challenge the conclusion, you're attacking the warrant—the logical connection between evidence and claim. This is often powerful because more evidence doesn't fix flawed reasoning.",
             },
             {

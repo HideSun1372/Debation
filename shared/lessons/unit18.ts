@@ -29,8 +29,8 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 options: [
                     { id: "a", text: "It's not a fallacy—perfection should be required" },
                     { id: "b", text: "It demands immediate perfection when partial progress still has value compared to alternatives" },
-                    { id: "c", text: "Renewable energy is perfect" },
-                    { id: "d", text: "The numbers are wrong" }
+                    { id: "c", text: "The numbers are wrong" },
+                    { id: "d", text: "Renewable energy is perfect" }
                 ],
                 correctAnswer: "b",
                 explanation: "This is nirvana fallacy—demanding immediate complete solution as the standard for worth. Partial progress in renewable energy reduces fossil fuel dependence, even without immediately meeting 100% of needs. Compare to alternatives, not to perfection.",
@@ -56,6 +56,26 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Real-World Nirvana Fallacy Examples",
+                content: "This fallacy appears constantly:\n\n**Healthcare Policy:**\n'Universal healthcare won't cover every procedure, so it's not worth pursuing.'\nReality: Covering most procedures helps most people, even if not perfect.\n\n**Climate Policy:**\n'This carbon reduction plan won't prevent all climate change, so it's pointless.'\nReality: Reducing harm has value even without eliminating it.\n\n**Criminal Justice:**\n'This reform won't eliminate all crime, so don't bother.'\nReality: Reducing crime rates helps even without zero crime.\n\n**Education:**\n'This program doesn't help every student, so it fails.'\nReality: Helping many students has value even without 100% success.\n\n**The Pattern:**\nPerfect is the enemy of good. Rejecting improvement because it's not perfection helps no one.",
+                keyPoints: [
+                    "Healthcare, climate, justice, education all see nirvana fallacy",
+                    "'Perfect is the enemy of good'",
+                    "Improvement has value even without perfection",
+                ],
+            },
+            {
+                type: "content",
+                title: "The Perfectionism Trap in Decision-Making",
+                content: "Nirvana thinking affects personal decisions too:\n\n**Career:**\n'This job isn't my dream job, so I'll wait.' Meanwhile, gaining experience in an imperfect job builds toward better opportunities.\n\n**Relationships:**\n'This person has flaws, so they're not right.' Everyone has flaws; the question is compatibility.\n\n**Projects:**\n'This plan isn't perfect, so let's not start.' Iterating on an imperfect start beats never beginning.\n\n**Recognizing the Pattern:**\n• Waiting for perfect conditions = never acting\n• Comparing real options to imaginary ideals = unfair\n• Progress beats paralysis\n\n**The Standard:**\n'Is this better than my current situation or other available options?' Not 'Is this perfect?'",
+                keyPoints: [
+                    "Perfectionism paralyzes decision-making",
+                    "Compare to real options, not imaginary ideals",
+                    "'Better than alternatives' is the right standard",
+                ],
+            },
+            {
                 type: "question",
                 id: "l18-01-q2",
                 question: "What's the correct standard when evaluating policy proposals?",
@@ -76,6 +96,49 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                     "Seek improvement, not perfection",
                     "Compare real options, not real vs. ideal",
                     "Consistent standards for all proposals",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Perfect Solution' Fallacy in Reverse",
+                content: "Sometimes debaters defend a bad status quo by demanding perfection from the change.\n\n**The Argument:**\n'Your plan has risk X, so we shouldn't do it.'\n\n**The Response:**\n'The status quo guarantees harm Y. A small risk of X is preferable to guaranteed Y. Denying any change because of non-zero risk is the Nirvana Fallacy.'\n\n**Risk Management:**\nPolicy is about managing risk, not eliminating it. Comparative risk analysis beats perfectionism.",
+                keyPoints: [
+                    "Status quo is rarely risk-free",
+                    "Comparing risk vs. guaranteed harm",
+                    "Perfectionism ignores status quo costs",
+                ],
+            },
+            {
+                type: "content",
+                title: "Utopian vs. Tragic Vision",
+                content: "Unconstrained vs. Constrained visions in debate:\n\n**Utopian (Unconstrained):**\nBelieves solutions should solve root causes and eliminate problems. Vulnerable to Nirvana Fallacy.\n\n**Tragic (Constrained):**\nBelieves problems are inherent; we can only manage trade-offs. More resilient to Nirvana Fallacy.\n\n**Debate Application:**\nIdentify which vision the judge or opponent holds. Frame your arguments accordingly. 'We can't solve human greed, but we can regulate its effects.'",
+                keyPoints: [
+                    "Utopian vision seeks total solutions",
+                    "Tragic vision manages trade-offs",
+                    "Match framing to the judging philosophy",
+                ],
+            },
+            {
+                type: "question",
+                id: "l18-01-q3",
+                question: "Which mindset is less likely to commit the Nirvana Fallacy?",
+                options: [
+                    { id: "a", text: "Utopian Vision (seeking perfection)" },
+                    { id: "b", text: "Tragic/Constrained Vision (managing trade-offs)" },
+                    { id: "c", text: "Pessimism" },
+                    { id: "d", text: "Optimism" }
+                ],
+                correctAnswer: "b",
+                explanation: "The Tragic/Constrained vision accepts that trade-offs are inevitable and perfection is impossible. This makes it naturally resistant to the Nirvana Fallacy, which demands perfect solutions.",
+            },
+            {
+                type: "content",
+                title: "Incrementalism Defense",
+                content: "Defending small steps:\n\n**The Attack:**\n'This is just a band-aid. It doesn't solve the structural issue.'\n\n**The Comparison:**\n'Band-aids stop bleeding. Structural surgery might be better, but it's not on the table / too risky / too expensive. Incremental progress saves lives now.'\n\n**Strategic Value:**\nDon't let opponents shame good, small reliable steps by comparing them to grand, risky, theoretical revolutions.",
+                keyPoints: [
+                    "Incremental steps have immediate value",
+                    "Don't let definitions of 'solution' exclude progress",
+                    "Real help > theoretical revolution",
                 ],
             },
         ],
@@ -104,11 +167,11 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 question: "Someone argues 'All speech should be protected without exception.' You respond: 'That would protect direct incitement to violence, meaning we couldn't stop someone yelling instructions to harm specific people.' What are you doing?",
                 options: [
                     { id: "a", text: "Making a personal attack" },
-                    { id: "b", text: "Using reductio ad absurdum—showing their principle leads to unacceptable conclusions" },
-                    { id: "c", text: "Changing the subject" },
-                    { id: "d", text: "Agreeing with them" }
+                    { id: "b", text: "Changing the subject" },
+                    { id: "c", text: "Agreeing with them" },
+                    { id: "d", text: "Using reductio ad absurdum—showing their principle leads to unacceptable conclusions" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "This is reductio ad absurdum. You're accepting their principle ('all speech protected without exception') and showing it leads to unacceptable implications (protecting incitement to violence). This challenges them to revise the principle.",
             },
             {
@@ -132,6 +195,26 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Famous Reductio Arguments",
+                content: "Examples from philosophy and history:\n\n**Zeno's Paradoxes:**\nIf motion is real, then traversing distance requires infinite steps. Infinite steps can't be completed. Therefore, motion is impossible. (Challenged our understanding of infinity)\n\n**Galileo on Falling Bodies:**\nIf heavier objects fall faster (Aristotle's view), then a heavy+light object should: (1) fall slower (light slows heavy) AND (2) fall faster (combined is heavier). This contradiction disproves the original premise.\n\n**Slavery Arguments:**\n'If we accept these people can be property, we must accept [absurd implication about human dignity].'\n\n**The Power:**\nWell-constructed reductios don't just show disagreement—they reveal internal contradictions or unacceptable implications that demand revision of the original position.",
+                keyPoints: [
+                    "Famous reductios have shaped science and philosophy",
+                    "They reveal internal contradictions in positions",
+                    "Strong reductios demand revision of the original position",
+                ],
+            },
+            {
+                type: "content",
+                title: "Slippery Slope vs. Reductio",
+                content: "Distinguish these related techniques:\n\n**Reductio ad Absurdum:**\n'Accepting your principle logically requires accepting [absurd conclusion].' This is deductive: the conclusion follows necessarily from the principle.\n\n**Slippery Slope:**\n'If we do X, it will lead to Y, then to Z.' This is predictive: it claims a causal chain of events.\n\n**Key Difference:**\nReductio shows logical implication (if P, then Q is necessary).\nSlippery slope claims empirical causation (if we do P, Q will probably happen).\n\n**Evaluation:**\n• Reductio is sound if the logic is valid\n• Slippery slope requires evidence for each causal step\n\n**In Debate:**\n'That's not a slippery slope—it's reductio. The conclusion follows logically from the principle, not causally from the policy.'",
+                keyPoints: [
+                    "Reductio is about logical implication; slippery slope is about causal prediction",
+                    "Reductio needs valid logic; slippery slope needs causal evidence",
+                    "Label your arguments correctly to strengthen them",
+                ],
+            },
+            {
                 type: "question",
                 id: "l18-02-q2",
                 question: "What's the key requirement for a valid reductio ad absurdum argument?",
@@ -152,6 +235,49 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                     "Reductio is a valid logical technique",
                     "Connection must be genuine, not forced",
                     "Defend by showing the implication doesn't follow or has limits",
+                ],
+            },
+            {
+                type: "content",
+                title: "Reductio vs. Slippery Slope detailed",
+                content: "Nuance in distinction:\n\n**Logical vs. Causal:**\nReductio: 'If A is true, B must be true (by definition).' \nSlippery Slope: 'If A happens, B will happen (by cause and effect).'\n\n**Example:**\n'If killing is always wrong, then self-defense is wrong.' (Reductio - logical implication).\n'If we allow self-defense, people will start killing for minor insults.' (Slippery Slope - causal prediction).\n\n**Why it matters:**\nRefuting Reductio requires showing the logic is flawed. Refuting Slippery Slope requires showing the cause is weak.",
+                keyPoints: [
+                    "Reductio = Logical necessity",
+                    "Slippery Slope = Causal probability",
+                    "Refutation strategy differs for each",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Line Drawing' Defense",
+                content: "Defending against Reductio:\n\n**The Attack:**\n'If you tax right X, you can tax right Y, which destroys freedom.'\n\n**The Defense:**\n'There is a clear line between X and Y. X involves public use, Y is private. My principle is restricted to public use.'\n\n**The Concept:**\nDrawing a bright line halts the reductio. You must articulate a principle that stops the slide to absurdity.",
+                keyPoints: [
+                    "Draw bright lines to limit principles",
+                    "Explain specific distinctions",
+                    "Prevent the slide to absurdity",
+                ],
+            },
+            {
+                type: "question",
+                id: "l18-02-q3",
+                question: "How do you stop a Reductio ad Absurdum argument?",
+                options: [
+                    { id: "a", text: "Yell 'Slippery Slope!'" },
+                    { id: "b", text: "Show a principled distinction (a 'bright line') that prevents your argument from extending to the absurd conclusion" },
+                    { id: "c", text: "Admit the absurdity" },
+                    { id: "d", text: "Ignore it" }
+                ],
+                correctAnswer: "b",
+                explanation: "You must show why your principle doesn't actually extend that far. 'I support free speech, but Incitement is a clear exception because it causes immediate violence.' That distinction (the bright line) stops the reductio.",
+            },
+            {
+                type: "content",
+                title: "Common Reductio Patterns",
+                content: "Watch for these:\n\n**'The Universalizer':**\n'If everyone did what you're proposing...'\n\n**'The Extremist':**\n'If we ban X because it's dangerous, we must ban cars/knives/water...'\n\n**'The Moral Absolute':**\n'If lying is wrong to save feelings, it's wrong to save lives...'\n\n**Usage:**\nThese are efficient ways to test the robustness of a principle.",
+                keyPoints: [
+                    "Universal application tests",
+                    "Consistency tests across categories",
+                    "Moral absolute tests",
                 ],
             },
         ],
@@ -179,12 +305,12 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 id: "l18-03-q1",
                 question: "Why is it strategically advantageous to have multiple independent arguments?",
                 options: [
-                    { id: "a", text: "Judges prefer longer speeches" },
-                    { id: "b", text: "If opponents defeat one argument, others remain; you only need to win one key argument to win the debate" },
+                    { id: "a", text: "If opponents defeat one argument, others remain; you only need to win one key argument to win the debate" },
+                    { id: "b", text: "Judges prefer longer speeches" },
                     { id: "c", text: "It fills more time" },
                     { id: "d", text: "It's required by debate rules" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Multiple independent arguments create redundancy. Opponents must defeat all of them, while you only need one surviving winning argument. This asymmetry heavily favors having multiple lines of attack.",
             },
             {
@@ -208,6 +334,26 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Testing Independence",
+                content: "Ensure your arguments truly stand alone:\n\n**The Defeat Test:**\n'If they completely refute argument A, does argument B still work?' If yes, they're independent. If no, they're really one argument.\n\n**The Logic Test:**\nDo A and B rely on the same premise? If so, that premise is your real argument. A and B are just applications.\n\n**The Evidence Test:**\nCould A be proven with completely different evidence than B? If they need the same evidence, they may not be truly independent.\n\n**Examples of Non-Independence:**\n• 'It's too expensive' and 'Resources would be better used elsewhere'—both depend on cost issues\n• 'The source is biased' and 'The methodology is flawed'—if the methodology flaw IS the bias, these are one argument\n\n**Examples of True Independence:**\n• 'It's unconstitutional' and 'It's bad policy'—different standards entirely\n• 'It won't reduce harm' and 'It creates new harms'—different ways to win",
+                keyPoints: [
+                    "Use the Defeat Test: can one fall while others stand?",
+                    "Check if arguments rely on the same premises",
+                    "True independence means different paths to victory",
+                ],
+            },
+            {
+                type: "content",
+                title: "Integrating Multi-Point with Other Techniques",
+                content: "Combine strategically:\n\n**Multi-Point + Prioritization:**\nMake three independent arguments. In rebuttals, focus on the one that's winning.\n\n**Multi-Point + Crystallization:**\n'I've made three arguments. Any one of them is sufficient to vote for us. Let me show why we're winning at least one...'\n\n**Multi-Point + Comparative:**\nEach point can show relative advantage: 'First, we're more cost-effective. Second, we're less risky. Third, we achieve better outcomes.'\n\n**Structure Template:**\n1. Roadmap: 'There are three independent reasons to support our position...'\n2. Develop each with claim-evidence-reasoning\n3. Connect to decision calculus: 'Any one of these is sufficient...'\n4. In rebuttal: focus on strongest surviving argument",
+                keyPoints: [
+                    "Multi-point creates options; prioritization focuses them",
+                    "Crystallize around your strongest surviving argument",
+                    "Each point can show different aspects of relative advantage",
+                ],
+            },
+            {
                 type: "question",
                 id: "l18-03-q2",
                 question: "What makes arguments truly 'independent' in a multi-point case?",
@@ -228,6 +374,49 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                     "Multi-point cases create redundancy advantage",
                     "Quality and independence matter more than quantity",
                     "Coherent but independent arguments are the goal",
+                ],
+            },
+            {
+                type: "content",
+                title: "Grouping for Offense",
+                content: "Using multi-point structure offensively:\n\n**The Spread:**\nPresenting arguments that force opponents into contradictory responses.\n\n**Example:**\nPoint 1: The plan is too small to solve.\nPoint 2: The plan is so big it causes inflation.\n(Opponent usually picks one to answer, implicitly conceding the premise of the other. You then extend the conceded premise).\n\n**Risk:**\nBe careful NOT to contradict yourself. Frame carefully: 'Even if small...' or 'The mechanism creates inflation regardless of size...'",
+                keyPoints: [
+                    "Force specific opponent choices",
+                    "Exploit concessions on premises",
+                    "Careful framing avoids self-contradiction",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Rule of Three'",
+                content: "Why three points?\n\n**Cognitive Science:**\nHumans remember lists of three. 'Life, Liberty, Pursuit of Happiness.'\n\n**Debate Structure:**\nTwo is often too few (fragile). Four is often too many (rushed).\n\n**Application:**\nIf you have 5 arguments, group the 2 weakest into the others or drop them. Present 3 strong, distinct headers.\n\n**Impact:**\nJudges flow '1, 2, 3' naturally. It feels complete.",
+                keyPoints: [
+                    "Three is the magic number for retention",
+                    "Balance between redundancy and depth",
+                    "Group smaller points under main headers",
+                ],
+            },
+            {
+                type: "question",
+                id: "l18-03-q3",
+                question: "Why is 'The Rule of Three' common in debate cases?",
+                options: [
+                    { id: "a", text: "It's a strict rule" },
+                    { id: "b", text: "It balances redundancy (safety) with depth (time per point) and is memorable" },
+                    { id: "c", text: "It's the maximum allowed" },
+                    { id: "d", text: "It's the minimum allowed" }
+                ],
+                correctAnswer: "b",
+                explanation: "Three points provide enough redundancy that one loss isn't fatal, but few enough that you can explain each well. It also fits human memory patterns better than long lists.",
+            },
+            {
+                type: "content",
+                title: "Sub-Pointing",
+                content: "Adding depth within points:\n\n**Structure:**\nContention 1: Economic Growth\n   - Subpoint A: Jobs\n   - Subpoint B: Wages\n   - Subpoint C: Innovation\n\n**Value:**\nAllows for 'Internal Independence'. Opponent might refute Jobs, but Wages and Innovation still stand, supporting the main Economic Growth contention.\n\n**Signposting:**\n'Contention 1, Subpoint A... Subpoint B...' helps the judge see the layers of defense.",
+                keyPoints: [
+                    "Internal redundancy within contentions",
+                    "Protects the main point from partial refutation",
+                    "Requires precise signposting",
                 ],
             },
         ],
@@ -256,11 +445,11 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 question: "What distinguishes comparative refutation from simple refutation?",
                 options: [
                     { id: "a", text: "Comparative refutation is longer" },
-                    { id: "b", text: "Simple refutation says 'they're wrong'; comparative says 'our approach is better because...'" },
-                    { id: "c", text: "Comparative refutation is always weaker" },
+                    { id: "b", text: "Comparative refutation is always weaker" },
+                    { id: "c", text: "Simple refutation says 'they're wrong'; comparative says 'our approach is better because...'" },
                     { id: "d", text: "Simple refutation uses evidence" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "Simple refutation attacks the opponent; comparative refutation shows your position is relatively better. This gives judges a reason to choose you, not just reject them—more aligned with how decisions are made.",
             },
             {
@@ -284,6 +473,26 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Building Comparative Frameworks",
+                content: "Structure your comparison systematically:\n\n**Cost-Benefit Framework:**\n'Their costs outweigh their benefits. Our benefits outweigh our costs. Net comparison favors us.'\n\n**Risk Framework:**\n'Both have risks. Theirs are higher probability AND higher impact.'\n\n**Implementation Framework:**\n'Both claim benefits. Ours are more achievable with fewer obstacles.'\n\n**Timeline Framework:**\n'Their benefits are speculative and long-term. Ours are concrete and near-term.'\n\n**Value Framework:**\n'Both affect [value]. Our approach better promotes [value] because...'\n\n**Building Blocks:**\n1. Identify the dimension of comparison\n2. Show their position on that dimension\n3. Show your position\n4. Explain why your position is preferable",
+                keyPoints: [
+                    "Use clear frameworks: cost-benefit, risk, timeline, value",
+                    "Structure comparison systematically",
+                    "Show their position, your position, and why yours is better",
+                ],
+            },
+            {
+                type: "content",
+                title: "Comparative Language and Framing",
+                content: "Wording matters for comparative arguments:\n\n**Strong Comparative Phrases:**\n• 'Our approach is more effective because...'\n• 'While both have costs, theirs are more severe...'\n• 'The comparison favors our position...'\n• 'We achieve more with less downside...'\n\n**Transitional Phrases:**\n• 'Unlike their approach...'\n• 'By contrast, we...'\n• 'While they face X, we avoid it by...'\n\n**Concession + Comparison:**\n• 'We grant [their point]. But even so, our position is preferable because...'\n\n**Avoid:**\n• 'We're perfect'—unrealistic\n• Pure attack without comparison—misses relative advantage\n• Comparing different dimensions—unfair comparison",
+                keyPoints: [
+                    "Use relative language: more effective, less risky, better",
+                    "Concession + comparison is powerful",
+                    "Compare on the same dimensions for fairness",
+                ],
+            },
+            {
                 type: "question",
                 id: "l18-04-q2",
                 question: "Your position has been attacked for a weakness. What's the comparative response?",
@@ -304,6 +513,49 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                     "Show relative advantage, not just opponent failure",
                     "Consistent criteria make comparisons fair",
                     "Comparative framing often more persuasive than absolute claims",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Even If' Comparative",
+                content: "The ultimate comparative tool:\n\n**The Move:**\n'Even if they are right about X, we still win because Y.'\n\n**Why it wins:**\nIt insulates you from risk. You don't need to win the argument about X to win the round.\n\n**Examples:**\n'Even if their plan costs more (concession), it saves lives (impact comparison).'\n'Even if our data is older (concession), it is from a more neutral source (methodology comparison).'\n\n**Confidence:**\nThis signals massive confidence to the judge.",
+                keyPoints: [
+                    "Insulates against losing specific arguments",
+                    "Focuses debate on the decisive comparison",
+                    "Signals confidence",
+                ],
+            },
+            {
+                type: "content",
+                title: "Comparative Worlds",
+                content: "Visualization:\n\n**Technique:**\n'Let's look at the world of the Affirmative vs the world of the Negative.'\n\n**Aff World:**\n- High cost\n- Lives saved\n- Justice served\n\n**Neg World:**\n- Low cost\n- Lives lost\n- Injustice continues\n\n**The Ask:**\n'Which world would you rather live in?'\n\n**Value:**\nSimplifies complex line-by-line debate into a holistic choice.",
+                keyPoints: [
+                    "Holistic comparison of outcomes",
+                    "Simplifies the ballot decision",
+                    "Connects technical arguments to reality",
+                ],
+            },
+            {
+                type: "question",
+                id: "l18-04-q3",
+                question: "What is the 'Worlds Comparison' strategy?",
+                options: [
+                    { id: "a", text: "Comparing Earth to Mars" },
+                    { id: "b", text: "Summarizing the total state of affairs under each side's advocacy" },
+                    { id: "c", text: "Listing arguments in order" },
+                    { id: "d", text: "Ignoring the opponent" }
+                ],
+                correctAnswer: "b",
+                explanation: "It asks the judge to compare the entire resulting state of the world under the Affirmative vs the Negative plan, weighing the package of benefits/harms against each other.",
+            },
+            {
+                type: "content",
+                title: "Net Benefits Analysis",
+                content: "The math of comparison:\n\n**Equation:**\n(Benefits of Plan - Disadvantages of Plan) > (Benefits of Status Quo)\n\n**Usage:**\n'The net benefits are clearly on our side.'\n\n**Application:**\nIf they prove a disadvantage, don't panic. Just prove your benefit is bigger. If (100 Benefit - 20 Cost) = 80 Net. 80 is still > 0.\n\n**Mindset:**\nYou don't need a perfect case (0 disadvantages). You just need a *net positive* case.",
+                keyPoints: [
+                    "Think in net equations, not zeros",
+                    "Outweighing is more common than refuting completely",
+                    "Partial wins still yield net benefits",
                 ],
             },
         ],
@@ -360,6 +612,26 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Preemptive Defense Against Goalpost Moving",
+                content: "Proactively protect yourself:\n\n**Get Standards On Record:**\n'Before I present evidence, what would satisfy this standard?'\nGet explicit criteria before investing time.\n\n**Define Success Metrics:**\n'Let's agree on what counts as evidence for this claim before proceeding.'\n\n**Written Standards:**\nIn formal contexts, document agreed standards.\n\n**Anticipate Moves:**\n'I'll show you X. I expect that won't be enough and you'll ask for Y. So let me also show Y upfront.'\n\n**Multiple Lines:**\nProvide multiple types of evidence so goalpost-moving is harder.\n\n**Call It Real-Time:**\nImmediately note when standards shift: 'Wait—you just changed the requirement.'",
+                keyPoints: [
+                    "Get standards on record before presenting evidence",
+                    "Anticipate likely moves and address them preemptively",
+                    "Call out shifts in real-time",
+                ],
+            },
+            {
+                type: "content",
+                title: "Goalpost Moving in Various Contexts",
+                content: "This fallacy appears everywhere:\n\n**Science Denial:**\n'Show me evidence.' [Studies shown.] 'Those are biased.' [Independent replication.] 'Science changes anyway.'\n\n**Political Discourse:**\n'Prove he said it.' [Quote provided.] 'That's out of context.' [Full context.] 'He didn't mean it.'\n\n**Legal Standards:**\nMoving goalposts in evidence requirements can undermine fair trials.\n\n**Personal Relationships:**\n'I'd be happy if you did X.' [X done.] 'Actually, I need Y too.'\n\n**Workplace:**\n'Complete this project.' [Completed.] 'But it needs A, B, and C more.'\n\n**The Pattern:**\nWhen someone doesn't want to accept something, standards become infinitely moveable.",
+                keyPoints: [
+                    "Appears in science denial, politics, relationships, workplace",
+                    "Pattern indicates unwillingness to accept any evidence",
+                    "Recognition is the first step to response",
+                ],
+            },
+            {
                 type: "question",
                 id: "l18-05-q2",
                 question: "How can you preemptively prevent goalpost-moving?",
@@ -380,6 +652,49 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                     "Standards should be stable or transparently revised",
                     "Demand explicit standards upfront",
                     "Document and call out goalpost movement",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Infinite Regress' Trap",
+                content: "When goalposts move forever:\n\n**The Trap:**\n'Why?' 'But why is that true?' 'But why?'\n\n**The Concept:**\nRadical skepticism can endlessly demand proof for the proof. This is a form of goalpost moving ('Your proof isn't fundamental enough').\n\n**The Fix:**\nEstablish a 'Base Reality' or 'Common Ground'. 'We generally agree that human life is valuable. I don't need to prove that foundational axiom in this policy debate.'\n\n**Call Out:**\nIdentify it as 'Infinite Regress' or 'Radical Skepticism' which makes debate impossible.",
+                keyPoints: [
+                    "Recognize radical skepticism as goalpost moving",
+                    "Establish common ground axioms",
+                    "Debate requires shared premises to function",
+                ],
+            },
+            {
+                type: "content",
+                title: "Goalposts in Definitions",
+                content: "Sneaky redefinitions:\n\n**The Move:**\nAgreeing to a definition of 'Economy', then later claiming 'Well, by Economy I meant specifically stock market, not GDP.'\n\n**The Defense:**\n'We agreed on the standard definition at the start. Narrowing it now that you're losing the GDP argument is moving the goalposts.'\n\n**Prevention:**\nDefine terms clearly in the first speech.",
+                keyPoints: [
+                    "Watch for mid-round redefinitions",
+                    "Hold opponents to original definitions",
+                    "Redefinition to exclude losing evidence is fallacious",
+                ],
+            },
+            {
+                type: "question",
+                id: "l18-05-q3",
+                question: "Why is 'Infinite Regress' (asking 'why' forever) problematic in debate?",
+                options: [
+                    { id: "a", text: "It's annoying" },
+                    { id: "b", text: "It prevents any conclusion because standards for proof become infinitely deep (Goalpost Moving)" },
+                    { id: "c", text: "It's too easy" },
+                    { id: "d", text: "It makes you look smart" }
+                ],
+                correctAnswer: "b",
+                explanation: "Infinite regress is a form of goalpost moving where the standard for what constitutes 'proof' is pushed back indefinitely. Debate requires agreeing on some shared reality or sufficiency of proof.",
+            },
+            {
+                type: "content",
+                title: "Strategic Goalpost Setting",
+                content: "Setting your own goalposts fairly:\n\n**The Strategy:**\n'Judge, if we prove X, we win. Use that as your standard.'\n\n**Why:**\nIt anchors the decision criteria early.\n\n**Fairness:**\nMake sure X is reasonable. If you set a fair goalpost and meet it, the judge will punish the opponent for trying to move it later.\n\n**The 'Voters' Speech:**\nIn the final speech, remind the judge: 'The standard we established was X. We met it here. Therefore...'",
+                keyPoints: [
+                    "Anchor decision criteria early",
+                    "Remind judges of the original standard",
+                    "Meeting your own stated burden is powerful",
                 ],
             },
         ],
@@ -408,11 +723,11 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 question: "Which argument should typically receive the most time in your speech?",
                 options: [
                     { id: "a", text: "The first one you thought of" },
-                    { id: "b", text: "The one most likely to be decisive for winning the round" },
-                    { id: "c", text: "The one that's easiest to make" },
-                    { id: "d", text: "All arguments should get equal time" }
+                    { id: "b", text: "The one that's easiest to make" },
+                    { id: "c", text: "All arguments should get equal time" },
+                    { id: "d", text: "The one most likely to be decisive for winning the round" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Decisive arguments—those most likely to determine who wins—should receive the most attention. Your job is to win the round, so invest time where winning is most possible and important.",
             },
             {
@@ -436,6 +751,26 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Dynamic Prioritization",
+                content: "Adjust in real-time:\n\n**Before Speaking:**\nPlan your priority order. What's most important?\n\n**During Speaking:**\nBe prepared to adjust if time runs shorter than expected. Know what you'll cut.\n\n**Reading the Judge:**\nWatch reactions. If the judge clearly cares about issue X, spend more time there.\n\n**After Opponent Speaks:**\nRe-prioritize based on what they emphasized. Their strongest points need response.\n\n**Late in Debate:**\nAs debates narrow, fewer issues matter. Focus even more intensely on the remaining key issues.\n\n**The Skill:**\nPrioritization requires constant recalibration. Initial plans may need to change based on how the debate develops.",
+                keyPoints: [
+                    "Plan priority order but be flexible",
+                    "Watch judge reactions for cues",
+                    "Re-prioritize based on how the debate develops",
+                ],
+            },
+            {
+                type: "content",
+                title: "Signaling Priority to Judges",
+                content: "Help judges follow your reasoning:\n\n**Explicit Priority:**\n'The most important issue in this debate is X. Let me address that first.'\n\n**Time Allocation:**\nJudges notice when you spend more time on something. Use that to signal importance.\n\n**Positioning:**\nFirst and last positions are remembered best. Put key arguments there.\n\n**Language:**\n• 'This is the decisive issue...'\n• 'Everything else is secondary to...'\n• 'The ballot comes down to...'\n\n**Differentiation:**\n'I'll briefly note on their minor point... But the key issue is...'\n\n**The Effect:**\nClear prioritization helps judges know what to evaluate. They appreciate the guidance.",
+                keyPoints: [
+                    "Explicitly tell judges what's most important",
+                    "Use time allocation and positioning strategically",
+                    "Clear priority language helps judges evaluate",
+                ],
+            },
+            {
                 type: "question",
                 id: "l18-06-q2",
                 question: "When is it strategically appropriate to 'drop' an argument (not respond to it at all)?",
@@ -456,6 +791,49 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                     "Invest time where winning is possible and important",
                     "Strategic drops and brief responses save time for priorities",
                     "Adjust based on what resonates with judges",
+                ],
+            },
+            {
+                type: "content",
+                title: "The 'Collapse' Strategy",
+                content: "Intentional narrowing:\n\n**Technique:**\nIn the final rebuttal, explicitly say: 'I am collapsing the debate down to two issues: A and B. Nothing else matters.'\n\n**Why:**\nIt tells the judge 'You can ignore the mess elsewhere.'\n\n**Risk:**\nYou must be right that A and B are the only things that matter. If you drop a winning opponent argument, you lose.\n\n**Execution:**\n'They talked about C, D, and E. But C and D are defensive, and E is outweighed by A. So let's focus on A.'",
+                keyPoints: [
+                    "Explicitly narrow the debate in late speeches",
+                    "Authorizes the judge to ignore clutter",
+                    "Requires accurate assessment of threats",
+                ],
+            },
+            {
+                type: "content",
+                title: "Time Allocation Math",
+                content: "Rules of thumb:\n\n**Constructive:**\nEqual time per main point.\n\n**Rebuttal:**\n50% on the Winning Issue. 30% on defense against their Winning Issue. 20% on cleanup.\n\n**Focus:**\nDon't spend 50% of your time on an argument that gets you 5% of the ballot.\n\n**Drill:**\nWatch a speech. Pause every 30 seconds. Ask 'Is this the best use of this 30 seconds?'",
+                keyPoints: [
+                    "Disproportionate time for decisive issues",
+                    "Don't major in minors",
+                    "Analyze time-ROI (Return on Investment)",
+                ],
+            },
+            {
+                type: "question",
+                id: "l18-06-q3",
+                question: "What does 'Collapsing' mean in a debate context?",
+                options: [
+                    { id: "a", text: "Fainting" },
+                    { id: "b", text: "Giving up" },
+                    { id: "c", text: "Intentionally narrowing the debate to fewer, decisive issues in late speeches" },
+                    { id: "d", text: "Speaking softer" }
+                ],
+                correctAnswer: "c",
+                explanation: "Collapsing is the strategic decision to stop fighting every battle and focus all remaining time and energy on the few arguments that will actually decide the winner.",
+            },
+            {
+                type: "content",
+                title: "Prioritization Signals",
+                content: "How to tell the judge what matters:\n\n**Flagging:**\n'This is the Voting Issue.'\n'Even if you vote against everything else, this point stands.'\n\n**Repetition:**\nRepeating the key tagline makes it stick.\n\n**Tone:**\nSlowing down and speaking seriously for the priority point.\n\n**The 'Even If' Layer:**\n'Even if I lost everything else (I didn't), this point wins it.'\n\n**Effect:**\nJudges are lazy/tired. They want you to tell them what to vote on.",
+                keyPoints: [
+                    "Flag voting issues explicitly",
+                    "Use tone and repetition",
+                    "Write the ballot for the judge",
                 ],
             },
         ],
@@ -489,16 +867,36 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Integrating Unit 18 Skills",
+                content: "These techniques work together:\n\n**Building Cases:**\nMake multi-point cases, each with comparative advantage over opponents.\n\n**Evaluating Standards:**\nReject nirvana fallacy demands; use reductio on opponent principles; hold them to stable standards.\n\n**Strategic Prioritization:**\nPrioritize the arguments where you have clearest comparative advantage.\n\n**Example Flow:**\n1. Recognize nirvana attack—reframe to appropriate comparison\n2. Make multi-point case showing each independent path to victory\n3. Use comparative refutation—show relative advantage on each dimension\n4. Call out goalpost moving if they shift standards\n5. Prioritize based on what's winning\n6. Crystallize around your clearest comparative advantage",
+                keyPoints: [
+                    "Standards, multi-point, and comparative work together",
+                    "Prioritize where you have clearest advantage",
+                    "Crystallize around your strongest comparative ground",
+                ],
+            },
+            {
+                type: "content",
+                title: "Practice Scenarios for Unit 18",
+                content: "Apply these skills:\n\n**Scenario 1:**\nOpponent says your policy is worthless because it doesn't solve 100%.\n→ Nirvana fallacy. Reframe comparison to alternatives.\n\n**Scenario 2:**\nTheir principle seems too broad.\n→ Use reductio ad absurdum. Show it leads to absurd conclusions.\n\n**Scenario 3:**\nYou need to defend against multiple opponent arguments.\n→ Prioritize. Which is most decisive? Spend time there.\n\n**Scenario 4:**\nYou keep meeting their standards and they keep raising new ones.\n→ Moving goalposts. Document the pattern and call it out.\n\n**Scenario 5:**\nBoth sides have flaws.\n→ Comparative refutation. Show your flaws are less severe.",
+                keyPoints: [
+                    "Recognize which technique fits each situation",
+                    "Combine techniques strategically",
+                    "Practice builds intuition for when to use what",
+                ],
+            },
+            {
                 type: "question",
                 id: "l18-07-q1",
                 question: "Someone argues your proposal is worthless because it doesn't solve the entire problem. What fallacy is this?",
                 options: [
-                    { id: "a", text: "Moving goalposts" },
-                    { id: "b", text: "Nirvana fallacy—demanding perfection when improvement has value" },
-                    { id: "c", text: "Reductio ad absurdum" },
-                    { id: "d", text: "Ad hominem" }
+                    { id: "a", text: "Nirvana fallacy—demanding perfection when improvement has value" },
+                    { id: "b", text: "Reductio ad absurdum" },
+                    { id: "c", text: "Ad hominem" },
+                    { id: "d", text: "Moving goalposts" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "This is nirvana fallacy—rejecting a proposal because it's not perfect. The correct standard is whether it improves on alternatives, not whether it achieves perfection. Improvement has value even without complete solution.",
             },
             {
@@ -522,6 +920,49 @@ export const UNIT_18_LESSONS: MultiPageLesson[] = [
                     "Standards for comparison should be realistic and stable",
                     "Multi-point and comparative approaches strengthen cases",
                     "Strategic prioritization maximizes limited time",
+                ],
+            },
+            {
+                type: "content",
+                title: "Section 2 Final Checks",
+                content: "Before moving to Section 3:\n\n**Checklist:**\n- Can you spot 10+ fallacies?\n- Can you structure a 3-point case?\n- Can you refute using 4+ different techniques?\n- Can you weigh arguments (Comparative)?\n- Can you manage your time (Prioritization)?\n\n**Self-Correction:**\nIf you struggle with X, go back and drill X. Section 3 strategies rely on these mechanics working automatically.\n\n**The Goal:**\nUnconscious Competence. Doing the right thing without thinking hard about it.",
+                keyPoints: [
+                    "Audit your skills before advancing",
+                    "Mechanics must be automatic",
+                    "Aim for unconscious competence",
+                ],
+            },
+            {
+                type: "content",
+                title: "The Art of the Decision",
+                content: "Understanding the Judge:\n\n**Insight:**\nJudges don't want to intervene. They want the debaters to make the decision easy.\n\n**Your Job:**\nComparison and Prioritization are about writing the judge's decision for them.\n\n**Success:**\nWhen a judge says 'I voted Aff because you told me X outweighed Y, and Neg didn't answer that comparison,' you have succeeded.",
+                keyPoints: [
+                    "Make the judge's job easy",
+                    "Write the decision for them",
+                    "Comparison is the tool of decision",
+                ],
+            },
+            {
+                type: "question",
+                id: "l18-07-q3",
+                question: "What is the ultimate goal of Comparison and Prioritization?",
+                options: [
+                    { id: "a", text: "To sound smart" },
+                    { id: "b", text: "To make the judge's decision easy by explaining exactly why you win" },
+                    { id: "c", text: "To fill time" },
+                    { id: "d", text: "To confuse the opponent" }
+                ],
+                correctAnswer: "b",
+                explanation: "Judges are human decision-makers. Comparison and Prioritization provide the framework for them to cast a ballot. You are essentially drafting the 'Reason for Decision' for them.",
+            },
+            {
+                type: "content",
+                title: "Next Steps",
+                content: "Advance to Unit 19:\n\n**Application:**\nWe will take these abstract concepts and apply them to messy, real-world drills.\n\n**Preparation:**\nBring your full toolkit. You'll need every skill from Units 11-18.",
+                keyPoints: [
+                    "Theory -> Practice",
+                    "Unit 19 simulates real chaos",
+                    "Prepare to use all skills",
                 ],
             },
         ],

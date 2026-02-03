@@ -27,12 +27,12 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                 id: "l17-01-q1",
                 question: "What's a key advantage of grouping related opponent arguments?",
                 options: [
-                    { id: "a", text: "It hides that you're not responding to everything" },
-                    { id: "b", text: "One thematic response addresses multiple arguments efficiently" },
-                    { id: "c", text: "Judges don't like detailed responses" },
-                    { id: "d", text: "It always takes longer than individual responses" }
+                    { id: "a", text: "Judges don't like detailed responses" },
+                    { id: "b", text: "It always takes longer than individual responses" },
+                    { id: "c", text: "One thematic response addresses multiple arguments efficiently" },
+                    { id: "d", text: "It hides that you're not responding to everything" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "Grouping allows one response to address multiple related arguments. Instead of five separate responses, you identify the common flaw and address it once. This saves time and shows you understand the underlying patterns.",
             },
             {
@@ -53,6 +53,36 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                     "Don't force grouping when arguments are genuinely distinct",
                     "Important or complex arguments may need individual treatment",
                     "Mix grouping and individual responses strategically",
+                ],
+            },
+            {
+                type: "content",
+                title: "Advanced Grouping Techniques",
+                content: "Master these sophisticated grouping approaches:\n\n**Thematic Clusters:**\nGroup by theme: 'Their economic arguments all fail because...' 'Their moral objections share this flaw...'\n\n**Logical Category:**\nGroup by error type: 'These three arguments commit the same logical fallacy.' 'All of these lack sufficient evidence.'\n\n**Source Grouping:**\n'All of their evidence comes from the same biased source...' 'These claims rely on outdated data.'\n\n**Strategic Grouping:**\nGroup weaker arguments together for efficient dismissal; spend more time on stronger arguments individually.\n\n**Nested Grouping:**\n'Their case has two categories of arguments: economic and moral. The economic arguments fail for reason X; the moral arguments fail for reason Y.'\n\n**Explicit Bridge:**\n'These arguments appear different but share a common flaw: they all assume Z, which is false.'",
+                keyPoints: [
+                    "Group by theme, logic, source, or strategic importance",
+                    "Nested grouping handles complex cases efficiently",
+                    "Make the connection between grouped arguments explicit",
+                ],
+            },
+            {
+                type: "content",
+                title: "Grouping in Different Debate Formats",
+                content: "Adapt grouping to your format:\n\n**Policy Debate:**\nGroup disadvantages by link type or impact area. Group solvency arguments by the type of mechanism they challenge.\n\n**Lincoln-Douglas:**\nGroup value objections separately from application challenges. 'Their three framework attacks share this problem...'\n\n**Public Forum:**\nGroup contentions by theme in summary. 'Both of their economic arguments fail for the same reason.'\n\n**Parliamentary:**\nGroup points of information by theme in your response.\n\n**Congressional:**\nReference previous speakers' arguments as a group when they share common ground.\n\n**Cross-Examination:**\nYou can set up grouping in CX: 'Would you agree that your second and third arguments both assume X?' This prepares your grouped response.",
+                keyPoints: [
+                    "Different formats have different natural grouping structures",
+                    "CX can set up groupings for your speeches",
+                    "Match grouping approach to format expectations",
+                ],
+            },
+            {
+                type: "content",
+                title: "Common Grouping Mistakes",
+                content: "Avoid these pitfalls:\n\n**Forced Grouping:**\nDon't group arguments that are genuinely distinct. Judges notice when connections are artificial.\n\n**Over-Grouping:**\nGrouping everything looks like you're avoiding substantive engagement.\n\n**Vague Categories:**\n'All their arguments fail' isn't grouping—it's assertion. Be specific about the shared flaw.\n\n**Missing Individual Attention:**\nTheir strongest argument may need individual response even if it could technically be grouped.\n\n**No Explicit Connection:**\nMake the common thread clear. Don't assume judges see the connection you see.\n\n**Inconsistent Reference:**\nOnce you've grouped arguments, refer to them consistently. Don't treat grouped arguments as individuals later.\n\n**Time Misallocation:**\nGrouping saves time, but still allocate enough time to make the grouped response substantive.",
+                keyPoints: [
+                    "Don't force artificial groupings",
+                    "Make connections explicit and specific",
+                    "Balance grouped and individual responses",
                 ],
             },
             {
@@ -103,12 +133,12 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                 id: "l17-02-q1",
                 question: "A fair coin has landed heads 7 times in a row. What's the probability of heads on the next flip?",
                 options: [
-                    { id: "a", text: "Less than 50%—tails is due" },
-                    { id: "b", text: "50%—each flip is independent" },
+                    { id: "a", text: "50%—each flip is independent" },
+                    { id: "b", text: "Less than 50%—tails is due" },
                     { id: "c", text: "More than 50%—the streak will continue" },
                     { id: "d", text: "100%—it's a pattern" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "For a fair coin, each flip is independent with 50% probability of heads. The previous seven heads don't affect the next flip. The coin has no memory. This is the core of why gambler's fallacy is wrong.",
             },
             {
@@ -129,6 +159,36 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                     "Call out when opponents assume past randomness affects future probability",
                     "Distinguish random from dependent/patterned events",
                     "Avoid committing the fallacy in your own reasoning",
+                ],
+            },
+            {
+                type: "content",
+                title: "Real-World Gambler's Fallacy",
+                content: "The fallacy appears far beyond gambling:\n\n**Stock Market:**\n'This stock has dropped for 5 days—it must go up tomorrow.' If daily changes are random, past losses don't predict future gains.\n\n**Sports:**\n'After 3 missed shots, the player is due to score.' Unless there's a psychological effect, each shot has independent probability.\n\n**Insurance/Risk:**\n'We haven't had a major earthquake in 50 years, so we're safe.' Geological events may or may not be independent.\n\n**Medical Testing:**\n'My last 3 tests were negative, so this one will probably be positive.' Test results are typically independent.\n\n**Criminal Justice:**\n'This area hasn't had crime in months; we can reduce patrols.' Past safety doesn't guarantee future safety.\n\n**The Common Thread:**\nIn all cases, people wrongly expect randomness to 'balance out' over short periods.",
+                keyPoints: [
+                    "The fallacy appears in finance, sports, risk assessment, and policy",
+                    "People expect balance where none is guaranteed",
+                    "Real consequences from this flawed thinking",
+                ],
+            },
+            {
+                type: "content",
+                title: "The Hot Hand Debate",
+                content: "A fascinating case study in independence:\n\n**The Original Claim:**\nResearchers (Gilovich, 1985) claimed the 'hot hand' in basketball is a myth—that shooters aren't actually more likely to score after making previous shots.\n\n**Why It Matters:**\nIf shots are independent, believing in 'hot hands' would be reverse gambler's fallacy (expecting patterns to continue rather than reverse).\n\n**Recent Research:**\nNewer studies (Miller & Sanjurjo, 2018) found a statistical bias in the original analysis. The hot hand may be real after all!\n\n**Lessons:**\n• Independence is an empirical question, not an assumption\n• Not all sequential events are independent\n• Psychology and physiology can create dependencies\n• Question the independence assumption when evidence suggests otherwise\n\n**In Debate:**\nBe careful about both directions: don't assume events balance out (gambler's fallacy), but also don't assume complete independence without evidence.",
+                keyPoints: [
+                    "Independence is an empirical question, not an assumption",
+                    "The hot hand debate shows research can be revised",
+                    "Psychology can create dependencies between events",
+                ],
+            },
+            {
+                type: "content",
+                title: "Teaching Probability in Arguments",
+                content: "Use probability reasoning persuasively:\n\n**Explain Independence:**\nWhen applicable, explain why events are independent: 'Each coin flip is physically separate from previous flips. The coin has no memory.'\n\n**Law of Large Numbers:**\n'Over thousands of flips, we expect 50% heads. But any short sequence can deviate wildly from this. Short runs don't predict short runs.'\n\n**Base Rates:**\n'The probability of X is 1%. Whether we've seen X recently doesn't change that base rate.'\n\n**Visual Thinking:**\n'Imagine throwing away all the previous results. If you started fresh, what would the probability be?' This clarifies that history doesn't matter for independent events.\n\n**Avoiding Math Phobia:**\nYou don't need complex calculations. The concept is simple: for independent events, past doesn't affect future.",
+                keyPoints: [
+                    "Explain independence in accessible terms",
+                    "Law of large numbers works over many events, not short runs",
+                    "Use simple analogies to clarify probability reasoning",
                 ],
             },
             {
@@ -179,12 +239,12 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                 id: "l17-03-q1",
                 question: "What's the main risk that line-by-line refutation prevents?",
                 options: [
-                    { id: "a", text: "Speaking too slowly" },
-                    { id: "b", text: "Dropping arguments that opponents can then claim you conceded" },
-                    { id: "c", text: "Confusing the judge" },
-                    { id: "d", text: "Running out of content" }
+                    { id: "a", text: "Confusing the judge" },
+                    { id: "b", text: "Speaking too slowly" },
+                    { id: "c", text: "Running out of content" },
+                    { id: "d", text: "Dropping arguments that opponents can then claim you conceded" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "The main risk prevented by line-by-line is dropping arguments. Unaddressed arguments may be treated as conceded by judges. Systematic response ensures every point receives attention.",
             },
             {
@@ -205,6 +265,36 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                     "Use line-by-line when judges expect it or arguments are distinct",
                     "Combine with grouping and prioritization as needed",
                     "Later speeches may focus on key issues rather than comprehensive response",
+                ],
+            },
+            {
+                type: "content",
+                title: "Flowing for Line-by-Line Success",
+                content: "Your flow sheet is the foundation:\n\n**Clear Organization:**\nMap their arguments with clear labels (A1, A2, A3 or Contention 1, 2, 3). This enables systematic response.\n\n**Space for Responses:**\nLeave room to write your responses next to their arguments as you prepare.\n\n**Abbreviations:**\nDevelop shortcuts: 'DA' for disadvantage, 'T' for turn, 'NA' for no access, etc.\n\n**Priority Markers:**\nMark their strongest arguments for more detailed response. Mark weak arguments for brief dismissal.\n\n**During Your Speech:**\nReference your flow. 'On their first argument about economics...' Follow the structure you've prepared.\n\n**Real-Time Updates:**\nAs you speak, check off arguments addressed. This prevents accidentally skipping any.",
+                keyPoints: [
+                    "Good flowing enables effective line-by-line response",
+                    "Mark priority for varying depth",
+                    "Check off arguments as you address them",
+                ],
+            },
+            {
+                type: "content",
+                title: "Common Line-by-Line Mistakes",
+                content: "Avoid these pitfalls:\n\n**Restating Their Argument:**\n✘ 'They said X. And then they said because of X, Y happens...'\n✔ 'On their X argument, that fails because...'\n\n**Equal Time Allocation:**\nNot every argument deserves equal time. Vary depth strategically.\n\n**No Prioritization:**\nIf you run out of time, ensure you've addressed the most important arguments first.\n\n**Losing the Big Picture:**\nLine-by-line can miss the forest for the trees. Periodically zoom out: 'But fundamentally, their case fails because...'\n\n**Forgetting Offense:**\nLine-by-line is defensive. Make sure you're also making offensive arguments.\n\n**Mechanical Delivery:**\nDon't sound like you're reading a checklist. Engage with their arguments genuinely.",
+                keyPoints: [
+                    "Don't restate their full arguments",
+                    "Vary depth and prioritize key arguments",
+                    "Maintain big-picture perspective and offensive arguments",
+                ],
+            },
+            {
+                type: "content",
+                title: "Practicing Line-by-Line",
+                content: "Develop this skill through deliberate practice:\n\n**Timed Drills:**\nGive yourself a case and a fixed response time. Practice systematic coverage.\n\n**Flow Practice:**\nWatch debate videos and practice flowing opponent cases. Then practice responses.\n\n**Speed Variation:**\nPractice at different time pressures. How do you adjust when you have less time?\n\n**Recording Review:**\nRecord yourself and check: Did you address everything? Did you vary depth appropriately? Did you signpost clearly?\n\n**Partner Practice:**\nHave a partner read a case, then immediately respond line-by-line. Get feedback on coverage and efficiency.\n\n**Format-Specific:**\nPractice in your specific debate format. Different formats have different line-by-line expectations.",
+                keyPoints: [
+                    "Timed drills build systematic response skills",
+                    "Recording review reveals coverage gaps",
+                    "Practice in your specific format",
                 ],
             },
             {
@@ -257,8 +347,8 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                 options: [
                     { id: "a", text: "Denied that test scores improved" },
                     { id: "b", text: "Provided an alternative cause that explains the improvement without their policy" },
-                    { id: "c", text: "Agreed with their argument" },
-                    { id: "d", text: "Made a personal attack" }
+                    { id: "c", text: "Made a personal attack" },
+                    { id: "d", text: "Agreed with their argument" }
                 ],
                 correctAnswer: "b",
                 explanation: "You've provided an alternative cause. The new curriculum explains test score improvement independently of their policy. This undermines their claim that their policy caused the improvement—the outcome would have occurred anyway.",
@@ -281,6 +371,26 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                     "Explain causal mechanisms clearly",
                     "Cite studies that control for alternative factors",
                     "Preempt likely alternative explanations",
+                ],
+            },
+            {
+                type: "content",
+                title: "Real-World Alternative Causality Debates",
+                content: "This appears constantly in policy debates:\n\n**Economic Policy:**\n'Tax cuts caused growth' vs. 'Economic cycles caused growth.' Controlled studies try to isolate the tax effect.\n\n**Education:**\n'This program improved outcomes' vs. 'Demographics changed' or 'Other programs helped.'\n\n**Crime Policy:**\n'More police reduced crime' vs. 'Demographic shifts' or 'Economic improvements' explain the reduction.\n\n**Health Policy:**\n'This regulation improved health' vs. 'Technology improvements' or 'Income increases' drove the improvement.\n\n**Environmental:**\n'Climate policy reduced emissions' vs. 'Economic recession reduced activity.'\n\n**The Challenge:**\nReal-world outcomes have multiple causes. Strong causal arguments acknowledge complexity while demonstrating the specific contribution of the proposed cause.",
+                keyPoints: [
+                    "Policy debates constantly involve alternative causality challenges",
+                    "Multiple causes often contribute to real-world outcomes",
+                    "Strong arguments acknowledge complexity while demonstrating specific causal contribution",
+                ],
+            },
+            {
+                type: "content",
+                title: "Evaluating Causal Claims",
+                content: "Judge causation claims carefully:\n\n**Hill's Criteria (adapted):**\n• **Strength**: Larger effects are more likely causal\n• **Consistency**: Effect reproduced in multiple studies\n• **Specificity**: Cause leads to specific outcome\n• **Temporality**: Cause precedes effect\n• **Dose-Response**: More cause = more effect\n• **Plausibility**: Mechanism makes sense\n• **Coherence**: Fits with other knowledge\n\n**Questions to Ask:**\n• What's the proposed mechanism?\n• Were alternative explanations controlled for?\n• Is the evidence from controlled studies or correlation?\n• Does the timing work out?\n• Is the effect size meaningful?\n\n**The Standard:**\nStrong causal claims should meet multiple criteria. Single-study correlational evidence is weak.",
+                keyPoints: [
+                    "Multiple criteria for evaluating causal claims",
+                    "Mechanism, control, and replication matter",
+                    "Single-study correlations are weak evidence",
                 ],
             },
             {
@@ -331,12 +441,12 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                 id: "l17-05-q1",
                 question: "'States with more ice cream sales have more drowning deaths. Therefore, eating ice cream causes drowning.' What fallacy is this?",
                 options: [
-                    { id: "a", text: "Only ecological fallacy" },
-                    { id: "b", text: "Ecological fallacy combined with false causation—group correlation is spurious (caused by a third factor: summer weather)" },
+                    { id: "a", text: "Ecological fallacy combined with false causation—group correlation is spurious (caused by a third factor: summer weather)" },
+                    { id: "b", text: "Only ecological fallacy" },
                     { id: "c", text: "No fallacy—ice cream is dangerous" },
                     { id: "d", text: "Appeal to authority" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "This combines ecological fallacy (drawing individual conclusions from group data) with false causation. The group-level correlation exists because both ice cream sales and drowning deaths increase in summer. No individual causal mechanism connects them.",
             },
             {
@@ -357,6 +467,26 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                     "Challenge when group data is misapplied to individuals",
                     "Be clear about what level your conclusions address",
                     "Individual-level data is stronger for individual conclusions",
+                ],
+            },
+            {
+                type: "content",
+                title: "Simpson's Paradox",
+                content: "A related phenomenon that shows aggregation problems:\n\n**The Paradox:**\nTrends that appear in group data can disappear or reverse when the data is divided into subgroups.\n\n**Classic Example:**\nA treatment appears harmful overall, but is actually beneficial for men AND beneficial for women separately. How? Confounding variables in group composition.\n\n**Why It Matters:**\nAggregate data can hide—or create—patterns that don't exist at more granular levels.\n\n**In Debate:**\n'Their aggregate data shows X. But when broken down by [relevant subgroups], the pattern disappears. The aggregate is misleading.'\n\n**The Lesson:**\nAlways be cautious about aggregate statistics. Consider what subgroups might exist and how patterns might differ within them.",
+                keyPoints: [
+                    "Aggregate patterns can reverse in subgroups",
+                    "Confounding variables can create misleading aggregates",
+                    "Consider subgroup analysis when evaluating aggregate claims",
+                ],
+            },
+            {
+                type: "content",
+                title: "Individual vs. Population Interventions",
+                content: "Policy implications of this distinction:\n\n**Individual Interventions:**\nTargeted approaches address specific individuals based on individual assessment. More precise but harder to scale.\n\n**Population Interventions:**\nBroad approaches based on group-level data. Easier to implement but may miss individual variation.\n\n**The Tradeoff:**\n• Group data can guide population-level policies\n• Individual decisions require individual-level consideration\n• 'On average' doesn't mean 'for everyone'\n\n**In Policy Debate:**\n'This intervention works on average. But some individuals will be harmed. We need to consider who wins and who loses, not just aggregate effects.'\n\n**Defense:**\n'While individual variation exists, overall outcomes improve. Policy must work with aggregate effects since individual-level programs aren't feasible at scale.'",
+                keyPoints: [
+                    "Group data supports population-level policy",
+                    "Individual decisions require individual consideration",
+                    "Acknowledge tradeoffs between aggregate effects and individual variation",
                 ],
             },
             {
@@ -408,11 +538,11 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                 question: "What's the difference between summary and crystallization?",
                 options: [
                     { id: "a", text: "There is no difference" },
-                    { id: "b", text: "Summary repeats arguments; crystallization identifies what's determinative and why you win there" },
-                    { id: "c", text: "Summary is longer" },
+                    { id: "b", text: "Summary is longer" },
+                    { id: "c", text: "Summary repeats arguments; crystallization identifies what's determinative and why you win there" },
                     { id: "d", text: "Crystallization comes earlier" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "Summary repeats what happened; crystallization identifies the key voting issue(s) and shows why you win there. Crystallization gives judges a decision calculus, not just a recap.",
             },
             {
@@ -433,6 +563,26 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                     "Multiple frameworks can structure crystallization",
                     "Choose the frame that best fits your winning position",
                     "Criterion, outweighing, and burden are common frames",
+                ],
+            },
+            {
+                type: "content",
+                title: "Advanced Crystallization Techniques",
+                content: "Take your crystallization to the next level:\n\n**The Story:**\nWeave your winning narrative: 'This debate started with X. They tried Y, but we showed Z. The result is clear.'\n\n**The Filter:**\n'Set aside everything except this one question: [key issue]. On that question, we win.'\n\n**The Concession Contrast:**\n'We've given them credit for A, B, and C. But none of those outweigh D, which is ours.'\n\n**The Visual:**\n'Picture the judge's ballot. They're asking: [frame the question]. The answer favors us because...'\n\n**The Inevitability:**\n'No matter how you approach this debate, you arrive at the same conclusion: [your position].'\n\n**The Minimization:**\n'Their best argument is X. Even granting X entirely, it doesn't outweigh Y.'",
+                keyPoints: [
+                    "Story, filter, and contrast techniques elevate crystallization",
+                    "Create inevitability around your winning position",
+                    "Minimize their best argument while maximizing yours",
+                ],
+            },
+            {
+                type: "content",
+                title: "Crystallization Mistakes to Avoid",
+                content: "Common crystallization errors:\n\n**Summary Instead of Synthesis:**\n✘ 'We made arguments A, B, C, D, E, F...'\n✔ 'The key issue is X. We win X because...'\n\n**Too Many Voting Issues:**\nThree is probably the maximum. One or two is better. Clarity = persuasion.\n\n**Not Explaining Why You Win:**\nIdentifying the issue isn't enough. Show why you prevail there.\n\n**Ignoring Their Best Argument:**\nAddress it directly or judges may vote on it. 'Even their best argument doesn't change the calculus because...'\n\n**New Arguments:**\nCrystallization synthesizes existing content; don't introduce new arguments.\n\n**Tentative Language:**\n✘ 'We might win because...'\n✔ 'The debate clearly favors our position because...'",
+                keyPoints: [
+                    "Synthesize, don't summarize",
+                    "Keep voting issues to one to three",
+                    "Use confident language and address their best argument",
                 ],
             },
             {
@@ -489,14 +639,34 @@ export const UNIT_17_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Integrating These Skills",
+                content: "These techniques work together:\n\n**Organizing While Attacking:**\n• Group arguments that share the same logical flaw\n• Use line-by-line for distinct arguments\n• Crystallize around the key voting issue\n\n**Fallacy Recognition Enables Grouping:**\n• 'These three arguments all commit ecological fallacy. I'll address them together.'\n• 'These rely on correlation, not causation. Here are alternatives...'\n\n**Crystallization Uses Everything:**\n• After grouping or line-by-line response, synthesize to the key issue\n• Show how fallacy recognition undermines their case\n• Frame the final decision around your strongest ground\n\n**The Flow:**\nGrouping/Line-by-Line (organization) → Fallacy Identification (analysis) → Crystallization (synthesis)",
+                keyPoints: [
+                    "Organization, analysis, and synthesis work together",
+                    "Fallacy recognition can structure grouping",
+                    "Crystallization brings everything together",
+                ],
+            },
+            {
+                type: "content",
+                title: "Practice Scenarios",
+                content: "Apply these skills to scenarios:\n\n**Scenario 1:**\nOpponent makes five arguments about economic harms from your policy. Three of them rely on single-study correlational evidence.\n→ Group those three and attack alternative causality/methodology; address the other two individually.\n\n**Scenario 2:**\nOpponent cites aggregate statistics to predict individual outcomes.\n→ Call ecological fallacy; demand individual-level data.\n\n**Scenario 3:**\nFinal speech with many arguments on both sides.\n→ Identify the 1-2 key voting issues; crystallize around why you win there.\n\n**Scenario 4:**\nOpponent says 'We haven't had a recession in 10 years, so we're due for one.'\n→ If recessions are random: gambler's fallacy. If cyclical: past data may be relevant.",
+                keyPoints: [
+                    "Practice applying these techniques to realistic scenarios",
+                    "Combine techniques strategically based on the situation",
+                    "Develop flexibility in your analytical approach",
+                ],
+            },
+            {
                 type: "question",
                 id: "l17-07-q1",
                 question: "What distinguishes crystallization from summary?",
                 options: [
                     { id: "a", text: "Crystallization is longer" },
                     { id: "b", text: "Crystallization identifies the key issue and tells judges why you win there; summary just recaps" },
-                    { id: "c", text: "There is no difference" },
-                    { id: "d", text: "Summary comes later" }
+                    { id: "c", text: "Summary comes later" },
+                    { id: "d", text: "There is no difference" }
                 ],
                 correctAnswer: "b",
                 explanation: "Crystallization is synthesis that identifies the determinative issue and shows why you win it. Summary just repeats what happened. Effective crystallization guides the judge's decision rather than listing arguments.",

@@ -126,39 +126,15 @@ Output only the argument itself (2-4 sentences), as if you're speaking in a deba
 }
 
 async function generateClaimToClassify(difficulty: DifficultyLevel): Promise<string> {
-  const claims: Record<DifficultyLevel, string[]> = {
-    beginner: [
-      "The death penalty should be abolished.",
-      "Climate change is caused by human activity.",
-      "Education is more important than experience.",
-      "Voting should be mandatory for all citizens.",
-      "Recycling reduces environmental damage.",
-    ],
-    intermediate: [
-      "Universal basic income would reduce poverty more effectively than current welfare systems.",
-      "Social media platforms bear responsibility for the spread of misinformation.",
-      "The benefits of space exploration outweigh its costs.",
-      "Remote work improves employee productivity.",
-      "Artificial intelligence will create more jobs than it eliminates.",
-    ],
-    advanced: [
-      "Democratic institutions are more conducive to long-term economic growth than authoritarian systems.",
-      "The concept of intellectual property fundamentally conflicts with the free flow of information.",
-      "Carbon taxation represents the most efficient mechanism for addressing climate change.",
-      "Technological determinism inadequately explains social change.",
-      "Restorative justice better serves victims than retributive punishment.",
-    ],
-    expert: [
-      "The precautionary principle should take precedence over economic considerations in environmental policy.",
-      "Epistemic autonomy is a prerequisite for meaningful democratic participation.",
-      "Market mechanisms cannot adequately address intergenerational justice concerns.",
-      "The distinction between positive and negative rights is morally arbitrary.",
-      "Collective action problems in international relations are fundamentally unsolvable without supranational authority.",
-    ],
-  };
+  const modelWithSystem = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-preview-09-2025",
+    systemInstruction: `You are a debate coach. Generate a claim for a student to classify as Fact, Value, or Policy.
+    Difficulty: ${difficulty}.
+    Output only the claim text.`
+  });
 
-  const claimList = claims[difficulty];
-  return claimList[Math.floor(Math.random() * claimList.length)];
+  const result = await modelWithSystem.generateContent(`Generate a claim.`);
+  return result.response.text();
 }
 
 async function generateEvidenceChallenge(
@@ -175,40 +151,15 @@ async function generateEvidenceChallenge(
 }
 
 async function generateFallaciousArgument(difficulty: DifficultyLevel): Promise<string> {
-  const fallacies: Record<DifficultyLevel, Array<{ fallacy: string; argument: string }>> = {
-    beginner: [
-      { fallacy: "ad hominem", argument: "You can't trust John's opinion on climate change because he's not a scientist." },
-      { fallacy: "strawman", argument: "People who support gun control want to take away all guns from everyone." },
-      { fallacy: "false dichotomy", argument: "You're either with us or against us. There's no middle ground." },
-      { fallacy: "appeal to authority", argument: "This celebrity endorses this diet, so it must be healthy." },
-      { fallacy: "slippery slope", argument: "If we allow students to use phones in class, soon they'll be gaming all day and failing every class." },
-    ],
-    intermediate: [
-      { fallacy: "hasty generalization", argument: "I met two rude people from that city, so everyone there must be rude." },
-      { fallacy: "circular reasoning", argument: "This news source is reliable because they always report the truth, and we know they report the truth because they're reliable." },
-      { fallacy: "red herring", argument: "Why worry about student debt when there are homeless people on the streets?" },
-      { fallacy: "appeal to emotion", argument: "Think of the children! We must ban this video game immediately." },
-      { fallacy: "bandwagon", argument: "Everyone is investing in crypto, so it must be a good investment." },
-    ],
-    advanced: [
-      { fallacy: "equivocation", argument: "The law says all men are equal, so a doctor and a criminal should be treated the same." },
-      { fallacy: "appeal to nature", argument: "Organic food is natural, so it must be healthier than processed food." },
-      { fallacy: "post hoc", argument: "Crime decreased after we installed cameras, proving cameras prevent crime." },
-      { fallacy: "false cause", argument: "Countries with more Nobel Prize winners also have higher chocolate consumption, so chocolate must boost intelligence." },
-      { fallacy: "loaded question", argument: "When did you stop cheating on your tests?" },
-    ],
-    expert: [
-      { fallacy: "motte-and-bailey", argument: "Of course free speech is important (motte), so we shouldn't criticize anyone's views (bailey)." },
-      { fallacy: "kettle logic", argument: "I never borrowed your book, and besides, it was already damaged when I got it, and I returned it in perfect condition." },
-      { fallacy: "nirvana fallacy", argument: "This policy won't eliminate all poverty, so we shouldn't implement it at all." },
-      { fallacy: "moral licensing", argument: "I recycled yesterday, so it's fine if I drive my gas-guzzler today." },
-      { fallacy: "texas sharpshooter", argument: "Looking at our results, we succeeded in areas X, Y, and Z - exactly what we were trying to achieve (after seeing results)." },
-    ],
-  };
+  const modelWithSystem = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-preview-09-2025",
+    systemInstruction: `You are a debate coach. Generate a fallacious argument.
+    Difficulty: ${difficulty}.
+    Output only the argument text. Do not reveal the fallacy type.`
+  });
 
-  const fallacyList = fallacies[difficulty];
-  const selected = fallacyList[Math.floor(Math.random() * fallacyList.length)];
-  return selected.argument;
+  const result = await modelWithSystem.generateContent(`Generate a fallacious argument.`);
+  return result.response.text();
 }
 
 async function generateClaimForWarrant(difficulty: DifficultyLevel, topic: string): Promise<string> {
@@ -260,6 +211,26 @@ export async function evaluatePracticeResponse(
       encouragement: "Keep practicing!",
     };
   }
+}
+
+export async function generatePracticeHint(
+  practiceType: PracticeType,
+  difficulty: DifficultyLevel,
+  context: any // The prompt itself
+): Promise<string> {
+  const modelWithSystem = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-preview-09-2025",
+    systemInstruction: `You are a helpful debate tutor. Provide a hint for the student's current practice task. 
+    Do NOT give the answer. 
+    Instead, guide them toward the right thinking process or structure. 
+    Keep it brief (1-2 sentences).
+    
+    Practice Type: ${practiceType}
+    Difficulty: ${difficulty}`,
+  });
+
+  const result = await modelWithSystem.generateContent(`Current Task Context: ${JSON.stringify(context)}. Give me a hint.`);
+  return result.response.text();
 }
 
 function buildEvaluationPrompt(

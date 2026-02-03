@@ -28,11 +28,11 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                 question: "Someone argues: 'My friend dropped out of college and became successful, so college isn't necessary for success.' What's fallacious about this reasoning?",
                 options: [
                     { id: "a", text: "Nothing—the example proves the point" },
-                    { id: "b", text: "One success story doesn't prove college is unnecessary generally; it's an outlier, not a pattern" },
-                    { id: "c", text: "College is always necessary" },
-                    { id: "d", text: "The friend isn't really successful" }
+                    { id: "b", text: "College is always necessary" },
+                    { id: "c", text: "The friend isn't really successful" },
+                    { id: "d", text: "One success story doesn't prove college is unnecessary generally; it's an outlier, not a pattern" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "This is the anecdotal fallacy. One dropout succeeding doesn't prove college is unnecessary—that requires statistical comparison of outcomes. The friend might be an exceptional outlier, and other dropouts might fare worse on average.",
             },
             {
@@ -43,6 +43,36 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                     "Anecdotes can illustrate; they can't prove general claims",
                     "Good use: 'Data shows X; here's an example'",
                     "Bad use: 'Here's an example; therefore X is true generally'",
+                ],
+            },
+            {
+                type: "content",
+                title: "Real-World Anecdotal Fallacies",
+                content: "The anecdotal fallacy appears constantly in public discourse:\n\n**Health and Medicine:**\n'My aunt cured her cancer with this herb, so it works.'\nIndividual recovery doesn't prove causation—spontaneous remission, misdiagnosis, and other factors could explain it.\n\n**Economics and Policy:**\n'I know someone on welfare who owns an iPhone, so welfare recipients are just lazy.'\nOne observation can't characterize millions of people's circumstances.\n\n**Technology and Safety:**\n'I've never worn a helmet and I'm fine, so helmets are unnecessary.'\nSurvivorship bias—we don't hear from those who were seriously injured.\n\n**Education and Careers:**\n'My cousin never studied and got straight A's, so studying is pointless.'\nExceptional cases don't define what works for most people.\n\n**Why These Arguments Persist:**\nStories are vivid, memorable, and emotionally compelling. Statistics feel abstract. But policy decisions affecting millions should be based on data, not anecdotes.",
+                keyPoints: [
+                    "Anecdotal fallacies are common in health, policy, and safety debates",
+                    "Survivorship bias means we only hear from survivors, not victims",
+                    "Stories are compelling but shouldn't drive major decisions",
+                ],
+            },
+            {
+                type: "content",
+                title: "The Psychology Behind Anecdotal Reasoning",
+                content: "Understanding why we fall for anecdotes helps us resist them:\n\n**Availability Heuristic:**\nWe judge probability by how easily examples come to mind. Dramatic stories are memorable, so we overestimate their frequency.\n\n**Narrative Transportation:**\nStories engage us emotionally and lower our critical defenses. We become 'transported' into the narrative.\n\n**Identifiable Victim Effect:**\nWe care more about specific individuals than statistical abstractions. 'One death is a tragedy; a million is a statistic.'\n\n**Base Rate Neglect:**\nWe focus on the specific case and ignore how common or rare such cases actually are.\n\n**Confirmation Bias:**\nWe remember anecdotes that confirm our beliefs and forget those that contradict them.\n\n**Implications for Debate:**\nRecognize when opponents use stories to bypass logic. Redirect to data while acknowledging the emotional power of their example.",
+                keyPoints: [
+                    "Availability heuristic makes vivid stories seem more common",
+                    "We care more about identifiable individuals than statistics",
+                    "Recognizing these biases helps resist anecdotal reasoning",
+                ],
+            },
+            {
+                type: "content",
+                title: "Countering Anecdotes with Data Literacy",
+                content: "The best defense against anecdotal fallacies is data literacy:\n\n**Sample Size Matters:**\n'How many cases does this represent?' One case is not evidence. Ten thousand might be.\n\n**Selection Effects:**\n'How were these examples chosen?' Cherry-picked examples prove nothing.\n\n**Control Groups:**\n'What happened to similar people who didn't do X?' Without comparison, we can't attribute outcomes.\n\n**Base Rates:**\n'How common is this outcome in general?' Rare events need context.\n\n**Correlation vs. Causation:**\n'Did X actually cause Y, or did they just happen together?' Temporal sequence doesn't prove causation.\n\n**Constructive Responses:**\n• 'That's an interesting case. What does the research show overall?'\n• 'I appreciate the example. How representative is it?'\n• 'Stories are compelling, but let's look at the systematic evidence.'",
+                keyPoints: [
+                    "Always ask about sample size, selection, and comparison groups",
+                    "Base rates provide essential context for individual cases",
+                    "Guide conversations from anecdotes to systematic evidence",
                 ],
             },
             {
@@ -132,16 +162,46 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Advanced Weighing Strategies",
+                content: "Master these advanced outweighing techniques:\n\n**Stacking Criteria:**\n'We win on magnitude, probability, AND timeframe. Even if you contest one, we still win on the others.'\n\n**Defensive Weighing:**\nAnticipate their weighing and preempt it. 'They'll say their harm is irreversible, but ours affects more people—scale outweighs reversibility.'\n\n**Meta-Weighing:**\nArgue why certain criteria matter more. 'Why does magnitude matter more than timeframe? Because policy should prioritize the greatest good.'\n\n**Comparative Contextualization:**\nPut numbers in perspective. 'Their cost equals 0.1% of the budget—the Pentagon loses more in accounting errors annually.'\n\n**Turn Their Weighing:**\n'They say probability matters most. Agreed—and our benefit is certain while their harm is speculative. Even by their own standard, we win.'",
+                keyPoints: [
+                    "Stack multiple weighing criteria for stronger arguments",
+                    "Meta-weighing argues why certain criteria matter more",
+                    "Turn opponent's weighing framework against them",
+                ],
+            },
+            {
+                type: "content",
+                title: "Real-World Outweighing Examples",
+                content: "See how outweighing works in practice:\n\n**Healthcare Policy:**\n'We concede this program costs $10 billion. But it prevents 50,000 deaths annually. Each statistical life is valued at $10 million, meaning we save $500 billion in human value—a 50:1 benefit-to-cost ratio.'\n\n**Environmental Regulation:**\n'Yes, these rules reduce coal jobs. But they prevent 12,000 premature deaths and 100,000 asthma attacks yearly. Health impacts outweigh job losses, especially when affected workers can be retrained.'\n\n**Education Reform:**\n'We accept implementation costs money upfront. But graduates earn $1 million more over their lifetime, paying more taxes and reducing social services. Long-term benefits dwarf short-term costs.'\n\n**Criminal Justice:**\n'Longer sentences have deterrence value. But mass incarceration costs $80 billion annually and destroys communities, perpetuating cycles of crime. The cure is worse than the disease.'\n\nNotice how each example concedes the opponent's point, then demonstrates why the speaker's impact is larger using specific criteria and evidence.",
+                keyPoints: [
+                    "Quantification makes weighing concrete and credible",
+                    "Acknowledge opponent's point before showing yours is larger",
+                    "Connect weighing to specific criteria like magnitude or probability",
+                ],
+            },
+            {
+                type: "content",
+                title: "Common Outweighing Mistakes",
+                content: "Avoid these outweighing pitfalls:\n\n**Asserting Without Proving:**\n✘ 'Our impact is obviously bigger.'\n✔ 'Our impact affects 10 million people vs. their 100,000—a 100:1 magnitude advantage.'\n\n**Ignoring Their Framework:**\nIf they've established a moral framework, you must engage it. Outweighing on utilitarian grounds may not work if they've won that rights matter more.\n\n**Outweighing the Unweighable:**\nSome impacts don't compare well. 'Is preventing one genocide worth causing widespread poverty?' Be careful with incommensurable values.\n\n**Forgetting to Concede Explicitly:**\n✘ [Just making your argument]\n✔ 'We grant their point. Here's why we still win...'\n\n**Making It Sound Defensive:**\n✘ 'Even though they're right...'\n✔ 'Their point is minor compared to our decisive advantage.'\n\nFraming matters. Outweighing should feel like offense, not retreat.",
+                keyPoints: [
+                    "Quantify your comparisons; don't just assert superiority",
+                    "Engage their framework, don't ignore it",
+                    "Frame outweighing as offense, not defense",
+                ],
+            },
+            {
                 type: "question",
                 id: "l16-02-q2",
                 question: "What's the risk of relying too heavily on outweighing?",
                 options: [
                     { id: "a", text: "Judges don't understand outweighing" },
-                    { id: "b", text: "It can make you appear to be losing on every individual argument" },
-                    { id: "c", text: "Outweighing is against debate rules" },
+                    { id: "b", text: "Outweighing is against debate rules" },
+                    { id: "c", text: "It can make you appear to be losing on every individual argument" },
                     { id: "d", text: "There's no risk—always outweigh" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "If you outweigh too much, you appear to be conceding every argument and hoping quantity saves you. This can look like you're losing everywhere. Mix outweighing with direct refutation for a stronger appearance.",
             },
             {
@@ -179,12 +239,12 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                 id: "l16-03-q1",
                 question: "'This diet must work—it has millions of followers!' Why is this reasoning fallacious?",
                 options: [
-                    { id: "a", text: "It's not fallacious—popularity proves effectiveness" },
-                    { id: "b", text: "Popularity could result from marketing, not effectiveness; you need actual evidence of outcomes" },
+                    { id: "a", text: "Popularity could result from marketing, not effectiveness; you need actual evidence of outcomes" },
+                    { id: "b", text: "It's not fallacious—popularity proves effectiveness" },
                     { id: "c", text: "Diets never work" },
                     { id: "d", text: "Millions of people can't be wrong" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Popularity could result from marketing, celebrity endorsement, or wishful thinking rather than actual effectiveness. The diet's popularity doesn't prove it works—you need evidence of actual health outcomes to establish that.",
             },
             {
@@ -205,6 +265,36 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                     "Request evidence independent of popularity",
                     "Use historical counterexamples of popular wrong beliefs",
                     "Distinguish expert consensus from general popularity",
+                ],
+            },
+            {
+                type: "content",
+                title: "Social Media and Modern Bandwagons",
+                content: "The digital age has amplified bandwagon effects:\n\n**Viral Misinformation:**\nFalse claims spread because they're shared, not because they're true. 'This post has 100K shares' means nothing about accuracy.\n\n**Follower Counts:**\n'This influencer has 10 million followers, so their advice must be good.' Follower count reflects marketing skill, not expertise.\n\n**Review Manipulation:**\nProducts with thousands of 5-star reviews may have purchased them. Popularity metrics are gameable.\n\n**Echo Chambers:**\nAlgorithms show us content that's popular in our bubble, making fringe beliefs seem mainstream.\n\n**FOMO-Based Arguments:**\n'Everyone is investing in this/buying this/doing this.' Fear of missing out exploits bandwagon psychology.\n\n**Critical Response:**\nAlways ask: 'What evidence exists independent of popularity?' Don't let share counts substitute for substance.",
+                keyPoints: [
+                    "Virality doesn't equal validity",
+                    "Popularity metrics can be manipulated",
+                    "Echo chambers distort perception of what's mainstream",
+                ],
+            },
+            {
+                type: "content",
+                title: "Historical Bandwagon Failures",
+                content: "History shows majorities being catastrophically wrong:\n\n**Scientific Errors:**\n• For centuries, most people believed in spontaneous generation\n• The medical establishment rejected germ theory\n• Phrenology was mainstream science\n• Most geologists rejected continental drift\n\n**Medical Disasters:**\n• Doctors widely recommended cigarettes\n• Lobotomies were celebrated treatments\n• Thalidomide was popular before its dangers emerged\n\n**Social Injustices:**\n• Slavery was defended as natural\n• Women's suffrage was opposed by majorities\n• Segregation had popular support\n\n**Economic Bubbles:**\n• Tulip mania\n• South Sea Bubble\n• Dot-com crash\n• 2008 housing crisis\n\nIn each case, popular opinion was demonstrably wrong. Truth required evidence-based analysis, not vote-counting.",
+                keyPoints: [
+                    "Scientific consensus has been wrong many times",
+                    "Popular social attitudes have supported injustice",
+                    "Economic bubbles show mass delusion is possible",
+                ],
+            },
+            {
+                type: "content",
+                title: "Building Independent Thinking",
+                content: "Resist bandwagon pressure through deliberate practice:\n\n**Delay Judgment:**\nBefore accepting popular claims, wait to evaluate evidence. Urgency often accompanies bandwagon appeals.\n\n**Seek Dissent:**\nActively look for critics and contrarians. What arguments exist against the popular view?\n\n**Trace Origins:**\nWhere did this popular belief come from? Follow claims back to their original sources.\n\n**Question Mechanisms:**\nWhy might something be popular regardless of merit? Marketing? Convenience? Emotional appeal?\n\n**Practice Contrarianism:**\nOccasionally argue the unpopular side just to understand it. This builds intellectual independence.\n\n**Value Evidence Over Votes:**\nDevelop the habit of asking 'What's the evidence?' rather than 'What do most people think?'\n\nIndependent thinking isn't about being contrarian for its own sake—it's about ensuring popular opinion is based on evidence.",
+                keyPoints: [
+                    "Delay judgment until you've evaluated evidence independently",
+                    "Actively seek out dissenting views",
+                    "Ask why something is popular, not just that it is",
                 ],
             },
             {
@@ -256,11 +346,11 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                 question: "How can conceding a point actually strengthen your position?",
                 options: [
                     { id: "a", text: "It can't—conceding always weakens your position" },
-                    { id: "b", text: "It builds credibility, saves time for important arguments, and focuses judges on your strongest ground" },
-                    { id: "c", text: "Judges award points for concession" },
-                    { id: "d", text: "It confuses opponents" }
+                    { id: "b", text: "Judges award points for concession" },
+                    { id: "c", text: "It confuses opponents" },
+                    { id: "d", text: "It builds credibility, saves time for important arguments, and focuses judges on your strongest ground" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Strategic concession builds credibility (you seem fair and honest), saves time (focus on what matters), and simplifies the debate (judges focus on your strongest ground). Conceding everything is bad, but conceding wisely is powerful.",
             },
             {
@@ -281,6 +371,36 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                     "Concede explicitly and confidently, then redirect",
                     "Frame concessions as minor and immediately pivot",
                     "Track concessions to avoid contradiction",
+                ],
+            },
+            {
+                type: "content",
+                title: "Advanced Concession Language",
+                content: "Master these concession phrases:\n\n**Strong Concession Phrases:**\n• 'We grant this point. It's minor compared to...'\n• 'Their evidence here is accurate. But the relevant question is...'\n• 'Even accepting their entire argument, we still win because...'\n• 'We don't contest this—we contest whether it matters.'\n\n**Weak Phrases to Avoid:**\n• 'I guess they're right...' (sounds defeated)\n• 'We have to admit...' (sounds forced)\n• 'Unfortunately, they have a point' (admits weakness unnecessarily)\n\n**Framing Matters:**\nThe same concession can sound like strength or weakness:\n✘ 'We're giving up on this argument.'\n✔ 'We're focusing on what actually decides the debate.'\n\n**Practice:**\nRegularly practice concession-and-pivot in drills until it becomes natural and confident.",
+                keyPoints: [
+                    "Use confident, positive language when conceding",
+                    "Frame concessions as strategic choices, not forced admissions",
+                    "Practice until concession feels natural and strong",
+                ],
+            },
+            {
+                type: "content",
+                title: "Concession in Different Debate Formats",
+                content: "Adapt concession strategy to the format:\n\n**Policy Debate:**\nConcede solvency or advantage claims that don't determine the round. Focus on the key impacts.\n\n**Lincoln-Douglas:**\nConcede framework elements if you can win the value debate. Or concede application issues if framework is yours.\n\n**Public Forum:**\nConcede definitional or scope issues to focus on the core contention-level debate.\n\n**Congressional Debate:**\nConcede previous points while adding your unique contribution to the discussion.\n\n**Cross-Examination:**\nConcede obvious points rather than looking evasive. 'Fair point. But consider this...'\n\n**In CX:**\nDon't let concessions during CX undermine your main case. Distinguish between CX agreements and case positions.",
+                keyPoints: [
+                    "Different formats have different standards for concession",
+                    "CX concessions don't necessarily bind your case",
+                    "Know what's safe to concede in each format",
+                ],
+            },
+            {
+                type: "content",
+                title: "Common Concession Mistakes",
+                content: "Avoid these pitfalls:\n\n**Conceding Too Much:**\nConceding everything makes you look like you're losing. Be selective.\n\n**Conceding Core Arguments:**\nNever concede your thesis, criterion, or round-winning impacts.\n\n**Inconsistent Concession:**\nDon't argue against something you've conceded. Track your concessions.\n\n**Apologetic Tone:**\nConcession should sound strategic, not defeated.\n\n**Lingering:**\nDon't dwell on concessions. Acknowledge and immediately pivot.\n\n**Failing to Connect:**\nAfter conceding, show why you still win. Concession without explanation looks like surrender.\n\n**Conceding in CX Against Your Case:**\nBe careful when agreeing during cross-examination. Don't accidentally concede case positions.\n\n**Not Conceding When You Should:**\nFighting every point wastes time and reduces credibility.",
+                keyPoints: [
+                    "Don't concede core arguments or too many points",
+                    "Stay consistent and don't dwell on concessions",
+                    "Balance concession with direct refutation",
                 ],
             },
             {
@@ -332,11 +452,11 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                 question: "'We've spent $5 billion on this project. We can't abandon it now.' Why is this sunk cost reasoning?",
                 options: [
                     { id: "a", text: "It's not—$5 billion is a lot of money" },
-                    { id: "b", text: "The $5 billion is gone regardless of future decisions; the question should be whether continuing produces good outcomes, not whether we've invested" },
-                    { id: "c", text: "All spending decisions involve sunk costs" },
+                    { id: "b", text: "All spending decisions involve sunk costs" },
+                    { id: "c", text: "The $5 billion is gone regardless of future decisions; the question should be whether continuing produces good outcomes, not whether we've invested" },
                     { id: "d", text: "Large investments always justify continuation" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "The $5 billion is gone no matter what. The only relevant question is whether continuing produces better outcomes than stopping. Past investment justifies nothing about future decisions—those should be based on future outcomes alone.",
             },
             {
@@ -357,6 +477,36 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                     "Challenge policy defenses based on past investment",
                     "Apply to your own strategy: pivot from failing approaches",
                     "Past investment may create relevant capabilities, but the cost itself is irrelevant",
+                ],
+            },
+            {
+                type: "content",
+                title: "Sunk Cost in Major Decisions",
+                content: "The fallacy affects life's biggest decisions:\n\n**Career Paths:**\n'I've spent 10 years in this field—I can't switch now.'\nThe question is whether another path would make you happier going forward, not what you've already invested.\n\n**Relationships:**\n'We've been together for 5 years; I can't leave now.'\nPast time together doesn't justify staying in a bad relationship.\n\n**Education:**\n'I've completed 3 years of this degree; I must finish.'\nIf the field isn't right, switching may be better than completing something useless.\n\n**Business Ventures:**\n'We've invested too much to shut down.'\nContinuing a failing business wastes more money, not less.\n\n**The Pattern:**\nIn each case, the sunk cost creates emotional attachment that distorts rational analysis. The right question is always: 'What's the best path forward from here?'",
+                keyPoints: [
+                    "Sunk cost affects careers, relationships, education, and business",
+                    "Past investment creates emotional attachment that distorts logic",
+                    "Always ask what's best from now, not what's already invested",
+                ],
+            },
+            {
+                type: "content",
+                title: "The Psychology of Sunk Costs",
+                content: "Understanding why we fall for this helps us resist it:\n\n**Loss Aversion:**\nWe hate losses more than we enjoy equivalent gains. Abandoning past investment feels like a loss.\n\n**Need for Consistency:**\nWe want our current actions to justify past actions. Admitting a mistake feels uncomfortable.\n\n**Narrative Identity:**\n'I'm the person who...' Past investment becomes part of our identity.\n\n**Social Pressure:**\n'What will people think if I quit?' Others may judge abandonment harshly.\n\n**Optimism Bias:**\n'Maybe things will turn around.' We overestimate future success to justify past investment.\n\n**Overcoming These:**\n• Reframe quitting as redirecting\n• Seek external perspective\n• Focus on future rather than justifying past\n• Celebrate learning from mistakes",
+                keyPoints: [
+                    "Loss aversion and need for consistency drive sunk cost thinking",
+                    "Social pressure and optimism bias reinforce the trap",
+                    "Reframe abandonment as redirection to resist the fallacy",
+                ],
+            },
+            {
+                type: "content",
+                title: "Practical Strategies to Avoid the Trap",
+                content: "Implement these techniques:\n\n**Zero-Based Thinking:**\n'Knowing what I now know, would I make this decision again?' If no, reconsider.\n\n**Fresh Eyes Test:**\nImagine someone new facing this decision with no history. What would they choose?\n\n**Time-Limited Reviews:**\nSchedule regular reviews where you explicitly ask: 'Should we continue?' Don't just continue by default.\n\n**Pre-Commitment:**\nBefore starting, define conditions that would justify stopping. Then honor those conditions.\n\n**Small Experiments:**\nWhen possible, make smaller investments first to limit sunk cost accumulation.\n\n**Track Record Analysis:**\nHave your 'one more try' predictions been accurate? If not, trust that pattern.\n\n**External Accountability:**\nShare criteria with others who will hold you accountable.",
+                keyPoints: [
+                    "Use zero-based thinking: would you make this choice again?",
+                    "Pre-commit to stopping conditions before investing",
+                    "Schedule regular reviews to avoid continuation by default",
                 ],
             },
             {
@@ -407,12 +557,12 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                 id: "l16-06-q1",
                 question: "Which criticism is most appropriate when opponent evidence comes from a decades-old study?",
                 options: [
-                    { id: "a", text: "Expertise criticism" },
+                    { id: "a", text: "Currency criticism—the data may be outdated" },
                     { id: "b", text: "Bias criticism" },
-                    { id: "c", text: "Currency criticism—the data may be outdated" },
+                    { id: "c", text: "Expertise criticism" },
                     { id: "d", text: "Publication criticism" }
                 ],
-                correctAnswer: "c",
+                correctAnswer: "a",
                 explanation: "Currency criticism challenges outdated evidence. Conditions, data, and understanding change over time. What was true decades ago may not be true now, making currency criticism the most appropriate challenge.",
             },
             {
@@ -433,6 +583,36 @@ export const UNIT_16_LESSONS: MultiPageLesson[] = [
                     "Avoid genetic fallacy—show how problems affect specific claims",
                     "Don't overreach or make unsupported bias claims",
                     "Combine with substantive response when possible",
+                ],
+            },
+            {
+                type: "content",
+                title: "Building Source Evaluation Skills",
+                content: "Develop systematic source evaluation habits:\n\n**CRAAP Test:**\n• **Currency**: When was it published/updated?\n• **Relevance**: Does it address your topic?\n• **Authority**: Who created it? What are their credentials?\n• **Accuracy**: Is it supported by evidence? Can you verify it?\n• **Purpose**: Why was it created? Is there bias?\n\n**Lateral Reading:**\nDon't just read the source—search for what others say about the source and author.\n\n**Check Funding:**\nWho paid for this research? What interests do they have?\n\n**Look for Peer Review:**\nHas this been evaluated by experts in the field?\n\n**Track Record Review:**\nWhat has this source claimed before? Were those claims accurate?\n\nDeveloping these habits improves both your offense (attacking their sources) and defense (choosing yours).",
+                keyPoints: [
+                    "Use CRAAP test for systematic source evaluation",
+                    "Lateral reading reveals what others say about a source",
+                    "Apply these skills to both evaluating opponents and selecting your own sources",
+                ],
+            },
+            {
+                type: "content",
+                title: "Source Criticism for Specific Evidence Types",
+                content: "Different evidence types require different approaches:\n\n**Academic Studies:**\n• Sample size and selection\n• Methodology appropriateness\n• Peer review status\n• Replication results\n• Funding disclosure\n\n**News Articles:**\n• Reporter credentials\n• Number and quality of sources\n• Publication editorial standards\n• Correction history\n\n**Expert Testimony:**\n• Credentials in THIS specific area\n• Potential conflicts of interest\n• Track record of claims\n• Whether consensus or outlier view\n\n**Statistics/Data:**\n• Data collection methodology\n• Sample representativeness\n• Timeframe currency\n• Interpretation accuracy\n• Who collected and why",
+                keyPoints: [
+                    "Different evidence types have different vulnerability points",
+                    "Academic studies: methodology, peer review, funding",
+                    "Expert testimony: credentials, conflicts, consensus",
+                ],
+            },
+            {
+                type: "content",
+                title: "Defending Your Own Sources",
+                content: "Anticipate attacks on your evidence:\n\n**Choose Quality Sources:**\nStart with sources resistant to criticism. Peer-reviewed, recent, unbiased sources are harder to attack.\n\n**Know Your Sources:**\nBe prepared to explain author credentials, methodology, and publication context.\n\n**Preempt Obvious Attacks:**\n'This source from 2020 reflects current conditions...'\n'Despite being industry-funded, this study was independently replicated...'\n\n**Defend Without Overreacting:**\nSource criticism doesn't kill your argument. Calmly explain why the criticism doesn't undermine your specific evidence.\n\n**Turn the Tables:**\n'If you're concerned about source quality, let's compare yours...'\n\n**Acknowledge and Proceed:**\n'Fair point about X. But the core finding still stands because...'",
+                keyPoints: [
+                    "Choose quality sources to minimize attack surface",
+                    "Know your sources well enough to defend them",
+                    "Preempt obvious criticism before opponents raise it",
                 ],
             },
             {

@@ -20,16 +20,46 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The Scout Mindset",
+                content: "Julia Galef distinguishes two mindsets:\n\n**Soldier Mindset:**\nMotivated reasoning. The goal is to defend your 'tribe' or idea. Evidence is an ally or an enemy. You ask: 'Must I believe this?' (for bad news) or 'Can I believe this?' (for good news).\n\n**Scout Mindset:**\nAccuracy reasoning. The goal is to see the map clearly. Evidence is just information. You ask: 'Is this true?'\n\n**In Debate:**\nSoldiers win battles but lose wars (because they don't see reality). Scouts adjust their strategy to reality and win.",
+                keyPoints: [
+                    "Soldiers defend; Scouts explore",
+                    "Motivated reasoning distorts evidence processing",
+                    "Accuracy is the ultimate strategic advantage",
+                ],
+            },
+            {
+                type: "content",
+                title: "Bayesian Thinking Basics",
+                content: "Thinking in probabilities, not binaries:\n\n**Priors:** Your initial belief.\n**Update:** New evidence shifts the probability.\n**Posterior:** Your new belief.\n\n**The Lesson:**\nDon't go from 'True' to 'False' instantly. Go from '90% confident' to '60% confident' when you see counter-evidence. This makes it easier to change your mind without losing face.",
+                keyPoints: [
+                    "Beliefs are probabilities, not off/on switches",
+                    "Update incrementally based on evidence strength",
+                    "Softening confidence is easier than admitting total defeat",
+                ],
+            },
+            {
+                type: "content",
+                title: "Kill Your Darlings",
+                content: "A writing rule that applies to arguments:\n\n**The Concept:**\nSometimes you love an argument. It's clever, witty, and original. But it's flawed. You ignore the flaw because you love the argument.\n\n**The Discipline:**\nBe ruthless. If your favorite argument has a hole, cut it. Better to win with boring, solid arguments than lose with clever, broken ones.",
+                keyPoints: [
+                    "Emotional attachment to arguments causes blindness",
+                    "Ruthlessly cut flawed arguments, even if you like them",
+                    "Effectiveness > Cleverness",
+                ],
+            },
+            {
                 type: "question",
                 id: "l12-01-q1",
                 question: "What does strong emotional defensiveness when your argument is challenged potentially indicate?",
                 options: [
-                    { id: "a", text: "That you might be protecting a belief rather than evaluating it fairly" },
-                    { id: "b", text: "That you're definitely correct" },
-                    { id: "c", text: "That your opponent is being unfair" },
-                    { id: "d", text: "That you should speak louder" }
+                    { id: "a", text: "That you're definitely correct" },
+                    { id: "b", text: "That your opponent is being unfair" },
+                    { id: "c", text: "That you should speak louder" },
+                    { id: "d", text: "That you might be protecting a belief rather than evaluating it fairly" }
                 ],
-                correctAnswer: "a",
+                correctAnswer: "d",
                 explanation: "Strong emotional defensiveness can indicate you're protecting a belief rather than objectively evaluating it. This doesn't mean you're wrong, but it's a signal to examine your reasoning more carefully and consider whether you're being fair to opposing arguments.",
             },
             {
@@ -58,11 +88,11 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 question: "Why is actively seeking evidence against your position intellectually valuable?",
                 options: [
                     { id: "a", text: "It proves you're wrong" },
-                    { id: "b", text: "It weakens your argument for debates" },
-                    { id: "c", text: "It prevents you from believing false things and strengthens your understanding" },
+                    { id: "b", text: "It prevents you from believing false things and strengthens your understanding" },
+                    { id: "c", text: "It weakens your argument for debates" },
                     { id: "d", text: "It's not valuable—always seek confirming evidence" }
                 ],
-                correctAnswer: "c",
+                correctAnswer: "b",
                 explanation: "Seeking disconfirming evidence is how scientists think and it serves two purposes: if you're wrong, it helps you find out before committing to error; if you're right, you'll understand the strongest objections and be prepared to address them.",
             },
             {
@@ -106,6 +136,36 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The Ecological Fallacy",
+                content: "A statistical version of Division:\n\n**The Error:**\nMaking inferences about individuals based on group statistics.\n\n**Example:**\n'Rich states vote Democrat. John lives in a rich state. Therefore, John is likely Democrat.'\n*Reality:* Actually, within rich states, rich PEOPLE often vote Republican. The state aggregate hides the individual correlation.\n\n**Debate Application:**\nWhen an opponent cites state/national level data to prove individual behavior, call Ecological Fallacy.",
+                keyPoints: [
+                    "Group correlations do not necessarily apply to individuals",
+                    "Specific individual data > Aggregate group data",
+                    "Common in demographic and political arguments",
+                ],
+            },
+            {
+                type: "content",
+                title: "Emergence: More Than The Sum",
+                content: "When Composition fails hard:\n\n**Emergent Properties:**\nProperties that exist ONLY at the system level.\n• A neuron isn't conscious; a brain is.\n• One ant isn't smart; a colony is.\n• One trader isn't a panic; a market is.\n\n**The Argument:**\n'You can't understand the system by looking at the parts. The system has rules of its own.'\nThis is a powerful response to reductionist arguments.",
+                keyPoints: [
+                    "Systems have properties their parts lack",
+                    "Reductionism (looking only at parts) misses system-level truth",
+                    "Complexity theory refutes simple composition logic",
+                ],
+            },
+            {
+                type: "content",
+                title: "Systemic Risk",
+                content: "A financial example of Composition Failure:\n\n**The Logic:**\n'It is safe for Bank A to sell this asset.' (True)\n'It is safe for Bank B to sell this asset.' (True)\n'Therefore, it is safe for ALL banks to sell this asset at once.' (FALSE)\n\n**The Crash:**\nIf everyone sells at once, the price crashes, and everyone goes bust. Individual safety does not compose to collective safety.\n\n**Debate Use:**\nWhenever an opponent argues 'This is good for X, so it's good for everyone,' check for systemic effects.",
+                keyPoints: [
+                    "Individual rationality can lead to collective irrationality",
+                    "Market crashes are composition fallacies in action",
+                    "Always check for feedback loops",
+                ],
+            },
+            {
                 type: "question",
                 id: "l12-02-q1",
                 question: "'This is an expensive car, so every part in it must be expensive.' What fallacy is this?",
@@ -133,12 +193,12 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 id: "l12-02-q2",
                 question: "'Each person acting in their self-interest will collectively produce the best outcome for society.' What fallacy might this involve?",
                 options: [
-                    { id: "a", text: "Division" },
+                    { id: "a", text: "Composition—individual benefit doesn't automatically aggregate to collective benefit" },
                     { id: "b", text: "Is always true" },
                     { id: "c", text: "Ad hominem" },
-                    { id: "d", text: "Composition—individual benefit doesn't automatically aggregate to collective benefit" }
+                    { id: "d", text: "Division" }
                 ],
-                correctAnswer: "d",
+                correctAnswer: "a",
                 explanation: "This is potentially a composition fallacy—what's good for each individual doesn't necessarily aggregate to what's best for all. Collective action problems, externalities, and tragedy of the commons show cases where individual rationality produces collective harm.",
             },
             {
@@ -200,6 +260,36 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
             },
             {
                 type: "content",
+                title: "The Ideological Turing Test",
+                content: "A mental model proposed by Bryan Caplan:\n\n**The Test:**\nCan you state your opponent's view so well that a neutral observer can't tell the difference between you and a real believer?\n\n**The Challenge:**\nIf you can't pass this test, you don't understand the argument well enough to refute it effectively. You are refuting a caricature.\n\n**Practice:**\nWrite down your opponent's argument. Ask yourself: 'Would they sign this?' If not, revise until they would.",
+                keyPoints: [
+                    "Can you explain their view as well as they can?",
+                    "If not, you are likely attacking a strawman",
+                    "Pass the test before you start the rebuttal",
+                ],
+            },
+            {
+                type: "content",
+                title: "Rapoport's Rules",
+                content: "Daniel Dennett popularized these rules for critical commentary:\n\n1. **Re-express:** State their position so clearly/vividly that they say, 'Thanks, I wish I'd thought of putting it that way.'\n2. **List Agreement:** Mention anything you agree with.\n3. **Mention Learning:** Mention anything you learned from them.\n4. **Rebut:** Only then are you permitted to say a word of rebuttal.\n\n**Why:**\nThis disarms defensiveness. It proves you are a fair partner in truth-seeking, making your eventual attack devastatingly effective.",
+                keyPoints: [
+                    "Re-state clearly, Agree, Learn, THEN Rebut",
+                    "Disarms opponents and wins audience trust",
+                    "Makes the final variety (rebuttal) hit harder",
+                ],
+            },
+            {
+                type: "content",
+                title: "Intellectual Generosity",
+                content: "Generosity is persuasive.\n\n**The Effect:**\nWhen you are generous to an opponent's intent and meaning, you look confident. It signals: 'I am so secure in my position that I don't need to twist your words to win.'\n\n**The Contrast:**\nNitpicking over minor verbal slips looks weak/insecure. It signals: 'I need to catch you on a technicality because I can't beat your core idea.'",
+                keyPoints: [
+                    "Generosity signals confidence",
+                    "Nitpicking signals insecurity",
+                    "Audience psychology favors the fair player",
+                ],
+            },
+            {
+                type: "content",
                 title: "How to Interpret Charitably",
                 content: "Practical techniques:\n\n**Listen Carefully:**\nBefore formulating responses, make sure you understand what was actually said.\n\n**Assume Intelligence:**\nAssume your opponent is making a sensible point, even if poorly expressed. What's the most reasonable version of their argument?\n\n**Resolve Ambiguity Favorably:**\nIf a statement could mean something weak or something strong, assume the strong version.\n\n**Acknowledge Intent:**\n'What I think my opponent means is...' followed by a fair representation.\n\n**Ask Clarifying Questions:**\nIn cross-examination, seek to understand their position accurately before attacking it.\n\n**Separate Content from Presentation:**\nPoor delivery or organization doesn't make an argument substantively wrong.\n\n**Test Yourself:**\nWould your opponent recognize your characterization of their argument? If not, you may be misrepresenting.",
                 keyPoints: [
@@ -214,11 +304,11 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 question: "An opponent makes an unclear argument. What's the most charitable approach?",
                 options: [
                     { id: "a", text: "Attack the weakest possible interpretation" },
-                    { id: "b", text: "Interpret it in the strongest, most sensible way before responding" },
-                    { id: "c", text: "Ignore the argument entirely" },
-                    { id: "d", text: "Mock them for being unclear" }
+                    { id: "b", text: "Ignore the argument entirely" },
+                    { id: "c", text: "Mock them for being unclear" },
+                    { id: "d", text: "Interpret it in the strongest, most sensible way before responding" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Charitable interpretation means giving opponents the benefit of the doubt and engaging with the strongest version of their argument. This is more intellectually honest, more impressive to judges, and protects you from accusations of misrepresentation.",
             },
             {
@@ -290,11 +380,11 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 question: "'The end of life is its goal. Death is the end of life. Therefore, death is life's goal.' What's the problem?",
                 options: [
                     { id: "a", text: "The argument is too long" },
-                    { id: "b", text: "'End' means 'purpose' in premise 1 and 'termination' in premise 2—equivocation" },
-                    { id: "c", text: "Death isn't real" },
+                    { id: "b", text: "Death isn't real" },
+                    { id: "c", text: "'End' means 'purpose' in premise 1 and 'termination' in premise 2—equivocation" },
                     { id: "d", text: "Nothing is wrong; this is valid logic" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "c",
                 explanation: "This argument equivocates on 'end.' In premise 1, 'end' means 'purpose' or 'goal.' In premise 2, 'end' means 'termination' or 'conclusion.' The argument only seems logical because the same word is used, but the meanings are completely different.",
             },
             {
@@ -305,6 +395,36 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                     "Technical and colloquial meanings often differ",
                     "Political and abstract terms have multiple meanings",
                     "Check key terms for consistent usage throughout",
+                ],
+            },
+            {
+                type: "content",
+                title: "Motte and Bailey Fallacy",
+                content: "A strategic form of equivocation:\n\n**The Bailey:** (Desirable but indefensible)\nA bold, controversial claim. 'All morality is subjective.'\n\n**The Motte:** (Defensible but boring)\nA weak, obvious claim. 'People have different opinions on morality.'\n\n**The Tactic:**\nThe arguer lives in the Bailey (making bold claims). When attacked, they retreat to the Motte ('I just meant people disagree!'). Once the attack stops, they return to the Bailey.\n\n**The Defense:**\nForce them to choose ONE definition and stick to it. 'Are you arguing the bold claim or the safe one?'",
+                keyPoints: [
+                    "Conflating a bold claim with a trivial one",
+                    "Retreating to the trivial definition when challenged",
+                    "Force a choice: defend the bold claim or admit the triviality",
+                ],
+            },
+            {
+                type: "content",
+                title: "Deepities",
+                content: "A term coined by Dennett for statements that are ambiguity traps:\n\n**Example:** 'Love is just a word.'\n\n**Review:**\nOn one reading, it's TRUE but trivial (yes, 'love' is a four-letter word in English).\nOn the other reading, it's profound but FALSE (love is a strong emotion/bond, not just ink on page).\n\n**The Trick:**\nIt sounds profound because it borrows truth from the trivial side and importance from the false side.",
+                keyPoints: [
+                    "Deepities oscillate between 'True but Trivial' and 'False but Profound'",
+                    "They sound wise but say nothing",
+                    "Disambiguate the two meanings to destroy the 'depth'",
+                ],
+            },
+            {
+                type: "content",
+                title: "Operational Definitions",
+                content: "How to fix ambiguity:\n\n**The Fix:**\nDefine terms by how they are measured.\n\n**Ambiguous:** 'This program improves education.'\n**Operational:** 'This program increases SAT math scores by 50 points.'\n\n**Effect:**\nNow we can debate facts. We aren't arguing about the meaning of 'improve' anymore. In debate, ask for operational definitions: 'What metric are you using to measure 'Freedom'?'",
+                keyPoints: [
+                    "Define abstract terms by their measurement",
+                    "Moves debate from semantics to data",
+                    "Clarifies exactly what is being claimed",
                 ],
             },
             {
@@ -398,16 +518,46 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Primary vs. Secondary Sources",
+                content: "Know the difference:\n\n**Primary Source:** The original study, the raw data, the eyewitness account.\n**Secondary Source:** A news article ABOUT the study. An opinion piece summing up data.\n\n**The Strategy:**\nAlways try to find the primary source. Secondary sources often misinterpret, exaggerate, or cherry-pick the primary data ('Source Laundering'). Reading the original study often reveals that the headline is wrong.",
+                keyPoints: [
+                    "Primary sources are the raw truth",
+                    "Secondary sources introduce interpretation error",
+                    "Go to the source to find the nuanced reality",
+                ],
+            },
+            {
+                type: "content",
+                title: "Peer Review Value",
+                content: "Why cite journals?\n\n**The Process:**\nExperts in the field check the methodology BEFORE publication. It's a filter for basic competence.\n\n**vs. Think Tanks/Blogs:**\nThink Tanks publish whatever they want. Blogs have no filter. Peer review isn't perfect, but it's the gold standard for a reason. Citing a peer-reviewed meta-analysis beats citing a blog post every time.",
+                keyPoints: [
+                    "Peer review is an expert quality filter",
+                    "Think tanks and blogs lack this verification step",
+                    "Prioritize academic/peer-reviewed sources for authority",
+                ],
+            },
+            {
+                type: "content",
+                title: "Zombie Statistics",
+                content: "Stats that never die, even when debunked.\n\n**Example:**\n'Women make 77 cents on the dollar.'\n(Often cited as 'equal work' but the stat is 'aggregate earnings'—ignoring hours/job type. The 'controlled' gap is much smaller).\n\n**The Lesson:**\nCheck the *origin* date. Some stats from 1980 are still quoted today as if current. Always ask: 'Is this a Zombie Stat?'",
+                keyPoints: [
+                    "Check the birthdate of famous statistics",
+                    "Debunked stats persist because they are catchy",
+                    "Trace citations back to see if the root data is real",
+                ],
+            },
+            {
                 type: "question",
                 id: "l12-05-q1",
                 question: "Why is 'Studies show...' a weak citation?",
                 options: [
                     { id: "a", text: "It uses the word 'studies'" },
-                    { id: "b", text: "It can't be verified—judges don't know what studies, by whom, when, or where" },
-                    { id: "c", text: "Studies aren't reliable" },
-                    { id: "d", text: "It's too short" }
+                    { id: "b", text: "Studies aren't reliable" },
+                    { id: "c", text: "It's too short" },
+                    { id: "d", text: "It can't be verified—judges don't know what studies, by whom, when, or where" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "'Studies show' is unverifiable—it doesn't specify which studies, conducted by whom, published where, or when. Without this information, judges can't assess source quality, and opponents can't check accuracy. It might as well be invented.",
             },
             {
@@ -436,11 +586,11 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 question: "You summarize a researcher's findings in your own words. Do you need to cite them?",
                 options: [
                     { id: "a", text: "No—you used your own words, so it's yours" },
-                    { id: "b", text: "Only if they're famous" },
-                    { id: "c", text: "Yes—the ideas came from their research, even if the words are yours" },
+                    { id: "b", text: "Yes—the ideas came from their research, even if the words are yours" },
+                    { id: "c", text: "Only if they're famous" },
                     { id: "d", text: "Only in academic debate" }
                 ],
-                correctAnswer: "c",
+                correctAnswer: "b",
                 explanation: "Paraphrasing—putting someone else's ideas in your own words—still requires attribution. The ideas and findings came from their research. Presenting them without credit suggests they're your own discoveries, which is intellectually dishonest.",
             },
             {
@@ -490,10 +640,10 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 options: [
                     { id: "a", text: "A valid distinction between artists" },
                     { id: "b", text: "Appeal to authority" },
-                    { id: "c", text: "Hasty generalization" },
-                    { id: "d", text: "The No True Scotsman fallacy—the definition shifted to exclude the counterexample" }
+                    { id: "c", text: "The No True Scotsman fallacy—the definition shifted to exclude the counterexample" },
+                    { id: "d", text: "Hasty generalization" }
                 ],
-                correctAnswer: "d",
+                correctAnswer: "c",
                 explanation: "This is No True Scotsman. The original claim was about artists generally. When confronted with counterexamples (artists who sell work), the definition was modified to exclude them. But selling work doesn't disqualify someone from being an artist—the definition shifted to protect the claim.",
             },
             {
@@ -504,6 +654,36 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                     "Common in political, religious, and cultural arguments",
                     "Protects claims by narrowing groups until only confirming cases remain",
                     "Makes claims either trivial or circular",
+                ],
+            },
+            {
+                type: "content",
+                title: "Falsifiability",
+                content: "Karl Popper's standard for science:\n\n**The Principle:**\nFor a theory to be scientific/meaningful, there must be some evidence that COULD prove it wrong.\n\n**Connection:**\nNo True Scotsman makes claims unfalsifiable. If every counter-example is 'fake,' then the theory can never be disproven. That makes the theory useless.\n\n**Debate Use:**\n'Judge, their definition makes their claim unfalsifiable. If nothing can disprove it, it asserts nothing about reality.'",
+                keyPoints: [
+                    "Scientific claims must be falsifiable",
+                    "No True Scotsman removes falsifiability",
+                    "Unfalsifiable claims are analytically empty",
+                ],
+            },
+            {
+                type: "content",
+                title: "Moving Goalposts vs. Refining Theory",
+                content: "Not all changes are fallacies.\n\n**Legitimate Refinement:**\n'All birds fly.' -> 'Ah, penguins don't.' -> 'Okay, all birds EXCEPT flightless species fly.'\n(This narrows scope openly based on evidence).\n\n**Fallacious Move:**\n'Penguins aren't TRUE birds.'\n(This redefines the category to save the original claim).\n\n**The Difference:**\nRefinement admits the original error and specifies the new scope. No True Scotsman denies the error and pretends the word always meant that.",
+                keyPoints: [
+                    "Refining theories based on evidence is good science",
+                    "Redefining words to hide error is fallacious",
+                    "Look for admission of error vs. denial",
+                ],
+            },
+            {
+                type: "content",
+                title: "Conceptual Stretching",
+                content: "The opposite problem: Stretching definitions to include everything.\n\n**Example:**\n'Everything is violence.' (Speech, silence, inaction).\n\n**Result:**\nIf everything is violence, the word 'violence' loses all utility. We can no longer distinguish between a punch and an insult.\n\n**Balance:**\nDefinitions shouldn't be so narrow they exclude real examples (No True Scotsman) nor so broad they include everything (Stretching).",
+                keyPoints: [
+                    "Definitions lose value if they include everything",
+                    "Conceptual stretching dilutes meaning",
+                    "Aim for precise boundaries",
                 ],
             },
             {
@@ -521,12 +701,12 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 id: "l12-06-q2",
                 question: "If every counterexample can be dismissed by saying 'that's not a REAL example,' what does this mean for the claim?",
                 options: [
-                    { id: "a", text: "The claim is very strong" },
-                    { id: "b", text: "The claim is unfalsifiable and therefore meaningless" },
+                    { id: "a", text: "The claim is unfalsifiable and therefore meaningless" },
+                    { id: "b", text: "The claim is very strong" },
                     { id: "c", text: "The claim is proven true" },
                     { id: "d", text: "More counterexamples are needed" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "A claim that can't possibly be disproven—because any counterexample is simply redefined out of the category—is unfalsifiable and therefore meaningless. It makes no substantive prediction that could be tested. Such claims say nothing about the actual world.",
             },
             {
@@ -603,11 +783,11 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 question: "'Every citizen benefits when GDP grows.' But if growth goes entirely to the wealthy while most citizens' real wages stagnate, what fallacy is committed?",
                 options: [
                     { id: "a", text: "No True Scotsman" },
-                    { id: "b", text: "Division—whole (economy) properties don't automatically apply to parts (citizens)" },
-                    { id: "c", text: "Equivocation" },
-                    { id: "d", text: "Appeal to authority" }
+                    { id: "b", text: "Equivocation" },
+                    { id: "c", text: "Appeal to authority" },
+                    { id: "d", text: "Division—whole (economy) properties don't automatically apply to parts (citizens)" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "This is the fallacy of division. GDP growth is a property of the whole economy, but it doesn't automatically distribute to each citizen. 'The economy' growing doesn't mean each person is better off—aggregate properties don't necessarily apply to individual parts.",
             },
             {
@@ -615,12 +795,12 @@ export const UNIT_12_LESSONS: MultiPageLesson[] = [
                 id: "l12-07-q2",
                 question: "An opponent's argument could mean something weak or strong. The charitable approach is to:",
                 options: [
-                    { id: "a", text: "Engage with the strongest, most reasonable interpretation" },
-                    { id: "b", text: "Attack the weakest possible version" },
-                    { id: "c", text: "Ignore the argument" },
+                    { id: "a", text: "Ignore the argument" },
+                    { id: "b", text: "Engage with the strongest, most reasonable interpretation" },
+                    { id: "c", text: "Attack the weakest possible version" },
                     { id: "d", text: "Ask the judge to dismiss it" }
                 ],
-                correctAnswer: "a",
+                correctAnswer: "b",
                 explanation: "Charitable interpretation means engaging with the strongest version of the argument. This is more intellectually honest, more impressive to judges, and protects you from accusations of strawmanning. Defeating strong arguments demonstrates genuine refutation.",
             },
             {

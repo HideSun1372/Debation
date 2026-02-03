@@ -20,6 +20,36 @@ export const UNIT_11_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Steelmanning",
+                content: "The opposite of strawmanning:\n\n**The Concept:**\nAddress the STRONGEST possible version of your opponent's argument. Fix their errors, improve their phrasing, and THEN refute it.\n\n**Why Do This?**\nIt proves your argument is superior to the *best* the other side offers, not just their fumbling attempt. It shows supreme confidence and intellectual honesty.\n\n**Example:**\n'My opponent argued X, which is weak. But even if they had argued Y (a stronger version), it would still fail because...'",
+                keyPoints: [
+                    "Attack the strongest version of the argument",
+                    "Demonstrates confidence and dominance",
+                    "Prevents 'you misunderstood me' defenses",
+                ],
+            },
+            {
+                type: "content",
+                title: "Tone Policing",
+                content: "A debate meta-tactic to avoid:\n\n**The Tactic:**\nDismissing an argument because it was delivered with emotion or anger, rather than addressing the substance.\n\n**Why It's a Fallacy:**\nAn angry truth is still true. A polite lie is still false. While composure is strategic for *you* (to persuade), demanding it from *others* as a condition of listening is often a dodge.\n\n**Debate Response:**\n'My opponent attacks my tone because they cannot answer my argument. Let's look at the facts regardless of how they were delivered.'",
+                keyPoints: [
+                    "Tone doesn't determine truth",
+                    "Don't dismiss substance just because of delivery",
+                    "Distinguish between strategic composure and tone policing",
+                ],
+            },
+            {
+                type: "content",
+                title: "Argument vs. Assertion",
+                content: "Graceful disagreement requires arguments, not just 'No.'\n\n**Assertion:**\n'That's wrong.' 'I disagree.'\n(These are just statements of position).\n\n**Argument:**\n'That's wrong BECAUSE [reason] and [evidence].'\n\n**The Rule:**\nNever disagree without a 'because.' Naked disagreement looks like stubbornness. Reasoned disagreement looks like intellect.",
+                keyPoints: [
+                    "Disagreeing without reasons is childish",
+                    "Always attach a 'because' clause",
+                    "Elevate contradiction to refutation",
+                ],
+            },
+            {
                 type: "question",
                 id: "l11-01-q1",
                 question: "Why is maintaining composure during heated debate strategically advantageous?",
@@ -125,6 +155,36 @@ export const UNIT_11_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "Tautologies",
+                content: "The ultimate circle:\n\n**Definition:**\nA statement that is true by its own definition. 'All bachelors are unmarried men.'\n\n**In Debate:**\nTautologies are empty. They say nothing about the world.\nArgument: 'Our policy is the right thing to do because it is correct.'\nAnalysis: 'Right' and 'Correct' mean the same thing. You haven't given a reason; you've given a synonym.\n\n**Response:**\n'That's a tautology. It's true by definition but empty of meaning.'",
+                keyPoints: [
+                    "Tautologies are necessarily true but information-free",
+                    "They restate definitions instead of proving claims",
+                    "Watch for 'X is X' structures",
+                ],
+            },
+            {
+                type: "content",
+                title: "Infinite Regress",
+                content: "When circles spiral:\n\n**The Problem:**\nIf A requires B, and B requires C, and C requires A... where does it start?\n\n**Example:**\n'It's illegal because it's against the law.' (Why is it against the law? Because it's illegal.)\n\n**Breaking the Regress:**\nYou must eventually ground an argument in something independent—a value, a fact, or a consequence. You can't just circle back to the start.",
+                keyPoints: [
+                    "Circular arguments often lead to infinite loops",
+                    "Arguments must anchor in independent ground",
+                    "Identify where the reasoning loops back",
+                ],
+            },
+            {
+                type: "content",
+                title: "Defining Terms Circularly",
+                content: "A common trap in definitions:\n\n**Example:**\n'A good leader is someone who leads well.'\n\n**Usefulness:**\nZero. It tells us nothing about the qualities of leadership.\n\n**Non-Circular:**\n'A good leader is someone who inspires action, maintains integrity, and achieves group goals.'\n(Now we have criteria to debate).\n\n**Debate Tip:**\nCheck your opponent's definitions. Are they just using the word to define itself?",
+                keyPoints: [
+                    "Definitions must add descriptive content",
+                    "Repetitive definitions prevent real debate",
+                    "Demand criteria, not synonyms",
+                ],
+            },
+            {
                 type: "question",
                 id: "l11-02-q1",
                 question: "What makes an argument 'circular'?",
@@ -208,6 +268,36 @@ export const UNIT_11_LESSONS: MultiPageLesson[] = [
                     "Fabrication includes invention, falsification, and significant misrepresentation",
                     "Source laundering and credential inflation are common violations",
                     "Ask: Would the original author recognize this as fair?",
+                ],
+            },
+            {
+                type: "content",
+                title: "Contextomy (Quote Mining)",
+                content: "The art of cutting words to change meaning.\n\n**Example:**\nOriginal: 'There is no evidence that X causes Y, though some suspect it might under extreme conditions.'\nQuote Mine: 'Some suspect X causes Y.'\n\n**The Deception:**\nBy cutting the 'no evidence' part, the meaning is inverted. This is a form of lying.\n\n**Defense:**\nRead the full sentence. Read the sentence before. Read the sentence after. Context creates meaning.",
+                keyPoints: [
+                    "Removing context can invert meaning",
+                    "This is intellectually dishonest",
+                    "Always check surrounding sentences",
+                ],
+            },
+            {
+                type: "content",
+                title: "Palming a Card",
+                content: "A magic trick metaphor for debate:\n\n**The Trick:**\nHiding evidence that hurts your case while showing only what helps.\n\n**The Ethics:**\nWhile you advocate for your side, ignoring a direct 'Not' in your own evidence source is fabrication by omission. If your study says 'The program failed in 90% of cases,' and you only read 'The program succeeded in 10% of cases' without mentioning the failure... you are misleading.",
+                keyPoints: [
+                    "Omission of central findings is falsification",
+                    "Don't hide the headline to quote the footnote",
+                    "Full disclosure builds trust",
+                ],
+            },
+            {
+                type: "content",
+                title: "Ghost-Citing",
+                content: "Citing sources that don't actually support the claim.\n\n**The Tactic:**\nThrowing out a citation '[Author, Year]' after a sentence, hoping no one checks.\n\n**The Risk:**\nIf the judge or opponent checks and the source says nothing about that topic, you lose instantly. It's a ' bluff' that risks the entire round.\n\n**Rule:**\nNever cite a source you haven't read or verified. A bad citation is worse than no citation.",
+                keyPoints: [
+                    "Don't bluff with citations",
+                    "Citing irrelevant sources is a form of fabrication",
+                    "Verification is easier than ever—don't risk it",
                 ],
             },
             {
@@ -315,6 +405,36 @@ export const UNIT_11_LESSONS: MultiPageLesson[] = [
                 ],
             },
             {
+                type: "content",
+                title: "The N=1 Fallacy",
+                content: "The danger of the single anecdote:\n\n**The Logic:**\n'I did X and got Y result. Therefore X causes Y.'\n\n**The Problem:**\nYou are a sample of one. Maybe you were lucky. Maybe you have special genes. Maybe you just worked harder.\n\n**In Arguments:**\n'My grandfather smoked and lived to 90.'\n(N=1 outlier).\n'My cousin got sick after the vaccine.'\n(N=1 correlation).\n\n**Response:**\n'That is an N of 1. What does the N of 1,000,000 say?'",
+                keyPoints: [
+                    "Single anecdotes (N=1) prove nothing about general trends",
+                    "Individual variation overwhelms general rules in small samples",
+                    "Shift focus to population-level data",
+                ],
+            },
+            {
+                type: "content",
+                title: "Outliers",
+                content: "Extreme cases that skew perception.\n\n**The Concept:**\nMost data points cluster in the middle (the average). A few are far away (outliers).\n\n**The Fallacy:**\nGeneralizing from outliers.\n'Basketball players are all 7 feet tall.' (No, you just notice the tall ones).\n'Tech startups make billions.' (No, most fail; you only hear about the unicorns).\n\n**Debate Use:**\n'Is this example typical or an outlier?'",
+                keyPoints: [
+                    "Outliers are memorable but unrepresentative",
+                    "Generalizing from outliers creates false realities",
+                    "Always ask for the median/average experience",
+                ],
+            },
+            {
+                type: "content",
+                title: "Law of Small Numbers",
+                content: "A cognitive bias:\n\n**The Bias:**\nWe expect small samples to look like the whole population. We trust small samples too much.\n\n**The Math:**\nSmall samples have EXTREME results more often than large samples.\n(A hospital with 2 babies a day might have 100% boys. A hospital with 100 babies a day never will).\n\n**Lesson:**\nBe skeptical of extreme results from small studies. They are often just statistical noise.",
+                keyPoints: [
+                    "Small samples produce extreme results by chance",
+                    "Don't confuse small-sample variance with real trends",
+                    "Require larger samples for bold claims",
+                ],
+            },
+            {
                 type: "question",
                 id: "l11-04-q1",
                 question: "'I've asked three friends and they all agree with me, so most people must agree.' What fallacy is this?",
@@ -398,6 +518,36 @@ export const UNIT_11_LESSONS: MultiPageLesson[] = [
                     "Lateral reading checks sources in new tabs before reading deeply",
                     "Search for what others say ABOUT the source",
                     "Don't trust self-presentation—verify externally",
+                ],
+            },
+            {
+                type: "content",
+                title: "Click Restraint",
+                content: "A skill of digital detectives:\n\n**The Problem:**\nMost people click the first result on Google. The first result is often an ad or optimized SEO spam.\n\n**The Skill:**\nScan the whole search results page. Look at the snippets. Look at the URLs.\nWho is publishing this?\nWhen was it published?\n\n**The Act:**\nDon't click immediately. Restrain yourself. Choose the *best* result, not the *first* result.",
+                keyPoints: [
+                    "First results are often ads or SEO spam",
+                    "Scan the Search Engine Results Page (SERP) fully",
+                    "Choose reliability over immediacy",
+                ],
+            },
+            {
+                type: "content",
+                title: "Deepfakes Awareness",
+                content: "Seeing isn't believing anymore:\n\n**The Reality:**\nAI can generate photorealistic faces, voices, and videos.\n\n**Verification:**\n• Look for unnatural blinking or mouth movements\n• Check authoritative sources (did legit news confirm this video?)\n• Reverse image search (often deepfakes use old stock photos as bases)\n\n**Debate:**\nBe careful using 'video evidence' from unverified social media accounts.",
+                keyPoints: [
+                    "Media can be synthesized",
+                    "Verify provenance (origin) of video/audio",
+                    "Rely on trusted verification outlets",
+                ],
+            },
+            {
+                type: "content",
+                title: "Sibling Sites",
+                content: "When verification is a loop:\n\n**The Trap:**\nSite A says 'X'.\nSite B cites Site A.\nSite C cites Site B.\nThey all look independent, but they are owned by the same network.\n\n**The Check:**\n'Who owns this domain?'\n'Are these sites actually independent?'\nReal corroboration comes from UNCONNECTED sources.",
+                keyPoints: [
+                    "Networks of fake sites simulate consensus",
+                    "Check ownership and affiliation",
+                    "Seek truly independent confirmation",
                 ],
             },
             {
@@ -502,6 +652,36 @@ export const UNIT_11_LESSONS: MultiPageLesson[] = [
                     "Patterns identified after seeing data may be random",
                     "Cherry-picking confirming cases while ignoring others",
                     "Advance predictions are testable; post-hoc patterns may be noise",
+                ],
+            },
+            {
+                type: "content",
+                title: "P-Hacking",
+                content: "How scientists (accidentally) cheat:\n\n**The Concept:**\n'P-value' measures statistical significance. Scientists want a p-value below 0.05.\n\n**The Hack:**\nTesting variables in many different ways until one combination yields p < 0.05.\n'Demopcats didn't vote differently... but *young female* Democrats in *rural* areas did!'\n\n**The Result:**\nA false positive presented as a major discovery.\n\n**Defense:**\n'Was this specific subgroup analysis planned before the study started?'",
+                keyPoints: [
+                    "Manipulating analysis to find 'significance'",
+                    "Subgroup analysis is a common hiding place for p-hacking",
+                    "Demand pre-registered analysis plans",
+                ],
+            },
+            {
+                type: "content",
+                title: "Data Dredging",
+                content: "Fishing for correlations:\n\n**The Analogy:**\nDragging a net along the bottom of the ocean. You'll catch *something*.\n\n**The Fallacy:**\nIf you have a massive database and look for ANY correlation, you will find bogus ones. (e.g., 'US spending on science correlates with hanging suicides').\n\n**Spurious Correlations:**\nPatterns without cause. Texas Sharpshooters love them because they look like perfect hits.",
+                keyPoints: [
+                    "Big data guarantees random correlations",
+                    "Correlation without theory is suspect",
+                    "Check for causality mechanisms",
+                ],
+            },
+            {
+                type: "content",
+                title: "The Bonferroni Correction",
+                content: "The statistical fix:\n\n**The Logic:**\nIf you test 20 things, your chance of a false positive is high.\n\n**The Correction:**\nDivide your significance threshold by the number of tests. If testing 20 things, you need p < 0.0025, not 0.05.\n\n**Debate Use:**\n'My opponent cites a study that tested 100 variables. Did they correct for multiple comparisons? If not, their 'significant' finding is likely noise.'",
+                keyPoints: [
+                    "More tests require stricter evidence standards",
+                    "Correcting for multiple comparisons prevents false positives",
+                    "Ask: Did they adjust for the number of attempts?",
                 ],
             },
             {
