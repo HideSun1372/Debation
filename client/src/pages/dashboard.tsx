@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SkillBadge } from "@/components/skill-badge";
 import { SkillProgress } from "@/components/skill-progress";
 import { BookOpen, Swords, History, User, Trophy, TrendingUp, Loader2 } from "lucide-react";
+import { apiUrl } from "@/lib/api-config";
 
 export default function Dashboard() {
     const { user: authUser, isLoading } = useAuth();
@@ -164,7 +165,7 @@ export default function Dashboard() {
                                 variant="outline"
                                 size="sm"
                                 onClick={async () => {
-                                    const res = await fetch('/api/dev/unlock-all', { method: 'POST', credentials: 'include' });
+                                    const res = await fetch(apiUrl('/api/dev/unlock-all'), { method: 'POST', credentials: 'include' });
                                     const data = await res.json();
                                     alert(data.message || 'Done!');
                                     window.location.reload();
@@ -176,7 +177,7 @@ export default function Dashboard() {
                                 variant="outline"
                                 size="sm"
                                 onClick={async () => {
-                                    const res = await fetch('/api/dev/reset-progress', { method: 'POST', credentials: 'include' });
+                                    const res = await fetch(apiUrl('/api/dev/reset-progress'), { method: 'POST', credentials: 'include' });
                                     const data = await res.json();
                                     alert(data.message || 'Done!');
                                     window.location.reload();
@@ -190,7 +191,7 @@ export default function Dashboard() {
                                 onClick={async () => {
                                     const points = prompt('Enter skill points:', '3000');
                                     if (points) {
-                                        const res = await fetch('/api/dev/set-skill-points', {
+                                        const res = await fetch(apiUrl('/api/dev/set-skill-points'), {
                                             method: 'POST',
                                             credentials: 'include',
                                             headers: { 'Content-Type': 'application/json' },
@@ -211,7 +212,7 @@ export default function Dashboard() {
                                     const wins = prompt('Wins:', '10');
                                     const losses = prompt('Losses:', '5');
                                     if (wins && losses) {
-                                        const res = await fetch('/api/dev/set-stats', {
+                                        const res = await fetch(apiUrl('/api/dev/set-stats'), {
                                             method: 'POST',
                                             credentials: 'include',
                                             headers: { 'Content-Type': 'application/json' },

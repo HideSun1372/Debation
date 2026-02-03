@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "./use-auth";
+import { apiUrl } from "@/lib/api-config";
 
 interface AdminStatus {
   isAdmin: boolean;
@@ -12,7 +13,7 @@ export function useAdmin() {
   const { data, isLoading } = useQuery<AdminStatus>({
     queryKey: ["/api/auth/admin", user?.id],
     queryFn: async () => {
-      const res = await fetch("/api/auth/admin");
+      const res = await fetch(apiUrl("/api/auth/admin"));
       if (!res.ok) throw new Error("Failed to fetch admin status");
       return res.json();
     },

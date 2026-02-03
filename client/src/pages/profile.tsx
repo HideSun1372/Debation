@@ -10,6 +10,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Link } from "wouter";
 import { EditProfileDialog } from "@/components/edit-profile-dialog";
 import { Settings } from "lucide-react";
+import { apiUrl } from "@/lib/api-config";
 
 export default function Profile() {
   const { user, isLoading, isAuthenticated } = useAuth();
@@ -41,7 +42,7 @@ export default function Profile() {
               Track your debate progress, view your stats, and earn skill points by logging in.
             </p>
             <Button asChild size="lg" data-testid="button-login-profile">
-              <a href="/api/login">Sign In with Replit</a>
+              <a href={apiUrl("/api/login")}>Sign In with Replit</a>
             </Button>
           </CardContent>
         </Card>
