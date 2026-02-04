@@ -6,13 +6,37 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 
 const app = express();
+
+// 1. Trust Proxy (Must be at the very top for Render/Vercel sessions)
+app.set("trust proxy", 1);
+
+// 2. BUM-PROOF CORS: Supports IP hopping and Production
+const allowedOrigins = [
+  'https://debation.vercel.app', 
+  'http://localhost:5173', 
+  'https://localhost:5000',
+  'https://127.0.0.1:5000',
+  'http://127.0.0.1:5173',
+  'https://10.0.0.236:5000',
+  'https://10.0.0.236:5173',
+  'https://hidesun1372.instatunnel.my'
+];
+
 app.use(cors({
-  origin: 'https://debation.vercel.app', // Replace with YOUR actual Vercel URL
+  origin: (origin, callback) => {
+    // Allow if: No origin (mobile/curl), in list, or is a local network IP
+    if (!origin || allowedOrigins.includes(origin) || origin.includes("192.168.")) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS blocked this origin'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['set-cookie']
 }));
+
 const httpServer = createServer(app);
 
 declare module "http" {
@@ -38,10 +62,10 @@ export function log(message: string, source = "express") {
     second: "2-digit",
     hour12: true,
   });
-
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
+// Request logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -60,28 +84,23 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
       log(logLine);
     }
   });
-
   next();
 });
 
 (async () => {
+  // registerRoutes will call setupAuth, which attaches the session middleware
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
     res.status(status).json({ message });
-    throw err;
+    // Removed 'throw err' to prevent server crashing on simple API errors
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
   if (process.env.NODE_ENV === "production") {
     serveStatic(app);
   } else {
@@ -89,15 +108,11 @@ app.use((req, res, next) => {
     await setupVite(httpServer, app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || "5000", 10);
   httpServer.listen(
     {
       port,
-      host: "0.0.0.0",
+      host: "0.0.0.0", // Allows access from other IPs on your network
     },
     () => {
       log(`serving on port ${port}`);

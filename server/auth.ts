@@ -31,26 +31,26 @@ export function isAuthenticated(req: any, res: any, next: any) {
 }
 
 export function setupAuth(app: Express) {
-    // Session setup
-    const sessionSettings: session.SessionOptions = {
-        secret: process.env.SESSION_SECRET || "dev_secret_key",
-        resave: true, // Force save on every request
-        saveUninitialized: true, // Create session even if nothing modified
-        store: storage.sessionStore,
-        cookie: {
-            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-            httpOnly: true,
-            secure: false, // Allow HTTP in development
-            sameSite: "lax",
-        },
-    };
+    // server/auth.ts - Inside your setupAuth function
+const isProd = app.get("env") === "production";
 
-    if (app.get("env") === "production") {
-        app.set("trust proxy", 1);
-        if (sessionSettings.cookie) {
-            sessionSettings.cookie.secure = true;
-        }
-    }
+const sessionSettings: session.SessionOptions = {
+    secret: process.env.SESSION_SECRET || "dev_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    store: storage.sessionStore,
+    proxy: isProd, 
+    cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: isProd,           // Required for SameSite: 'none'
+        sameSite: isProd ? "none" : "lax", 
+    },
+};
+
+if (isProd) {
+    app.set("trust proxy", 1); // Essential for Render
+}
 
     app.use(session(sessionSettings));
     app.use(passport.initialize());
