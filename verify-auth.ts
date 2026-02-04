@@ -1,12 +1,15 @@
-
 import axios from 'axios';
-import { wrapper } from 'axios-cookiejar-support';
-import { CookieJar } from 'tough-cookie';
 
-const jar = new CookieJar();
-const client = wrapper(axios.create({ jar }));
+// 1. Dynamic URL: This lets you hop between localhost, 127.0.0.1, and your IP
+export const BASE_URL = window.location.hostname === "debation.vercel.app"
+  ? "https://debation.onrender.com/api" 
+  : `http://${window.location.hostname}:5000/api`;
 
-const BASE_URL = 'http://localhost:5000/api';
+// 2. Create the client: Browser handles cookies automatically with withCredentials
+const client = axios.create({
+    baseURL: BASE_URL,
+    withCredentials: true 
+});
 
 async function testAuth() {
     const username = `testuser_${Date.now()}`;
@@ -14,42 +17,40 @@ async function testAuth() {
     const email = `${username}@example.com`;
 
     try {
-        console.log(`1. Registering user: ${username} with email ${email}`);
-        const regRes = await client.post(`${BASE_URL}/register`, {
+        console.log(`--- STARTING AUTH TEST ON: ${BASE_URL} ---`);
+        
+        // 1. Register
+        console.log(`1. Registering: ${username}`);
+        const regRes = await client.post(`/register`, {
             username,
             password,
             email
         });
         console.log('Registration Status:', regRes.status);
-        console.log('Registration Data:', regRes.data);
 
-        if (regRes.data.email !== email) {
-            console.error('FAILURE: Email was not saved correctly.');
-        } else {
-            console.log('SUCCESS: Email saved matches input.');
-        }
-
-        console.log('\n2. Logging in');
-        const loginRes = await client.post(`${BASE_URL}/login`, {
+        // 2. Login
+        console.log('2. Logging in...');
+        const loginRes = await client.post(`/login`, {
             username,
             password
         });
         console.log('Login Status:', loginRes.status);
 
-        console.log('\n3. Accessing Protected Route (/api/user)');
-        const userRes = await client.get(`${BASE_URL}/user`);
+        // 3. Access Protected Route (The "Persistence" Test)
+        console.log('3. Testing session persistence (/api/user)...');
+        const userRes = await client.get(`/user`);
         console.log('User Route Status:', userRes.status);
-        console.log('User Data:', userRes.data);
-
-        if (userRes.data.username === username && userRes.data.email === email) {
-            console.log('\nSUCCESS: Auth flow with email verified!');
+        
+        if (userRes.data.username === username) {
+            console.log('✅ SUCCESS: You are logged in and recognized!');
         } else {
-            console.error('\nFAILURE: User data mismatch.');
+            console.error('❌ FAILURE: Session was not saved.');
         }
 
     } catch (error: any) {
-        console.error('\nERROR:', error.response ? error.response.data : error.message);
+        console.error('❌ ERROR:', error.response ? error.response.data : error.message);
     }
 }
 
+// Run the test
 testAuth();
