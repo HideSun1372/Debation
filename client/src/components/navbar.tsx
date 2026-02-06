@@ -4,7 +4,7 @@ import { useUser } from "@/lib/user-context";
 import { useAuth } from "@/hooks/use-auth";
 import { SkillBadge } from "./skill-badge";
 import { ThemeToggle } from "./theme-toggle";
-import { LayoutDashboard, Home, Menu, X, LogIn, LogOut, Code, Swords } from "lucide-react";
+import { LayoutDashboard, Home, Menu, X, LogIn, LogOut, Code, Swords, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
@@ -15,7 +15,7 @@ export function Navbar() {
   const [location] = useLocation();
   const { user } = useUser();
   const { user: authUser, isLoading: authLoading, isAuthenticated, logout } = useAuth();
-  const { isAdmin } = useAdmin();
+  const { isAdmin, isDeveloper } = useAdmin();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Disable navbar in debate route
@@ -37,6 +37,7 @@ export function Navbar() {
   const authNavItems = [
     { href: "/", label: "Home", icon: Home },
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/users", label: "Users", icon: Users },
   ];
 
   const navItems = isAuthenticated ? authNavItems : publicNavItems;
@@ -75,7 +76,7 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {isAdmin && <Badge variant="destructive" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5"><Code className="h-3 w-3" /> Dev</Badge>}
+          {(isAdmin || isDeveloper) && <Badge variant="destructive" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5"><Code className="h-3 w-3" /> Dev</Badge>}
           {isAuthenticated && <SkillBadge points={user.skillPoints} size="sm" />}
           <ThemeToggle />
 

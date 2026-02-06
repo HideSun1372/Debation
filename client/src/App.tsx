@@ -14,6 +14,7 @@ import Practice from "@/pages/practice";
 import Profile from "@/pages/profile";
 import History from "@/pages/history";
 import Debate from "@/pages/debate";
+import Users from "@/pages/users";
 import AuthPage from "@/pages/auth-page";
 import Pricing from "@/pages/pricing";
 import NotFound from "@/pages/not-found";
@@ -52,6 +53,9 @@ function Router() {
       </Route>
       <Route path="/debate">
         {() => <ProtectedRoute component={Debate} />}
+      </Route>
+      <Route path="/users">
+        {() => <ProtectedRoute component={Users} />}
       </Route>
       <Route path="/pricing">
         {() => <ProtectedRoute component={Pricing} />}

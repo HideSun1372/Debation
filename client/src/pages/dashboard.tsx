@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useUser } from "@/lib/user-context";
 import { useAdmin } from "@/hooks/use-admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { SkillBadge } from "@/components/skill-badge";
 import { SkillProgress } from "@/components/skill-progress";
 import { BookOpen, Swords, History, User, Trophy, TrendingUp, Loader2 } from "lucide-react";
@@ -12,7 +15,7 @@ import { apiUrl } from "@/lib/api-config";
 export default function Dashboard() {
     const { user: authUser, isLoading } = useAuth();
     const { user } = useUser();
-    const { isAdmin } = useAdmin();
+    const { isAdmin, isDeveloper } = useAdmin();
 
     if (isLoading) {
         return (
@@ -149,92 +152,138 @@ export default function Dashboard() {
                 </Card>
 
                 {/* Admin Panel (only for developers) */}
-                {isAdmin && (
-                    <Card className="mt-8 border-destructive/50">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-destructive">
-                                <TrendingUp className="h-5 w-5" />
-                                Developer Tools
-                            </CardTitle>
-                            <CardDescription>
-                                Quick actions for testing and development
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="flex flex-wrap gap-2">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={async () => {
-                                    const res = await fetch(apiUrl('/api/dev/unlock-all'), { method: 'POST', credentials: 'include' });
-                                    const data = await res.json();
-                                    alert(data.message || 'Done!');
-                                    window.location.reload();
-                                }}
-                            >
-                                Unlock All Lessons
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={async () => {
-                                    const res = await fetch(apiUrl('/api/dev/reset-progress'), { method: 'POST', credentials: 'include' });
-                                    const data = await res.json();
-                                    alert(data.message || 'Done!');
-                                    window.location.reload();
-                                }}
-                            >
-                                Reset Progress
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={async () => {
-                                    const points = prompt('Enter skill points:', '3000');
-                                    if (points) {
-                                        const res = await fetch(apiUrl('/api/dev/set-skill-points'), {
-                                            method: 'POST',
-                                            credentials: 'include',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify({ points: parseInt(points) }),
-                                        });
-                                        const data = await res.json();
-                                        alert(data.message || 'Done!');
-                                        window.location.reload();
-                                    }
-                                }}
-                            >
-                                Set Skill Points
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={async () => {
-                                    const wins = prompt('Wins:', '10');
-                                    const losses = prompt('Losses:', '5');
-                                    if (wins && losses) {
-                                        const res = await fetch(apiUrl('/api/dev/set-stats'), {
-                                            method: 'POST',
-                                            credentials: 'include',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify({
-                                                wins: parseInt(wins),
-                                                losses: parseInt(losses),
-                                                totalDebates: parseInt(wins) + parseInt(losses)
-                                            }),
-                                        });
-                                        const data = await res.json();
-                                        alert(data.message || 'Done!');
-                                        window.location.reload();
-                                    }
-                                }}
-                            >
-                                Set Win/Loss Stats
-                            </Button>
-                        </CardContent>
-                    </Card>
+                {(isAdmin || isDeveloper) && (
+                    <DeveloperToolsCard />
                 )}
             </div>
         </div >
+    );
+}
+
+function DeveloperToolsCard() {
+    const [targetUsername, setTargetUsername] = useState("");
+
+    const devPost = async (path: string, body?: Record<string, unknown>) => {
+        const payload = { ...body };
+        if (targetUsername.trim()) payload.username = targetUsername.trim();
+        const res = await fetch(apiUrl(path), {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        alert(data.message || data.error || "Done!");
+        if (res.ok) window.location.reload();
+    };
+
+    return (
+        <Card className="mt-8 border-destructive/50">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-destructive">
+                    <TrendingUp className="h-5 w-5" />
+                    Developer Tools
+                </CardTitle>
+                <CardDescription>
+                    Quick actions for testing. Optionally apply to another account by entering their username.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div className="flex flex-wrap items-center gap-2">
+                    <Label htmlFor="dev-target-username" className="text-sm text-muted-foreground whitespace-nowrap">
+                        Apply to username (blank = self):
+                    </Label>
+                    <Input
+                        id="dev-target-username"
+                        placeholder="e.g. thehiddensun1372"
+                        value={targetUsername}
+                        onChange={(e) => setTargetUsername(e.target.value)}
+                        className="max-w-[200px]"
+                    />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" onClick={() => devPost("/api/dev/unlock-all")}>
+                        Unlock All Lessons
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => devPost("/api/dev/reset-progress")}>
+                        Reset Progress
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                            const points = prompt("Enter skill points:", "3000");
+                            if (points != null) devPost("/api/dev/set-skill-points", { points: parseInt(points) });
+                        }}
+                    >
+                        Set Skill Points
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                            const wins = prompt("Wins:", "10");
+                            const losses = prompt("Losses:", "5");
+                            if (wins != null && losses != null)
+                                devPost("/api/dev/set-stats", {
+                                    wins: parseInt(wins),
+                                    losses: parseInt(losses),
+                                    totalDebates: parseInt(wins) + parseInt(losses),
+                                });
+                        }}
+                    >
+                        Set Win/Loss Stats
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => devPost("/api/dev/grant-dominion")}>
+                        Grant Dominion
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => devPost("/api/dev/revoke-dominion")}>
+                        Revoke Dominion
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                            const username = prompt("Username to make a developer:", "");
+                            if (username != null && username.trim()) {
+                                fetch(apiUrl("/api/dev/promote-developer"), {
+                                    method: "POST",
+                                    credentials: "include",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ username: username.trim() }),
+                                })
+                                    .then((r) => r.json())
+                                    .then((data) => alert(data.message || data.error || "Done!"));
+                            }
+                        }}
+                    >
+                        Make developer
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                            const username = targetUsername.trim() || prompt("Username to delete (cannot be yourself):", "");
+                            if (!username || !username.trim()) return;
+                            if (!confirm(`Permanently delete account "${username}"? This cannot be undone.`)) return;
+                            fetch(apiUrl("/api/dev/delete-user"), {
+                                method: "POST",
+                                credentials: "include",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ username: username.trim() }),
+                            })
+                                .then((r) => r.json())
+                                .then((data) => {
+                                    alert(data.message || data.error || "Done!");
+                                    if (data.success) window.location.reload();
+                                });
+                        }}
+                    >
+                        Delete user
+                    </Button>
+                </div>
+            </CardContent>
+        </Card>
     );
 }
 

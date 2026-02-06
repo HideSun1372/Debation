@@ -1,16 +1,37 @@
 import express, { type Express } from "express";
 import { createServer, type Server } from "http";
+import { randomBytes } from "crypto";
 import { storage } from "./storage";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { setupAuth, isAuthenticated } from "./auth";
 import { z } from "zod";
 import { generatePracticePrompt, evaluatePracticeResponse } from "./practice";
 import type { PracticeType, DifficultyLevel } from "@shared/lessons/types";
+import Stripe from "stripe";
+
+// server/routes.ts
+
+// Use 'any' as a quick bypass or just remove the version property entirely
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  // @ts-ignore - This tells TypeScript to stop being a "nerd" about the version
+  apiVersion: "2026-01-28.clover", 
+});
 
 console.log("Initializing Gemini with key:", process.env.GEMINI_API_KEY ? `${process.env.GEMINI_API_KEY.substring(0, 10)}...` : "MISSING");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+// One-time tokens for success URL: token -> { userId, createdAt }. Deleted after use or when expired.
+const checkoutTokens = new Map<string, { userId: string; createdAt: number }>();
+const CHECKOUT_TOKEN_TTL_MS = 15 * 60 * 1000; // 15 minutes
+
+function pruneExpiredTokens() {
+  const now = Date.now();
+  Array.from(checkoutTokens.entries()).forEach(([token, data]) => {
+    if (now - data.createdAt > CHECKOUT_TOKEN_TTL_MS) checkoutTokens.delete(token);
+  });
+}
 
 export async function registerRoutes(
   httpServer: Server,
@@ -18,6 +39,136 @@ export async function registerRoutes(
 ): Promise<Server> {
   // Setup authentication (must be before other routes)
   setupAuth(app);
+
+  app.get(["/api/webhook", "/api/webhook/"], (_req, res) => {
+    res.status(200).send("Stripe webhook endpoint. Use POST from Stripe (or stripe listen). Server is reachable at /api/webhook.");
+  });
+
+  const webhookHandler = async (req: express.Request, res: express.Response) => {
+    console.log("[Stripe Webhook] POST /api/webhook received");
+    const sig = req.headers["stripe-signature"];
+    let event: Stripe.Event;
+
+    try {
+      const rawBody = (req as any).rawBody;
+      if (!rawBody) {
+        console.error("[Stripe Webhook] raw body missing");
+        return res.status(400).send("Webhook Error: raw body required");
+      }
+      if (!sig || !process.env.STRIPE_WEBHOOK_SECRET) {
+        console.error("[Stripe Webhook] missing signature or STRIPE_WEBHOOK_SECRET");
+        return res.status(400).send("Webhook misconfigured");
+      }
+      event = stripe.webhooks.constructEvent(
+        rawBody,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
+    } catch (err: any) {
+      console.error("[Stripe Webhook] constructEvent failed:", err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    try {
+      if (event.type === "checkout.session.completed") {
+        let session = event.data.object as any;
+        let userId = session.metadata?.userId || session.client_reference_id;
+
+        if (!userId && session.id) {
+          try {
+            const full = await stripe.checkout.sessions.retrieve(session.id);
+            session = full as any;
+            userId = session.metadata?.userId || session.client_reference_id;
+          } catch (e) {
+            console.error("[Stripe Webhook] session.retrieve failed:", (e as Error).message);
+          }
+        }
+
+        if (userId) {
+          const uid = String(userId);
+          try {
+            await storage.updateUser(uid, { isPro: true, proType: "paid" });
+            console.log("[Stripe Webhook] Dominion granted for user:", uid);
+          } catch (err: any) {
+            console.warn("[Stripe Webhook] updateUser failed (user may not exist):", err.message);
+            // Return 200 so Stripe doesn't retry; test events have fake userIds
+          }
+        } else {
+          console.warn("[Stripe Webhook] checkout.session.completed but no userId (metadata or client_reference_id)");
+        }
+      }
+    } catch (err: any) {
+      console.error("[Stripe Webhook] unexpected error:", err.message);
+      // Still return 200 so Stripe doesn't retry on every event
+    }
+
+    res.json({ received: true });
+  };
+
+  app.post(["/api/webhook", "/api/webhook/"], webhookHandler);
+
+  // Grant Dominion when user returns from checkout (no webhook needed). One-time token in URL expires after use.
+  app.post("/api/confirm-checkout", isAuthenticated, async (req: any, res) => {
+    try {
+      const { session_id: sessionId, token } = req.body;
+      if (!sessionId || typeof sessionId !== "string") {
+        return res.status(400).json({ error: "session_id required" });
+      }
+      if (!token || typeof token !== "string") {
+        return res.status(400).json({ error: "token required" });
+      }
+      pruneExpiredTokens();
+      const tokenData = checkoutTokens.get(token);
+      if (!tokenData) {
+        return res.status(400).json({ error: "Invalid or already-used link; complete a new checkout to activate Dominion" });
+      }
+      const currentUserId = String(req.user.id);
+      if (tokenData.userId !== currentUserId) {
+        return res.status(403).json({ error: "Token does not match user" });
+      }
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      if (session.status !== "complete") {
+        return res.status(400).json({ error: "Checkout not complete" });
+      }
+      const sessionUserId = (session as any).metadata?.userId || (session as any).client_reference_id;
+      if (sessionUserId !== currentUserId) {
+        return res.status(403).json({ error: "Session does not match user" });
+      }
+      checkoutTokens.delete(token); // one-time use: link is dead after this
+      await storage.updateUser(currentUserId, { isPro: true, proType: "paid" });
+      res.json({ ok: true });
+    } catch (e: any) {
+      console.error("[confirm-checkout]", e.message);
+      res.status(500).json({ error: e.message || "Failed to confirm checkout" });
+    }
+  });
+
+  // 2. The Checkout Session (The "Redirector")
+  app.post("/api/create-checkout-session", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+
+    try {
+      const userId = String((req.user as any).id);
+      const oneTimeToken = randomBytes(24).toString("hex");
+      checkoutTokens.set(oneTimeToken, { userId, createdAt: Date.now() });
+      pruneExpiredTokens();
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [{
+          price: 'price_1SwyTGIjMxHslLyBZj3DGSCp', 
+          quantity: 1,
+        }],
+        mode: 'subscription',
+        success_url: `${req.headers.origin}/profile?success=true&session_id={CHECKOUT_SESSION_ID}&token=${oneTimeToken}`,
+        cancel_url: `${req.headers.origin}/profile?canceled=true`,
+        client_reference_id: userId,
+        metadata: { userId },
+      });
+      res.json({ url: session.url });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
 
   app.post("/api/debates", async (req: any, res) => {
     try {
@@ -427,6 +578,46 @@ Respond with a JSON object:
     }
   });
 
+  // Search users by username (authenticated)
+  app.get("/api/users/search", isAuthenticated, async (req: any, res) => {
+    try {
+      const q = (req.query.q as string)?.trim() ?? "";
+      const limit = Math.min(parseInt(req.query.limit as string, 10) || 30, 50);
+      const users = await storage.searchUsers(q, limit);
+      res.json(users);
+    } catch (error) {
+      console.error("Error searching users:", error);
+      res.status(500).json({ error: "Failed to search users" });
+    }
+  });
+
+  // Discover users (recent, for browsing)
+  app.get("/api/users/discover", isAuthenticated, async (req: any, res) => {
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string, 10) || 24, 50);
+      const users = await storage.listUsersDiscover(limit);
+      res.json(users);
+    } catch (error) {
+      console.error("Error listing users:", error);
+      res.status(500).json({ error: "Failed to discover users" });
+    }
+  });
+
+  // Delete own account (authenticated)
+  app.delete("/api/user", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      await storage.deleteUser(userId);
+      req.logout((err: any) => {
+        if (err) console.error("Logout after delete:", err);
+        res.json({ success: true, message: "Account deleted" });
+      });
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      res.status(500).json({ error: "Failed to delete account" });
+    }
+  });
+
   // Check if user is admin/developer
   // Developer account is enabled when all these match:
   // - Email: siqichen0802@gmail.com
@@ -437,14 +628,13 @@ Respond with a JSON object:
     try {
       const user = req.user;
 
-      // Check if user matches developer credentials
-      const isDeveloper = user.email === "siqichen0802@gmail.com";
+      // Developer: hardcoded email, env ADMIN_EMAIL, or DB flag
+      const isDeveloper =
+        user.email === "siqichen0802@gmail.com" ||
+        (user as any).isDeveloper === true ||
+        (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL);
 
-      // Also allow via environment variable for flexibility
-      const adminEmail = process.env.ADMIN_EMAIL;
-      const isEnvAdmin = adminEmail && user.email === adminEmail;
-
-      const isAdmin = isDeveloper || isEnvAdmin;
+      const isAdmin = isDeveloper;
 
       res.json({ isAdmin, isDeveloper });
     } catch (error) {
@@ -700,18 +890,31 @@ Respond with a JSON object:
       return res.status(401).json({ error: "Not authenticated" });
     }
     const user = req.user;
-    const isDev = user.email === "siqichen0802@gmail.com";
-
+    const isDev =
+      user.email === "siqichen0802@gmail.com" ||
+      (user as any).isDeveloper === true ||
+      (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL);
     if (!isDev) {
       return res.status(403).json({ error: "Developer access required" });
     }
     next();
   };
 
+  // Resolve target user: body.username -> that user's id; else current user's id
+  async function resolveTargetUserId(req: any): Promise<{ userId: string; forUsername: string }> {
+    const username = req.body?.username;
+    if (username && typeof username === "string" && username.trim()) {
+      const target = await storage.getUserByUsername(username.trim());
+      if (!target) throw new Error(`User not found: ${username}`);
+      return { userId: target.id, forUsername: target.username };
+    }
+    return { userId: req.user.id, forUsername: (req.user as any).username };
+  }
+
   // Unlock all lessons (mark as complete)
   app.post("/api/dev/unlock-all", isDeveloperMiddleware, async (req: any, res) => {
     try {
-      const userId = req.user.id;
+      const { userId, forUsername } = await resolveTargetUserId(req);
 
       // Get all lesson IDs from the curriculum
       const { getAllLessons } = await import("@shared/schema");
@@ -726,10 +929,11 @@ Respond with a JSON object:
 
       res.json({
         success: true,
-        message: `Unlocked ${allLessonIds.length} lessons`,
+        message: forUsername ? `Unlocked ${allLessonIds.length} lessons for ${forUsername}` : `Unlocked ${allLessonIds.length} lessons`,
         completedLessonIds: allLessonIds
       });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message?.startsWith("User not found")) return res.status(404).json({ error: error.message });
       console.error("Error unlocking lessons:", error);
       res.status(500).json({ error: "Failed to unlock lessons" });
     }
@@ -738,7 +942,7 @@ Respond with a JSON object:
   // Instant complete a specific lesson
   app.post("/api/dev/complete-lesson", isDeveloperMiddleware, async (req: any, res) => {
     try {
-      const userId = req.user.id;
+      const { userId } = await resolveTargetUserId(req);
       const { lessonId } = req.body;
 
       if (!lessonId) {
@@ -761,7 +965,8 @@ Respond with a JSON object:
         message: `Completed lesson ${lessonId}`,
         completedLessonIds: completedIds,
       });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message?.startsWith("User not found")) return res.status(404).json({ error: error.message });
       console.error("Error completing lesson:", error);
       res.status(500).json({ error: "Failed to complete lesson" });
     }
@@ -770,7 +975,7 @@ Respond with a JSON object:
   // Set skill points to any value
   app.post("/api/dev/set-skill-points", isDeveloperMiddleware, async (req: any, res) => {
     try {
-      const userId = req.user.id;
+      const { userId, forUsername } = await resolveTargetUserId(req);
       const { points } = req.body;
 
       if (typeof points !== "number" || points < 0) {
@@ -783,10 +988,11 @@ Respond with a JSON object:
 
       res.json({
         success: true,
-        message: `Set skill points to ${points}`,
+        message: forUsername ? `Set skill points to ${points} for ${forUsername}` : `Set skill points to ${points}`,
         user: updatedUser
       });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message?.startsWith("User not found")) return res.status(404).json({ error: error.message });
       console.error("Error setting skill points:", error);
       res.status(500).json({ error: "Failed to set skill points" });
     }
@@ -795,7 +1001,7 @@ Respond with a JSON object:
   // Reset all lesson progress
   app.post("/api/dev/reset-progress", isDeveloperMiddleware, async (req: any, res) => {
     try {
-      const userId = req.user.id;
+      const { userId, forUsername } = await resolveTargetUserId(req);
 
       await storage.updateLessonProgress(userId, {
         hasCompletedOnboarding: false,
@@ -809,9 +1015,10 @@ Respond with a JSON object:
 
       res.json({
         success: true,
-        message: "Progress reset to initial state"
+        message: forUsername ? `Progress reset for ${forUsername}` : "Progress reset to initial state"
       });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message?.startsWith("User not found")) return res.status(404).json({ error: error.message });
       console.error("Error resetting progress:", error);
       res.status(500).json({ error: "Failed to reset progress" });
     }
@@ -821,7 +1028,7 @@ Respond with a JSON object:
   // Set wins/losses/total debates
   app.post("/api/dev/set-stats", isDeveloperMiddleware, async (req: any, res) => {
     try {
-      const userId = req.user.id;
+      const { userId, forUsername } = await resolveTargetUserId(req);
       const { wins, losses, totalDebates } = req.body;
 
       const updates: any = {};
@@ -837,12 +1044,80 @@ Respond with a JSON object:
 
       res.json({
         success: true,
-        message: "Stats updated",
-        user: updatedUser
+        message: forUsername ? `Stats updated for ${forUsername}` : "Stats updated",
+        user: updatedUser,
       });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message?.startsWith("User not found")) return res.status(404).json({ error: error.message });
       console.error("Error setting stats:", error);
       res.status(500).json({ error: "Failed to set stats" });
+    }
+  });
+
+  // Grant Dominion (for testing when webhook doesn't fire)
+  app.post("/api/dev/grant-dominion", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const { userId, forUsername } = await resolveTargetUserId(req);
+      await storage.updateUser(userId, { isPro: true, proType: "paid" });
+      res.json({ success: true, message: forUsername ? `Dominion granted for ${forUsername}` : "Dominion granted" });
+    } catch (error: any) {
+      if (error.message?.startsWith("User not found")) return res.status(404).json({ error: error.message });
+      console.error("Error granting Dominion:", error);
+      res.status(500).json({ error: "Failed to grant Dominion" });
+    }
+  });
+
+  // Revoke Dominion (for testing subscription flow)
+  app.post("/api/dev/revoke-dominion", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const { userId, forUsername } = await resolveTargetUserId(req);
+      await storage.updateUser(userId, { isPro: false, proType: "free" });
+      res.json({
+        success: true,
+        message: forUsername ? `Dominion revoked for ${forUsername}` : "Dominion revoked",
+      });
+    } catch (error: any) {
+      if (error.message?.startsWith("User not found")) return res.status(404).json({ error: error.message });
+      console.error("Error revoking Dominion:", error);
+      res.status(500).json({ error: "Failed to revoke Dominion" });
+    }
+  });
+
+  // Make another user a developer (persisted in DB)
+  app.post("/api/dev/promote-developer", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const { username } = req.body;
+      if (!username || typeof username !== "string" || !username.trim()) {
+        return res.status(400).json({ error: "username is required" });
+      }
+      const target = await storage.getUserByUsername(username.trim());
+      if (!target) return res.status(404).json({ error: `User not found: ${username}` });
+      await storage.updateUser(target.id, { isDeveloper: true });
+      res.json({ success: true, message: `${target.username} is now a developer` });
+    } catch (error: any) {
+      console.error("Error promoting developer:", error);
+      res.status(500).json({ error: "Failed to promote developer" });
+    }
+  });
+
+  // Delete another user's account (developer only; requires username in body)
+  app.post("/api/dev/delete-user", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const { username } = req.body;
+      if (!username || typeof username !== "string" || !username.trim()) {
+        return res.status(400).json({ error: "username is required" });
+      }
+      const target = await storage.getUserByUsername(username.trim());
+      if (!target) return res.status(404).json({ error: `User not found: ${username}` });
+      const currentUserId = req.user.id;
+      if (target.id === currentUserId) {
+        return res.status(400).json({ error: "Use the profile page to delete your own account" });
+      }
+      await storage.deleteUser(target.id);
+      res.json({ success: true, message: `Account ${target.username} has been deleted` });
+    } catch (error: any) {
+      console.error("Error deleting user:", error);
+      res.status(500).json({ error: "Failed to delete user" });
     }
   });
 

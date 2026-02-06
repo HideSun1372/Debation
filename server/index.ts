@@ -43,6 +43,29 @@ app.use(cors({
   exposedHeaders: ['set-cookie']
 }));
 
+// Log any request to /api/webhook so we can see if Stripe or stripe listen is reaching the server
+app.use((req, res, next) => {
+  const pathNorm = (req.originalUrl || req.url || "").split("?")[0].replace(/\/+$/, "") || "/";
+  if (pathNorm === "/api/webhook") {
+    console.log("[Stripe Webhook] Request seen:", req.method, pathNorm, "(originalUrl:", req.originalUrl + ")");
+  }
+  next();
+});
+
+// Stripe webhook needs raw body for signature verification; capture it before json() parses.
+app.use((req, res, next) => {
+  const pathNorm = (req.originalUrl || req.url || "").split("?")[0].replace(/\/+$/, "") || "/";
+  if (pathNorm !== "/api/webhook" || req.method !== "POST") return next();
+  console.log("[Stripe Webhook] Incoming POST to /api/webhook, capturing body...");
+  const chunks: Buffer[] = [];
+  req.on("data", (chunk: Buffer) => chunks.push(chunk));
+  req.on("end", () => {
+    (req as any).rawBody = Buffer.concat(chunks);
+    console.log("[Stripe Webhook] Body captured, length:", (req as any).rawBody.length);
+    next();
+  });
+});
+
 // 3. Don't forget your JSON parser or your API won't see req.body!
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -95,5 +118,8 @@ app.use((req, res, next) => {
   const port = parseInt(process.env.PORT || "5000", 10);
   httpServer.listen({ port, host: "0.0.0.0" }, () => {
     log(`serving on port ${port}`);
+    if (process.env.NODE_ENV !== "production") {
+      log(`Stripe webhook URL for stripe listen: http://localhost:${port}/api/webhook`);
+    }
   });
 })();

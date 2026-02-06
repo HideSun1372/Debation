@@ -36,6 +36,15 @@ async function updateProfile(updates: Partial<InsertUser>): Promise<User> {
   return await res.json();
 }
 
+async function changePassword(currentPassword: string, newPassword: string): Promise<{ ok: boolean }> {
+  const res = await apiRequest("PATCH", "/api/user/password", { currentPassword, newPassword });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to change password");
+  }
+  return res.json();
+}
+
 async function logout(): Promise<void> {
   await apiRequest("POST", "/api/logout");
 }
@@ -53,6 +62,7 @@ export function useAuth() {
     mutationFn: login,
     onSuccess: (user) => {
       queryClient.setQueryData(["/api/auth/user"], user);
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/admin"] });
     },
   });
 
@@ -60,6 +70,7 @@ export function useAuth() {
     mutationFn: register,
     onSuccess: (user) => {
       queryClient.setQueryData(["/api/auth/user"], user);
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/admin"] });
     },
   });
 
@@ -67,6 +78,7 @@ export function useAuth() {
     mutationFn: logout,
     onSuccess: () => {
       queryClient.setQueryData(["/api/auth/user"], null);
+      queryClient.removeQueries({ queryKey: ["/api/auth/admin"] });
       queryClient.removeQueries({ queryKey: ["/api/debates"] });
       queryClient.removeQueries({ queryKey: ["/api/progress"] });
       localStorage.removeItem("debate-user"); // Clear local session data
@@ -80,6 +92,11 @@ export function useAuth() {
     },
   });
 
+  const changePasswordMutation = useMutation({
+    mutationFn: ({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) =>
+      changePassword(currentPassword, newPassword),
+  });
+
   return {
     user,
     isLoading,
@@ -89,7 +106,7 @@ export function useAuth() {
     registerMutation,
     logoutMutation,
     updateProfileMutation,
-    // maintain backward compatibility explicitly if needed, via logoutMutation
+    changePasswordMutation,
     logout: logoutMutation.mutate,
   };
 }

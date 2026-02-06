@@ -282,7 +282,7 @@ export const DEBATE_TOPICS = [
 
 export type DebateTopic = typeof DEBATE_TOPICS[number];
 
-// Users table - merged with auth fields
+// shared/schema.ts
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: varchar("username").unique().notNull(),
@@ -295,6 +295,11 @@ export const users = pgTable("users", {
   totalDebates: integer("total_debates").notNull().default(0),
   wins: integer("wins").notNull().default(0),
   losses: integer("losses").notNull().default(0),
+  // --- DOMINION FIELDS ---
+  isPro: boolean("is_pro").notNull().default(false),
+  proType: varchar("pro_type").notNull().default("free"), // Will be "Dominion"
+  // -----------------------
+  isDeveloper: boolean("is_developer").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -308,6 +313,12 @@ export const insertUserSchema = createInsertSchema(users).omit({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;
+
+/** Public user info (no password, email, or isDeveloper) for search/discover */
+export type PublicUser = Pick<
+  User,
+  "id" | "username" | "firstName" | "lastName" | "profileImageUrl" | "skillPoints" | "totalDebates" | "wins" | "losses"
+>;
 
 // Debates table
 export const debates = pgTable("debates", {

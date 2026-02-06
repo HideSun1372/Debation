@@ -181,4 +181,28 @@ if (isProd) {
             }
         }
     });
+
+    app.patch("/api/user/password", async (req, res) => {
+        if (!req.isAuthenticated()) return res.sendStatus(401);
+        try {
+            const userId = (req.user as User).id;
+            const { currentPassword, newPassword } = req.body;
+            if (!currentPassword || typeof currentPassword !== "string" || !newPassword || typeof newPassword !== "string") {
+                return res.status(400).json({ error: "Current password and new password are required" });
+            }
+            if (newPassword.length < 6) {
+                return res.status(400).json({ error: "New password must be at least 6 characters" });
+            }
+            const user = await storage.getUser(userId);
+            if (!user || !(await comparePasswords(currentPassword, user.password))) {
+                return res.status(401).json({ error: "Current password is incorrect" });
+            }
+            const hashedPassword = await hashPassword(newPassword);
+            await storage.updateUser(userId, { password: hashedPassword });
+            res.json({ ok: true });
+        } catch (error: any) {
+            console.error("Change password error:", error);
+            res.status(500).json({ error: "Failed to change password" });
+        }
+    });
 }

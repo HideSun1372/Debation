@@ -7,13 +7,75 @@ import { SkillProgress } from "@/components/skill-progress";
 import { getSkillTier, SKILL_TIERS } from "@shared/schema";
 import { Trophy, Target, TrendingUp, TrendingDown, Percent, Swords, Award, LogIn } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { EditProfileDialog } from "@/components/edit-profile-dialog";
-import { Settings } from "lucide-react";
+import { ChangePasswordDialog } from "@/components/change-password-dialog";
+import { Settings, KeyRound } from "lucide-react";
 import { apiUrl } from "@/lib/api-config";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Trash2 } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function Profile() {
+  const search = useSearch();
+  const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
   const { user, isLoading, isAuthenticated } = useAuth();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const isSuccessReturn = search.includes("success=true");
+  const sessionIdMatch = search.match(/session_id=([^&]+)/);
+  const tokenMatch = search.match(/token=([^&]+)/);
+  const sessionId = sessionIdMatch ? sessionIdMatch[1] : null;
+  const token = tokenMatch ? tokenMatch[1] : null;
+
+  // When returning from checkout with session_id and token: confirm with backend and grant Dominion (token is one-time use)
+  useEffect(() => {
+    if (!isSuccessReturn || !sessionId || !token || !isAuthenticated) return;
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/api/confirm-checkout"), {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: sessionId, token }),
+        });
+        if (res.ok) {
+          await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+          window.history.replaceState(null, "", "/profile");
+        }
+      } catch (_) {}
+    })();
+  }, [isSuccessReturn, sessionId, token, isAuthenticated, queryClient]);
+
+  const handleJoinDominion = async () => {
+    try {
+      const response = await fetch(apiUrl("/api/create-checkout-session"), {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data.error || "Failed to create checkout session");
+      }
+    } catch (error) {
+      console.error("Stripe Error:", error);
+      alert("Could not open checkout. Check if your server is running!");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -90,6 +152,38 @@ export default function Profile() {
       </div>
 
       <div className="grid gap-6">
+      <Card className="border-2 border-amber-500/50 bg-gradient-to-br from-amber-500/10 via-background to-transparent shadow-md mb-2">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <CardTitle className="text-amber-700 dark:text-amber-500 flex items-center gap-2">
+                    <Award className="h-6 w-6" />
+                    The Dominion of Debate
+                  </CardTitle>
+                  <CardDescription>Unlimited AI sparring & exclusive tournament access</CardDescription>
+                </div>
+                {user?.isPro && (
+                  <div className="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full border border-amber-200">
+                    ACTIVE MEMBER
+                  </div>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent>
+              {!user?.isPro ? (
+                <Button
+                  onClick={handleJoinDominion}
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold h-11 transition-all hover:scale-[1.01]"
+                >
+                  Upgrade to Dominion ($6/mo)
+                </Button>
+              ) : (
+                <p className="text-sm text-amber-800/80 dark:text-amber-400/80 italic">
+                  Your Dominion status is active. Prepare for glory.
+                </p>
+              )}
+            </CardContent>
+          </Card>
         <Card className="overflow-hidden">
           <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/5 p-6 md:p-8">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
@@ -113,12 +207,20 @@ export default function Profile() {
                   <p className="text-4xl font-bold text-primary" data-testid="text-profile-points">{user.skillPoints}</p>
                   <p className="text-muted-foreground">Total Points</p>
                 </div>
-                <EditProfileDialog user={user}>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <Settings className="h-4 w-4" />
-                    Edit Profile
-                  </Button>
-                </EditProfileDialog>
+                <div className="flex gap-2">
+                  <EditProfileDialog user={user}>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Settings className="h-4 w-4" />
+                      Edit Profile
+                    </Button>
+                  </EditProfileDialog>
+                  <ChangePasswordDialog>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <KeyRound className="h-4 w-4" />
+                      Change password
+                    </Button>
+                  </ChangePasswordDialog>
+                </div>
               </div>
             </div>
           </div>
@@ -242,8 +344,8 @@ export default function Profile() {
                   <div key={milestone.tier} className="relative flex items-center gap-4 pl-10">
                     <div
                       className={`absolute left-2 w-5 h-5 rounded-full border-2 ${milestone.reached
-                          ? "bg-primary border-primary"
-                          : "bg-background border-muted-foreground"
+                        ? "bg-primary border-primary"
+                        : "bg-background border-muted-foreground"
                         }`}
                     />
                     <div className="flex-1">
@@ -278,7 +380,71 @@ export default function Profile() {
             </CardContent>
           </Card>
         )}
+
+        <Card className="border-destructive/50">
+          <CardHeader>
+            <CardTitle className="text-destructive flex items-center gap-2">
+              <Trash2 className="h-5 w-5" />
+              Danger zone
+            </CardTitle>
+            <CardDescription>
+              Permanently delete your account and all associated data. This cannot be undone.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              variant="destructive"
+              onClick={() => setDeleteDialogOpen(true)}
+              data-testid="button-delete-account"
+            >
+              Delete my account
+            </Button>
+          </CardContent>
+        </Card>
       </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete your account, profile, debate history, and progress. You will need to sign up again to use Debation. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteLoading}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleteLoading}
+              onClick={async (e) => {
+                e.preventDefault();
+                setDeleteLoading(true);
+                try {
+                  const res = await fetch(apiUrl("/api/user"), {
+                    method: "DELETE",
+                    credentials: "include",
+                  });
+                  const data = await res.json();
+                  if (res.ok) {
+                    await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+                    setDeleteDialogOpen(false);
+                    setLocation("/");
+                    window.location.reload();
+                  } else {
+                    alert(data.error || "Failed to delete account");
+                  }
+                } catch (err) {
+                  alert("Failed to delete account");
+                } finally {
+                  setDeleteLoading(false);
+                }
+              }}
+            >
+              {deleteLoading ? "Deleting…" : "Delete account"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

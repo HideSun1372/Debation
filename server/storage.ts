@@ -1,7 +1,7 @@
 
-import { users, sessions, debates, debateMessages, lessonProgress, type User, type InsertUser, type UpsertUser, type Debate, type InsertDebate, type DebateMessage, type InsertDebateMessage, type LessonProgress, type InsertLessonProgress } from "@shared/schema";
+import { users, sessions, debates, debateMessages, lessonProgress, type User, type InsertUser, type UpsertUser, type PublicUser, type Debate, type InsertDebate, type DebateMessage, type InsertDebateMessage, type LessonProgress, type InsertLessonProgress } from "@shared/schema";
 import { randomUUID } from "crypto";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, ilike, inArray } from "drizzle-orm";
 import { db, pool } from "./db";
 
 interface CreateDebateInput {
@@ -44,6 +44,11 @@ export interface IStorage {
   // Lesson Progress
   getLessonProgress(userId: string): Promise<LessonProgress | undefined>;
   updateLessonProgress(userId: string, progress: Partial<LessonProgress>): Promise<LessonProgress>;
+
+  searchUsers(query: string, limit?: number): Promise<PublicUser[]>;
+  listUsersDiscover(limit?: number): Promise<PublicUser[]>;
+
+  deleteUser(userId: string): Promise<void>;
 }
 
 // ============================================================================
@@ -73,6 +78,60 @@ export class DatabaseStorage implements IStorage {
     if (!db) throw new Error("Database not available");
     const [user] = await db.select().from(users).where(eq(users.username, username));
     return user;
+  }
+
+  async searchUsers(query: string, limit = 30): Promise<PublicUser[]> {
+    if (!db) throw new Error("Database not available");
+    const q = query.trim();
+    if (!q) return [];
+    const rows = await db
+      .select({
+        id: users.id,
+        username: users.username,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        profileImageUrl: users.profileImageUrl,
+        skillPoints: users.skillPoints,
+        totalDebates: users.totalDebates,
+        wins: users.wins,
+        losses: users.losses,
+      })
+      .from(users)
+      .where(ilike(users.username, `%${q}%`))
+      .limit(limit);
+    return rows;
+  }
+
+  async listUsersDiscover(limit = 24): Promise<PublicUser[]> {
+    if (!db) throw new Error("Database not available");
+    const rows = await db
+      .select({
+        id: users.id,
+        username: users.username,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        profileImageUrl: users.profileImageUrl,
+        skillPoints: users.skillPoints,
+        totalDebates: users.totalDebates,
+        wins: users.wins,
+        losses: users.losses,
+      })
+      .from(users)
+      .orderBy(desc(users.createdAt))
+      .limit(limit);
+    return rows;
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    if (!db) throw new Error("Database not available");
+    const userDebates = await db.select({ id: debates.id }).from(debates).where(eq(debates.userId, userId));
+    const debateIds = userDebates.map((d) => d.id);
+    if (debateIds.length > 0) {
+      await db.delete(debateMessages).where(inArray(debateMessages.debateId, debateIds));
+    }
+    await db.delete(debates).where(eq(debates.userId, userId));
+    await db.delete(lessonProgress).where(eq(lessonProgress.userId, userId));
+    await db.delete(users).where(eq(users.id, userId));
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
@@ -401,6 +460,53 @@ export class MemStorage implements IStorage {
     }
     this.lessonProgressMap.set(progress.id, progress);
     return progress;
+  }
+
+  private toPublicUser(user: User): PublicUser {
+    return {
+      id: user.id,
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profileImageUrl: user.profileImageUrl,
+      skillPoints: user.skillPoints,
+      totalDebates: user.totalDebates,
+      wins: user.wins,
+      losses: user.losses,
+    };
+  }
+
+  async searchUsers(query: string, limit = 30): Promise<PublicUser[]> {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    const list = Array.from(this.users.values())
+      .filter((u) => u.username.toLowerCase().includes(q))
+      .slice(0, limit)
+      .map((u) => this.toPublicUser(u));
+    return list;
+  }
+
+  async listUsersDiscover(limit = 24): Promise<PublicUser[]> {
+    const list = Array.from(this.users.values())
+      .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime())
+      .slice(0, limit)
+      .map((u) => this.toPublicUser(u));
+    return list;
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    const userDebates = Array.from(this.debates.values()).filter((d) => d.userId === userId);
+    const debateIds = new Set(userDebates.map((d) => d.id));
+    const messageIdsToDelete = Array.from(this.debateMessages.entries())
+      .filter(([, m]) => debateIds.has(m.debateId))
+      .map(([id]) => id);
+    messageIdsToDelete.forEach((id) => this.debateMessages.delete(id));
+    userDebates.forEach((d) => this.debates.delete(d.id));
+    const progressIdsToDelete = Array.from(this.lessonProgressMap.entries())
+      .filter(([, p]) => p.userId === userId)
+      .map(([id]) => id);
+    progressIdsToDelete.forEach((id) => this.lessonProgressMap.delete(id));
+    this.users.delete(userId);
   }
 }
 
