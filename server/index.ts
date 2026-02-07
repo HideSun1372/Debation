@@ -3,14 +3,28 @@ import cors from "cors";
 import 'dotenv/config';
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
-import { createServer } from "http"; // 1. Keep this import
+import { createServer } from "http";
+import session from "express-session";
 
 const app = express();
 
-// 2. INITIALIZE httpServer HERE
 const httpServer = createServer(app); 
 
 app.set("trust proxy", 1);
+
+// ADD SESSION HERE ⬇️
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'temporary-secret-change-later',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 24 * 60 * 60 * 1000
+  }
+}));
+// SESSION CODE ENDS HERE ⬆️
 
 const allowedOrigins = [
   'https://debation.vercel.app', 
@@ -67,7 +81,6 @@ app.use((req, res, next) => {
   });
 });
 
-// 3. Don't forget your JSON parser or your API won't see req.body!
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -99,7 +112,6 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Now httpServer is defined and can be passed here!
   await registerRoutes(httpServer, app);
 
   if (process.env.NODE_ENV === "production") {
