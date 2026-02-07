@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import { randomBytes } from "crypto";
 import { storage } from "./storage";
+import { setupWebSocket } from "./websocket";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { setupAuth, isAuthenticated } from "./auth";
 import { z } from "zod";
@@ -39,6 +40,9 @@ export async function registerRoutes(
 ): Promise<Server> {
   // Setup authentication (must be before other routes)
   setupAuth(app);
+
+  // WebSocket for multiplayer debates
+  setupWebSocket(httpServer);
 
   app.get(["/api/webhook", "/api/webhook/"], (_req, res) => {
     res.status(200).send("Stripe webhook endpoint. Use POST from Stripe (or stripe listen). Server is reachable at /api/webhook.");
@@ -167,6 +171,115 @@ export async function registerRoutes(
       res.json({ url: session.url });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
+    }
+  });
+
+  // Send debate request to a friend (they can accept or decline)
+  app.post("/api/debates/request", isAuthenticated, async (req: any, res) => {
+    try {
+      const { username, topicId, formatId, userSide } = req.body;
+      const challengerId = String(req.user.id);
+
+      if (!username || typeof username !== "string" || !topicId || !formatId) {
+        return res.status(400).json({ error: "username, topicId, and formatId required" });
+      }
+
+      const opponent = await storage.getUserByUsername(username.trim());
+      if (!opponent) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      if (opponent.id === challengerId) {
+        return res.status(400).json({ error: "Cannot challenge yourself" });
+      }
+
+      const friendStatus = await storage.getFriendStatus(challengerId, opponent.id);
+      if (friendStatus !== "friends") {
+        return res.status(400).json({ error: "You can only challenge friends. Add them as a friend first." });
+      }
+
+      const side = (userSide === "pro" || userSide === "con") ? userSide : "pro";
+      const request = await storage.createDebateRequest(
+        challengerId,
+        opponent.id,
+        topicId,
+        formatId,
+        side
+      );
+
+      res.status(201).json({ request, message: `Debate request sent to ${opponent.username}` });
+    } catch (error) {
+      console.error("Error creating debate request:", error);
+      res.status(500).json({ error: "Failed to send request" });
+    }
+  });
+
+  // List debate requests sent by current user (for challenger to poll until accepted)
+  app.get("/api/debates/requests/sent", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = String(req.user.id);
+      const requests = await storage.listDebateRequestsSentBy(userId);
+      res.json(requests);
+    } catch (error) {
+      console.error("Error fetching sent debate requests:", error);
+      res.status(500).json({ error: "Failed to fetch requests" });
+    }
+  });
+
+  // List pending debate requests for current user
+  app.get("/api/debates/requests", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = String(req.user.id);
+      const requests = await storage.listDebateRequestsPendingFor(userId);
+      res.json(requests);
+    } catch (error) {
+      console.error("Error fetching debate requests:", error);
+      res.status(500).json({ error: "Failed to fetch requests" });
+    }
+  });
+
+  // Accept debate request - creates debate and returns it
+  app.post("/api/debates/requests/:id/accept", isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const userId = String(req.user.id);
+
+      const debate = await storage.acceptDebateRequest(id);
+      if (!debate) {
+        return res.status(404).json({ error: "Request not found or already processed" });
+      }
+
+      const isRecipient = debate.opponentUserId === userId;
+      if (!isRecipient && debate.userId !== userId) {
+        return res.status(403).json({ error: "Not authorized to accept this request" });
+      }
+
+      const side = debate.userId === userId ? debate.userSide : (debate.userSide === "pro" ? "con" : "pro");
+      const debateUrl = `/debate?room=${debate.id}&format=${debate.formatId}&topic=${debate.topicId}&side=${side}`;
+
+      res.json({ debate, debateUrl });
+    } catch (error) {
+      console.error("Error accepting debate request:", error);
+      res.status(500).json({ error: "Failed to accept request" });
+    }
+  });
+
+  // Decline debate request
+  app.post("/api/debates/requests/:id/decline", isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const reqInfo = await storage.getDebateRequest(id);
+      if (!reqInfo || reqInfo.status !== "pending") {
+        return res.status(404).json({ error: "Request not found or already processed" });
+      }
+      const userId = String(req.user.id);
+      if (reqInfo.toUserId !== userId) {
+        return res.status(403).json({ error: "Not authorized to decline this request" });
+      }
+      await storage.declineDebateRequest(id);
+      res.json({ message: "Request declined" });
+    } catch (error) {
+      console.error("Error declining debate request:", error);
+      res.status(500).json({ error: "Failed to decline request" });
     }
   });
 
@@ -346,12 +459,26 @@ export async function registerRoutes(
         debateId,
         messages,
         opponentId,
-        opponentSkillRange,
+        opponentSkillRange: inputOpponentSkillRange,
         userSkillPoints,
         topic,
         side,
-        format
+        format,
+        opponentUserId: pvpOpponentUserId
       } = req.body;
+
+      let opponentSkillRange = inputOpponentSkillRange;
+      if (opponentId === "human" && debateId) {
+        const debate = await storage.getDebate(debateId);
+        const oppUserId = pvpOpponentUserId || debate?.opponentUserId;
+        if (oppUserId) {
+          const oppUser = await storage.getUser(oppUserId);
+          const oppPoints = oppUser?.skillPoints ?? 500;
+          opponentSkillRange = { min: Math.max(0, oppPoints - 100), max: oppPoints + 100 };
+        } else {
+          opponentSkillRange = { min: 400, max: 600 };
+        }
+      }
 
       const userMessages = messages
         .filter((m: { role: string }) => m.role === "user")
@@ -428,7 +555,6 @@ Be fair but consider the skill level difference. If the user is debating someone
         }
 
         // Update user stats if authenticated
-        // Use effectiveUserId logic to capture cases where session matches debate owner
         if (req.isAuthenticated()) {
           const user = req.user as any;
           const currentPoints = user.skillPoints || 0;
@@ -446,6 +572,26 @@ Be fair but consider the skill level difference. If the user is debating someone
           }
 
           await storage.updateUser(user.id, updates);
+
+          // PvP: also update opponent's stats
+          if (updatedDebate?.opponentType === "human" && updatedDebate?.opponentUserId) {
+            const oppUserId = updatedDebate.opponentUserId;
+            const oppUser = await storage.getUser(oppUserId);
+            if (oppUser) {
+              const oppPointsChange = -pointsChange;
+              const oppNewPoints = Math.max(0, oppUser.skillPoints + oppPointsChange);
+              const oppUpdates: any = {
+                skillPoints: oppNewPoints,
+                totalDebates: (oppUser.totalDebates || 0) + 1
+              };
+              if (evaluation.won) {
+                oppUpdates.losses = (oppUser.losses || 0) + 1;
+              } else {
+                oppUpdates.wins = (oppUser.wins || 0) + 1;
+              }
+              await storage.updateUser(oppUserId, oppUpdates);
+            }
+          }
         }
       }
 
@@ -603,6 +749,208 @@ Respond with a JSON object:
     }
   });
 
+  // Public profile by username (stats only; includes friendStatus for authenticated viewer)
+  app.get("/api/users/profile/:username", isAuthenticated, async (req: any, res) => {
+    try {
+      let username: string;
+      try {
+        username = decodeURIComponent(req.params.username || "");
+      } catch {
+        return res.status(400).json({ error: "Invalid username in URL" });
+      }
+      if (!username.trim()) return res.status(400).json({ error: "Username is required" });
+      const user = await storage.getUserByUsername(username.trim());
+      if (!user) return res.status(404).json({ error: "User not found" });
+      const publicProfile = {
+        id: user.id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl,
+        skillPoints: user.skillPoints,
+        totalDebates: user.totalDebates,
+        wins: user.wins,
+        losses: user.losses,
+      };
+      // Support both full user object and serialized id from session
+      const meId = String((req.user && typeof (req.user as any).id !== "undefined" ? (req.user as any).id : req.user) ?? "");
+      if (!meId) return res.status(401).json({ error: "Not authenticated" });
+      if (meId !== user.id) {
+        let friendStatus: "none" | "pending_sent" | "pending_received" | "friends";
+        try {
+          friendStatus = await storage.getFriendStatus(meId, user.id);
+        } catch (fsErr) {
+          const e = fsErr as Error;
+          console.error("Error in getFriendStatus (returning none):", e.message, e.stack);
+          friendStatus = "none";
+        }
+        return res.json({ ...publicProfile, friendStatus });
+      }
+      res.json({ ...publicProfile, friendStatus: "self" });
+    } catch (error) {
+      const err = error as Error;
+      console.error("Error fetching profile:", err.message, err.stack);
+      res.status(500).json({ error: "Failed to fetch profile" });
+    }
+  });
+
+  const friendUsernameSchema = z.object({
+    username: z.string().min(1, "username is required").max(255).transform((s) => s.trim()),
+  });
+
+  // Helper: get current user id from session (supports full user object or serialized id)
+  const getMeId = (req: any) => String((req.user && typeof (req.user as any).id !== "undefined" ? (req.user as any).id : req.user) ?? "");
+
+  // Send friend request
+  app.post("/api/friends/request", isAuthenticated, async (req: any, res) => {
+    try {
+      const parseResult = friendUsernameSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ error: parseResult.error.errors[0]?.message ?? "Invalid request", details: parseResult.error.errors });
+      }
+      const { username } = parseResult.data;
+      const target = await storage.getUserByUsername(username);
+      if (!target) return res.status(404).json({ error: "User not found" });
+      const meId = getMeId(req);
+      if (!meId) return res.status(401).json({ error: "Not authenticated" });
+      if (target.id === meId) return res.status(400).json({ error: "Cannot send request to yourself" });
+      const existing = await storage.getFriendRequest(meId, target.id);
+      if (existing) {
+        if (existing.status === "accepted") return res.status(400).json({ error: "Already friends" });
+        return res.status(400).json({ error: "Friend request already sent" });
+      }
+      const fromThem = await storage.getFriendRequest(target.id, meId);
+      if (fromThem && fromThem.status === "pending") {
+        return res.status(400).json({ error: "They already sent you a request - accept it instead" });
+      }
+      await storage.createFriendRequest(meId, target.id);
+      res.json({ success: true, message: `Friend request sent to ${target.username}` });
+    } catch (error: any) {
+      if (error.message === "Friend request already exists") return res.status(400).json({ error: error.message });
+      console.error("Error sending friend request:", error);
+      res.status(500).json({ error: "Failed to send request" });
+    }
+  });
+
+  // Accept friend request
+  app.post("/api/friends/accept", isAuthenticated, async (req: any, res) => {
+    try {
+      const parseResult = friendUsernameSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ error: parseResult.error.errors[0]?.message ?? "Invalid request", details: parseResult.error.errors });
+      }
+      const { username } = parseResult.data;
+      const fromUser = await storage.getUserByUsername(username);
+      if (!fromUser) return res.status(404).json({ error: "User not found" });
+      const meId = getMeId(req);
+      if (!meId) return res.status(401).json({ error: "Not authenticated" });
+      const request = await storage.getFriendRequest(fromUser.id, meId);
+      if (!request || request.status !== "pending") {
+        return res.status(400).json({ error: "No pending request from that user" });
+      }
+      await storage.acceptFriendRequest(fromUser.id, meId);
+      res.json({ success: true, message: `You are now friends with ${fromUser.username}` });
+    } catch (error) {
+      console.error("Error accepting friend request:", error);
+      res.status(500).json({ error: "Failed to accept request" });
+    }
+  });
+
+  // Reject / decline friend request (recipient declines a pending request)
+  app.post("/api/friends/reject", isAuthenticated, async (req: any, res) => {
+    try {
+      const parseResult = friendUsernameSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ error: parseResult.error.errors[0]?.message ?? "Invalid request", details: parseResult.error.errors });
+      }
+      const { username } = parseResult.data;
+      const fromUser = await storage.getUserByUsername(username);
+      if (!fromUser) return res.status(404).json({ error: "User not found" });
+      const meId = getMeId(req);
+      if (!meId) return res.status(401).json({ error: "Not authenticated" });
+      const request = await storage.getFriendRequest(fromUser.id, meId);
+      if (!request || request.status !== "pending") {
+        return res.status(400).json({ error: "No pending request from that user" });
+      }
+      await storage.deleteFriendRequest(fromUser.id, meId);
+      res.json({ success: true, message: "Friend request declined" });
+    } catch (error) {
+      console.error("Error rejecting friend request:", error);
+      res.status(500).json({ error: "Failed to decline request" });
+    }
+  });
+
+  // Cancel friend request (sender cancels their own pending request)
+  app.delete("/api/friends/requests", isAuthenticated, async (req: any, res) => {
+    try {
+      const parseResult = friendUsernameSchema.safeParse(req.query);
+      if (!parseResult.success) {
+        return res.status(400).json({ error: parseResult.error.errors[0]?.message ?? "Invalid request", details: parseResult.error.errors });
+      }
+      const { username } = parseResult.data;
+      const target = await storage.getUserByUsername(username);
+      if (!target) return res.status(404).json({ error: "User not found" });
+      const meId = getMeId(req);
+      if (!meId) return res.status(401).json({ error: "Not authenticated" });
+      const request = await storage.getFriendRequest(meId, target.id);
+      if (!request || request.status !== "pending") {
+        return res.status(400).json({ error: "No pending request to that user" });
+      }
+      await storage.deleteFriendRequest(meId, target.id);
+      res.json({ success: true, message: "Friend request cancelled" });
+    } catch (error) {
+      console.error("Error cancelling friend request:", error);
+      res.status(500).json({ error: "Failed to cancel request" });
+    }
+  });
+
+  // Unfriend (remove accepted friendship)
+  app.delete("/api/friends", isAuthenticated, async (req: any, res) => {
+    try {
+      const parseResult = friendUsernameSchema.safeParse(req.query);
+      if (!parseResult.success) {
+        return res.status(400).json({ error: parseResult.error.errors[0]?.message ?? "Invalid request", details: parseResult.error.errors });
+      }
+      const { username } = parseResult.data;
+      const other = await storage.getUserByUsername(username);
+      if (!other) return res.status(404).json({ error: "User not found" });
+      const meId = getMeId(req);
+      if (!meId) return res.status(401).json({ error: "Not authenticated" });
+      if (other.id === meId) return res.status(400).json({ error: "Cannot unfriend yourself" });
+      await storage.removeFriendship(meId, other.id);
+      res.json({ success: true, message: "Friend removed" });
+    } catch (error) {
+      console.error("Error removing friend:", error);
+      res.status(500).json({ error: "Failed to remove friend" });
+    }
+  });
+
+  // List pending friend requests (received)
+  app.get("/api/friends/requests", isAuthenticated, async (req: any, res) => {
+    try {
+      const meId = getMeId(req);
+      if (!meId) return res.status(401).json({ error: "Not authenticated" });
+      const list = await storage.listPendingReceived(meId);
+      res.json(list);
+    } catch (error) {
+      console.error("Error listing requests:", error);
+      res.status(500).json({ error: "Failed to list requests" });
+    }
+  });
+
+  // List my friends
+  app.get("/api/friends", isAuthenticated, async (req: any, res) => {
+    try {
+      const meId = getMeId(req);
+      if (!meId) return res.status(401).json({ error: "Not authenticated" });
+      const friends = await storage.listFriends(meId);
+      res.json(friends);
+    } catch (error) {
+      console.error("Error listing friends:", error);
+      res.status(500).json({ error: "Failed to list friends" });
+    }
+  });
+
   // Delete own account (authenticated)
   app.delete("/api/user", isAuthenticated, async (req: any, res) => {
     try {
@@ -618,25 +966,25 @@ Respond with a JSON object:
     }
   });
 
-  // Check if user is admin/developer
-  // Developer account is enabled when all these match:
-  // - Email: siqichen0802@gmail.com
-  // - Username: HideSun1372
-  // - First name: Nandery
-  // - Last name: Lolcat
+  // Creator: the original dev; cannot have dev revoked and has "Creator" badge
+  const CREATOR_EMAIL = "siqichen0802@gmail.com";
+
+  // Check if user is admin/developer/creator
   app.get("/api/auth/admin", isAuthenticated, async (req: any, res) => {
     try {
       const user = req.user;
 
-      // Developer: hardcoded email, env ADMIN_EMAIL, or DB flag
+      const isCreator = user.email === CREATOR_EMAIL;
+
+      // Developer: Creator email, env ADMIN_EMAIL, or DB flag
       const isDeveloper =
-        user.email === "siqichen0802@gmail.com" ||
+        isCreator ||
         (user as any).isDeveloper === true ||
         (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL);
 
       const isAdmin = isDeveloper;
 
-      res.json({ isAdmin, isDeveloper });
+      res.json({ isAdmin, isDeveloper, isCreator });
     } catch (error) {
       console.error("Error checking admin status:", error);
       res.status(500).json({ error: "Failed to check admin status" });
@@ -891,11 +1239,22 @@ Respond with a JSON object:
     }
     const user = req.user;
     const isDev =
-      user.email === "siqichen0802@gmail.com" ||
+      user.email === CREATOR_EMAIL ||
       (user as any).isDeveloper === true ||
       (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL);
     if (!isDev) {
       return res.status(403).json({ error: "Developer access required" });
+    }
+    next();
+  };
+
+  // Middleware: only the Creator can grant/revoke dev privileges
+  const isCreatorMiddleware = async (req: any, res: any, next: any) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+    if (req.user.email !== CREATOR_EMAIL) {
+      return res.status(403).json({ error: "Only the Creator can grant or revoke developer privileges" });
     }
     next();
   };
@@ -1083,8 +1442,8 @@ Respond with a JSON object:
     }
   });
 
-  // Make another user a developer (persisted in DB)
-  app.post("/api/dev/promote-developer", isDeveloperMiddleware, async (req: any, res) => {
+  // Make another user a developer (Creator only)
+  app.post("/api/dev/promote-developer", isDeveloperMiddleware, isCreatorMiddleware, async (req: any, res) => {
     try {
       const { username } = req.body;
       if (!username || typeof username !== "string" || !username.trim()) {
@@ -1097,6 +1456,26 @@ Respond with a JSON object:
     } catch (error: any) {
       console.error("Error promoting developer:", error);
       res.status(500).json({ error: "Failed to promote developer" });
+    }
+  });
+
+  // Revoke a user's developer status (Creator only). Creator cannot be revoked.
+  app.post("/api/dev/revoke-developer", isDeveloperMiddleware, isCreatorMiddleware, async (req: any, res) => {
+    try {
+      const { username } = req.body;
+      if (!username || typeof username !== "string" || !username.trim()) {
+        return res.status(400).json({ error: "username is required" });
+      }
+      const target = await storage.getUserByUsername(username.trim());
+      if (!target) return res.status(404).json({ error: `User not found: ${username}` });
+      if (target.email === CREATOR_EMAIL) {
+        return res.status(400).json({ error: "The Creator's developer privileges cannot be revoked" });
+      }
+      await storage.updateUser(target.id, { isDeveloper: false });
+      res.json({ success: true, message: `Developer privileges revoked for ${target.username}` });
+    } catch (error: any) {
+      console.error("Error revoking developer:", error);
+      res.status(500).json({ error: "Failed to revoke developer" });
     }
   });
 

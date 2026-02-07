@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useLocation, useSearch } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
 import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
+import { useDebateWebSocket } from "@/hooks/use-debate-websocket";
 
 interface DebateMessage {
   id: string;
@@ -32,27 +32,52 @@ interface DebateResult {
 }
 
 export default function Debate() {
-  const searchString = useSearch();
-  const [, setLocation] = useLocation();
+  const searchString = typeof window !== "undefined" ? window.location.search.slice(1) : "";
   const { user, recordDebate, addDebateToHistory } = useUser();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const params = new URLSearchParams(searchString);
+  const roomId = params.get("room");
+  const isPvP = !!roomId;
   const opponentId = params.get("opponent");
   const formatId = params.get("format");
   const topicId = params.get("topic");
-  const side = params.get("side") as "pro" | "con";
+  const side = (params.get("side") || "pro") as "pro" | "con";
   const judgeType = params.get("judgeType") as "lay" | "traditional" | "circuit" || "traditional";
   const customPrepTime = parseInt(params.get("prepTime") || "0");
   const customSpeechTimes: Record<string, number> = (() => {
     try { return JSON.parse(params.get("speechTimes") || "{}"); }
     catch { return {}; }
   })();
-  const voiceMode = params.get("voiceMode") === "true";
+  const voiceMode = !isPvP && params.get("voiceMode") === "true";
 
-  const opponent = AI_OPPONENTS.find((o) => o.id === opponentId);
+  const opponent = isPvP ? null : AI_OPPONENTS.find((o) => o.id === opponentId);
   const topic = DEBATE_TOPICS.find((t) => t.id === topicId);
   const format = DEBATE_FORMATS.find((f) => f.id === formatId);
+
+  const { connected: wsConnected, opponentOnline, sendSpeech: wsSendSpeech } = useDebateWebSocket({
+    debateId: isPvP ? roomId : null,
+    onSpeech: useCallback((msg: { content: string; speechId: string; speechName: string }) => {
+      if (!isPvP) return;
+      const opponentMessage: DebateMessage = {
+        id: `opponent-${Date.now()}`,
+        role: "opponent",
+        content: msg.content,
+        speechId: msg.speechId,
+        speechName: msg.speechName,
+      };
+      setMessages((prev) => [...prev, opponentMessage]);
+      setCurrentSpeechIndex((prev) => prev + 1);
+      setSpeechTimeRemaining(0);
+    }, []),
+    onOpponentJoined: useCallback(() => {
+      // Opponent joined - debate can start
+    }, []),
+    onOpponentLeft: useCallback(() => {
+      // Opponent left
+    }, []),
+    onError: useCallback((msg: string) => console.error("[WS]", msg), []),
+  });
 
   const getSpeechTime = (speech: DebateSpeech): number =>
     customSpeechTimes[speech.id] ?? speech.defaultMinutes;
@@ -144,8 +169,18 @@ export default function Debate() {
   const isCrossfire = currentSpeech?.type === "crossfire";
 
   useEffect(() => {
+    if (isPvP) {
+      if (!roomId || !topic || !format) {
+        window.location.href = "/play";
+        return;
+      }
+      setDebateId(roomId);
+      setIsInitializing(false);
+      return;
+    }
+
     if (!opponent || !topic || !format) {
-      setLocation("/practice");
+      window.location.href = "/play";
       return;
     }
 
@@ -168,7 +203,7 @@ export default function Debate() {
     };
 
     initDebate();
-  }, [opponent, topic, format, side, user.id, setLocation]);
+  }, [isPvP, roomId, opponent, topic, format, side, user.id]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -221,9 +256,13 @@ export default function Debate() {
     }
   }, [format]);
 
+  // For PvP, don't run timer until opponent has joined
+  const waitingForOpponent = isPvP && !opponentOnline;
+
   useEffect(() => {
     // Timer runs when: it's user's turn, OR we're in CX mode (regardless of questioner role)
-    const shouldRun = isTimerRunning && !isLoading && !isDebateComplete && (isUserTurn || isCxMode);
+    // For PvP: only run when opponent has joined
+    const shouldRun = isTimerRunning && !isLoading && !isDebateComplete && (isUserTurn || isCxMode) && !waitingForOpponent;
     if (!shouldRun) return;
 
     const interval = setInterval(() => {
@@ -246,7 +285,7 @@ export default function Debate() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isTimerRunning, isLoading, isUserTurn, isDebateComplete, isInPrepTime, isCxMode]);
+  }, [isTimerRunning, isLoading, isUserTurn, isDebateComplete, isInPrepTime, isCxMode, waitingForOpponent]);
 
   // Auto-end CX when timer runs out
   useEffect(() => {
@@ -619,7 +658,9 @@ export default function Debate() {
   // Trigger opponent's regular speech OR first CX question if opponent is questioner
   // Guard: Don't trigger anything while opponent is thinking, typing, or speaking TTS (prevents timing issues)
   // Uses both state AND ref checks - ref is synchronous and prevents React batching race conditions
+  // Skip for PvP - opponent sends via WebSocket
   useEffect(() => {
+    if (isPvP) return;
     if (!isInitializing && !isLoading && !isThinking && !typingMessage && !isAudioPlaying && !isDeliveringOpponentSpeechRef.current && format && currentSpeech && !isDebateComplete) {
       const speechToDeliver = currentSpeech;
       const indexToAdvance = currentSpeechIndex;
@@ -823,7 +864,7 @@ export default function Debate() {
     const messageText = messageOverride ?? inputValue;
     if (!messageText.trim() || isLoading || !currentSpeech || !format) return;
 
-    // In crossfire mode, determine if this is a valid turn or if user should be called out
+    // In crossfire mode, determine if it is a valid turn or if user should be called out
     // We allow sending in answering phase so opponent can call them out if needed
 
     const userMessage: DebateMessage = {
@@ -837,6 +878,15 @@ export default function Debate() {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     speechRecognition.resetTranscript();
+
+    if (isPvP) {
+      wsSendSpeech(messageText.trim(), currentSpeech.id, currentSpeech.name, "user");
+      if (format && currentSpeechIndex < format.speeches.length) {
+        setCurrentSpeechIndex((prev) => prev + 1);
+      }
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -1140,8 +1190,8 @@ export default function Debate() {
       const response = await apiRequest("POST", "/api/debate/evaluate", {
         debateId,
         messages,
-        opponentId: opponent?.id,
-        opponentSkillRange: { min: opponent?.minSkill, max: opponent?.maxSkill },
+        opponentId: isPvP ? "human" : opponent?.id,
+        opponentSkillRange: isPvP ? undefined : { min: opponent?.minSkill, max: opponent?.maxSkill },
         userSkillPoints: user.skillPoints,
         topic: topic?.title,
         side,
@@ -1153,11 +1203,11 @@ export default function Debate() {
       setDebateResult(result);
       recordDebate(result.won, result.pointsChange);
 
-      if (debateId && opponent && topic && format) {
+      if (debateId && topic && format) {
         addDebateToHistory({
           id: debateId,
           date: new Date().toLocaleDateString(),
-          opponentId: opponent.id,
+          opponentId: isPvP ? "human" : (opponent?.id ?? "unknown"),
           topicId: topic.id,
           formatId: format.id,
           result: result.won ? "win" : "loss",
@@ -1179,11 +1229,11 @@ export default function Debate() {
       setDebateResult(mockResult);
       recordDebate(mockResult.won, mockResult.pointsChange);
 
-      if (debateId && opponent && topic && format) {
+      if (debateId && topic && format) {
         addDebateToHistory({
           id: debateId,
           date: new Date().toLocaleDateString(),
-          opponentId: opponent.id,
+          opponentId: isPvP ? "human" : (opponent?.id ?? "unknown"),
           topicId: topic.id,
           formatId: format.id,
           result: mockResult.won ? "win" : "loss",
@@ -1264,9 +1314,12 @@ export default function Debate() {
     }
   }, [isLoading, voiceState, isUserTurn, isDebateComplete]);
 
-  if (!opponent || !topic || !format) {
+  // For PvP, opponent is null (human); for AI we need opponent, topic, format
+  if (!topic || !format || (!isPvP && !opponent)) {
     return null;
   }
+
+  const opponentDisplayName = opponent?.name ?? "Opponent";
 
   if (isInitializing) {
     return (
@@ -1290,7 +1343,7 @@ export default function Debate() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setLocation("/practice")}
+                onClick={() => { window.location.href = "/play"; }}
                 data-testid="button-back"
               >
                 <ArrowLeft className="h-4 w-4 mr-1" />
@@ -1299,7 +1352,7 @@ export default function Debate() {
               <div className="hidden sm:block">
                 <p className="font-medium text-sm">{topic.title}</p>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span>vs {opponent.name}</span>
+                  <span>vs {opponentDisplayName}</span>
                   <span className="mx-1">|</span>
                   <span>{format.name}</span>
                   <span className="mx-1">|</span>
@@ -1349,7 +1402,7 @@ export default function Debate() {
                 </Button>
               )}
 
-              {!isDebateComplete && messages.length >= 2 && (
+              {messages.length >= 2 && (
                 <Button
                   onClick={handleEndDebate}
                   disabled={isEvaluating}
@@ -1373,8 +1426,25 @@ export default function Debate() {
       </div>
 
       <div className="flex-1 overflow-hidden flex">
+        {isPvP && waitingForOpponent ? (
+          <div className="flex-1 flex items-center justify-center p-8">
+            <div className="text-center max-w-md">
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                <User className="h-8 w-8 text-muted-foreground animate-pulse" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Waiting for opponent to join</h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                The debate will start when your friend joins. They need to accept your request from their profile.
+              </p>
+              <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground">
+                <div className={cn("w-2 h-2 rounded-full", wsConnected ? "bg-green-500" : "bg-yellow-500")} />
+                {wsConnected ? "Connected" : "Connecting..."}
+              </div>
+            </div>
+          </div>
+        ) : (
         <div className={cn(
-          "flex-1 overflow-hidden transition-all duration-300",
+          "flex-1 flex flex-col overflow-hidden min-w-0 transition-all duration-300",
           showFlowSheet ? "pr-0" : ""
         )}>
           <div className="container mx-auto px-4 h-full max-w-4xl">
@@ -1405,7 +1475,7 @@ export default function Debate() {
                     <div className="mt-4 p-3 bg-muted/50 rounded-lg inline-block">
                       <p className="text-sm font-medium mb-1">First Speech: {currentSpeech.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {isUserTurn ? "You speak first - present your opening argument below" : `${opponent?.name} will speak first`}
+                        {isUserTurn ? "You speak first - present your opening argument below" : `${opponentDisplayName} will speak first`}
                       </p>
                     </div>
                   </CardContent>
@@ -1463,7 +1533,7 @@ export default function Debate() {
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs font-medium opacity-70">
-                            {message.role === "user" ? "You" : opponent.name}
+                            {message.role === "user" ? "You" : opponentDisplayName}
                           </span>
                           <span className="text-xs opacity-50">{message.speechName}</span>
                           {isTypingThisMessage && (
@@ -1498,7 +1568,7 @@ export default function Debate() {
                     <div className="bg-muted rounded-lg px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">{opponent.name} is thinking...</span>
+                        <span className="text-sm text-muted-foreground">{opponentDisplayName} is thinking...</span>
                       </div>
                     </div>
                   </div>
@@ -1508,7 +1578,6 @@ export default function Debate() {
               </div>
             </ScrollArea>
           </div>
-        </div>
 
         {showFlowSheet && (
           <div className={cn(
@@ -1604,7 +1673,6 @@ export default function Debate() {
             <PanelRightOpen className="h-4 w-4" />
           </Button>
         )}
-      </div>
 
       {!isDebateComplete && currentSpeech && (
         <div className="border-t bg-background">
@@ -1625,7 +1693,7 @@ export default function Debate() {
                       data-testid="button-claim-first-question"
                     >
                       {crossfireRaceWinner === "user" ? "You got it!" :
-                        crossfireRaceWinner === "opponent" ? `${opponent?.name} was faster!` :
+                        crossfireRaceWinner === "opponent" ? `${opponentDisplayName} was faster!` :
                           "Claim First Question!"}
                     </Button>
                   </div>
@@ -1810,7 +1878,7 @@ export default function Debate() {
                             <>
                               <div className="flex items-center gap-3">
                                 <Volume2 className="h-6 w-6 text-muted-foreground animate-pulse" />
-                                <p className="text-lg font-medium">{opponent?.name} is speaking...</p>
+                                <p className="text-lg font-medium">{opponentDisplayName} is speaking...</p>
                               </div>
                               <p className="text-sm text-muted-foreground text-center">
                                 Take notes on the flow sheet - the text will appear after they finish
@@ -1844,7 +1912,7 @@ export default function Debate() {
                                       // Remove voiceMode from URL params and reload
                                       const newParams = new URLSearchParams(params.toString());
                                       newParams.delete("voiceMode");
-                                      setLocation(`/debate?${newParams.toString()}`);
+                                      window.location.href = `/debate?${newParams.toString()}`;
                                     }}
                                     data-testid="button-switch-text-mode"
                                   >
@@ -1906,7 +1974,7 @@ export default function Debate() {
                                       onClick={() => {
                                         const newParams = new URLSearchParams(params.toString());
                                         newParams.delete("voiceMode");
-                                        setLocation(`/debate?${newParams.toString()}`);
+                                        window.location.href = `/debate?${newParams.toString()}`;
                                       }}
                                       data-testid="button-switch-text-mode-error"
                                     >
@@ -1988,7 +2056,7 @@ export default function Debate() {
                 <div className="p-4 rounded-lg bg-muted/50 border border-dashed flex items-center justify-center gap-3">
                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                   <div className="text-center">
-                    <p className="font-medium text-sm">Waiting for {opponent?.name}'s {currentSpeech.name}</p>
+                    <p className="font-medium text-sm">Waiting for {opponentDisplayName}'s {currentSpeech.name}</p>
                     <p className="text-xs text-muted-foreground">{currentSpeech.description}</p>
                   </div>
                 </div>
@@ -1997,6 +2065,9 @@ export default function Debate() {
           )}
         </div>
       )}
+        </div>
+        )}
+      </div>
 
       <Dialog open={showResult} onOpenChange={setShowResult}>
         <DialogContent className="sm:max-w-md max-h-[85vh] flex flex-col">
@@ -2015,7 +2086,7 @@ export default function Debate() {
               )}
             </DialogTitle>
             <DialogDescription className="text-center text-xs">
-              vs {opponent?.name}
+              vs {opponentDisplayName}
             </DialogDescription>
           </DialogHeader>
 
@@ -2071,14 +2142,14 @@ export default function Debate() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setLocation("/history")}
+              onClick={() => { window.location.href = "/history"; }}
               data-testid="button-view-history"
             >
               View History
             </Button>
             <Button
               size="sm"
-              onClick={() => setLocation("/practice")}
+              onClick={() => { window.location.href = "/play"; }}
               data-testid="button-debate-again"
             >
               Debate Again

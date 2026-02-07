@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { useLocation, useRoute } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AuthPage() {
-    const [, setLocation] = useLocation();
     const { loginMutation, registerMutation } = useAuth();
     const { toast } = useToast();
     const [username, setUsername] = useState("");
@@ -22,7 +20,7 @@ export default function AuthPage() {
         loginMutation.mutate(
             { username, password },
             {
-                onSuccess: () => setLocation("/"),
+                onSuccess: () => { window.location.href = "/"; },
                 onError: (error: Error) => {
                     toast({
                         title: "Login failed",
@@ -39,7 +37,7 @@ export default function AuthPage() {
         registerMutation.mutate(
             { username, password, email },
             {
-                onSuccess: () => setLocation("/"),
+                onSuccess: () => { window.location.href = "/"; },
                 onError: (error: Error) => {
                     toast({
                         title: "Registration failed",

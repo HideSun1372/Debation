@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useUser } from "@/lib/user-context";
 import { useAdmin } from "@/hooks/use-admin";
@@ -15,7 +14,7 @@ import { apiUrl } from "@/lib/api-config";
 export default function Dashboard() {
     const { user: authUser, isLoading } = useAuth();
     const { user } = useUser();
-    const { isAdmin, isDeveloper } = useAdmin();
+    const { isAdmin, isDeveloper, isCreator } = useAdmin();
 
     if (isLoading) {
         return (
@@ -39,10 +38,10 @@ export default function Dashboard() {
             bgColor: "bg-blue-500/10",
         },
         {
-            href: "/practice",
+            href: "/play",
             icon: Swords,
-            title: "Practice",
-            description: "Debate against AI opponents",
+            title: "Play",
+            description: "Debate against AI opponents or friends",
             color: "text-orange-500",
             bgColor: "bg-orange-500/10",
         },
@@ -117,7 +116,7 @@ export default function Dashboard() {
                     {features.map((feature) => {
                         const Icon = feature.icon;
                         return (
-                            <Link key={feature.href} href={feature.href}>
+                            <a key={feature.href} href={feature.href}>
                                 <Card className="h-full cursor-pointer transition-all hover:shadow-lg hover:border-primary/50 hover:scale-[1.02]">
                                     <CardHeader className="flex flex-row items-center gap-4">
                                         <div className={cn("p-3 rounded-lg", feature.bgColor)}>
@@ -129,7 +128,7 @@ export default function Dashboard() {
                                         </div>
                                     </CardHeader>
                                 </Card>
-                            </Link>
+                            </a>
                         );
                     })}
                 </div>
@@ -138,29 +137,29 @@ export default function Dashboard() {
                 <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
                     <CardContent className="py-8 text-center">
                         <Trophy className="h-10 w-10 text-primary mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Ready to Practice?</h3>
+                        <h3 className="text-xl font-semibold mb-2">Ready to Play?</h3>
                         <p className="text-muted-foreground max-w-md mx-auto mb-4">
                             Jump into a debate and put your skills to the test!
                         </p>
-                        <Link href="/practice">
+                        <a href="/play">
                             <Button size="lg" className="gap-2">
                                 <Swords className="h-5 w-5" />
-                                Start Practicing
+                                Start Playing
                             </Button>
-                        </Link>
+                        </a>
                     </CardContent>
                 </Card>
 
                 {/* Admin Panel (only for developers) */}
                 {(isAdmin || isDeveloper) && (
-                    <DeveloperToolsCard />
+                    <DeveloperToolsCard isCreator={isCreator} />
                 )}
             </div>
         </div >
     );
 }
 
-function DeveloperToolsCard() {
+function DeveloperToolsCard({ isCreator }: { isCreator: boolean }) {
     const [targetUsername, setTargetUsername] = useState("");
 
     const devPost = async (path: string, body?: Record<string, unknown>) => {
@@ -240,25 +239,54 @@ function DeveloperToolsCard() {
                     <Button variant="outline" size="sm" onClick={() => devPost("/api/dev/revoke-dominion")}>
                         Revoke Dominion
                     </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                            const username = prompt("Username to make a developer:", "");
-                            if (username != null && username.trim()) {
-                                fetch(apiUrl("/api/dev/promote-developer"), {
-                                    method: "POST",
-                                    credentials: "include",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ username: username.trim() }),
-                                })
-                                    .then((r) => r.json())
-                                    .then((data) => alert(data.message || data.error || "Done!"));
-                            }
-                        }}
-                    >
-                        Make developer
-                    </Button>
+                    {isCreator && (
+                        <>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    const username = targetUsername.trim() || prompt("Username to make a developer:", "");
+                                    if (username && username.trim()) {
+                                        fetch(apiUrl("/api/dev/promote-developer"), {
+                                            method: "POST",
+                                            credentials: "include",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({ username: username.trim() }),
+                                        })
+                                            .then((r) => r.json())
+                                            .then((data) => {
+                                                alert(data.message || data.error || "Done!");
+                                                if (data.success) window.location.reload();
+                                            });
+                                    }
+                                }}
+                            >
+                                Make developer
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    const username = targetUsername.trim() || prompt("Username to revoke developer:", "");
+                                    if (!username || !username.trim()) return;
+                                    if (!confirm(`Revoke developer privileges for "${username}"?`)) return;
+                                    fetch(apiUrl("/api/dev/revoke-developer"), {
+                                        method: "POST",
+                                        credentials: "include",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ username: username.trim() }),
+                                    })
+                                        .then((r) => r.json())
+                                        .then((data) => {
+                                            alert(data.message || data.error || "Done!");
+                                            if (data.success) window.location.reload();
+                                        });
+                                }}
+                            >
+                                Revoke developer
+                            </Button>
+                        </>
+                    )}
                     <Button
                         variant="destructive"
                         size="sm"

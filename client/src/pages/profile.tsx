@@ -5,14 +5,13 @@ import { useAuth } from "@/hooks/use-auth";
 import { SkillBadge } from "@/components/skill-badge";
 import { SkillProgress } from "@/components/skill-progress";
 import { getSkillTier, SKILL_TIERS } from "@shared/schema";
-import { Trophy, Target, TrendingUp, TrendingDown, Percent, Swords, Award, LogIn } from "lucide-react";
+import { Trophy, Target, TrendingUp, TrendingDown, Percent, Award, LogIn } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Link, useSearch } from "wouter";
 import { EditProfileDialog } from "@/components/edit-profile-dialog";
 import { ChangePasswordDialog } from "@/components/change-password-dialog";
 import { Settings, KeyRound } from "lucide-react";
 import { apiUrl } from "@/lib/api-config";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
   AlertDialog,
@@ -24,12 +23,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Trash2 } from "lucide-react";
-import { useLocation } from "wouter";
-
+import { Trash2, UserPlus, Check, Users, Swords, X } from "lucide-react";
 export default function Profile() {
-  const search = useSearch();
-  const [, setLocation] = useLocation();
+  const search = typeof window !== "undefined" ? window.location.search : "";
   const queryClient = useQueryClient();
   const { user, isLoading, isAuthenticated } = useAuth();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -375,11 +371,15 @@ export default function Profile() {
                 Start practicing to build your debate skills and track your progress!
               </p>
               <Button asChild data-testid="button-start-practicing">
-                <Link href="/practice">Start Practicing</Link>
+                <a href="/play">Start Playing</a>
               </Button>
             </CardContent>
           </Card>
         )}
+
+        <FriendRequestsCard queryClient={queryClient} />
+        <DebateRequestsCard queryClient={queryClient} />
+        <FriendsCard />
 
         <Card className="border-destructive/50">
           <CardHeader>
@@ -428,8 +428,7 @@ export default function Profile() {
                   if (res.ok) {
                     await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
                     setDeleteDialogOpen(false);
-                    setLocation("/");
-                    window.location.reload();
+                    window.location.href = "/";
                   } else {
                     alert(data.error || "Failed to delete account");
                   }
@@ -446,5 +445,304 @@ export default function Profile() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+type PendingRequest = {
+  id: string;
+  fromUserId: string;
+  toUserId: string;
+  status: string;
+  createdAt: string;
+  fromUser: {
+    id: string;
+    username: string;
+    firstName: string | null;
+    lastName: string | null;
+    profileImageUrl: string | null;
+    skillPoints: number;
+    totalDebates: number;
+    wins: number;
+    losses: number;
+  };
+};
+
+type PublicUser = {
+  id: string;
+  username: string;
+  firstName: string | null;
+  lastName: string | null;
+  profileImageUrl: string | null;
+  skillPoints: number;
+  totalDebates: number;
+  wins: number;
+  losses: number;
+};
+
+function FriendRequestsCard({ queryClient }: { queryClient: ReturnType<typeof useQueryClient> }) {
+  const { data: requests, isLoading } = useQuery<PendingRequest[]>({
+    queryKey: ["/api/friends/requests"],
+    queryFn: async () => {
+      const res = await fetch(apiUrl("/api/friends/requests"), { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load requests");
+      return res.json();
+    },
+    refetchInterval: 5000, // Poll every 5 seconds for new requests
+  });
+
+  const acceptMutation = useMutation({
+    mutationFn: async (username: string) => {
+      const res = await fetch(apiUrl("/api/friends/accept"), {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to accept");
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/friends/requests"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/friends"] });
+    },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: async (username: string) => {
+      const res = await fetch(apiUrl("/api/friends/reject"), {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to decline");
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/friends/requests"] });
+    },
+  });
+
+  if (isLoading || !requests?.length) return null;
+
+  const getDisplayName = (u: PendingRequest["fromUser"]) =>
+    [u.firstName, u.lastName].filter(Boolean).join(" ") || u.username;
+  const getInitials = (u: PendingRequest["fromUser"]) =>
+    (u.firstName?.charAt(0) || "") + (u.lastName?.charAt(0) || "") || u.username.slice(0, 2).toUpperCase();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <UserPlus className="h-5 w-5" />
+          Friend requests
+        </CardTitle>
+        <CardDescription>Accept or decline pending friend requests</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {requests.map((req) => (
+          <div key={req.id} className="flex items-center justify-between gap-4 p-3 rounded-lg bg-muted/50">
+            <a href={`/users/${encodeURIComponent(req.fromUser.username)}`} className="flex items-center gap-3 min-w-0 flex-1">
+              <Avatar className="h-10 w-10 shrink-0">
+                <AvatarImage src={req.fromUser.profileImageUrl ?? undefined} />
+                <AvatarFallback className="text-xs">{getInitials(req.fromUser)}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0">
+                <p className="font-medium truncate">{getDisplayName(req.fromUser)}</p>
+                <p className="text-sm text-muted-foreground truncate">@{req.fromUser.username}</p>
+              </div>
+            </a>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1"
+                onClick={() => rejectMutation.mutate(req.fromUser.username)}
+                disabled={rejectMutation.isPending}
+              >
+                Decline
+              </Button>
+              <Button
+                size="sm"
+                className="gap-1"
+                onClick={() => acceptMutation.mutate(req.fromUser.username)}
+                disabled={acceptMutation.isPending}
+              >
+                <Check className="h-4 w-4" />
+                Accept
+              </Button>
+            </div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
+
+type DebateRequestItem = {
+  id: string;
+  fromUserId: string;
+  toUserId: string;
+  topicId: string;
+  formatId: string;
+  challengerSide: string;
+  status: string;
+  debateId: string | null;
+  createdAt: string;
+  fromUser: PublicUser;
+};
+
+function DebateRequestsCard({ queryClient }: { queryClient: ReturnType<typeof useQueryClient> }) {
+  const { data: requests, isLoading } = useQuery<DebateRequestItem[]>({
+    queryKey: ["/api/debates/requests"],
+    queryFn: async () => {
+      const res = await fetch(apiUrl("/api/debates/requests"), { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load debate requests");
+      return res.json();
+    },
+    refetchInterval: 5000, // Poll every 5 seconds for new requests
+  });
+
+  const acceptMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(apiUrl(`/api/debates/requests/${id}/accept`), {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to accept");
+      return data as { debate: { id: string; formatId: string; topicId: string }; debateUrl: string };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/debates/requests"] });
+      window.location.href = data.debateUrl;
+    },
+  });
+
+  const declineMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(apiUrl(`/api/debates/requests/${id}/decline`), {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to decline");
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/debates/requests"] });
+    },
+  });
+
+  if (isLoading || !requests?.length) return null;
+
+  const getDisplayName = (u: PublicUser) =>
+    [u.firstName, u.lastName].filter(Boolean).join(" ") || u.username;
+  const getInitials = (u: PublicUser) =>
+    (u.firstName?.charAt(0) || "") + (u.lastName?.charAt(0) || "") || u.username.slice(0, 2).toUpperCase();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Swords className="h-5 w-5" />
+          Debate requests
+        </CardTitle>
+        <CardDescription>Accept or decline debate challenges from friends</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {requests.map((req) => (
+          <div key={req.id} className="flex items-center justify-between gap-4 p-3 rounded-lg bg-muted/50">
+            <a href={`/users/${encodeURIComponent(req.fromUser.username)}`} className="flex items-center gap-3 min-w-0 flex-1">
+              <Avatar className="h-10 w-10 shrink-0">
+                <AvatarImage src={req.fromUser.profileImageUrl ?? undefined} />
+                <AvatarFallback className="text-xs">{getInitials(req.fromUser)}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0">
+                <p className="font-medium truncate">{getDisplayName(req.fromUser)} wants to debate</p>
+                <p className="text-sm text-muted-foreground truncate">
+                  Topic & format selected • You would be {req.challengerSide === "pro" ? "Con" : "Pro"}
+                </p>
+              </div>
+            </a>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1"
+                onClick={() => declineMutation.mutate(req.id)}
+                disabled={declineMutation.isPending}
+              >
+                <X className="h-4 w-4" />
+                Decline
+              </Button>
+              <Button
+                size="sm"
+                className="gap-1"
+                onClick={() => acceptMutation.mutate(req.id)}
+                disabled={acceptMutation.isPending}
+              >
+                <Check className="h-4 w-4" />
+                Accept
+              </Button>
+            </div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
+
+function FriendsCard() {
+  const { data: friends, isLoading } = useQuery<PublicUser[]>({
+    queryKey: ["/api/friends"],
+    queryFn: async () => {
+      const res = await fetch(apiUrl("/api/friends"), { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load friends");
+      return res.json();
+    },
+  });
+
+  if (isLoading || !friends?.length) return null;
+
+  const getDisplayName = (u: PublicUser) =>
+    [u.firstName, u.lastName].filter(Boolean).join(" ") || u.username;
+  const getInitials = (u: PublicUser) =>
+    (u.firstName?.charAt(0) || "") + (u.lastName?.charAt(0) || "") || u.username.slice(0, 2).toUpperCase();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Users className="h-5 w-5" />
+          Friends
+        </CardTitle>
+        <CardDescription>Your friends on Debation</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {friends.map((u) => (
+            <a key={u.id} href={`/users/${encodeURIComponent(u.username)}`}>
+              <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent/50 transition-colors">
+                <Avatar className="h-10 w-10 shrink-0">
+                  <AvatarImage src={u.profileImageUrl ?? undefined} />
+                  <AvatarFallback className="text-xs">{getInitials(u)}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <p className="font-medium truncate">{getDisplayName(u)}</p>
+                  <p className="text-sm text-muted-foreground truncate">@{u.username}</p>
+                </div>
+                <SkillBadge points={u.skillPoints} size="sm" className="ml-auto" />
+              </div>
+            </a>
+          ))}
+        </div>
+        <Button asChild variant="outline" size="sm" className="mt-3">
+          <a href="/users">Find more users</a>
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

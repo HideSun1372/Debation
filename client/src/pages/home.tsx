@@ -1,4 +1,3 @@
-import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
@@ -24,32 +23,32 @@ export default function Home() {
               {!isLoading && (
                 isAuthenticated ? (
                   <>
-                    <Link href="/dashboard">
+                    <a href="/dashboard">
                       <Button size="lg" className="gap-2 w-full sm:w-auto" data-testid="button-go-to-dashboard">
                         <LayoutDashboard className="h-5 w-5" />
                         Go to Dashboard
                       </Button>
-                    </Link>
-                    <Link href="/practice">
-                      <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto" data-testid="button-start-practice">
+                    </a>
+                    <a href="/play">
+                      <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto" data-testid="button-start-play">
                         <Swords className="h-5 w-5" />
-                        Start Practicing
+                        Play
                       </Button>
-                    </Link>
+                    </a>
                   </>
                 ) : (
                   <>
-                    <Link href="/auth">
+                    <a href="/auth">
                       <Button size="lg" className="gap-2 w-full sm:w-auto" data-testid="button-get-started">
                         <LogIn className="h-5 w-5" />
                         Get Started
                       </Button>
-                    </Link>
-                    <Link href="/auth">
+                    </a>
+                    <a href="/auth">
                       <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto" data-testid="button-login">
                         Already have an account? Login
                       </Button>
-                    </Link>
+                    </a>
                   </>
                 )
               )}
@@ -83,11 +82,11 @@ export default function Home() {
                 <div className="mx-auto w-12 h-12 rounded-full bg-tier-intermediate/10 flex items-center justify-center mb-2">
                   <Target className="h-6 w-6 text-tier-intermediate" />
                 </div>
-                <CardTitle className="text-lg">2. Practice</CardTitle>
+                <CardTitle className="text-lg">2. Play</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm">
-                  Debate against AI opponents matched to your skill level. Choose from various formats and topics.
+                  Debate against AI opponents or challenge friends. Choose from various formats and topics.
                 </p>
               </CardContent>
             </Card>
@@ -175,17 +174,24 @@ export default function Home() {
             <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
               <CardContent className="py-8">
                 <Users className="h-10 w-10 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Coming Soon: Online Multiplayer</h3>
+                <h3 className="text-xl font-semibold mb-2">Online Multiplayer</h3>
                 <p className="text-muted-foreground max-w-md mx-auto mb-4">
-                  Compete against real players with ELO-based matchmaking and qualify for global debate competitions.
+                  Challenge friends to debate. Send a request and they can accept or decline. Compete against real players!
                 </p>
-                {!isAuthenticated && !isLoading && (
-                  <Link href="/auth">
+                {isAuthenticated && !isLoading ? (
+                  <a href="/play">
+                    <Button className="gap-2">
+                      <Users className="h-4 w-4" />
+                      Play Now
+                    </Button>
+                  </a>
+                ) : !isLoading && (
+                  <a href="/auth">
                     <Button className="gap-2">
                       <LogIn className="h-4 w-4" />
                       Sign Up Now
                     </Button>
-                  </Link>
+                  </a>
                 )}
               </CardContent>
             </Card>

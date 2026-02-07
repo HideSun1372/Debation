@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, timestamp, boolean, index, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, timestamp, boolean, index, jsonb, unique } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { CURRICULUM_UNITS, CurriculumUnit, CurriculumSection, CurriculumLesson, getAllCurriculumLessons } from "./curriculum";
@@ -324,16 +324,21 @@ export type PublicUser = Pick<
 export const debates = pgTable("debates", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").notNull(),
-  opponentId: text("opponent_id").notNull(),
+  opponentId: text("opponent_id").notNull(), // AI id e.g. "b1" or "human" for PvP
   topicId: text("topic_id").notNull(),
   formatId: text("format_id").notNull(),
   userSide: text("user_side").notNull(), // "pro" or "con"
-  status: text("status").notNull().default("in_progress"), // "in_progress", "completed"
+  status: text("status").notNull().default("in_progress"), // "waiting", "in_progress", "completed"
   result: text("result"), // "win", "loss", or null if in progress
   pointsChange: integer("points_change"),
   feedback: text("feedback"),
   startedAt: timestamp("started_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
   completedAt: timestamp("completed_at"),
+  // Multiplayer (PvP) fields
+  opponentType: text("opponent_type").notNull().default("ai"), // "ai" | "human"
+  opponentUserId: varchar("opponent_user_id"), // Human opponent's user ID when opponentType = "human"
+  affUserId: varchar("aff_user_id"), // User ID of affirmative side (PvP only)
+  negUserId: varchar("neg_user_id"), // User ID of negative side (PvP only)
 });
 
 export const insertDebateSchema = createInsertSchema(debates).omit({
@@ -387,6 +392,36 @@ export const insertLessonProgressSchema = createInsertSchema(lessonProgress).omi
 
 export type InsertLessonProgress = z.infer<typeof insertLessonProgressSchema>;
 export type LessonProgress = typeof lessonProgress.$inferSelect;
+
+// Friend requests: from_user_id sent request to to_user_id. status: 'pending' | 'accepted'
+export const friendRequests = pgTable(
+  "friend_requests",
+  {
+    id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+    fromUserId: varchar("from_user_id").notNull(),
+    toUserId: varchar("to_user_id").notNull(),
+    status: text("status").notNull().default("pending"), // 'pending' | 'accepted'
+    createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  },
+  (t) => [unique("friend_requests_from_to").on(t.fromUserId, t.toUserId)]
+);
+
+export type FriendRequest = typeof friendRequests.$inferSelect;
+
+// Debate requests: challenger invites friend to debate. status: 'pending' | 'accepted' | 'declined'
+export const debateRequests = pgTable("debate_requests", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  fromUserId: varchar("from_user_id").notNull(),
+  toUserId: varchar("to_user_id").notNull(),
+  topicId: text("topic_id").notNull(),
+  formatId: text("format_id").notNull(),
+  challengerSide: text("challenger_side").notNull(), // "pro" | "con"
+  status: text("status").notNull().default("pending"), // "pending" | "accepted" | "declined"
+  debateId: varchar("debate_id"), // Set when accepted
+  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
+});
+
+export type DebateRequest = typeof debateRequests.$inferSelect;
 
 // Educational Content
 export const EDUCATIONAL_CONTENT = {

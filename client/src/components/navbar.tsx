@@ -1,25 +1,87 @@
-import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/lib/user-context";
 import { useAuth } from "@/hooks/use-auth";
 import { SkillBadge } from "./skill-badge";
 import { ThemeToggle } from "./theme-toggle";
-import { LayoutDashboard, Home, Menu, X, LogIn, LogOut, Code, Swords, Users } from "lucide-react";
+import { LayoutDashboard, Home, Menu, X, LogIn, LogOut, Code, Swords, Users, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useAdmin } from "@/hooks/use-admin";
+import { useQuery } from "@tanstack/react-query";
+import { apiUrl } from "@/lib/api-config";
+import { useToast } from "@/hooks/use-toast";
+
+type PendingRequest = { id: string; fromUser: { username: string } };
 
 export function Navbar() {
-  const [location] = useLocation();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
   const { user } = useUser();
   const { user: authUser, isLoading: authLoading, isAuthenticated, logout } = useAuth();
-  const { isAdmin, isDeveloper } = useAdmin();
+  const { isAdmin, isDeveloper, isCreator } = useAdmin();
+  const { toast } = useToast();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const hasToastedFriendRef = useRef(false);
+  const hasToastedDebateRef = useRef(false);
+
+  const { data: pendingRequests } = useQuery<PendingRequest[]>({
+    queryKey: ["/api/friends/requests"],
+    queryFn: async () => {
+      const res = await fetch(apiUrl("/api/friends/requests"), { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+    enabled: isAuthenticated,
+    refetchOnWindowFocus: true,
+    refetchInterval: 5000, // Poll every 5 seconds for new requests
+  });
+
+  const { data: debateRequests } = useQuery<{ id: string }[]>({
+    queryKey: ["/api/debates/requests"],
+    queryFn: async () => {
+      const res = await fetch(apiUrl("/api/debates/requests"), { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+    enabled: isAuthenticated,
+    refetchOnWindowFocus: true,
+    refetchInterval: 5000, // Poll every 5 seconds for new requests
+  });
+
+  const pendingFriendCount = pendingRequests?.length ?? 0;
+  const pendingDebateCount = debateRequests?.length ?? 0;
+
+  useEffect(() => {
+    if (pendingFriendCount === 0) hasToastedFriendRef.current = false;
+    else if (isAuthenticated && !hasToastedFriendRef.current) {
+      hasToastedFriendRef.current = true;
+      toast({
+        title: "Friend request" + (pendingFriendCount > 1 ? "s" : ""),
+        description:
+          pendingFriendCount === 1
+            ? "Someone sent you a friend request. Check your profile to accept."
+            : `${pendingFriendCount} people sent you friend requests. Check your profile to accept.`,
+      });
+    }
+  }, [isAuthenticated, pendingFriendCount, toast]);
+
+  useEffect(() => {
+    if (pendingDebateCount === 0) hasToastedDebateRef.current = false;
+    else if (isAuthenticated && !hasToastedDebateRef.current) {
+      hasToastedDebateRef.current = true;
+      toast({
+        title: "Debate request" + (pendingDebateCount > 1 ? "s" : ""),
+        description:
+          pendingDebateCount === 1
+            ? "A friend wants to debate. Check your profile to accept or decline."
+            : `${pendingDebateCount} friends want to debate. Check your profile.`,
+      });
+    }
+  }, [isAuthenticated, pendingDebateCount, toast]);
 
   // Disable navbar in debate route
-  if (location === "/debate") {
+  if (pathname === "/debate") {
     return null;
   }
 
@@ -37,6 +99,7 @@ export function Navbar() {
   const authNavItems = [
     { href: "/", label: "Home", icon: Home },
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/play", label: "Play", icon: Swords },
     { href: "/users", label: "Users", icon: Users },
   ];
 
@@ -45,19 +108,19 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-14 items-center justify-between gap-4 px-4">
-        <Link href="/" className="flex items-center gap-2">
+        <a href="/" className="flex items-center gap-2">
           <Swords className="h-6 w-6 text-primary" />
           <span className="font-bold text-lg hidden sm:inline">Debation</span>
-        </Link>
+        </a>
 
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location === item.href ||
-              (item.href !== "/" && location.startsWith(item.href));
+            const isActive = pathname === item.href ||
+              (item.href !== "/" && pathname.startsWith(item.href));
 
             return (
-              <Link key={item.href} href={item.href}>
+              <a key={item.href} href={item.href}>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -70,27 +133,36 @@ export function Navbar() {
                   <Icon className="h-4 w-4" />
                   {item.label}
                 </Button>
-              </Link>
+              </a>
             );
           })}
         </nav>
 
         <div className="flex items-center gap-2">
-          {(isAdmin || isDeveloper) && <Badge variant="destructive" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5"><Code className="h-3 w-3" /> Dev</Badge>}
+          {isCreator && <Badge variant="default" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5 bg-amber-600 hover:bg-amber-600"><Crown className="h-3 w-3" /> Creator</Badge>}
+          {!isCreator && (isAdmin || isDeveloper) && <Badge variant="destructive" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5"><Code className="h-3 w-3" /> Dev</Badge>}
           {isAuthenticated && <SkillBadge points={user.skillPoints} size="sm" />}
           <ThemeToggle />
 
           {!authLoading && (
             isAuthenticated && authUser ? (
               <div className="flex items-center gap-2">
-                <Link href="/profile">
+                <a href="/profile" className="relative inline-block">
                   <Avatar className="h-8 w-8 cursor-pointer hover:ring-2 hover:ring-primary transition-all">
                     <AvatarImage src={authUser.profileImageUrl || undefined} alt={authUser.firstName || "User"} />
                     <AvatarFallback className="text-xs">
                       {getInitials(authUser.firstName, authUser.lastName)}
                     </AvatarFallback>
                   </Avatar>
-                </Link>
+                  {(pendingFriendCount + pendingDebateCount) > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-1 -right-1 h-5 min-w-5 flex items-center justify-center rounded-full p-0 text-xs"
+                    >
+                      {pendingFriendCount + pendingDebateCount > 99 ? "99+" : pendingFriendCount + pendingDebateCount}
+                    </Badge>
+                  )}
+                </a>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -104,7 +176,7 @@ export function Navbar() {
                 </Button>
               </div>
             ) : (
-              <Link href="/auth">
+              <a href="/auth">
                 <Button
                   variant="default"
                   size="sm"
@@ -114,7 +186,7 @@ export function Navbar() {
                   <LogIn className="h-4 w-4" />
                   Login
                 </Button>
-              </Link>
+              </a>
             )
           )}
 
@@ -135,11 +207,11 @@ export function Navbar() {
           <nav className="container mx-auto px-4 py-2 flex flex-col gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = location === item.href ||
-                (item.href !== "/" && location.startsWith(item.href));
+              const isActive = pathname === item.href ||
+                (item.href !== "/" && pathname.startsWith(item.href));
 
               return (
-                <Link key={item.href} href={item.href}>
+                <a key={item.href} href={item.href}>
                   <Button
                     variant="ghost"
                     className={cn(
@@ -152,7 +224,7 @@ export function Navbar() {
                     <Icon className="h-4 w-4" />
                     {item.label}
                   </Button>
-                </Link>
+                </a>
               );
             })}
 
@@ -168,7 +240,7 @@ export function Navbar() {
                   Logout
                 </Button>
               ) : (
-                <Link href="/auth">
+                <a href="/auth">
                   <Button
                     variant="default"
                     className="w-full justify-start gap-2 mt-2"
@@ -177,7 +249,7 @@ export function Navbar() {
                     <LogIn className="h-4 w-4" />
                     Login
                   </Button>
-                </Link>
+                </a>
               )
             )}
           </nav>

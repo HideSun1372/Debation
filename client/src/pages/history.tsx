@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -70,9 +69,9 @@ export default function History() {
               Once you complete your first debate, you'll be able to see all your past matches here,
               including opponents, topics, results, and points changes.
             </p>
-            <Link href="/practice">
+            <a href="/play">
               <Button data-testid="link-start-first-debate">Start Your First Debate</Button>
-            </Link>
+            </a>
           </CardContent>
         </Card>
       ) : (

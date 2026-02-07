@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SkillBadge } from "@/components/skill-badge";
 import { Search, Users as UsersIcon, Loader2 } from "lucide-react";
@@ -131,19 +131,21 @@ export default function Users() {
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
               {users.map((u) => (
-                <Card key={u.id} className="overflow-hidden">
-                  <CardContent className="p-4 flex items-center gap-4">
-                    <Avatar className="h-12 w-12 shrink-0">
-                      <AvatarImage src={u.profileImageUrl ?? undefined} alt={u.username} />
-                      <AvatarFallback className="text-sm">{getInitials(u)}</AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0 flex-1">
-                      <p className="font-medium truncate">{getDisplayName(u)}</p>
-                      <p className="text-sm text-muted-foreground truncate">@{u.username}</p>
-                    </div>
-                    <SkillBadge points={u.skillPoints} size="sm" />
-                  </CardContent>
-                </Card>
+                <a key={u.id} href={`/users/${encodeURIComponent(u.username)}`}>
+                  <Card className="overflow-hidden hover:bg-accent/50 transition-colors cursor-pointer">
+                    <CardContent className="p-4 flex items-center gap-4">
+                      <Avatar className="h-12 w-12 shrink-0">
+                        <AvatarImage src={u.profileImageUrl ?? undefined} alt={u.username} />
+                        <AvatarFallback className="text-sm">{getInitials(u)}</AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium truncate">{getDisplayName(u)}</p>
+                        <p className="text-sm text-muted-foreground truncate">@{u.username}</p>
+                      </div>
+                      <SkillBadge points={u.skillPoints} size="sm" />
+                    </CardContent>
+                  </Card>
+                </a>
               ))}
             </div>
           )}

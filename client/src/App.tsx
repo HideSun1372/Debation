@@ -15,6 +15,7 @@ import Profile from "@/pages/profile";
 import History from "@/pages/history";
 import Debate from "@/pages/debate";
 import Users from "@/pages/users";
+import UserProfile from "@/pages/user-profile";
 import AuthPage from "@/pages/auth-page";
 import Pricing from "@/pages/pricing";
 import NotFound from "@/pages/not-found";
@@ -42,7 +43,7 @@ function Router() {
       <Route path="/learn">
         {() => <ProtectedRoute component={Learn} />}
       </Route>
-      <Route path="/practice">
+      <Route path="/play">
         {() => <ProtectedRoute component={Practice} />}
       </Route>
       <Route path="/profile">
@@ -53,6 +54,9 @@ function Router() {
       </Route>
       <Route path="/debate">
         {() => <ProtectedRoute component={Debate} />}
+      </Route>
+      <Route path="/users/:username">
+        {() => <ProtectedRoute component={UserProfile} />}
       </Route>
       <Route path="/users">
         {() => <ProtectedRoute component={Users} />}

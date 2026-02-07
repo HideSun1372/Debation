@@ -5,6 +5,7 @@ import { apiUrl } from "@/lib/api-config";
 interface AdminStatus {
   isAdmin: boolean;
   isDeveloper: boolean;
+  isCreator: boolean;
 }
 
 export function useAdmin() {
@@ -22,15 +23,10 @@ export function useAdmin() {
     refetchOnWindowFocus: true,
   });
 
-  /*
-  if (isAuthenticated && !isAuthLoading) {
-    console.log("useAdmin data:", data, "User ID:", user?.id);
-  }
-  */
-
   return {
     isAdmin: data?.isAdmin ?? false,
     isDeveloper: data?.isDeveloper ?? false,
+    isCreator: data?.isCreator ?? false,
     isLoading: isAuthLoading || (isAuthenticated && isLoading),
   };
 }

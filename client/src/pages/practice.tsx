@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useLocation } from "wouter";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,9 +13,11 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUser } from "@/lib/user-context";
 import { AI_OPPONENTS, DEBATE_TOPICS, DEBATE_FORMATS, getSkillTier, type AIOpponent, type DebateFormatConfig, type DebateSpeech } from "@shared/schema";
-import { Swords, User, Target, ArrowRight, Clock, Circle, Hexagon, Star, Crown, Settings, ChevronDown, Users, Timer, MessageSquare, Shuffle, Gavel, Mic, MicOff } from "lucide-react";
+import { Swords, User, Target, ArrowRight, Clock, Circle, Hexagon, Star, Crown, Settings, ChevronDown, Users, Timer, MessageSquare, Shuffle, Gavel, Mic, MicOff, UserPlus, Link2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { apiUrl } from "@/lib/api-config";
+import { useToast } from "@/hooks/use-toast";
 
 const tierIcons = {
   BEGINNER: Circle,
@@ -48,8 +49,13 @@ const tierTextColors = {
 
 export default function Practice() {
   const { user } = useUser();
-  const [, setLocation] = useLocation();
+  const { toast } = useToast();
   const userTier = getSkillTier(user.skillPoints);
+
+  const [practiceMode, setPracticeMode] = useState<"ai" | "friend">("ai");
+  const [friendUsername, setFriendUsername] = useState("");
+  const [friendChallengeResult, setFriendChallengeResult] = useState<{ message: string } | null>(null);
+  const [friendChallengeLoading, setFriendChallengeLoading] = useState(false);
 
   const [step, setStep] = useState<"opponent" | "format" | "topic" | "side">("opponent");
   const [selectedOpponent, setSelectedOpponent] = useState<AIOpponent | null>(null);
@@ -123,7 +129,7 @@ export default function Practice() {
       voiceMode: voiceMode.toString(),
     });
     
-    setLocation(`/debate?${params.toString()}`);
+    window.location.href = `/debate?${params.toString()}`;
   };
   
   const handleFormatSelect = (formatId: string) => {
@@ -145,13 +151,105 @@ export default function Practice() {
 
   const recommendedOpponents = getRecommendedOpponents();
 
+  const handleCreateFriendChallenge = async () => {
+    if (!friendUsername.trim() || !selectedFormat || !selectedTopic) return;
+    setFriendChallengeLoading(true);
+    try {
+      const res = await fetch(apiUrl("/api/debates/request"), {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: friendUsername.trim(),
+          topicId: selectedTopic,
+          formatId: selectedFormat,
+          userSide: selectedSide === "random" ? "pro" : selectedSide,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to send request");
+      setFriendChallengeResult({ message: data.message || `Debate request sent to ${friendUsername}` });
+      toast({ title: "Request sent", description: data.message });
+    } catch (e) {
+      toast({ title: "Error", description: (e as Error).message, variant: "destructive" });
+    } finally {
+      setFriendChallengeLoading(false);
+    }
+  };
+
+  // Poll for accepted debate request so challenger auto-redirects when friend accepts
+  const sentRequestPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  useEffect(() => {
+    if (!friendChallengeResult) return;
+    sentRequestPollRef.current = setInterval(async () => {
+      try {
+        const res = await fetch(apiUrl("/api/debates/requests/sent"), { credentials: "include" });
+        if (!res.ok) return;
+        const sent: Array<{ status: string; debateUrl?: string }> = await res.json();
+        const accepted = sent.find((r) => r.status === "accepted" && r.debateUrl);
+        if (accepted?.debateUrl) {
+          if (sentRequestPollRef.current) {
+            clearInterval(sentRequestPollRef.current);
+            sentRequestPollRef.current = null;
+          }
+          window.location.href = accepted.debateUrl;
+        }
+      } catch {
+        // ignore
+      }
+    }, 3000);
+    return () => {
+      if (sentRequestPollRef.current) {
+        clearInterval(sentRequestPollRef.current);
+      }
+    };
+  }, [friendChallengeResult]);
+
+  if (friendChallengeResult) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-5xl">
+        <Card className="max-w-xl mx-auto">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <UserPlus className="h-5 w-5 text-primary" />
+              Request Sent
+            </CardTitle>
+            <CardDescription>
+              {friendChallengeResult.message}. Your friend will receive a request they can accept or decline. You will be redirected automatically when they accept.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => { setFriendChallengeResult(null); setStep("opponent"); }}>
+              Send Another Request
+            </Button>
+            <a href="/profile" className="ml-2">
+              <Button variant="outline">Go to Profile</Button>
+            </a>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">Practice Debate</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2">Play Debate</h1>
         <p className="text-muted-foreground text-lg">
           Choose your opponent, format, and topic to begin a debate session.
         </p>
+        <Tabs value={practiceMode} onValueChange={(v) => { setPracticeMode(v as "ai" | "friend"); setStep("opponent"); setSelectedOpponent(null); setFriendUsername(""); }} className="mt-4">
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="ai" className="gap-2">
+              <User className="h-4 w-4" />
+              AI Opponent
+            </TabsTrigger>
+            <TabsTrigger value="friend" className="gap-2">
+              <UserPlus className="h-4 w-4" />
+              Friend Challenge
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2">
@@ -162,7 +260,7 @@ export default function Practice() {
               size="sm"
               onClick={() => setStep(s as typeof step)}
               disabled={
-                (s === "format" && !selectedOpponent) ||
+                (s === "format" && (practiceMode === "ai" ? !selectedOpponent : !friendUsername.trim())) ||
                 (s === "topic" && !selectedFormat) ||
                 (s === "side" && !selectedTopic)
               }
@@ -177,7 +275,37 @@ export default function Practice() {
 
       {step === "opponent" && (
         <div className="space-y-6">
-          {recommendedOpponents.length > 0 && (
+          {practiceMode === "friend" ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <UserPlus className="h-5 w-5 text-primary" />
+                  Challenge a Friend
+                </CardTitle>
+                <CardDescription>
+                  Enter your friend's username to invite them to a debate
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-4 max-w-md">
+                  <Input
+                    placeholder="Friend's username"
+                    value={friendUsername}
+                    onChange={(e) => setFriendUsername(e.target.value)}
+                    data-testid="input-friend-username"
+                  />
+                  <Button
+                    onClick={() => setStep("format")}
+                    disabled={!friendUsername.trim()}
+                    data-testid="button-friend-continue"
+                  >
+                    Continue
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ) : recommendedOpponents.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -282,7 +410,7 @@ export default function Practice() {
             </CardContent>
           </Card>
 
-          {selectedOpponent && (
+          {practiceMode === "ai" && selectedOpponent && (
             <div className="flex justify-end">
               <Button onClick={() => setStep("format")} data-testid="button-next-format">
                 Continue to Format
@@ -736,7 +864,7 @@ export default function Practice() {
               <div className="space-y-3">
                 <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">Opponent</span>
-                  <span className="font-medium">{selectedOpponent?.name}</span>
+                  <span className="font-medium">{practiceMode === "friend" ? `@${friendUsername}` : selectedOpponent?.name}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b">
                   <span className="text-muted-foreground">Format</span>
@@ -798,10 +926,22 @@ export default function Practice() {
             <Button variant="outline" onClick={() => setStep("topic")} data-testid="button-back-topic">
               Back
             </Button>
-            <Button size="lg" onClick={handleStartDebate} data-testid="button-start-debate">
-              <Swords className="h-5 w-5 mr-2" />
-              Start Debate
-            </Button>
+            {practiceMode === "friend" ? (
+              <Button
+                size="lg"
+                onClick={handleCreateFriendChallenge}
+                disabled={!friendUsername.trim() || !selectedFormat || !selectedTopic || friendChallengeLoading}
+                data-testid="button-create-challenge"
+              >
+                <Link2 className="h-5 w-5 mr-2" />
+                {friendChallengeLoading ? "Creating..." : "Create Challenge"}
+              </Button>
+            ) : (
+              <Button size="lg" onClick={handleStartDebate} data-testid="button-start-debate">
+                <Swords className="h-5 w-5 mr-2" />
+                Start Debate
+              </Button>
+            )}
           </div>
         </div>
       )}

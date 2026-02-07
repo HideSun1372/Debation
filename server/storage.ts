@@ -1,7 +1,7 @@
 
-import { users, sessions, debates, debateMessages, lessonProgress, type User, type InsertUser, type UpsertUser, type PublicUser, type Debate, type InsertDebate, type DebateMessage, type InsertDebateMessage, type LessonProgress, type InsertLessonProgress } from "@shared/schema";
+import { users, sessions, debates, debateMessages, lessonProgress, friendRequests, debateRequests, type User, type InsertUser, type UpsertUser, type PublicUser, type Debate, type InsertDebate, type DebateMessage, type InsertDebateMessage, type LessonProgress, type InsertLessonProgress, type FriendRequest, type DebateRequest } from "@shared/schema";
 import { randomUUID } from "crypto";
-import { eq, desc, ilike, inArray } from "drizzle-orm";
+import { eq, desc, ilike, inArray, and, or } from "drizzle-orm";
 import { db, pool } from "./db";
 
 interface CreateDebateInput {
@@ -14,6 +14,10 @@ interface CreateDebateInput {
   result?: string | null;
   pointsChange?: number | null;
   feedback?: string | null;
+  opponentType?: "ai" | "human";
+  opponentUserId?: string | null;
+  affUserId?: string | null;
+  negUserId?: string | null;
 }
 
 import createMemoryStore from "memorystore";
@@ -49,6 +53,24 @@ export interface IStorage {
   listUsersDiscover(limit?: number): Promise<PublicUser[]>;
 
   deleteUser(userId: string): Promise<void>;
+
+  // Friends
+  createFriendRequest(fromUserId: string, toUserId: string): Promise<FriendRequest>;
+  getFriendRequest(fromUserId: string, toUserId: string): Promise<FriendRequest | undefined>;
+  acceptFriendRequest(fromUserId: string, toUserId: string): Promise<void>;
+  deleteFriendRequest(fromUserId: string, toUserId: string): Promise<void>;
+  removeFriendship(userId1: string, userId2: string): Promise<void>;
+  getFriendStatus(userId: string, otherUserId: string): Promise<"none" | "pending_sent" | "pending_received" | "friends">;
+  listPendingReceived(userId: string): Promise<Array<FriendRequest & { fromUser: PublicUser }>>;
+  listFriends(userId: string): Promise<PublicUser[]>;
+
+  // Debate requests
+  createDebateRequest(fromUserId: string, toUserId: string, topicId: string, formatId: string, challengerSide: string): Promise<DebateRequest>;
+  getDebateRequest(id: string): Promise<(DebateRequest & { fromUser?: PublicUser }) | undefined>;
+  listDebateRequestsPendingFor(userId: string): Promise<Array<DebateRequest & { fromUser: PublicUser }>>;
+  listDebateRequestsSentBy(userId: string): Promise<Array<DebateRequest & { debateUrl?: string }>>;
+  acceptDebateRequest(id: string): Promise<Debate | null>;
+  declineDebateRequest(id: string): Promise<void>;
 }
 
 // ============================================================================
@@ -132,6 +154,129 @@ export class DatabaseStorage implements IStorage {
     await db.delete(debates).where(eq(debates.userId, userId));
     await db.delete(lessonProgress).where(eq(lessonProgress.userId, userId));
     await db.delete(users).where(eq(users.id, userId));
+    await db.delete(friendRequests).where(or(eq(friendRequests.fromUserId, userId), eq(friendRequests.toUserId, userId)));
+  }
+
+  async createFriendRequest(fromUserId: string, toUserId: string): Promise<FriendRequest> {
+    if (!db) throw new Error("Database not available");
+    const [row] = await db.insert(friendRequests).values({
+      fromUserId,
+      toUserId,
+      status: "pending",
+    }).returning();
+    return row;
+  }
+
+  async getFriendRequest(fromUserId: string, toUserId: string): Promise<FriendRequest | undefined> {
+    if (!db) throw new Error("Database not available");
+    const [row] = await db.select().from(friendRequests).where(
+      and(eq(friendRequests.fromUserId, fromUserId), eq(friendRequests.toUserId, toUserId))
+    );
+    return row;
+  }
+
+  async acceptFriendRequest(fromUserId: string, toUserId: string): Promise<void> {
+    if (!db) throw new Error("Database not available");
+    await db.update(friendRequests)
+      .set({ status: "accepted" })
+      .where(and(eq(friendRequests.fromUserId, fromUserId), eq(friendRequests.toUserId, toUserId)));
+  }
+
+  async deleteFriendRequest(fromUserId: string, toUserId: string): Promise<void> {
+    if (!db) throw new Error("Database not available");
+    await db.delete(friendRequests).where(
+      and(eq(friendRequests.fromUserId, fromUserId), eq(friendRequests.toUserId, toUserId))
+    );
+  }
+
+  async removeFriendship(userId1: string, userId2: string): Promise<void> {
+    if (!db) throw new Error("Database not available");
+    const row =
+      (await this.getFriendRequest(userId1, userId2)) ?? (await this.getFriendRequest(userId2, userId1));
+    if (!row || row.status !== "accepted") return;
+    await this.deleteFriendRequest(row.fromUserId, row.toUserId);
+  }
+
+  async getFriendStatus(userId: string, otherUserId: string): Promise<"none" | "pending_sent" | "pending_received" | "friends"> {
+    if (!db) throw new Error("Database not available");
+    const sent = await this.getFriendRequest(userId, otherUserId);
+    const received = await this.getFriendRequest(otherUserId, userId);
+    if (sent) {
+      if (sent.status === "accepted") return "friends";
+      return "pending_sent";
+    }
+    if (received) {
+      if (received.status === "accepted") return "friends";
+      return "pending_received";
+    }
+    return "none";
+  }
+
+  async listPendingReceived(userId: string): Promise<Array<FriendRequest & { fromUser: PublicUser }>> {
+    if (!db) throw new Error("Database not available");
+    const rows = await db
+      .select({
+        id: friendRequests.id,
+        fromUserId: friendRequests.fromUserId,
+        toUserId: friendRequests.toUserId,
+        status: friendRequests.status,
+        createdAt: friendRequests.createdAt,
+        uid: users.id,
+        username: users.username,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        profileImageUrl: users.profileImageUrl,
+        skillPoints: users.skillPoints,
+        totalDebates: users.totalDebates,
+        wins: users.wins,
+        losses: users.losses,
+      })
+      .from(friendRequests)
+      .innerJoin(users, eq(friendRequests.fromUserId, users.id))
+      .where(and(eq(friendRequests.toUserId, userId), eq(friendRequests.status, "pending")));
+    return rows.map((r) => ({
+      id: r.id,
+      fromUserId: r.fromUserId,
+      toUserId: r.toUserId,
+      status: r.status,
+      createdAt: r.createdAt,
+      fromUser: {
+        id: r.uid,
+        username: r.username,
+        firstName: r.firstName,
+        lastName: r.lastName,
+        profileImageUrl: r.profileImageUrl,
+        skillPoints: r.skillPoints,
+        totalDebates: r.totalDebates,
+        wins: r.wins,
+        losses: r.losses,
+      },
+    }));
+  }
+
+  async listFriends(userId: string): Promise<PublicUser[]> {
+    if (!db) throw new Error("Database not available");
+    const rows = await db
+      .select({ fromUserId: friendRequests.fromUserId, toUserId: friendRequests.toUserId })
+      .from(friendRequests)
+      .where(and(eq(friendRequests.status, "accepted"), or(eq(friendRequests.fromUserId, userId), eq(friendRequests.toUserId, userId))));
+    const ids = rows.map((r) => (r.fromUserId === userId ? r.toUserId : r.fromUserId));
+    if (ids.length === 0) return [];
+    const userRows = await db
+      .select({
+        id: users.id,
+        username: users.username,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        profileImageUrl: users.profileImageUrl,
+        skillPoints: users.skillPoints,
+        totalDebates: users.totalDebates,
+        wins: users.wins,
+        losses: users.losses,
+      })
+      .from(users)
+      .where(inArray(users.id, ids));
+    return userRows;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
@@ -196,7 +341,7 @@ export class DatabaseStorage implements IStorage {
   async getDebatesByUser(userId: string): Promise<Debate[]> {
     if (!db) throw new Error("Database not available");
     return db.select().from(debates)
-      .where(eq(debates.userId, userId))
+      .where(or(eq(debates.userId, userId), eq(debates.opponentUserId, userId)))
       .orderBy(desc(debates.startedAt));
   }
 
@@ -217,6 +362,10 @@ export class DatabaseStorage implements IStorage {
       result: input.result || null,
       pointsChange: input.pointsChange || null,
       feedback: input.feedback || null,
+      opponentType: input.opponentType || "ai",
+      opponentUserId: input.opponentUserId ?? null,
+      affUserId: input.affUserId ?? null,
+      negUserId: input.negUserId ?? null,
     }).returning();
     return debate;
   }
@@ -277,6 +426,109 @@ export class DatabaseStorage implements IStorage {
       return created;
     }
   }
+
+  async createDebateRequest(fromUserId: string, toUserId: string, topicId: string, formatId: string, challengerSide: string): Promise<DebateRequest> {
+    if (!db) throw new Error("Database not available");
+    const [req] = await db.insert(debateRequests).values({
+      fromUserId,
+      toUserId,
+      topicId,
+      formatId,
+      challengerSide,
+      status: "pending",
+    }).returning();
+    return req;
+  }
+
+  async getDebateRequest(id: string): Promise<(DebateRequest & { fromUser?: PublicUser }) | undefined> {
+    if (!db) throw new Error("Database not available");
+    const [r] = await db.select().from(debateRequests).where(eq(debateRequests.id, id));
+    if (!r) return undefined;
+    const [from] = await db.select({
+      id: users.id,
+      username: users.username,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      profileImageUrl: users.profileImageUrl,
+      skillPoints: users.skillPoints,
+      totalDebates: users.totalDebates,
+      wins: users.wins,
+      losses: users.losses,
+    }).from(users).where(eq(users.id, r.fromUserId));
+    return { ...r, fromUser: from };
+  }
+
+  async listDebateRequestsPendingFor(userId: string): Promise<Array<DebateRequest & { fromUser: PublicUser }>> {
+    if (!db) throw new Error("Database not available");
+    const rows = await db.select().from(debateRequests)
+      .where(and(eq(debateRequests.toUserId, userId), eq(debateRequests.status, "pending")))
+      .orderBy(desc(debateRequests.createdAt));
+    const result: Array<DebateRequest & { fromUser: PublicUser }> = [];
+    for (const r of rows) {
+      const [from] = await db.select({
+        id: users.id,
+        username: users.username,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        profileImageUrl: users.profileImageUrl,
+        skillPoints: users.skillPoints,
+        totalDebates: users.totalDebates,
+        wins: users.wins,
+        losses: users.losses,
+      }).from(users).where(eq(users.id, r.fromUserId));
+      if (from) result.push({ ...r, fromUser: from });
+    }
+    return result;
+  }
+
+  async listDebateRequestsSentBy(userId: string): Promise<Array<DebateRequest & { debateUrl?: string }>> {
+    if (!db) throw new Error("Database not available");
+    const rows = await db.select().from(debateRequests)
+      .where(eq(debateRequests.fromUserId, userId))
+      .orderBy(desc(debateRequests.createdAt));
+    return rows.map((r) => {
+      const result = { ...r };
+      if (r.status === "accepted" && r.debateId) {
+        const side = r.challengerSide as "pro" | "con";
+        (result as any).debateUrl = `/debate?room=${r.debateId}&format=${r.formatId}&topic=${r.topicId}&side=${side}`;
+      }
+      return result;
+    });
+  }
+
+  async acceptDebateRequest(id: string): Promise<Debate | null> {
+    if (!db) throw new Error("Database not available");
+    const [r] = await db.select().from(debateRequests).where(eq(debateRequests.id, id));
+    if (!r || r.status !== "pending") return null;
+
+    const challengerId = r.fromUserId;
+    const opponentId = r.toUserId;
+    const side = r.challengerSide as "pro" | "con";
+    const affUserId = side === "pro" ? challengerId : opponentId;
+    const negUserId = side === "pro" ? opponentId : challengerId;
+    const opponentSide = side === "pro" ? "con" : "pro";
+
+    const [newDebate] = await db.insert(debates).values({
+      userId: challengerId,
+      opponentId: "human",
+      opponentType: "human",
+      opponentUserId: opponentId,
+      topicId: r.topicId,
+      formatId: r.formatId,
+      userSide: side,
+      status: "waiting",
+      affUserId,
+      negUserId,
+    }).returning();
+
+    await db.update(debateRequests).set({ status: "accepted", debateId: newDebate.id }).where(eq(debateRequests.id, id));
+    return newDebate;
+  }
+
+  async declineDebateRequest(id: string): Promise<void> {
+    if (!db) throw new Error("Database not available");
+    await db.update(debateRequests).set({ status: "declined" }).where(eq(debateRequests.id, id));
+  }
 }
 
 // ============================================================================
@@ -287,6 +539,8 @@ export class MemStorage implements IStorage {
   private debates: Map<string, Debate>;
   private debateMessages: Map<string, DebateMessage>;
   private lessonProgressMap: Map<string, LessonProgress>;
+  private friendRequestsMap: Map<string, FriendRequest>;
+  private debateRequestsMap: Map<string, DebateRequest>;
 
   sessionStore: session.Store;
   private currentId: number;
@@ -296,6 +550,8 @@ export class MemStorage implements IStorage {
     this.debates = new Map();
     this.debateMessages = new Map();
     this.lessonProgressMap = new Map();
+    this.friendRequestsMap = new Map();
+    this.debateRequestsMap = new Map();
 
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000,
@@ -327,6 +583,9 @@ export class MemStorage implements IStorage {
       totalDebates: insertUser.totalDebates ?? 0,
       wins: insertUser.wins ?? 0,
       losses: insertUser.losses ?? 0,
+      isPro: insertUser.isPro ?? false,
+      proType: insertUser.proType ?? "free",
+      isDeveloper: insertUser.isDeveloper ?? false,
       createdAt: now,
       updatedAt: now,
     };
@@ -377,7 +636,7 @@ export class MemStorage implements IStorage {
 
   async getDebatesByUser(userId: string): Promise<Debate[]> {
     return Array.from(this.debates.values())
-      .filter((d) => d.userId === userId)
+      .filter((d) => d.userId === userId || d.opponentUserId === userId)
       .sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
   }
 
@@ -401,6 +660,10 @@ export class MemStorage implements IStorage {
       feedback: input.feedback || null,
       startedAt: new Date(),
       completedAt: null,
+      opponentType: input.opponentType || "ai",
+      opponentUserId: input.opponentUserId ?? null,
+      affUserId: input.affUserId ?? null,
+      negUserId: input.negUserId ?? null,
     };
     this.debates.set(id, debate);
     return debate;
@@ -506,7 +769,177 @@ export class MemStorage implements IStorage {
       .filter(([, p]) => p.userId === userId)
       .map(([id]) => id);
     progressIdsToDelete.forEach((id) => this.lessonProgressMap.delete(id));
+    Array.from(this.friendRequestsMap.entries())
+      .filter(([, r]) => r.fromUserId === userId || r.toUserId === userId)
+      .forEach(([id]) => this.friendRequestsMap.delete(id));
     this.users.delete(userId);
+  }
+
+  async createFriendRequest(fromUserId: string, toUserId: string): Promise<FriendRequest> {
+    const existing = await this.getFriendRequest(fromUserId, toUserId);
+    if (existing) throw new Error("Friend request already exists");
+    const id = randomUUID();
+    const req: FriendRequest = {
+      id,
+      fromUserId,
+      toUserId,
+      status: "pending",
+      createdAt: new Date(),
+    };
+    this.friendRequestsMap.set(id, req);
+    return req;
+  }
+
+  async getFriendRequest(fromUserId: string, toUserId: string): Promise<FriendRequest | undefined> {
+    return Array.from(this.friendRequestsMap.values()).find(
+      (r) => r.fromUserId === fromUserId && r.toUserId === toUserId
+    );
+  }
+
+  async acceptFriendRequest(fromUserId: string, toUserId: string): Promise<void> {
+    const req = await this.getFriendRequest(fromUserId, toUserId);
+    if (!req) throw new Error("Friend request not found");
+    req.status = "accepted";
+    this.friendRequestsMap.set(req.id, req);
+  }
+
+  async deleteFriendRequest(fromUserId: string, toUserId: string): Promise<void> {
+    const req = await this.getFriendRequest(fromUserId, toUserId);
+    if (req) this.friendRequestsMap.delete(req.id);
+  }
+
+  async removeFriendship(userId1: string, userId2: string): Promise<void> {
+    const row =
+      (await this.getFriendRequest(userId1, userId2)) ?? (await this.getFriendRequest(userId2, userId1));
+    if (row && row.status === "accepted") this.friendRequestsMap.delete(row.id);
+  }
+
+  async getFriendStatus(userId: string, otherUserId: string): Promise<"none" | "pending_sent" | "pending_received" | "friends"> {
+    const sent = await this.getFriendRequest(userId, otherUserId);
+    const received = await this.getFriendRequest(otherUserId, userId);
+    if (sent) {
+      if (sent.status === "accepted") return "friends";
+      return "pending_sent";
+    }
+    if (received) {
+      if (received.status === "accepted") return "friends";
+      return "pending_received";
+    }
+    return "none";
+  }
+
+  async listPendingReceived(userId: string): Promise<Array<FriendRequest & { fromUser: PublicUser }>> {
+    const list = Array.from(this.friendRequestsMap.values())
+      .filter((r) => r.toUserId === userId && r.status === "pending");
+    const result: Array<FriendRequest & { fromUser: PublicUser }> = [];
+    for (const r of list) {
+      const u = await this.getUser(r.fromUserId);
+      if (!u) continue;
+      result.push({ ...r, fromUser: this.toPublicUser(u) });
+    }
+    return result;
+  }
+
+  async listFriends(userId: string): Promise<PublicUser[]> {
+    const rows = Array.from(this.friendRequestsMap.values())
+      .filter((r) => r.status === "accepted" && (r.fromUserId === userId || r.toUserId === userId));
+    const ids = rows.map((r) => (r.fromUserId === userId ? r.toUserId : r.fromUserId));
+    const result: PublicUser[] = [];
+    for (const id of ids) {
+      const u = await this.getUser(id);
+      if (u) result.push(this.toPublicUser(u));
+    }
+    return result;
+  }
+
+  async createDebateRequest(fromUserId: string, toUserId: string, topicId: string, formatId: string, challengerSide: string): Promise<DebateRequest> {
+    const id = randomUUID();
+    const req: DebateRequest = {
+      id,
+      fromUserId,
+      toUserId,
+      topicId,
+      formatId,
+      challengerSide,
+      status: "pending",
+      debateId: null,
+      createdAt: new Date(),
+    };
+    this.debateRequestsMap.set(id, req);
+    return req;
+  }
+
+  async getDebateRequest(id: string): Promise<(DebateRequest & { fromUser?: PublicUser }) | undefined> {
+    const r = this.debateRequestsMap.get(id);
+    if (!r) return undefined;
+    const u = await this.getUser(r.fromUserId);
+    return { ...r, fromUser: u ? this.toPublicUser(u) : undefined };
+  }
+
+  async listDebateRequestsPendingFor(userId: string): Promise<Array<DebateRequest & { fromUser: PublicUser }>> {
+    const list = Array.from(this.debateRequestsMap.values())
+      .filter((r) => r.toUserId === userId && r.status === "pending");
+    const result: Array<DebateRequest & { fromUser: PublicUser }> = [];
+    for (const r of list) {
+      const u = await this.getUser(r.fromUserId);
+      if (u) result.push({ ...r, fromUser: this.toPublicUser(u) });
+    }
+    return result;
+  }
+
+  async listDebateRequestsSentBy(userId: string): Promise<Array<DebateRequest & { debateUrl?: string }>> {
+    const list = Array.from(this.debateRequestsMap.values())
+      .filter((r) => r.fromUserId === userId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return list.map((r) => {
+      const result = { ...r };
+      if (r.status === "accepted" && r.debateId) {
+        const side = r.challengerSide as "pro" | "con";
+        (result as any).debateUrl = `/debate?room=${r.debateId}&format=${r.formatId}&topic=${r.topicId}&side=${side}`;
+      }
+      return result;
+    });
+  }
+
+  async acceptDebateRequest(id: string): Promise<Debate | null> {
+    const r = this.debateRequestsMap.get(id);
+    if (!r || r.status !== "pending") return null;
+    const challengerId = r.fromUserId;
+    const opponentId = r.toUserId;
+    const side = r.challengerSide as "pro" | "con";
+    const affUserId = side === "pro" ? challengerId : opponentId;
+    const negUserId = side === "pro" ? opponentId : challengerId;
+    const newDebate: Debate = {
+      id: randomUUID(),
+      userId: challengerId,
+      opponentId: "human",
+      opponentType: "human",
+      opponentUserId: opponentId,
+      topicId: r.topicId,
+      formatId: r.formatId,
+      userSide: side,
+      status: "waiting",
+      result: null,
+      pointsChange: null,
+      feedback: null,
+      startedAt: new Date(),
+      completedAt: null,
+      affUserId,
+      negUserId,
+    };
+    this.debates.set(newDebate.id, newDebate);
+    r.status = "accepted";
+    r.debateId = newDebate.id;
+    this.debateRequestsMap.set(id, r);
+    return newDebate;
+  }
+
+  async declineDebateRequest(id: string): Promise<void> {
+    const r = this.debateRequestsMap.get(id);
+    if (r) {
+      r.status = "declined";
+      this.debateRequestsMap.set(id, r);
+    }
   }
 }
 

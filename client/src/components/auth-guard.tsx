@@ -1,5 +1,4 @@
 import { useAuth } from "@/hooks/use-auth";
-import { useLocation } from "wouter";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -9,17 +8,16 @@ interface AuthGuardProps {
 
 /**
  * Protects routes that require authentication.
- * Redirects to /auth if user is not logged in.
+ * Redirects to /auth if user is not logged in (full page reload).
  */
 export function AuthGuard({ children }: AuthGuardProps) {
-    const [, setLocation] = useLocation();
     const { isLoading, isAuthenticated } = useAuth();
 
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
-            setLocation("/auth");
+            window.location.href = "/auth";
         }
-    }, [isLoading, isAuthenticated, setLocation]);
+    }, [isLoading, isAuthenticated]);
 
     if (isLoading) {
         return (
