@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // 1. Dynamic URL: This lets you hop between localhost, 127.0.0.1, and your IP
-export const BASE_URL = window.location.hostname === "debation.vercel.app"
+export const BASE_URL = window.location.hostname.includes("vercel.app")
   ? "https://debation.onrender.com/api" 
   : `http://${window.location.hostname}:5000/api`;
 
