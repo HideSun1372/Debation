@@ -20,7 +20,6 @@ const allowedOrigins = [
   'http://127.0.0.1:5173',
   'https://hidesun1372.instatunnel.my',
   'https://debation.onrender.com',
-  'https://debation.vercel.app'
 ];
 
 app.use(cors({
