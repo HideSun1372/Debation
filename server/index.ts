@@ -12,19 +12,6 @@ const httpServer = createServer(app);
 
 app.set("trust proxy", 1);
 
-// ADD SESSION HERE ⬇️
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'temporary-secret-change-later',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    maxAge: 24 * 60 * 60 * 1000
-  }
-}));
-// SESSION CODE ENDS HERE ⬆️
 
 const allowedOrigins = [
   'https://debation.vercel.app', 
