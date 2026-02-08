@@ -1,13 +1,12 @@
 /**
  * Base URL for API requests.
- * Set VITE_API_BASE_URL in .env to override (e.g. http://localhost:5000, https://hidesun1372.onrender.com).
- * Production fallback: https://debation.onrender.com
- * Development fallback: empty string (same-origin)
+ * Set VITE_API_BASE_URL in .env to override (e.g. http://localhost:5000, https://debation.onrender.com).
+ * Default: empty string (same-origin, uses relative paths like /api/auth/user)
  */
 function getApiBaseUrl(): string {
   const env = import.meta.env.VITE_API_BASE_URL;
   if (env && typeof env === "string") return env.replace(/\/$/, "");
-  return import.meta.env.PROD ? "https://debation.onrender.com" : "";
+  return "";
 }
 
 export const API_BASE_URL = getApiBaseUrl();
@@ -35,7 +34,6 @@ export function getWsUrl(): string {
   if (envWs && typeof envWs === "string") return envWs.replace(/\/$/, "");
   const apiBase = getApiBaseUrl();
   if (apiBase) return httpToWsUrl(apiBase);
-  if (import.meta.env.PROD) return "wss://debation.onrender.com";
   const { protocol, hostname, port } = window.location;
   const wsProtocol = protocol === "https:" ? "wss:" : "ws:";
   const wsPort = port || (protocol === "https:" ? "443" : "80");

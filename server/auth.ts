@@ -32,7 +32,7 @@ export function isAuthenticated(req: any, res: any, next: any) {
 
 export function setupAuth(app: Express) {
     // server/auth.ts - Inside your setupAuth function
-const isProd = app.get("env") === "production";
+const isProd = process.env.NODE_ENV === "production";
 
 const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET || "dev_secret_key",
