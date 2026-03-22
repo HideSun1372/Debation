@@ -19,6 +19,7 @@ import UserProfile from "@/pages/user-profile";
 import AuthPage from "@/pages/auth-page";
 import Pricing from "@/pages/pricing";
 import NotFound from "@/pages/not-found";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Wrapper for protected routes
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -81,6 +82,7 @@ function App() {
               <Router />
             </div>
             <Toaster />
+            <SpeedInsights />
           </TooltipProvider>
         </UserProvider>
       </ThemeProvider>
