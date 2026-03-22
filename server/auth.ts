@@ -84,6 +84,16 @@ if (isProd) {
         }
     });
 
+    function loginAndSave(req: any, res: any, next: any, user: User, statusCode: number) {
+        req.login(user, (err: Error) => {
+            if (err) return next(err);
+            req.session.save((err: Error) => {
+                if (err) return next(err);
+                res.status(statusCode).json(user);
+            });
+        });
+    }
+
     // Auth Routes
     app.post("/api/register", async (req, res, next) => {
         try {
@@ -104,10 +114,7 @@ if (isProd) {
                 losses: 0,
             });
 
-            req.login(user, (err) => {
-                if (err) return next(err);
-                res.status(201).json(user);
-            });
+            loginAndSave(req, res, next, user, 201);
         } catch (err) {
             next(err);
         }
@@ -121,10 +128,7 @@ if (isProd) {
             if (!user) {
                 return res.status(401).send("Invalid credentials");
             }
-            req.login(user, (err) => {
-                if (err) return next(err);
-                res.status(200).json(user);
-            });
+            loginAndSave(req, res, next, user, 200);
         })(req, res, next);
     });
 
@@ -148,7 +152,7 @@ if (isProd) {
         res.json(req.user);
     });
 
-    app.patch("/api/user", async (req, res) => {
+    app.patch("/api/user", async (req, res, next) => {
         if (!req.isAuthenticated()) return res.sendStatus(401);
         try {
             const userId = (req.user as User).id;
@@ -163,15 +167,7 @@ if (isProd) {
 
             const updatedUser = await storage.updateUser(userId, updates);
 
-            // Login with updated user to refresh session
-            req.login(updatedUser, (err) => {
-                if (err) {
-                    // Even if login update fails, we return the user, 
-                    // though session might be stale until next reload.
-                    console.error("Session update failed:", err);
-                }
-                res.json(updatedUser);
-            });
+            loginAndSave(req, res, next, updatedUser, 200);
         } catch (error: any) {
             if (error.message === "Username already exists" || error.message === "Email already exists") {
                 res.status(400).send(error.message);
