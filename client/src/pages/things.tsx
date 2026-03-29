@@ -58,8 +58,20 @@ export default function Things() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl">Changelogs: March 28th, 2026 (v2)</CardTitle>
+                <CardTitle className="text-xl">Changelogs: March 28th, 2026 (v3)</CardTitle>
                 <Badge variant="secondary" className="text-xs">Latest</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground leading-relaxed">
+                Profile pages have been upgraded! You can now upload a profile picture directly (no more image URLs), add a bio, and show off role badges — Creator, Developer, and Dominion — as icon badges with tooltips. The top bar also displays your highest role badge.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl">Changelogs: March 28th, 2026 (v2)</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
