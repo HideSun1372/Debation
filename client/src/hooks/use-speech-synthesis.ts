@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { apiUrl } from "@/lib/api-config";
 
 interface UseSpeechSynthesisOptions {
     onStart?: () => void;
@@ -73,7 +74,7 @@ export function useSpeechSynthesis(
 
         try {
             console.log("[TTS] Starting TTS for text:", text.substring(0, 50) + "...");
-            const res = await fetch("/api/tts/stream", {
+            const res = await fetch(apiUrl("/api/tts/stream"), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

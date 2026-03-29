@@ -5,6 +5,7 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import session from "express-session";
+import { pool, initializeSessionTable } from "./db";
 
 const app = express();
 
@@ -103,6 +104,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Ensure session table exists before registering routes (important for cold starts on Render)
+  await initializeSessionTable();
+
   await registerRoutes(httpServer, app);
 
   if (process.env.NODE_ENV === "production") {
