@@ -80,14 +80,23 @@ export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
+    console.log("[Storage] DatabaseStorage constructor called");
     if (!pool) {
+      console.error("[Storage] Database pool not available!");
       throw new Error("Database pool not available");
     }
-    this.sessionStore = new PgSession({
-      pool: pool,
-      tableName: "sessions",
-      createTableIfMissing: false,
-    });
+    console.log("[Storage] Creating PgSession with pool...");
+    try {
+      this.sessionStore = new PgSession({
+        pool: pool,
+        tableName: "sessions",
+        createTableIfMissing: false,
+      });
+      console.log("[Storage] PgSession created successfully");
+    } catch (err: any) {
+      console.error("[Storage] Failed to create PgSession:", err.message);
+      throw err;
+    }
   }
 
   async getUser(id: string): Promise<User | undefined> {

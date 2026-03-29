@@ -58,9 +58,16 @@ if (isProd) {
     app.set("trust proxy", 1); // Essential for Render
 }
 
+    console.log("[Auth] Applying session middleware...");
     app.use(session(sessionSettings));
+    console.log("[Auth] Session middleware applied");
+
+    console.log("[Auth] Applying passport middleware...");
     app.use(passport.initialize());
+    console.log("[Auth] Passport initialized");
+
     app.use(passport.session());
+    console.log("[Auth] Passport session middleware applied");
 
     passport.use(
         new LocalStrategy(async (username, password, done) => {
