@@ -300,6 +300,8 @@ export const users = pgTable("users", {
   proType: varchar("pro_type").notNull().default("free"), // Will be "Dominion"
   // -----------------------
   isDeveloper: boolean("is_developer").notNull().default(false),
+  cachedInsights: text("cached_insights"),
+  insightsDebateCount: integer("insights_debate_count").default(0),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -1749,7 +1749,36 @@ Respond with a JSON object:
         });
       }
 
-      // Gather recent feedback from completed debates (last 10)
+      // Stats (always computed fresh — cheap)
+      const wins = completedDebates.filter(d => d.result === "win").length;
+      const losses = completedDebates.filter(d => d.result === "loss").length;
+      const formatCounts: Record<string, { total: number; wins: number }> = {};
+      for (const d of completedDebates) {
+        if (!formatCounts[d.formatId]) formatCounts[d.formatId] = { total: 0, wins: 0 };
+        formatCounts[d.formatId].total++;
+        if (d.result === "win") formatCounts[d.formatId].wins++;
+      }
+
+      const stats = {
+        totalDebates: completedDebates.length,
+        wins,
+        losses,
+        winRate: completedDebates.length > 0 ? Math.round((wins / completedDebates.length) * 100) : 0,
+        skillPoints: user.skillPoints,
+        formatCounts,
+      };
+
+      // Return cached insights if debate count hasn't changed
+      if (user.cachedInsights && user.insightsDebateCount === completedDebates.length) {
+        try {
+          const insights = JSON.parse(user.cachedInsights);
+          return res.json({ hasData: true, insights, stats });
+        } catch {
+          // Corrupted cache — fall through to regenerate
+        }
+      }
+
+      // Generate fresh insights with AI
       const recentDebates = completedDebates.slice(0, 10);
       const debateSummaries = recentDebates.map(d => ({
         format: d.formatId,
@@ -1761,26 +1790,16 @@ Respond with a JSON object:
         date: d.completedAt || d.startedAt,
       }));
 
-      // Stats
-      const wins = completedDebates.filter(d => d.result === "win").length;
-      const losses = completedDebates.filter(d => d.result === "loss").length;
-      const formatCounts: Record<string, { total: number; wins: number }> = {};
-      for (const d of completedDebates) {
-        if (!formatCounts[d.formatId]) formatCounts[d.formatId] = { total: 0, wins: 0 };
-        formatCounts[d.formatId].total++;
-        if (d.result === "win") formatCounts[d.formatId].wins++;
-      }
-
       const prompt = `You are a debate coach AI. Analyze this student's debate history and provide personalized improvement advice.
 
 STUDENT STATS:
 - Skill Points: ${user.skillPoints}
 - Total Debates: ${completedDebates.length}
 - Wins: ${wins}, Losses: ${losses}
-- Win Rate: ${completedDebates.length > 0 ? Math.round((wins / completedDebates.length) * 100) : 0}%
+- Win Rate: ${stats.winRate}%
 
 FORMAT BREAKDOWN:
-${Object.entries(formatCounts).map(([fmt, stats]) => `- ${fmt}: ${stats.total} debates, ${stats.wins} wins (${Math.round((stats.wins / stats.total) * 100)}% win rate)`).join("\n")}
+${Object.entries(formatCounts).map(([fmt, s]) => `- ${fmt}: ${s.total} debates, ${s.wins} wins (${Math.round((s.wins / s.total) * 100)}% win rate)`).join("\n")}
 
 RECENT DEBATE FEEDBACK:
 ${debateSummaries.map((d, i) => `${i + 1}. Format: ${d.format}, Side: ${d.side}, Result: ${d.result}, Points: ${(d.pointsChange ?? 0) > 0 ? "+" : ""}${d.pointsChange ?? 0}\n   Feedback: ${d.feedback || "No feedback available"}`).join("\n\n")}
@@ -1803,10 +1822,8 @@ Keep each string concise (under 20 words for array items, under 40 words for sum
       const result = await insightsModel.generateContent(prompt);
       const text = result.response.text().trim();
 
-      // Parse the JSON response
       let insights;
       try {
-        // Strip markdown code blocks if present
         const cleaned = text.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "");
         insights = JSON.parse(cleaned);
       } catch {
@@ -1814,18 +1831,13 @@ Keep each string concise (under 20 words for array items, under 40 words for sum
         return res.status(500).json({ error: "Failed to parse insights" });
       }
 
-      res.json({
-        hasData: true,
-        insights,
-        stats: {
-          totalDebates: completedDebates.length,
-          wins,
-          losses,
-          winRate: completedDebates.length > 0 ? Math.round((wins / completedDebates.length) * 100) : 0,
-          skillPoints: user.skillPoints,
-          formatCounts,
-        },
+      // Cache insights in the database
+      await storage.updateUser(userId, {
+        cachedInsights: JSON.stringify(insights),
+        insightsDebateCount: completedDebates.length,
       });
+
+      res.json({ hasData: true, insights, stats });
     } catch (err: any) {
       console.error("[Insights] Error:", err.message);
       res.status(500).json({ error: "Failed to generate insights" });

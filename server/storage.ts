@@ -586,6 +586,8 @@ export class MemStorage implements IStorage {
       isPro: insertUser.isPro ?? false,
       proType: insertUser.proType ?? "free",
       isDeveloper: insertUser.isDeveloper ?? false,
+      cachedInsights: insertUser.cachedInsights ?? null,
+      insightsDebateCount: insertUser.insightsDebateCount ?? 0,
       createdAt: now,
       updatedAt: now,
     };
