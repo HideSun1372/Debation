@@ -221,8 +221,8 @@ export default function Profile() {
                       {user.isPro && (
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <span className="relative inline-flex items-center justify-center h-7 w-7 cursor-default self-center -ml-6">
-                              <img src="/dominion-logo.png" alt="Dominion" className="absolute h-[85px] w-[85px] object-contain" />
+                            <span className="cursor-default inline-flex items-center justify-center h-7 w-7 self-center ml-1">
+                              <img src="/dominion-logo.png" alt="Dominion" className="h-[85px] w-[85px] object-contain cursor-default absolute pointer-events-none" />
                             </span>
                           </TooltipTrigger>
                           <TooltipContent>Dominion Member</TooltipContent>

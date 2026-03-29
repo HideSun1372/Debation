@@ -288,6 +288,30 @@ export default function Debate() {
     return () => clearInterval(interval);
   }, [isTimerRunning, isLoading, isUserTurn, isDebateComplete, isInPrepTime, isCxMode, waitingForOpponent]);
 
+  // Browser-native TTS for opponent voice
+  const ttsCompletionCallbackRef = useRef<(() => void) | null>(null);
+  const speechSynthesis = useSpeechSynthesis({
+    rate: 1.1, // Slightly faster for debate pacing
+    onStart: () => {
+      // Audio is actually playing now — safe to show opponent_speaking state
+      setIsAudioPlaying(true);
+      setVoiceState("opponent_speaking");
+    },
+    onEnd: () => {
+      setIsAudioPlaying(false);
+      setVoiceState("idle");
+      ttsCompletionCallbackRef.current?.();
+      ttsCompletionCallbackRef.current = null;
+    },
+    onError: (error) => {
+      console.error("TTS error:", error);
+      setIsAudioPlaying(false);
+      setVoiceState("idle");
+      ttsCompletionCallbackRef.current?.();
+      ttsCompletionCallbackRef.current = null;
+    },
+  });
+
   // Auto-end CX when timer runs out
   useEffect(() => {
     if (isCxMode && speechTimeRemaining <= 0 && !cxTimedOut && !isLoading) {
@@ -411,30 +435,6 @@ export default function Debate() {
     const visibleWords = words.slice(fadeStartIndex, displayedWordCount);
     return visibleWords.join(" ");
   };
-
-  // Browser-native TTS for opponent voice
-  const ttsCompletionCallbackRef = useRef<(() => void) | null>(null);
-  const speechSynthesis = useSpeechSynthesis({
-    rate: 1.1, // Slightly faster for debate pacing
-    onStart: () => {
-      // Audio is actually playing now — safe to show opponent_speaking state
-      setIsAudioPlaying(true);
-      setVoiceState("opponent_speaking");
-    },
-    onEnd: () => {
-      setIsAudioPlaying(false);
-      setVoiceState("idle");
-      ttsCompletionCallbackRef.current?.();
-      ttsCompletionCallbackRef.current = null;
-    },
-    onError: (error) => {
-      console.error("TTS error:", error);
-      setIsAudioPlaying(false);
-      setVoiceState("idle");
-      ttsCompletionCallbackRef.current?.();
-      ttsCompletionCallbackRef.current = null;
-    },
-  });
 
   // Play TTS audio for AI opponent's message
   const playTTS = useCallback((text: string, onComplete?: () => void): void => {
