@@ -31,8 +31,10 @@ export function isAuthenticated(req: any, res: any, next: any) {
 }
 
 export function setupAuth(app: Express) {
+    console.log("[Auth] Setting up authentication...");
     // server/auth.ts - Inside your setupAuth function
 const isProd = process.env.NODE_ENV === "production";
+console.log("[Auth] isProd:", isProd);
 
 if (isProd && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET === "dev_secret_key")) {
     throw new Error("SESSION_SECRET must be a strong secret in production");
@@ -145,9 +147,12 @@ if (isProd) {
 
     // Auth user endpoint - returns current authenticated user
     app.get("/api/auth/user", (req, res) => {
+        console.log("[Auth] GET /api/auth/user - isAuthenticated:", req.isAuthenticated(), "sessionID:", req.sessionID);
         if (!req.isAuthenticated()) {
+            console.log("[Auth] 401 - User not authenticated");
             return res.sendStatus(401);
         }
+        console.log("[Auth] 200 - User authenticated:", (req.user as any)?.id);
         res.json(req.user);
     });
 
