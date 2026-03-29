@@ -26,16 +26,16 @@ const allowedOrigins = [
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    const isLocal = origin.includes("localhost") || 
-                    origin.includes("127.0.0.1") || 
-                    origin.startsWith("http://192.168.") || 
+    const isLocal = origin.includes("localhost") ||
+                    origin.includes("127.0.0.1") ||
+                    origin.startsWith("http://192.168.") ||
                     origin.startsWith("http://10.");
     const isAllowedDomain = allowedOrigins.includes(origin);
 
     if (isLocal || isAllowedDomain) {
       callback(null, true);
     } else {
-      console.log("CORS Blocked Origin:", origin);
+      if (DEBUG) console.log("CORS Blocked Origin:", origin);
       callback(new Error('CORS blocked this origin'));
     }
   },
@@ -45,10 +45,12 @@ app.use(cors({
   exposedHeaders: ['set-cookie']
 }));
 
+const DEBUG = process.env.DEBUG === "true";
+
 // Log any request to /api/webhook so we can see if Stripe or stripe listen is reaching the server
 app.use((req, res, next) => {
   const pathNorm = (req.originalUrl || req.url || "").split("?")[0].replace(/\/+$/, "") || "/";
-  if (pathNorm === "/api/webhook") {
+  if (DEBUG && pathNorm === "/api/webhook") {
     console.log("[Stripe Webhook] Request seen:", req.method, pathNorm, "(originalUrl:", req.originalUrl + ")");
   }
   next();
@@ -58,12 +60,12 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const pathNorm = (req.originalUrl || req.url || "").split("?")[0].replace(/\/+$/, "") || "/";
   if (pathNorm !== "/api/webhook" || req.method !== "POST") return next();
-  console.log("[Stripe Webhook] Incoming POST to /api/webhook, capturing body...");
+  if (DEBUG) console.log("[Stripe Webhook] Incoming POST to /api/webhook, capturing body...");
   const chunks: Buffer[] = [];
   req.on("data", (chunk: Buffer) => chunks.push(chunk));
   req.on("end", () => {
     (req as any).rawBody = Buffer.concat(chunks);
-    console.log("[Stripe Webhook] Body captured, length:", (req as any).rawBody.length);
+    if (DEBUG) console.log("[Stripe Webhook] Body captured, length:", (req as any).rawBody.length);
     next();
   });
 });
@@ -88,11 +90,13 @@ app.use((req, res, next) => {
     return originalResJson.apply(res, [bodyJson, ...args]);
   };
   res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      log(logLine);
+    if (DEBUG) {
+      const duration = Date.now() - start;
+      if (path.startsWith("/api")) {
+        let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+        if (capturedJsonResponse) logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        log(logLine);
+      }
     }
   });
   next();

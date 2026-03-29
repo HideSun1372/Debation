@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import { randomBytes } from "crypto";
+import { Readable } from "stream";
 import { storage } from "./storage";
 import { setupWebSocket } from "./websocket";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -9,6 +10,28 @@ import { z } from "zod";
 import { generatePracticePrompt, evaluatePracticeResponse } from "./practice";
 import type { PracticeType, DifficultyLevel } from "@shared/lessons/types";
 import Stripe from "stripe";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
+import multer from "multer";
+
+const audioUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
+
+const debateMessageLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 20,
+  keyGenerator: (req: any) => req.user?.id || ipKeyGenerator(req),
+  message: { error: "Too many requests. Please slow down." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const practiceGenerateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  keyGenerator: (req: any) => req.user?.id || ipKeyGenerator(req),
+  message: { error: "Too many practice generation requests. Please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // server/routes.ts
 
@@ -17,8 +40,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   // @ts-ignore - This tells TypeScript to stop being a "nerd" about the version
   apiVersion: "2026-01-28.clover", 
 });
-
-console.log("Initializing Gemini with key:", process.env.GEMINI_API_KEY ? `${process.env.GEMINI_API_KEY.substring(0, 10)}...` : "MISSING");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -323,11 +344,15 @@ export async function registerRoutes(
     }
   });
 
-  app.get("/api/debates/:id", async (req, res) => {
+  app.get("/api/debates/:id", isAuthenticated, async (req: any, res) => {
     try {
       const debate = await storage.getDebate(req.params.id);
       if (!debate) {
         return res.status(404).json({ error: "Debate not found" });
+      }
+      const userId = String(req.user.id);
+      if (debate.userId !== userId && debate.opponentUserId !== userId) {
+        return res.status(403).json({ error: "Not authorized" });
       }
       const messages = await storage.getDebateMessages(req.params.id);
       res.json({ ...debate, messages });
@@ -337,21 +362,31 @@ export async function registerRoutes(
     }
   });
 
-  app.patch("/api/debates/:id", async (req, res) => {
+  app.patch("/api/debates/:id", isAuthenticated, async (req: any, res) => {
     try {
-      const updates = req.body;
-      const debate = await storage.updateDebate(req.params.id, updates);
+      const debate = await storage.getDebate(req.params.id);
       if (!debate) {
         return res.status(404).json({ error: "Debate not found" });
       }
-      res.json(debate);
+      const userId = String(req.user.id);
+      if (debate.userId !== userId && debate.opponentUserId !== userId) {
+        return res.status(403).json({ error: "Not authorized" });
+      }
+      const { status, result, pointsChange, feedback } = req.body;
+      const allowedUpdates: Record<string, any> = {};
+      if (status !== undefined) allowedUpdates.status = status;
+      if (result !== undefined) allowedUpdates.result = result;
+      if (pointsChange !== undefined) allowedUpdates.pointsChange = pointsChange;
+      if (feedback !== undefined) allowedUpdates.feedback = feedback;
+      const updated = await storage.updateDebate(req.params.id, allowedUpdates);
+      res.json(updated);
     } catch (error) {
       console.error("Error updating debate:", error);
       res.status(500).json({ error: "Failed to update debate" });
     }
   });
 
-  app.post("/api/debate/message", async (req, res) => {
+  app.post("/api/debate/message", isAuthenticated, debateMessageLimiter, async (req: any, res) => {
     try {
       const {
         message,
@@ -395,17 +430,21 @@ export async function registerRoutes(
         content: m.content,
       }));
 
-      // Add crossfire question context if provided
+      // Ensure history starts with a user message (Gemini requirement)
+      // Filter out leading assistant messages
+      while (contextMessages.length > 0 && contextMessages[0].role === "assistant") {
+        contextMessages.shift();
+      }
+
+      // Add crossfire question context if provided (as system instruction, not history)
+      let systemInstruction = systemPrompt;
       if (cxIntent === "crossfire-answer-check" && crossfireQuestion) {
-        contextMessages = [
-          { role: "system", content: `The question you asked was: "${crossfireQuestion}"` },
-          ...contextMessages,
-        ];
+        systemInstruction += `\n\nContext: The question you asked was: "${crossfireQuestion}"`;
       }
 
       const modelWithSystem = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash-preview-09-2025",
-        systemInstruction: systemPrompt
+        model: "gemini-2.5-flash",
+        systemInstruction: systemInstruction
       });
 
       const chat = modelWithSystem.startChat({
@@ -521,7 +560,7 @@ Respond with a JSON object containing:
 Be fair but consider the skill level difference. If the user is debating someone much higher skilled and performs well, they should still potentially win.`;
 
       const modelWithSystemEvaluation = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash-preview-09-2025",
+        model: "gemini-3.1-pro-preview",
         systemInstruction: "You are a professional debate judge. Respond only with valid JSON.",
         generationConfig: { responseMimeType: "application/json" }
       });
@@ -689,7 +728,7 @@ Respond with a JSON object:
 }`;
 
       const modelWithSystemCrossfire = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash-preview-09-2025",
+        model: "gemini-3.1-pro-preview",
         systemInstruction: "You are a debate evaluator. Respond only with valid JSON. Be lenient - if they made any attempt to answer, consider it complete.",
         generationConfig: { responseMimeType: "application/json" }
       });
@@ -1150,7 +1189,7 @@ Respond with a JSON object:
     successCriteria: z.array(z.string()),
   });
 
-  app.post("/api/practice/generate", async (req, res) => {
+  app.post("/api/practice/generate", isAuthenticated, practiceGenerateLimiter, async (req: any, res) => {
     try {
       const parseResult = practiceGenerateSchema.safeParse(req.body);
       if (!parseResult.success) {
@@ -1497,6 +1536,299 @@ Respond with a JSON object:
     } catch (error: any) {
       console.error("Error deleting user:", error);
       res.status(500).json({ error: "Failed to delete user" });
+    }
+  });
+
+  // ── Gemini 2.5 Flash TTS ──────────────────────────────────────────────
+  // POST /api/tts/stream  { text: string }
+  // Returns audio blob using Gemini 2.5 Flash TTS.
+  app.post("/api/tts/stream", isAuthenticated, async (req, res) => {
+    const { text } = req.body;
+    if (!text || typeof text !== "string") {
+      return res.status(400).json({ error: "text is required" });
+    }
+
+    try {
+      console.log("[TTS] Calling Gemini 2.5 Flash TTS for:", text.substring(0, 50));
+
+      const apiKey = process.env.GEMINI_API_KEY;
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text }] }],
+            generationConfig: {
+              responseModalities: ["AUDIO"],
+              speechConfig: {
+                voiceConfig: {
+                  prebuiltVoiceConfig: {
+                    voiceName: "Kore",
+                  },
+                },
+              },
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("[TTS] API error:", error);
+        return res.status(response.status).json({ error });
+      }
+
+      const data = await response.json();
+      console.log("[TTS] Gemini response keys:", Object.keys(data));
+      console.log("[TTS] Candidates:", data.candidates?.length);
+      if (data.candidates?.[0]) {
+        console.log("[TTS] First candidate keys:", Object.keys(data.candidates[0]));
+        console.log("[TTS] Content keys:", Object.keys(data.candidates[0].content || {}));
+        console.log("[TTS] Parts:", data.candidates[0].content?.parts?.length);
+        if (data.candidates[0].content?.parts?.[0]) {
+          console.log("[TTS] First part keys:", Object.keys(data.candidates[0].content.parts[0]));
+        }
+      }
+
+      const audioData = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+      if (!audioData) {
+        console.error("[TTS] No audio data in response", JSON.stringify(data, null, 2));
+        return res.status(500).json({ error: "TTS failed to generate audio - no audio data in response" });
+      }
+
+      const pcmData = Buffer.from(audioData, "base64");
+      console.log("[TTS] Generated PCM audio:", pcmData.length, "bytes");
+
+      if (pcmData.length === 0) {
+        console.error("[TTS] PCM data is empty!");
+        return res.status(500).json({ error: "TTS generated empty audio" });
+      }
+
+      // Convert PCM to WAV format
+      const sampleRate = 24000;
+      const channels = 1;
+      const bitsPerSample = 16;
+      const byteRate = sampleRate * channels * bitsPerSample / 8;
+      const blockAlign = channels * bitsPerSample / 8;
+
+      // WAV header (44 bytes)
+      const wavHeader = Buffer.alloc(44);
+      wavHeader.write("RIFF", 0);
+      wavHeader.writeUInt32LE(36 + pcmData.length, 4); // File size - 8
+      wavHeader.write("WAVE", 8);
+      wavHeader.write("fmt ", 12);
+      wavHeader.writeUInt32LE(16, 16); // Subchunk1Size
+      wavHeader.writeUInt16LE(1, 20); // AudioFormat (1 = PCM)
+      wavHeader.writeUInt16LE(channels, 22);
+      wavHeader.writeUInt32LE(sampleRate, 24);
+      wavHeader.writeUInt32LE(byteRate, 28);
+      wavHeader.writeUInt16LE(blockAlign, 32);
+      wavHeader.writeUInt16LE(bitsPerSample, 34);
+      wavHeader.write("data", 36);
+      wavHeader.writeUInt32LE(pcmData.length, 40);
+
+      const wavBuffer = Buffer.concat([wavHeader, pcmData]);
+      console.log("[TTS] Converted to WAV:", wavBuffer.length, "bytes (header: 44, data:", pcmData.length, ")");
+      console.log("[TTS] WAV header:", wavHeader.toString("hex").substring(0, 20));
+      res.setHeader("Content-Type", "audio/wav");
+      res.setHeader("Content-Length", wavBuffer.length);
+      res.send(wavBuffer);
+    } catch (err: any) {
+      console.error("[TTS] Error:", err.message);
+      res.status(500).json({ error: "TTS request failed: " + err.message });
+    }
+  });
+
+  // ── Gemini 2.5 Flash STT (Speech-to-Text) ──────────────────────────────────
+  // POST /api/transcribe  multipart: audio file
+  // Uploads audio to Gemini Files API via REST, transcribes, returns { transcript: string }.
+  app.post("/api/transcribe", isAuthenticated, audioUpload.single("audio"), async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: "audio file required" });
+    }
+
+    try {
+      console.log("[STT] Received audio file:", req.file.mimetype, req.file.size, "bytes");
+      const apiKey = process.env.GEMINI_API_KEY;
+
+      // Upload file to Gemini Files API via REST
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", new Blob([req.file.buffer], { type: req.file.mimetype }));
+
+      console.log("[STT] Uploading to Gemini Files API...");
+      const uploadRes = await fetch(
+        `https://generativelanguage.googleapis.com/upload/v1beta/files?key=${apiKey}`,
+        {
+          method: "POST",
+          body: uploadFormData,
+        }
+      );
+
+      if (!uploadRes.ok) {
+        const err = await uploadRes.text();
+        console.error("[STT] Upload failed:", err);
+        return res.status(uploadRes.status).json({ error: "File upload failed" });
+      }
+
+      const uploadData = await uploadRes.json();
+      const fileUri = uploadData.file.uri;
+      console.log("[STT] File uploaded, URI:", fileUri);
+
+      // Call Gemini 2.5 Flash to transcribe
+      console.log("[STT] Calling Gemini 2.5 Flash for transcription...");
+      const transcribeRes = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: "Please transcribe this audio file and return only the transcribed text, nothing else.",
+                  },
+                  {
+                    fileData: {
+                      mimeType: req.file.mimetype,
+                      fileUri: fileUri,
+                    },
+                  },
+                ],
+              },
+            ],
+          }),
+        }
+      );
+
+      if (!transcribeRes.ok) {
+        const err = await transcribeRes.text();
+        console.error("[STT] Transcription API error:", err);
+        return res.status(transcribeRes.status).json({ error: "Transcription failed" });
+      }
+
+      const transcribeData = await transcribeRes.json();
+      const transcript = transcribeData.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+
+      if (!transcript) {
+        console.error("[STT] No transcript in response:", JSON.stringify(transcribeData));
+        return res.status(500).json({ error: "Failed to extract transcript" });
+      }
+
+      console.log("[STT] Transcription complete:", transcript);
+
+      // Clean up: delete the uploaded file
+      console.log("[STT] Deleting uploaded file...");
+      await fetch(`https://generativelanguage.googleapis.com/v1beta/${uploadData.file.name}?key=${apiKey}`, {
+        method: "DELETE",
+      });
+
+      res.json({ transcript });
+    } catch (err: any) {
+      console.error("[STT] Error:", err.message);
+      res.status(500).json({ error: "Transcription request failed: " + err.message });
+    }
+  });
+
+  // AI-powered personalized insights based on debate history
+  app.get("/api/insights", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const user = await storage.getUser(userId);
+      if (!user) return res.status(404).json({ error: "User not found" });
+
+      const debates = await storage.getDebatesByUser(userId);
+      const completedDebates = debates.filter(d => d.status === "completed");
+
+      // Need at least 1 completed debate to give insights
+      if (completedDebates.length === 0) {
+        return res.json({
+          hasData: false,
+          message: "Complete your first debate to get personalized insights!",
+        });
+      }
+
+      // Gather recent feedback from completed debates (last 10)
+      const recentDebates = completedDebates.slice(0, 10);
+      const debateSummaries = recentDebates.map(d => ({
+        format: d.formatId,
+        topic: d.topicId,
+        side: d.userSide,
+        result: d.result,
+        pointsChange: d.pointsChange,
+        feedback: d.feedback,
+        date: d.completedAt || d.startedAt,
+      }));
+
+      // Stats
+      const wins = completedDebates.filter(d => d.result === "win").length;
+      const losses = completedDebates.filter(d => d.result === "loss").length;
+      const formatCounts: Record<string, { total: number; wins: number }> = {};
+      for (const d of completedDebates) {
+        if (!formatCounts[d.formatId]) formatCounts[d.formatId] = { total: 0, wins: 0 };
+        formatCounts[d.formatId].total++;
+        if (d.result === "win") formatCounts[d.formatId].wins++;
+      }
+
+      const prompt = `You are a debate coach AI. Analyze this student's debate history and provide personalized improvement advice.
+
+STUDENT STATS:
+- Skill Points: ${user.skillPoints}
+- Total Debates: ${completedDebates.length}
+- Wins: ${wins}, Losses: ${losses}
+- Win Rate: ${completedDebates.length > 0 ? Math.round((wins / completedDebates.length) * 100) : 0}%
+
+FORMAT BREAKDOWN:
+${Object.entries(formatCounts).map(([fmt, stats]) => `- ${fmt}: ${stats.total} debates, ${stats.wins} wins (${Math.round((stats.wins / stats.total) * 100)}% win rate)`).join("\n")}
+
+RECENT DEBATE FEEDBACK:
+${debateSummaries.map((d, i) => `${i + 1}. Format: ${d.format}, Side: ${d.side}, Result: ${d.result}, Points: ${(d.pointsChange ?? 0) > 0 ? "+" : ""}${d.pointsChange ?? 0}\n   Feedback: ${d.feedback || "No feedback available"}`).join("\n\n")}
+
+Based on this data, respond in EXACTLY this JSON format (no markdown, no code blocks, just raw JSON):
+{
+  "strengths": ["strength 1", "strength 2"],
+  "improvements": ["area to improve 1", "area to improve 2", "area to improve 3"],
+  "formatRecommendation": {
+    "format": "format-id to practice more",
+    "reason": "why this format would help"
+  },
+  "tips": ["specific actionable tip 1", "specific actionable tip 2", "specific actionable tip 3"],
+  "summary": "A 1-2 sentence overall assessment of the student's debate skills and trajectory"
+}
+
+Keep each string concise (under 20 words for array items, under 40 words for summary/reason). Be encouraging but honest.`;
+
+      const insightsModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const result = await insightsModel.generateContent(prompt);
+      const text = result.response.text().trim();
+
+      // Parse the JSON response
+      let insights;
+      try {
+        // Strip markdown code blocks if present
+        const cleaned = text.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "");
+        insights = JSON.parse(cleaned);
+      } catch {
+        console.error("[Insights] Failed to parse AI response:", text);
+        return res.status(500).json({ error: "Failed to parse insights" });
+      }
+
+      res.json({
+        hasData: true,
+        insights,
+        stats: {
+          totalDebates: completedDebates.length,
+          wins,
+          losses,
+          winRate: completedDebates.length > 0 ? Math.round((wins / completedDebates.length) * 100) : 0,
+          skillPoints: user.skillPoints,
+          formatCounts,
+        },
+      });
+    } catch (err: any) {
+      console.error("[Insights] Error:", err.message);
+      res.status(500).json({ error: "Failed to generate insights" });
     }
   });
 

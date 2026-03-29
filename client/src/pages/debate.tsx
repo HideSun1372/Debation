@@ -137,7 +137,7 @@ export default function Debate() {
   // Speech recognition with auto-mode for voice debates
   const speechRecognition = useSpeechRecognition({
     autoMode: voiceMode,
-    silenceTimeout: 15000,
+    silenceTimeout: 20000,
     onSpeechEnd: useCallback((transcript: string) => {
       voiceSendRef.current(transcript);
     }, []),
@@ -851,6 +851,18 @@ export default function Debate() {
     if (shouldAutoStart) {
       console.log("[VoiceDebate] Auto-starting speech recognition");
       speechRecognition.startListening();
+    } else {
+      console.log("[VoiceDebate] Auto-start conditions not met:", {
+        voiceMode,
+        isReady: speechRecognition.isReady,
+        voiceState,
+        recognitionState: speechRecognition.state,
+        isUserTurn,
+        isLoading,
+        isDebateComplete,
+        isAudioPlaying,
+        hasError: !!speechRecognition.error
+      });
     }
   }, [voiceMode, speechRecognition.isReady, voiceState, speechRecognition.state, isUserTurn, isLoading, isDebateComplete, isAudioPlaying, speechRecognition.error]);
 
@@ -1260,7 +1272,8 @@ export default function Debate() {
   // Wire up voice send ref after handleSendMessage is defined
   useEffect(() => {
     voiceSendRef.current = (transcript: string) => {
-      if (transcript.trim() && voiceMode && voiceState === "listening") {
+      // Auto-send when transcription completes (voiceState is "idle" after recording + transcribing)
+      if (transcript.trim() && voiceMode && (voiceState === "idle" || voiceState === "listening")) {
         setVoiceState("sending");
         handleSendMessage(transcript);
       }
@@ -1291,12 +1304,10 @@ export default function Debate() {
     }
   }, [voiceMode, speechRecognition.state, voiceState]);
 
-  // Ensure flow sheet is always visible in voice mode
+  // Ensure flow sheet is open when entering voice mode
   useEffect(() => {
-    if (voiceMode && !showFlowSheet) {
-      setShowFlowSheet(true);
-    }
-  }, [voiceMode, showFlowSheet]);
+    if (voiceMode && !showFlowSheet) setShowFlowSheet(true);
+  }, [voiceMode]);
 
   // Reset voice state when loading finishes (after sending)
   useEffect(() => {
@@ -1442,7 +1453,214 @@ export default function Debate() {
               </div>
             </div>
           </div>
+        ) : voiceMode ? (<>
+          {/* ── Full-screen Voice Debate UI ── */}
+          <div className="flex-1 flex flex-col items-center justify-between py-10 px-6 bg-background overflow-hidden">
+
+            {/* Opponent section */}
+            <div className="flex flex-col items-center gap-4 flex-1 justify-center">
+              <div className={cn(
+                "w-36 h-36 rounded-full flex items-center justify-center border-4 transition-all duration-500",
+                voiceState === "opponent_speaking"
+                  ? "border-primary bg-primary/10 shadow-xl shadow-primary/30 scale-110"
+                  : isLoading
+                  ? "border-muted-foreground/30 bg-muted animate-pulse"
+                  : "border-muted bg-muted"
+              )}>
+                <Bot className={cn(
+                  "h-18 w-18 transition-colors duration-300",
+                  voiceState === "opponent_speaking" ? "text-primary" : "text-muted-foreground"
+                )} style={{ width: "4.5rem", height: "4.5rem" }} />
+              </div>
+              <p className="text-2xl font-bold">{opponentDisplayName}</p>
+              {voiceState === "opponent_speaking" && (
+                <div className="flex items-center gap-2 text-primary animate-pulse">
+                  <Volume2 className="h-5 w-5" />
+                  <span className="font-medium text-lg">Speaking...</span>
+                </div>
+              )}
+              {isLoading && voiceState !== "opponent_speaking" && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <span>Thinking...</span>
+                </div>
+              )}
+              {!isLoading && voiceState !== "opponent_speaking" && voiceState !== "listening" && voiceState !== "sending" && (
+                <span className="text-muted-foreground text-sm">Waiting...</span>
+              )}
+            </div>
+
+            {/* Divider */}
+            <div className="w-full max-w-xs flex items-center gap-4 my-4">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-muted-foreground font-mono">VS</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+
+            {/* User section */}
+            <div className="flex flex-col items-center gap-4 flex-1 justify-center">
+              {/* Mic circle */}
+              <div className={cn(
+                "w-36 h-36 rounded-full flex items-center justify-center border-4 transition-all duration-500",
+                speechRecognition.state === "listening"
+                  ? "border-green-500 bg-green-500/10 shadow-xl shadow-green-500/30 scale-110"
+                  : speechRecognition.state === "transcribing"
+                  ? "border-yellow-500 bg-yellow-500/10"
+                  : voiceState === "sending"
+                  ? "border-primary/50 bg-primary/5"
+                  : "border-muted bg-muted"
+              )}>
+                {speechRecognition.state === "listening" ? (
+                  <Mic className="text-green-500 animate-pulse" style={{ width: "4.5rem", height: "4.5rem" }} />
+                ) : speechRecognition.state === "transcribing" ? (
+                  <Loader2 className="text-yellow-500 animate-spin" style={{ width: "4.5rem", height: "4.5rem" }} />
+                ) : voiceState === "sending" ? (
+                  <Loader2 className="text-primary animate-spin" style={{ width: "4.5rem", height: "4.5rem" }} />
+                ) : speechRecognition.state === "starting" ? (
+                  <Loader2 className="text-muted-foreground animate-spin" style={{ width: "4.5rem", height: "4.5rem" }} />
+                ) : (
+                  <MicOff className="text-muted-foreground" style={{ width: "4.5rem", height: "4.5rem" }} />
+                )}
+              </div>
+
+              <p className="text-2xl font-bold">You</p>
+
+              {/* Status text */}
+              {speechRecognition.state === "listening" && (
+                <p className="text-green-500 font-medium text-lg">Listening — speak your argument</p>
+              )}
+              {speechRecognition.state === "transcribing" && (
+                <p className="text-yellow-500 font-medium">Processing your speech...</p>
+              )}
+              {speechRecognition.state === "starting" && (
+                <p className="text-muted-foreground">Starting microphone...</p>
+              )}
+              {voiceState === "sending" && (
+                <p className="text-primary font-medium">Sending your argument...</p>
+              )}
+              {speechRecognition.state === "error" && (
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-destructive font-medium">
+                    {speechRecognition.error === "not-allowed" ? "Microphone access denied" :
+                     speechRecognition.error === "no-microphone" ? "No microphone found" :
+                     speechRecognition.error === "transcription-failed" ? "Transcription failed" :
+                     "Microphone error"}
+                  </p>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    speechRecognition.resetError();
+                    setTimeout(() => speechRecognition.startListening(), 100);
+                  }}>
+                    <Mic className="h-4 w-4 mr-2" />
+                    Try Again
+                  </Button>
+                </div>
+              )}
+              {voiceState === "idle" && !isLoading && speechRecognition.state === "idle" && isUserTurn && !isDebateComplete && (
+                <p className="text-muted-foreground text-sm">Waiting to start recording...</p>
+              )}
+              {!isUserTurn && !isLoading && voiceState === "idle" && (
+                <p className="text-muted-foreground text-sm">Waiting for your turn...</p>
+              )}
+
+              {/* Show transcript for manual send */}
+              {speechRecognition.transcript && speechRecognition.state === "idle" && voiceState === "idle" && (
+                <div className="flex flex-col items-center gap-2 max-w-md">
+                  <p className="text-sm text-muted-foreground text-center italic">
+                    "{speechRecognition.transcript}"
+                  </p>
+                  <Button size="sm" variant="outline" onClick={() => {
+                    const t = speechRecognition.transcript;
+                    speechRecognition.resetTranscript();
+                    setVoiceState("sending");
+                    handleSendMessage(t);
+                  }}>
+                    <Send className="h-4 w-4 mr-2" />
+                    Send This
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom controls */}
+            <div className="flex items-center gap-4 mt-4">
+              <Button variant="ghost" size="sm" onClick={() => setAudioMuted(!audioMuted)}>
+                {audioMuted ? <VolumeX className="h-4 w-4 mr-2" /> : <Volume2 className="h-4 w-4 mr-2" />}
+                {audioMuted ? "Unmute AI" : "Mute AI"}
+              </Button>
+              {voiceState === "opponent_speaking" && (
+                <Button variant="outline" size="sm" onClick={() => {
+                  speechSynthesis.stop();
+                  setVoiceState("idle");
+                }}>
+                  Stop Talking
+                </Button>
+              )}
+              {messages.length >= 2 && (
+                <Button variant="outline" onClick={handleEndDebate} disabled={isEvaluating}>
+                  {isEvaluating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                  End Debate
+                </Button>
+              )}
+            </div>
+          </div>
+          {showFlowSheet && (
+            <div className="border-l bg-background/95 backdrop-blur-sm flex flex-col flex-shrink-0 w-96">
+              <div className="p-3 border-b flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium text-sm">Flow Sheet</span>
+                  <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/30">
+                    Voice Mode
+                  </Badge>
+                </div>
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowFlowSheet(false)}>
+                  <PanelRightClose className="h-4 w-4" />
+                </Button>
+              </div>
+              <ScrollArea className="flex-1 p-3">
+                <div className="space-y-3">
+                  {format?.speeches.slice(0, currentSpeechIndex + 1).map((speech) => (
+                    <div key={speech.id} className={cn(
+                      "p-2 rounded-lg border text-xs",
+                      speech.speaker === "aff" ? "bg-tier-beginner/5 border-tier-beginner/20" : "bg-destructive/5 border-destructive/20"
+                    )}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-medium">{speech.name}</span>
+                        <Badge variant="outline" className="text-xs h-5">{speech.speaker === "aff" ? "AFF" : "NEG"}</Badge>
+                      </div>
+                      <Textarea
+                        placeholder="Take notes..."
+                        className="min-h-[60px] text-xs resize-none border-0 bg-transparent p-0 focus-visible:ring-0"
+                        value={flowEntries.find(e => e.id === speech.id)?.notes || ""}
+                        onChange={(e) => {
+                          const existing = flowEntries.find(entry => entry.id === speech.id);
+                          if (existing) {
+                            setFlowEntries(prev => prev.map(entry => entry.id === speech.id ? { ...entry, notes: e.target.value } : entry));
+                          } else {
+                            setFlowEntries(prev => [...prev, { id: speech.id, speechName: speech.name, speaker: isUserSpeech(speech) ? "user" : "opponent", notes: e.target.value }]);
+                          }
+                        }}
+                      />
+                    </div>
+                  ))}
+                  {(!format || currentSpeechIndex === 0) && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-xs">Take notes while your opponent speaks!</p>
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          )}
+          {!showFlowSheet && (
+            <Button variant="outline" size="icon" className="fixed right-4 top-1/2 -translate-y-1/2 z-10" onClick={() => setShowFlowSheet(true)}>
+              <PanelRightOpen className="h-4 w-4" />
+            </Button>
+          )}
+        </>
         ) : (
+        <>
         <div className={cn(
           "flex-1 flex flex-col overflow-hidden min-w-0 transition-all duration-300",
           showFlowSheet ? "pr-0" : ""
@@ -1578,6 +1796,7 @@ export default function Debate() {
               </div>
             </ScrollArea>
           </div>
+        </div>
 
         {showFlowSheet && (
           <div className={cn(
@@ -1673,8 +1892,11 @@ export default function Debate() {
             <PanelRightOpen className="h-4 w-4" />
           </Button>
         )}
+        </>
+        )}
+      </div>
 
-      {!isDebateComplete && currentSpeech && (
+      {!voiceMode && !isDebateComplete && currentSpeech && (
         <div className="border-t bg-background">
           {crossfireRacing && !typingMessage ? (
             <div className="p-4">
@@ -2065,9 +2287,6 @@ export default function Debate() {
           )}
         </div>
       )}
-        </div>
-        )}
-      </div>
 
       <Dialog open={showResult} onOpenChange={setShowResult}>
         <DialogContent className="sm:max-w-md max-h-[85vh] flex flex-col">

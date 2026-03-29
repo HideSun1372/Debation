@@ -353,6 +353,7 @@ export default function Practice() {
             </Card>
           )}
 
+          {practiceMode === "ai" && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between gap-4 flex-wrap">
               <div>
@@ -409,6 +410,7 @@ export default function Practice() {
               </div>
             </CardContent>
           </Card>
+          )}
 
           {practiceMode === "ai" && selectedOpponent && (
             <div className="flex justify-end">

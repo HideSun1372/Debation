@@ -1,12 +1,13 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
 interface UseSpeechSynthesisOptions {
-    voice?: string; // Voice name to use
-    rate?: number; // Speech rate (0.1 to 10, default 1)
-    pitch?: number; // Speech pitch (0 to 2, default 1)
     onStart?: () => void;
     onEnd?: () => void;
     onError?: (error: string) => void;
+    // rate/pitch are accepted for API compatibility but not used with Camb.ai
+    rate?: number;
+    pitch?: number;
+    voice?: string;
 }
 
 interface UseSpeechSynthesisReturn {
@@ -25,164 +26,142 @@ interface UseSpeechSynthesisReturn {
 export function useSpeechSynthesis(
     options: UseSpeechSynthesisOptions = {}
 ): UseSpeechSynthesisReturn {
-    const {
-        voice: preferredVoice,
-        rate = 1,
-        pitch = 1,
-        onStart,
-        onEnd,
-        onError,
-    } = options;
+    const { onStart, onEnd, onError } = options;
 
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
-    const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
-    const [currentVoice, setCurrentVoice] = useState<SpeechSynthesisVoice | null>(null);
 
-    const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const audioBlobUrlRef = useRef<string | null>(null);
     const onStartRef = useRef(onStart);
     const onEndRef = useRef(onEnd);
     const onErrorRef = useRef(onError);
 
-    // Keep refs updated
     useEffect(() => {
         onStartRef.current = onStart;
         onEndRef.current = onEnd;
         onErrorRef.current = onError;
     }, [onStart, onEnd, onError]);
 
-    const isSupported = typeof window !== "undefined" && "speechSynthesis" in window;
-
-    // Load available voices
-    useEffect(() => {
-        if (!isSupported) return;
-
-        const loadVoices = () => {
-            const voices = window.speechSynthesis.getVoices();
-            setAvailableVoices(voices);
-
-            // Set default voice - prefer English voices
-            if (voices.length > 0 && !currentVoice) {
-                // Try to find a good English voice
-                const englishVoice = voices.find(
-                    (v) => v.lang.startsWith("en") && v.name.includes("Google")
-                ) || voices.find(
-                    (v) => v.lang.startsWith("en") && !v.localService
-                ) || voices.find(
-                    (v) => v.lang.startsWith("en")
-                ) || voices[0];
-
-                setCurrentVoice(englishVoice);
-            }
-        };
-
-        // Load immediately
-        loadVoices();
-
-        // Chrome loads voices asynchronously
-        window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
-
-        return () => {
-            window.speechSynthesis.removeEventListener("voiceschanged", loadVoices);
-        };
-    }, [isSupported, currentVoice]);
-
-    // Set voice by name
-    const setVoice = useCallback((voiceName: string) => {
-        const voice = availableVoices.find((v) => v.name === voiceName);
-        if (voice) {
-            setCurrentVoice(voice);
+    const cleanupAudio = useCallback(() => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.onended = null;
+            audioRef.current.onerror = null;
+            audioRef.current = null;
         }
-    }, [availableVoices]);
-
-    // Apply preferred voice when it changes
-    useEffect(() => {
-        if (preferredVoice && availableVoices.length > 0) {
-            setVoice(preferredVoice);
+        if (audioBlobUrlRef.current) {
+            URL.revokeObjectURL(audioBlobUrlRef.current);
+            audioBlobUrlRef.current = null;
         }
-    }, [preferredVoice, availableVoices, setVoice]);
+    }, []);
 
-    // Speak text
-    const speak = useCallback((text: string) => {
-        if (!isSupported || !text.trim()) return;
-
-        // Cancel any ongoing speech
-        window.speechSynthesis.cancel();
-
-        const utterance = new SpeechSynthesisUtterance(text);
-        utteranceRef.current = utterance;
-
-        // Apply settings
-        if (currentVoice) {
-            utterance.voice = currentVoice;
-        }
-        utterance.rate = rate;
-        utterance.pitch = pitch;
-
-        // Event handlers
-        utterance.onstart = () => {
-            setIsSpeaking(true);
-            setIsPaused(false);
-            onStartRef.current?.();
-        };
-
-        utterance.onend = () => {
-            setIsSpeaking(false);
-            setIsPaused(false);
-            utteranceRef.current = null;
-            onEndRef.current?.();
-        };
-
-        utterance.onerror = (event) => {
-            // Ignore "interrupted" errors - these happen when we cancel intentionally
-            if (event.error === "interrupted") return;
-
-            console.error("[SpeechSynthesis] Error:", event.error);
-            setIsSpeaking(false);
-            setIsPaused(false);
-            onErrorRef.current?.(event.error);
-        };
-
-        utterance.onpause = () => {
-            setIsPaused(true);
-        };
-
-        utterance.onresume = () => {
-            setIsPaused(false);
-        };
-
-        // Start speaking
-        window.speechSynthesis.speak(utterance);
-    }, [isSupported, currentVoice, rate, pitch]);
-
-    // Stop speaking
     const stop = useCallback(() => {
-        if (!isSupported) return;
-        window.speechSynthesis.cancel();
+        cleanupAudio();
         setIsSpeaking(false);
         setIsPaused(false);
-    }, [isSupported]);
+    }, [cleanupAudio]);
 
-    // Pause speaking
-    const pause = useCallback(() => {
-        if (!isSupported || !isSpeaking) return;
-        window.speechSynthesis.pause();
-    }, [isSupported, isSpeaking]);
+    const speak = useCallback(async (text: string) => {
+        if (!text.trim()) return;
 
-    // Resume speaking
-    const resume = useCallback(() => {
-        if (!isSupported || !isPaused) return;
-        window.speechSynthesis.resume();
-    }, [isSupported, isPaused]);
+        // Cancel any ongoing speech
+        stop();
 
-    // Cleanup on unmount
-    useEffect(() => {
-        return () => {
-            if (isSupported) {
-                window.speechSynthesis.cancel();
+        setIsSpeaking(true);
+        onStartRef.current?.();
+
+        try {
+            console.log("[TTS] Starting TTS for text:", text.substring(0, 50) + "...");
+            const res = await fetch("/api/tts/stream", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ text }),
+            });
+
+            console.log("[TTS] Response status:", res.status);
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`TTS request failed: ${res.status} - ${errorText}`);
             }
-        };
-    }, [isSupported]);
+
+            const blob = await res.blob();
+            console.log("[TTS] Received blob, size:", blob.size);
+            const url = URL.createObjectURL(blob);
+            audioBlobUrlRef.current = url;
+
+            // Create audio element in DOM (bypasses autoplay policy better)
+            const audio = document.createElement("audio");
+            audio.src = url;
+            audio.muted = true; // Mute initially to bypass autoplay restrictions
+
+            audioRef.current = audio;
+
+            audio.onloadedmetadata = () => {
+                console.log("[TTS] Audio metadata loaded, duration:", audio.duration);
+            };
+
+            audio.onended = () => {
+                console.log("[TTS] Audio playback ended");
+                cleanupAudio();
+                setIsSpeaking(false);
+                setIsPaused(false);
+                onEndRef.current?.();
+            };
+
+            audio.onerror = (e) => {
+                const errMsg = `Audio playback error: ${audio.error?.message || "unknown"}`;
+                console.error("[TTS]", errMsg, audio.error);
+                cleanupAudio();
+                setIsSpeaking(false);
+                setIsPaused(false);
+                onErrorRef.current?.(errMsg);
+            };
+
+            console.log("[TTS] Playing audio, src:", url);
+            try {
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    await playPromise;
+                    console.log("[TTS] Audio.play() succeeded");
+                }
+                // Unmute after playback starts
+                setTimeout(() => {
+                    audio.muted = false;
+                    console.log("[TTS] Audio unmuted");
+                }, 100);
+            } catch (playErr: any) {
+                console.error("[TTS] Audio.play() threw error:", playErr.message);
+                throw playErr;
+            }
+        } catch (err: any) {
+            console.error("[TTS] Error:", err.message);
+            cleanupAudio();
+            setIsSpeaking(false);
+            setIsPaused(false);
+            onErrorRef.current?.(err.message || "TTS failed");
+        }
+    }, [stop, cleanupAudio]);
+
+    const pause = useCallback(() => {
+        if (audioRef.current && isSpeaking) {
+            audioRef.current.pause();
+            setIsPaused(true);
+        }
+    }, [isSpeaking]);
+
+    const resume = useCallback(() => {
+        if (audioRef.current && isPaused) {
+            audioRef.current.play();
+            setIsPaused(false);
+        }
+    }, [isPaused]);
+
+    useEffect(() => {
+        return () => { cleanupAudio(); };
+    }, [cleanupAudio]);
 
     return {
         speak,
@@ -191,9 +170,10 @@ export function useSpeechSynthesis(
         resume,
         isSpeaking,
         isPaused,
-        isSupported,
-        availableVoices,
-        currentVoice,
-        setVoice,
+        isSupported: true,
+        // Kept for API compatibility — Camb.ai handles voice selection server-side
+        availableVoices: [],
+        currentVoice: null,
+        setVoice: () => {},
     };
 }

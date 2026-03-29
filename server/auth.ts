@@ -34,6 +34,10 @@ export function setupAuth(app: Express) {
     // server/auth.ts - Inside your setupAuth function
 const isProd = process.env.NODE_ENV === "production";
 
+if (isProd && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET === "dev_secret_key")) {
+    throw new Error("SESSION_SECRET must be a strong secret in production");
+}
+
 const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET || "dev_secret_key",
     resave: false,

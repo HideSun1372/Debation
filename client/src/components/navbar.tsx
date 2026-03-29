@@ -3,7 +3,7 @@ import { useUser } from "@/lib/user-context";
 import { useAuth } from "@/hooks/use-auth";
 import { SkillBadge } from "./skill-badge";
 import { ThemeToggle } from "./theme-toggle";
-import { LayoutDashboard, Home, Menu, X, LogIn, LogOut, Code, Swords, Users, Crown } from "lucide-react";
+import { LayoutDashboard, Home, Menu, X, LogIn, LogOut, Code, Swords, Crown, Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useState, useRef, useEffect } from "react";
@@ -99,8 +99,7 @@ export function Navbar() {
   const authNavItems = [
     { href: "/", label: "Home", icon: Home },
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/play", label: "Play", icon: Swords },
-    { href: "/users", label: "Users", icon: Users },
+    { href: "/things", label: "Things", icon: Newspaper },
   ];
 
   const navItems = isAuthenticated ? authNavItems : publicNavItems;

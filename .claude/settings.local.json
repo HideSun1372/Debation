@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "WebFetch(domain:docs.camb.ai)",
+      "WebSearch",
+      "Bash(npm install:*)"
+    ]
+  }
+}

@@ -20,6 +20,7 @@ import Users from "@/pages/users";
 import UserProfile from "@/pages/user-profile";
 import AuthPage from "@/pages/auth-page";
 import Pricing from "@/pages/pricing";
+import Things from "@/pages/things";
 import NotFound from "@/pages/not-found";
 
 // Wrapper for protected routes
@@ -65,6 +66,9 @@ function Router() {
       </Route>
       <Route path="/pricing">
         {() => <ProtectedRoute component={Pricing} />}
+      </Route>
+      <Route path="/things">
+        {() => <ProtectedRoute component={Things} />}
       </Route>
 
       <Route component={NotFound} />
