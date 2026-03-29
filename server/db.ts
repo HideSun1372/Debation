@@ -17,26 +17,56 @@ if (pool) {
 
 // Ensure session table exists on startup
 export async function initializeSessionTable() {
-  if (!pool) return;
-
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS sessions (
-        sid varchar NOT NULL COLLATE "default" PRIMARY KEY,
-        sess json NOT NULL,
-        expire timestamp(6) NOT NULL
-      );
-      CREATE INDEX IF NOT EXISTS "IDX_session_expire" on sessions ("expire");
-    `);
-    console.log("Session table initialized");
-  } catch (err) {
-    console.error("Failed to initialize session table:", err);
+  if (!pool) {
+    console.log("No database pool available, skipping session table init");
+    return;
   }
+
+  const maxRetries = 3;
+  let lastError: any;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[Session Init] Attempt ${attempt}/${maxRetries}: Initializing session table...`);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS sessions (
+          sid varchar PRIMARY KEY,
+          sess jsonb NOT NULL,
+          expire timestamp NOT NULL
+        );
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON sessions ("expire");
+      `);
+
+      // Clean up expired sessions
+      const result = await pool.query(`
+        DELETE FROM sessions WHERE expire < NOW();
+      `);
+      console.log(`[Session Init] Cleaned up ${result.rowCount} expired sessions`);
+
+      console.log("✓ Session table initialized successfully");
+      return;
+    } catch (err: any) {
+      lastError = err;
+      console.error(`✗ Attempt ${attempt} failed:`, err.message);
+
+      if (attempt < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
+      }
+    }
+  }
+
+  console.error("✗ Failed to initialize session table after", maxRetries, "attempts");
+  throw lastError;
 }
 
 // Call on module load for background init
 initializeSessionTable().catch(err => {
-  console.error("Background session table init failed:", err);
+  console.error("Session table initialization failed:", err.message);
+  // Don't exit, allow the app to run and create table on-demand if needed
 });
 
 export { pool };
