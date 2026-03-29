@@ -30,6 +30,28 @@ export { UNIT_27_LESSONS } from "./unit27";
 export { UNIT_28_LESSONS } from "./unit28";
 export { UNIT_29_LESSONS } from "./unit29";
 export { UNIT_30_LESSONS } from "./unit30";
+export { UNIT_31_LESSONS } from "./unit31";
+export { UNIT_32_LESSONS } from "./unit32";
+export { UNIT_33_LESSONS } from "./unit33";
+export { UNIT_34_LESSONS } from "./unit34";
+export { UNIT_35_LESSONS } from "./unit35";
+export { UNIT_36_LESSONS } from "./unit36";
+export { UNIT_37_LESSONS } from "./unit37";
+export { UNIT_38_LESSONS } from "./unit38";
+export { UNIT_39_LESSONS } from "./unit39";
+export { UNIT_40_LESSONS } from "./unit40";
+export { UNIT_41_LESSONS } from "./unit41";
+export { UNIT_42_LESSONS } from "./unit42";
+export { UNIT_43_LESSONS } from "./unit43";
+export { UNIT_44_LESSONS } from "./unit44";
+export { UNIT_45_LESSONS } from "./unit45";
+export { UNIT_46_LESSONS } from "./unit46";
+export { UNIT_47_LESSONS } from "./unit47";
+export { UNIT_48_LESSONS } from "./unit48";
+export { UNIT_49_LESSONS } from "./unit49";
+export { UNIT_50_LESSONS } from "./unit50";
+export { UNIT_51_LESSONS } from "./unit51";
+export { UNIT_52_LESSONS } from "./unit52";
 
 import { MultiPageLesson } from "./types";
 import { UNIT_01_LESSONS } from "./unit01";
@@ -62,8 +84,30 @@ import { UNIT_27_LESSONS } from "./unit27";
 import { UNIT_28_LESSONS } from "./unit28";
 import { UNIT_29_LESSONS } from "./unit29";
 import { UNIT_30_LESSONS } from "./unit30";
+import { UNIT_31_LESSONS } from "./unit31";
+import { UNIT_32_LESSONS } from "./unit32";
+import { UNIT_33_LESSONS } from "./unit33";
+import { UNIT_34_LESSONS } from "./unit34";
+import { UNIT_35_LESSONS } from "./unit35";
+import { UNIT_36_LESSONS } from "./unit36";
+import { UNIT_37_LESSONS } from "./unit37";
+import { UNIT_38_LESSONS } from "./unit38";
+import { UNIT_39_LESSONS } from "./unit39";
+import { UNIT_40_LESSONS } from "./unit40";
+import { UNIT_41_LESSONS } from "./unit41";
+import { UNIT_42_LESSONS } from "./unit42";
+import { UNIT_43_LESSONS } from "./unit43";
+import { UNIT_44_LESSONS } from "./unit44";
+import { UNIT_45_LESSONS } from "./unit45";
+import { UNIT_46_LESSONS } from "./unit46";
+import { UNIT_47_LESSONS } from "./unit47";
+import { UNIT_48_LESSONS } from "./unit48";
+import { UNIT_49_LESSONS } from "./unit49";
+import { UNIT_50_LESSONS } from "./unit50";
+import { UNIT_51_LESSONS } from "./unit51";
+import { UNIT_52_LESSONS } from "./unit52";
 
-// Combined lessons for Units 1-30 (Beginner + Intermediate + Advanced)
+// Combined lessons for Units 1-52 (Beginner + Intermediate + Advanced + Expert + Master)
 export const ALL_MULTI_PAGE_LESSONS: MultiPageLesson[] = [
   ...UNIT_01_LESSONS,
   ...UNIT_02_LESSONS,
@@ -95,4 +139,26 @@ export const ALL_MULTI_PAGE_LESSONS: MultiPageLesson[] = [
   ...UNIT_28_LESSONS,
   ...UNIT_29_LESSONS,
   ...UNIT_30_LESSONS,
+  ...UNIT_31_LESSONS,
+  ...UNIT_32_LESSONS,
+  ...UNIT_33_LESSONS,
+  ...UNIT_34_LESSONS,
+  ...UNIT_35_LESSONS,
+  ...UNIT_36_LESSONS,
+  ...UNIT_37_LESSONS,
+  ...UNIT_38_LESSONS,
+  ...UNIT_39_LESSONS,
+  ...UNIT_40_LESSONS,
+  ...UNIT_41_LESSONS,
+  ...UNIT_42_LESSONS,
+  ...UNIT_43_LESSONS,
+  ...UNIT_44_LESSONS,
+  ...UNIT_45_LESSONS,
+  ...UNIT_46_LESSONS,
+  ...UNIT_47_LESSONS,
+  ...UNIT_48_LESSONS,
+  ...UNIT_49_LESSONS,
+  ...UNIT_50_LESSONS,
+  ...UNIT_51_LESSONS,
+  ...UNIT_52_LESSONS,
 ];

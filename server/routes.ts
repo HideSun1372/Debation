@@ -401,7 +401,8 @@ export async function registerRoutes(
         speechType,
         cxIntent,
         crossfireQuestion,
-        previousMessages
+        previousMessages,
+        voiceMode,
       } = req.body;
 
       if (debateId && message) {
@@ -421,7 +422,8 @@ export async function registerRoutes(
         skillModifier,
         speechName,
         speechType,
-        cxIntent
+        cxIntent,
+        voiceMode
       );
 
       // For crossfire-answer-check, include the question that was asked
@@ -1909,7 +1911,8 @@ function buildDebateSpeechPrompt(
   skillModifier: string,
   speechName: string,
   speechType: string,
-  cxIntent?: string
+  cxIntent?: string,
+  voiceMode?: boolean
 ): string {
   // Handle cross-examination AND crossfire with specific intents
   if ((speechType === "cross-examination" || speechType === "crossfire") && cxIntent) {
@@ -2139,7 +2142,7 @@ RULES:
 1. Stay in character based on your personality and skill level
 2. Make arguments appropriate for your side and the speech type
 3. Respond directly to your opponent's points when relevant
-4. Keep responses focused and appropriate for the speech (150-300 words for constructives, 100-200 for rebuttals)
+4. Keep responses focused and appropriate for the speech (${voiceMode ? "60-80 words max — this is voice mode, keep it concise and natural to speak aloud" : "150-300 words for constructives, 100-200 for rebuttals"})
 5. Use the claim-warrant-impact framework when making arguments
 6. Be respectful but competitive
 7. Adapt your approach based on the specific speech type

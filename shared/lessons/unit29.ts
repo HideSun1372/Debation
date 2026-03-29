@@ -148,11 +148,11 @@ export const UNIT_29_LESSONS: MultiPageLesson[] = [
                 id: "l29-02-q1",
                 question: "Why is it useful to watch your speech with the audio muted (Pass 2)?",
                 options: [
-                    { id: "a", text: "So you can focus on the opponent's arguments." },
-                    { id: "b", text: "To isolate and evaluate your body language and visual delivery without being distracted by content." },
+                    { id: "a", text: "To isolate and evaluate your body language and visual delivery without being distracted by content." },
+                    { id: "b", text: "So you can focus on the opponent's arguments." },
                     { id: "c", text: "To save time." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Muting the audio lets you focus only on how you look: eye contact, posture, gestures, and confidence. You cannot fix what you do not notice. Isolating visual delivery makes it easier to improve."
             },
             {
@@ -290,11 +290,11 @@ export const UNIT_29_LESSONS: MultiPageLesson[] = [
                 id: "l29-03-q2",
                 question: "Your opponent drops your best argument. The judge's paradigm says they are 'mostly Tab but will not vote for arguments they think are false.' What should you do?",
                 options: [
-                    { id: "a", text: "Assume you will win the argument and move on." },
-                    { id: "b", text: "Briefly extend the argument and add one clear piece of support so the judge is confident it is true." },
-                    { id: "c", text: "Run theory on the drop." }
+                    { id: "a", text: "Briefly extend the argument and add one clear piece of support so the judge is confident it is true." },
+                    { id: "b", text: "Run theory on the drop." },
+                    { id: "c", text: "Assume you will win the argument and move on." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Because the judge may intervene if they think the argument is false, you should give them a reason to believe it. A short extension with one clear warrant or piece of evidence reduces the chance they will reject it on intervention grounds."
             },
             {
@@ -357,11 +357,11 @@ export const UNIT_29_LESSONS: MultiPageLesson[] = [
                 id: "l29-04-q1",
                 question: "The judge wrote: 'Neg had better organization.' What is the most useful way to interpret this?",
                 options: [
-                    { id: "a", text: "The Neg was smarter." },
-                    { id: "b", text: "My speeches were probably harder to follow; I should work on structure and signposting." },
+                    { id: "a", text: "My speeches were probably harder to follow; I should work on structure and signposting." },
+                    { id: "b", text: "The Neg was smarter." },
                     { id: "c", text: "The judge preferred the Neg's arguments." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Organization usually refers to how clear and structured the speeches were, not to who was smarter or who had better arguments. Use this as a signal to improve your own structure, signposting, and flow."
             },
             {
@@ -447,11 +447,11 @@ export const UNIT_29_LESSONS: MultiPageLesson[] = [
                 id: "l29-05-q1",
                 question: "A Policy judge is judging Lincoln-Douglas (Values). You run a 'nuclear war' impact. They run a 'loss of dignity' impact. Who wins?",
                 options: [
-                    { id: "a", text: "Dignity (it's LD)." },
-                    { id: "b", text: "Nuclear War (probably)." },
+                    { id: "a", text: "Nuclear War (probably)." },
+                    { id: "b", text: "Dignity (it's LD)." },
                     { id: "c", text: "It's a tie." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Policy judges are trained to think in terms of measurable impacts (bodies, dollars). 'Dignity' is hard to quantify; 'nuclear war' is easy. They often default to big, concrete impacts unless you give them a framework that explicitly prioritizes the value impact."
             },
             {
@@ -479,11 +479,11 @@ export const UNIT_29_LESSONS: MultiPageLesson[] = [
                 id: "l29-05-q2",
                 question: "You are Aff in front of a policy judge. The Neg runs a politics DA. What should you do?",
                 options: [
-                    { id: "a", text: "Ignore it and focus on your case." },
-                    { id: "b", text: "Answer the link, internal link, and impact; give a clear comparison to your advantages." },
-                    { id: "c", text: "Run theory on the DA." }
+                    { id: "a", text: "Answer the link, internal link, and impact; give a clear comparison to your advantages." },
+                    { id: "b", text: "Run theory on the DA." },
+                    { id: "c", text: "Ignore it and focus on your case." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Policy judges expect you to engage the DA. Answer each part of the link chain and weigh your advantages against the DA impact. Ignoring it will not work; they will vote on the flow."
             },
             {
@@ -546,11 +546,11 @@ export const UNIT_29_LESSONS: MultiPageLesson[] = [
                 id: "l29-06-q1",
                 question: "You read a statistic: '90% of people benefit.' The LD judge looks unimpressed. Why?",
                 options: [
-                    { id: "a", text: "They hate math." },
-                    { id: "b", text: "You haven't proved that 'benefit' is the goal. Maybe 'Justice' is the goal, and the 10% are being treated unjustly." },
+                    { id: "a", text: "You haven't proved that 'benefit' is the goal. Maybe 'Justice' is the goal, and the 10% are being treated unjustly." },
+                    { id: "b", text: "They hate math." },
                     { id: "c", text: "The stat is old." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "In LD, utilitarianism (greatest good for the greatest number) is only one framework. Tyranny of the majority is a real concern. Justice for the minority might outweigh benefit for the majority. You need to win the framework first."
             },
             {
@@ -588,11 +588,11 @@ export const UNIT_29_LESSONS: MultiPageLesson[] = [
                 id: "l29-06-q2",
                 question: "Your opponent wins that their value is 'Justice' and their criterion is 'Protecting the vulnerable.' You have a lot of evidence that your plan helps the majority. What should you do?",
                 options: [
-                    { id: "a", text: "Ignore framework and just extend your evidence." },
-                    { id: "b", text: "Argue that under Justice and protecting the vulnerable, your plan helps the most vulnerable (e.g., the worst-off) and theirs leaves them behind." },
-                    { id: "c", text: "Say 'Framework doesn't matter' and move on." }
+                    { id: "a", text: "Argue that under Justice and protecting the vulnerable, your plan helps the most vulnerable (e.g., the worst-off) and theirs leaves them behind." },
+                    { id: "b", text: "Say 'Framework doesn't matter' and move on." },
+                    { id: "c", text: "Ignore framework and just extend your evidence." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "You must engage the framework. The best move is to meet their standard: show that under Justice and protecting the vulnerable, you do it better. Use their framework to tell your story."
             },
             {
@@ -665,11 +665,11 @@ export const UNIT_29_LESSONS: MultiPageLesson[] = [
                 id: "l29-07-q1",
                 question: "You have a judge who seems to love evidence but also writes 'framework' on their paradigm. How should you approach the round?",
                 options: [
-                    { id: "a", text: "Ignore framework and only give evidence." },
-                    { id: "b", text: "Give both: a clear framework first, then evidence that fits under it." },
-                    { id: "c", text: "Only do framework and skip evidence." }
+                    { id: "a", text: "Give both: a clear framework first, then evidence that fits under it." },
+                    { id: "b", text: "Only do framework and skip evidence." },
+                    { id: "c", text: "Ignore framework and only give evidence." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Mixed judges want both. Give them a clear framework so they know how to weigh, then support it with evidence. That way you satisfy both preferences."
             },
             {
@@ -697,11 +697,11 @@ export const UNIT_29_LESSONS: MultiPageLesson[] = [
                 id: "l29-07-q2",
                 question: "Your judge's paradigm says 'Tabula Rasa' but also 'I will vote on what I think is true.' How should you treat them?",
                 options: [
-                    { id: "a", text: "Pure tab—they will only vote on what's on the flow." },
+                    { id: "a", text: "Mixed—give clean flow and clear issues, but also make sure your arguments are persuasive and logical so they 'think it's true.'" },
                     { id: "b", text: "Interventionist—they will vote on what they believe, so persuade them." },
-                    { id: "c", text: "Mixed—give clean flow and clear issues, but also make sure your arguments are persuasive and logical so they 'think it's true.'" }
+                    { id: "c", text: "Pure tab—they will only vote on what's on the flow." }
                 ],
-                correctAnswer: "c",
+                correctAnswer: "a",
                 explanation: "Paradigms can send mixed signals. 'Tabula Rasa' plus 'vote on what I think is true' suggests they want a clean flow but will intervene if something does not make sense. Give them both: clear issues and persuasive, logical arguments."
             },
             {

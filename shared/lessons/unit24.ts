@@ -37,12 +37,12 @@ export const UNIT_24_LESSONS: MultiPageLesson[] = [
                 id: "l24-01-q1",
                 question: "Which of these is a structural Antithesis?",
                 options: [
-                    { id: "a", text: "The cat sat on the mat." },
-                    { id: "b", text: "Float like a butterfly, sting like a bee." },
+                    { id: "a", text: "Float like a butterfly, sting like a bee." },
+                    { id: "b", text: "The cat sat on the mat." },
                     { id: "c", text: "I am hungry and tired." },
                     { id: "d", text: "Justice is blind." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "Though also Similes, it contracts 'Float' (Soft) with 'Sting' (Hard) and 'Butterfly' (Harmless) with 'Bee' (Harmful). The structure is perfectly balanced.",
                 tip: "If you can put it on a T-Shirt, it's probably Antithesis."
             },
@@ -229,10 +229,10 @@ export const UNIT_24_LESSONS: MultiPageLesson[] = [
                 options: [
                     { id: "a", text: "You win because you made more arguments." },
                     { id: "b", text: "The judge flows everything perfectly." },
-                    { id: "c", text: "You lose. The judge stops listening and thinks you are rude." },
-                    { id: "d", text: "It depends on the coin flip." }
+                    { id: "c", text: "It depends on the coin flip." },
+                    { id: "d", text: "You lose. The judge stops listening and thinks you are rude." }
                 ],
-                correctAnswer: "c",
+                correctAnswer: "d",
                 explanation: "To a normal person, Spreading sounds like a panic attack or a medical condition. They will not vote for it. They will vote for the person who speaks like a human. Adaptation is the #1 skill.",
                 tip: "Watch the judge's pen. If the pen stops moving, you are talking too fast."
             },
@@ -416,11 +416,11 @@ export const UNIT_24_LESSONS: MultiPageLesson[] = [
                 question: "You are in the 'Bid Round' (Octofinals). If you win, you get a Gold Bid. If you lose, you get nothing. The judge looks tired. What is the play?",
                 options: [
                     { id: "a", text: "Go for high-speed technical tricks to confuse the opponent." },
-                    { id: "b", text: "Slow down, focus on the biggest, simplest Impact, and ensure clarity." },
-                    { id: "c", text: "Offer a draw." },
-                    { id: "d", text: "Complain about the schedule." }
+                    { id: "b", text: "Offer a draw." },
+                    { id: "c", text: "Complain about the schedule." },
+                    { id: "d", text: "Slow down, focus on the biggest, simplest Impact, and ensure clarity." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "High stakes + Tired Judge = Risk Aversion. Don't get cute. Technical tricks often backfire when a judge is exhausted. Big, clear, undeniable impacts win bubble rounds. 'Even if they win X, we save the world.'",
                 tip: "Write 'SLOW DOWN' on your flow paper in big letters."
             },
@@ -587,12 +587,12 @@ export const UNIT_24_LESSONS: MultiPageLesson[] = [
                 id: "l24-07-q1",
                 question: "Final concept check: What is a 'Ghost Bid'?",
                 options: [
-                    { id: "a", text: "A scary argument." },
-                    { id: "b", text: "A bid earned but not used/usable." },
+                    { id: "a", text: "A bid earned but not used/usable." },
+                    { id: "b", text: "A scary argument." },
                     { id: "c", text: "A bid you buy." },
                     { id: "d", text: "A fake bid." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "It counts for your resume (and sometimes for At-Large qualification) but isn't a direct automatic entry ticket if the team composition changes or you can't go."
             },
             {

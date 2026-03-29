@@ -52,11 +52,11 @@ export const UNIT_22_LESSONS: MultiPageLesson[] = [
                 question: "You are reading a 'Nuclear War' impact card describing millions of hypothetical deaths. What is the strategically correct tone?",
                 options: [
                     { id: "a", text: "High energy, fast pace, excitement (to show importance)." },
-                    { id: "b", text: "Somber, heavy, slower pace, lower pitch (to show gravity)." },
+                    { id: "b", text: "Sarcastic and light (to mock the opponent)." },
                     { id: "c", text: "Monotone and efficient (to save time)." },
-                    { id: "d", text: "Sarcastic and light (to mock the opponent)." }
+                    { id: "d", text: "Somber, heavy, slower pace, lower pitch (to show gravity)." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Nuclear war is a tragedy. Your voice should carry 'Gravitas' (weight). If you sound excited about millions dying, you sound like a sociopath. If you sound bored, you sound incompetent. You must sound burdened by the tragedy.",
                 tip: "Imagine you are breaking the bad news to a family member. That is the tone for high-magnitude impacts."
             },
@@ -248,12 +248,12 @@ export const UNIT_22_LESSONS: MultiPageLesson[] = [
                 id: "l22-03-q1",
                 question: "In the 'Variable Pacing' strategy, when is the most critical time to be in 'Gear 1' (The Slowest Speed)?",
                 options: [
-                    { id: "a", text: "When reading the credentials of the author." },
-                    { id: "b", text: "When delivering the Tagline and the Terminal Impact." },
+                    { id: "a", text: "When delivering the Tagline and the Terminal Impact." },
+                    { id: "b", text: "During the roadmap (intro)." },
                     { id: "c", text: "When reading the middle warrants of a card." },
-                    { id: "d", text: "During the roadmap (intro)." }
+                    { id: "d", text: "When reading the credentials of the author." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "The Tagline is what the judge writes on their flow chart. The Impact is the reason they vote for you. If they miss the Tag, they lose your argument. If they miss the Impact, they lose your 'Why'. These MUST be delivered slowly and clearly. The middle data can be sped up.",
                 tip: "Imagine you are dictating a letter to a slow typist. That is how you should read your Taglines."
             },
@@ -337,12 +337,12 @@ export const UNIT_22_LESSONS: MultiPageLesson[] = [
                 id: "l22-04-q1",
                 question: "Which tagline uses the most effective Pathos?",
                 options: [
-                    { id: "a", text: "Subpoint B: GDP decreases by 5% annually." },
-                    { id: "b", text: "Subpoint B: We are bankrupting the next generation." },
-                    { id: "c", text: "Subpoint B: Fiscal irresponsibility is suboptimal policy." },
-                    { id: "d", text: "Subpoint B: The government is stupid and wrong." }
+                    { id: "a", text: "Subpoint B: Fiscal irresponsibility is suboptimal policy." },
+                    { id: "b", text: "Subpoint B: The government is stupid and wrong." },
+                    { id: "c", text: "Subpoint B: GDP decreases by 5% annually." },
+                    { id: "d", text: "Subpoint B: We are bankrupting the next generation." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Option B uses 'Bankrupting' (violent, active verb) and 'Next Generation' (Victim identification). It makes the economic loss feel like a *moral failure* against innocent children. A is just math. C is robotic. D is petulant.",
                 tip: "Verbs carry the emotion. 'Decreases' is boring. 'Slashes', 'Crushes', 'Eviscerates' are emotional."
             },
@@ -439,12 +439,12 @@ export const UNIT_22_LESSONS: MultiPageLesson[] = [
                 id: "l22-05-q1",
                 question: "Which statement is the most defensible in a debate?",
                 options: [
-                    { id: "a", text: "Socialism always fails eventually." },
-                    { id: "b", text: "Socialism has historically struck a balance of inefficiencies in the majority of observed cases." },
-                    { id: "c", text: "Socialism creates poverty." },
-                    { id: "d", text: "Socialism is impossible to implement." }
+                    { id: "a", text: "Socialism is impossible to implement." },
+                    { id: "b", text: "Socialism creates poverty." },
+                    { id: "c", text: "Socialism always fails eventually." },
+                    { id: "d", text: "Socialism has historically struck a balance of inefficiencies in the majority of observed cases." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "Statement B is hedged with multiple qualifiers: 'Historically' (Time), 'Inefficiencies' (Softer than 'Fails'), 'Majority of cases' (Not all). To disprove A, C, or D, the opponent only needs one counter-example (e.g., 'What about Norway?'). To disprove B, they would need a massive statistical analysis proving the majority was efficient. B is a fortress.",
                 tip: "The boring answer is usually the correct one in debate strategy. Exciting answers are easy to kill."
             },
@@ -541,12 +541,12 @@ export const UNIT_22_LESSONS: MultiPageLesson[] = [
                 id: "l22-06-q1",
                 question: "Which of these is an example of an 'A Fortiori' argument?",
                 options: [
-                    { id: "a", text: "It happened in the past, so it will happen again. (Induction)" },
-                    { id: "b", text: "If a child can solve this puzzle, surely a genius can solve it. (A Fortiori)" },
-                    { id: "c", text: "Expert X says it is true. (Appeal to Authority)" },
-                    { id: "d", text: "The majority of people agree. (Ad Populum)" }
+                    { id: "a", text: "If a child can solve this puzzle, surely a genius can solve it. (A Fortiori)" },
+                    { id: "b", text: "Expert X says it is true. (Appeal to Authority)" },
+                    { id: "c", text: "The majority of people agree. (Ad Populum)" },
+                    { id: "d", text: "It happened in the past, so it will happen again. (Induction)" }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "a",
                 explanation: "It argues from the weaker case (child) to the stronger case (genius). If the lower bar is cleared, the higher bar is automatically cleared. It implies certainty.",
                 tip: "Look for 'Even if'. 'Even if the economy was booming this would fail; and the economy is crashing, so it will definitely fail.'"
             },

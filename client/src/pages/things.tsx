@@ -37,8 +37,8 @@ export default function Things() {
               <Icon className="h-4 w-4" />
               {tab.label}
               {tab.id === "incidents" && (
-                <Badge variant="destructive" className="h-5 min-w-5 flex items-center justify-center rounded-full p-0 text-xs">
-                  1
+                <Badge variant="secondary" className="h-5 w-5 flex items-center justify-center rounded-full p-0 text-xs bg-green-100 text-green-800 leading-none">
+                  0
                 </Badge>
               )}
             </button>
@@ -58,8 +58,20 @@ export default function Things() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl">Changelogs: March 28th, 2026 (v3)</CardTitle>
+                <CardTitle className="text-xl">Changelogs: March 29th, 2026</CardTitle>
                 <Badge variant="secondary" className="text-xs">Latest</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground leading-relaxed">
+                The Expert and Master curriculum sections are now fully complete — all 22 units (31–52) are live with detailed lessons, questions, and practice exercises. Voice debate got several fixes: audio now plays correctly without the mute/unmute workaround, the timer ticks for all speeches (including opponent turns), and opponent speech is properly cut off when time expires. The Dominion badge on profile pages has also been fixed to display at the correct size.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl">Changelogs: March 28th, 2026 (v3)</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
@@ -97,16 +109,16 @@ export default function Things() {
 
       {activeTab === "incidents" && (
         <div className="space-y-4">
-          <Card className="border-destructive/30">
+          <Card className="border-green-500/30 bg-green-500/5">
             <CardHeader>
-              <div className="flex items-center gap-3">
-                <AlertTriangle className="h-5 w-5 text-destructive" />
+              <div className="flex items-center gap-3 line-through">
+                <AlertTriangle className="h-5 w-5 text-green-600" />
                 <CardTitle className="text-xl">Voice Debate Not Working</CardTitle>
               </div>
-              <Badge variant="destructive" className="w-fit text-xs">Ongoing</Badge>
+              <Badge variant="secondary" className="w-fit text-xs bg-green-100 text-green-800">✅ Resolved</Badge>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed line-through">
                 Voice debate currently doesn't work. We are trying our best on fixing this issue. Please be patient!
               </p>
             </CardContent>

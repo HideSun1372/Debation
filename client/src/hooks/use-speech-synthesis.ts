@@ -48,6 +48,9 @@ export function useSpeechSynthesis(
             audioRef.current.pause();
             audioRef.current.onended = null;
             audioRef.current.onerror = null;
+            if (audioRef.current.parentNode) {
+                audioRef.current.parentNode.removeChild(audioRef.current);
+            }
             audioRef.current = null;
         }
         if (audioBlobUrlRef.current) {
@@ -67,9 +70,6 @@ export function useSpeechSynthesis(
 
         // Cancel any ongoing speech
         stop();
-
-        setIsSpeaking(true);
-        onStartRef.current?.();
 
         try {
             console.log("[TTS] Starting TTS for text:", text.substring(0, 50) + "...");
@@ -92,15 +92,23 @@ export function useSpeechSynthesis(
             const url = URL.createObjectURL(blob);
             audioBlobUrlRef.current = url;
 
-            // Create audio element in DOM (bypasses autoplay policy better)
+            // Create audio element in DOM with explicit type
             const audio = document.createElement("audio");
+            audio.style.display = "none"; // Hide but keep in DOM
+            audio.crossOrigin = "anonymous";
+            document.body.appendChild(audio);
+
+            // Set source AFTER adding to DOM
             audio.src = url;
-            audio.muted = true; // Mute initially to bypass autoplay restrictions
 
             audioRef.current = audio;
 
             audio.onloadedmetadata = () => {
                 console.log("[TTS] Audio metadata loaded, duration:", audio.duration);
+            };
+
+            audio.oncanplaythrough = () => {
+                console.log("[TTS] Audio can play through");
             };
 
             audio.onended = () => {
@@ -113,27 +121,28 @@ export function useSpeechSynthesis(
 
             audio.onerror = (e) => {
                 const errMsg = `Audio playback error: ${audio.error?.message || "unknown"}`;
-                console.error("[TTS]", errMsg, audio.error);
+                console.error("[TTS] audio.onerror:", errMsg, audio.error);
                 cleanupAudio();
                 setIsSpeaking(false);
                 setIsPaused(false);
                 onErrorRef.current?.(errMsg);
             };
 
-            console.log("[TTS] Playing audio, src:", url);
+            console.log("[TTS] Playing audio, src:", url, "blob size:", blob.size);
             try {
                 const playPromise = audio.play();
                 if (playPromise !== undefined) {
-                    await playPromise;
+                    await playPromise.catch((err: any) => {
+                        console.error("[TTS] play() promise rejected:", err.message, err.name);
+                        throw err;
+                    });
                     console.log("[TTS] Audio.play() succeeded");
+                    // Fire onStart only now — when audio is actually playing
+                    setIsSpeaking(true);
+                    onStartRef.current?.();
                 }
-                // Unmute after playback starts
-                setTimeout(() => {
-                    audio.muted = false;
-                    console.log("[TTS] Audio unmuted");
-                }, 100);
             } catch (playErr: any) {
-                console.error("[TTS] Audio.play() threw error:", playErr.message);
+                console.error("[TTS] Audio.play() threw error:", playErr.message, playErr.name);
                 throw playErr;
             }
         } catch (err: any) {
@@ -163,6 +172,11 @@ export function useSpeechSynthesis(
         return () => { cleanupAudio(); };
     }, [cleanupAudio]);
 
+    const getPlaybackInfo = useCallback(() => ({
+        currentTime: audioRef.current?.currentTime ?? 0,
+        duration: audioRef.current?.duration ?? 0,
+    }), []);
+
     return {
         speak,
         stop,
@@ -171,6 +185,7 @@ export function useSpeechSynthesis(
         isSpeaking,
         isPaused,
         isSupported: true,
+        getPlaybackInfo,
         // Kept for API compatibility — Camb.ai handles voice selection server-side
         availableVoices: [],
         currentVoice: null,

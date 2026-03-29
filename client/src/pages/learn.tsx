@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,15 +47,16 @@ import { cn } from "@/lib/utils";
 type OnboardingStep = "welcome" | "experience" | "assessment" | "result";
 
 export default function Learn() {
-  const { 
-    user, 
-    completeOnboarding, 
+  const {
+    user,
+    completeOnboarding,
     completeLesson,
     completeLessons,
-    setCurrentLesson, 
+    setCurrentLesson,
     isLessonCompleted,
     resetLessonProgress,
     isAdmin,
+    isLoadingProgress,
   } = useUser();
 
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
@@ -120,6 +121,25 @@ export default function Learn() {
   const [advancementTestComplete, setAdvancementTestComplete] = useState(false);
 
   const hasCompletedOnboarding = user.lessonProgress.hasCompletedOnboarding;
+
+  // Track if we just exited a lesson to skip loading screen
+  const lastActiveLessonId = useRef<string | null>(null);
+  const justExitedLesson = useRef(false);
+
+  // Detect when exiting a lesson (transition from non-null to null)
+  useEffect(() => {
+    if (lastActiveLessonId.current !== null && activeLessonId === null) {
+      justExitedLesson.current = true;
+    }
+    lastActiveLessonId.current = activeLessonId;
+  }, [activeLessonId]);
+
+  // Reset the flag after one render
+  useEffect(() => {
+    if (justExitedLesson.current) {
+      justExitedLesson.current = false;
+    }
+  }, []);
 
   const getAllLessonIds = (): string[] => {
     const ids: string[] = [];
@@ -994,6 +1014,14 @@ export default function Learn() {
     };
     return labels[tier] || tier;
   };
+
+  if (isLoadingProgress && !activeLessonId && !justExitedLesson.current) {
+    return (
+      <div className="container mx-auto px-4 py-16 max-w-2xl flex items-center justify-center">
+        <div className="text-center text-muted-foreground">Loading your progress...</div>
+      </div>
+    );
+  }
 
   if (!hasCompletedOnboarding) {
     return (
@@ -2027,6 +2055,41 @@ export default function Learn() {
                   );
                 })}
               </div>
+
+              {(() => {
+                const allTiers: CurriculumTier[] = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT", "MASTER"];
+                const tierIndex = allTiers.indexOf(tier);
+                const prevTier = tierIndex > 0 ? allTiers[tierIndex - 1] : null;
+                const nextTier = tierIndex < allTiers.length - 1 ? allTiers[tierIndex + 1] : null;
+                const isSectionComplete = tierLessonIds.length > 0 && completedInTier === tierLessonIds.length;
+                const isNextAvailable = nextTier ? isTierAvailable(nextTier) : false;
+
+                if (!prevTier && !isSectionComplete) return null;
+
+                return (
+                  <div className="flex items-center justify-between gap-3 pt-4 border-t">
+                    {prevTier ? (
+                      <Button
+                        variant="outline"
+                        className="gap-2"
+                        onClick={() => { setActiveSection(prevTier); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                        Back to {prevTier.charAt(0) + prevTier.slice(1).toLowerCase()}
+                      </Button>
+                    ) : <div />}
+                    {isSectionComplete && nextTier && isNextAvailable && (
+                      <Button
+                        className="gap-2"
+                        onClick={() => { setActiveSection(nextTier); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                      >
+                        Move to {nextTier.charAt(0) + nextTier.slice(1).toLowerCase()}
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                );
+              })()}
             </TabsContent>
           );
         })}

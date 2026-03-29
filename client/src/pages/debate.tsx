@@ -230,9 +230,7 @@ export default function Debate() {
         setCxQuestioner(null);
         setCxStarted(false);
 
-        if (isUserSpeech(currentSpeech)) {
-          setIsTimerRunning(true);
-        }
+        setIsTimerRunning(true); // Timer always runs for all speeches
       }
     }
   }, [currentSpeechIndex, format]);
@@ -262,7 +260,10 @@ export default function Debate() {
   useEffect(() => {
     // Timer runs when: it's user's turn, OR we're in CX mode (regardless of questioner role)
     // For PvP: only run when opponent has joined
-    const shouldRun = isTimerRunning && !isLoading && !isDebateComplete && (isUserTurn || isCxMode) && !waitingForOpponent;
+    // Timer ticks for all turns. For user turn, pause while loading (submitting).
+    // For opponent turn, always tick — they must finish within time.
+    const shouldRun = isTimerRunning && !isDebateComplete && !waitingForOpponent &&
+      (isCxMode || !isUserTurn || !isLoading);
     if (!shouldRun) return;
 
     const interval = setInterval(() => {
@@ -293,6 +294,53 @@ export default function Debate() {
       setCxTimedOut(true);
     }
   }, [isCxMode, speechTimeRemaining, cxTimedOut, isLoading]);
+
+  // Cut off opponent speech when timer expires
+  useEffect(() => {
+    if (speechTimeRemaining > 0 || isUserTurn || isCxMode || isDebateComplete || !isTimerRunning) return;
+
+    // Stop TTS if playing
+    if (isAudioPlaying) {
+      // Estimate how many words were heard based on audio playback position
+      const { currentTime, duration } = speechSynthesis.getPlaybackInfo();
+      const fullContent = pendingOpponentMessageRef.current?.content || "";
+      if (fullContent && duration > 0) {
+        const ratio = Math.min(1, currentTime / duration);
+        const words = fullContent.split(/\s+/);
+        const heardWords = Math.max(1, Math.round(ratio * words.length));
+        const truncated = words.slice(0, heardWords).join(" ");
+        const msg = pendingOpponentMessageRef.current!;
+        setMessages(prev => [...prev, { ...msg, content: truncated }]);
+      }
+      speechSynthesis.stop();
+      setIsAudioPlaying(false);
+      setVoiceState("idle");
+    }
+
+    // Stop typing if in progress, trim to displayed words
+    if (typingMessage) {
+      const words = typingMessage.fullContent.split(/\s+/);
+      const truncated = words.slice(0, typingMessage.displayedWordCount).join(" ");
+      setMessages(prev => prev.map(m =>
+        m.id === typingMessage.messageId ? { ...m, content: truncated } : m
+      ));
+      if (typingIntervalRef.current) {
+        clearTimeout(typingIntervalRef.current);
+        typingIntervalRef.current = null;
+      }
+      setTypingMessage(null);
+    }
+
+    // Clear all blocking state
+    onTypingCompleteRef.current = null;
+    ttsCompletionCallbackRef.current = null;
+    isDeliveringOpponentSpeechRef.current = false;
+    pendingOpponentMessageRef.current = null;
+
+    setIsLoading(false);
+    setIsTimerRunning(false);
+    setCurrentSpeechIndex(prev => prev + 1);
+  }, [speechTimeRemaining, isUserTurn, isCxMode, isDebateComplete, isTimerRunning, isAudioPlaying, typingMessage, speechSynthesis]);
 
   // Typing simulation effect - simulates AI typing at realistic speed
   useEffect(() => {
@@ -368,6 +416,11 @@ export default function Debate() {
   const ttsCompletionCallbackRef = useRef<(() => void) | null>(null);
   const speechSynthesis = useSpeechSynthesis({
     rate: 1.1, // Slightly faster for debate pacing
+    onStart: () => {
+      // Audio is actually playing now — safe to show opponent_speaking state
+      setIsAudioPlaying(true);
+      setVoiceState("opponent_speaking");
+    },
     onEnd: () => {
       setIsAudioPlaying(false);
       setVoiceState("idle");
@@ -383,15 +436,13 @@ export default function Debate() {
     },
   });
 
-  // Play TTS audio for AI opponent's message (now using browser synthesis)
+  // Play TTS audio for AI opponent's message
   const playTTS = useCallback((text: string, onComplete?: () => void): void => {
     if (audioMuted || !speechSynthesis.isSupported) {
       onComplete?.();
       return;
     }
 
-    setIsAudioPlaying(true);
-    setVoiceState("opponent_speaking");
     ttsCompletionCallbackRef.current = onComplete || null;
     speechSynthesis.speak(text);
   }, [audioMuted, speechSynthesis]);
@@ -425,7 +476,8 @@ export default function Debate() {
       isDeliveringOpponentSpeechRef.current = true;
 
       pendingOpponentMessageRef.current = message;
-      setVoiceState("opponent_speaking");
+      // Don't set opponent_speaking here — onStart in useSpeechSynthesis will set it
+      // once audio is actually playing (after TTS fetch completes)
 
       playTTS(message.content, () => {
         // Clear blocking ref when TTS completes
@@ -776,6 +828,7 @@ export default function Debate() {
               speechName: speechToDeliver.name,
               speechType: speechToDeliver.type,
               previousMessages: messages,
+              voiceMode,
             });
 
             const data = await response.json();
@@ -1113,6 +1166,7 @@ export default function Debate() {
             speechName: nextSpeech.name,
             speechType: nextSpeech.type,
             previousMessages: messages.concat(userMessage),
+            voiceMode,
           });
 
           const data = await response.json();
@@ -1312,18 +1366,11 @@ export default function Debate() {
   // Reset voice state when loading finishes (after sending)
   useEffect(() => {
     if (!isLoading && voiceState === "sending") {
-      // Determine next state based on whose turn it is
-      if (isUserTurn && !isDebateComplete) {
-        // Still user's turn (e.g., during CX), go back to idle so auto-start can trigger
-        setVoiceState("idle");
-      } else if (!isDebateComplete) {
-        // Opponent's turn - will transition to opponent_speaking when they respond
-        setVoiceState("opponent_speaking");
-      } else {
-        setVoiceState("idle");
-      }
+      // Always return to idle - let playTTS and enqueueAiMessage handle opponent_speaking state
+      // This prevents the button from showing before audio actually starts
+      setVoiceState("idle");
     }
-  }, [isLoading, voiceState, isUserTurn, isDebateComplete]);
+  }, [isLoading, voiceState]);
 
   // For PvP, opponent is null (human); for AI we need opponent, topic, format
   if (!topic || !format || (!isPvP && !opponent)) {
@@ -1587,12 +1634,11 @@ export default function Debate() {
                 {audioMuted ? <VolumeX className="h-4 w-4 mr-2" /> : <Volume2 className="h-4 w-4 mr-2" />}
                 {audioMuted ? "Unmute AI" : "Mute AI"}
               </Button>
-              {voiceState === "opponent_speaking" && (
+              {isUserTurn && speechRecognition.isListening && (
                 <Button variant="outline" size="sm" onClick={() => {
-                  speechSynthesis.stop();
-                  setVoiceState("idle");
+                  speechRecognition.stopListening();
                 }}>
-                  Stop Talking
+                  Stop Recording
                 </Button>
               )}
               {messages.length >= 2 && (

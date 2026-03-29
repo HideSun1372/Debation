@@ -153,11 +153,11 @@ export const UNIT_21_LESSONS: MultiPageLesson[] = [
                 question: "Which framing strategy makes the 'Tax the Rich' argument most persuasive?",
                 options: [
                     { id: "a", text: "Punishment Frame: Rich people are evil and deserve to pay." },
-                    { id: "b", text: "Fairness Frame: They use public roads/schools to get rich, so they should pay back." },
-                    { id: "c", text: "Envy Frame: It's not fair they have yachts." },
-                    { id: "d", text: "Math Frame: We need money." }
+                    { id: "b", text: "Envy Frame: It's not fair they have yachts." },
+                    { id: "c", text: "Math Frame: We need money." },
+                    { id: "d", text: "Fairness Frame: They use public roads/schools to get rich, so they should pay back." }
                 ],
-                correctAnswer: "b",
+                correctAnswer: "d",
                 explanation: "The Fairness Frame (Reciprocity) appeals to universal values. The Punishment/Envy frames can backfire by looking petty. Framing it as 'paying back investment' makes taxes sound like a duty rather than a theft."
             },
             {
