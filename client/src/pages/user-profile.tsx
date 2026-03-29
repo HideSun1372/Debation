@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SkillBadge } from "@/components/skill-badge";
-import { Trophy, Swords, ArrowLeft, Loader2, UserPlus, Check, Users, UserMinus } from "lucide-react";
+import { Trophy, Swords, ArrowLeft, Loader2, UserPlus, Check, Users, UserMinus, Crown, Code } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { apiUrl } from "@/lib/api-config";
 
 type ProfileData = {
@@ -14,6 +15,10 @@ type ProfileData = {
   firstName: string | null;
   lastName: string | null;
   profileImageUrl: string | null;
+  bio: string | null;
+  isCreator: boolean;
+  isDeveloper: boolean;
+  isPro: boolean;
   skillPoints: number;
   totalDebates: number;
   wins: number;
@@ -202,8 +207,43 @@ export default function UserProfile() {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h1 className="text-2xl font-bold">{getDisplayName(profile)}</h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-2xl font-bold">{getDisplayName(profile)}</h1>
+                  <div className="h-0 overflow-visible flex items-center gap-1">
+                  <TooltipProvider>
+                    {profile.isCreator && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-default inline-flex items-center justify-center h-7 w-7 rounded-full bg-amber-600 text-white shadow-sm self-center">
+                            <Crown className="h-4 w-4" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>Creator</TooltipContent>
+                      </Tooltip>
+                    )}
+                    {!profile.isCreator && profile.isDeveloper && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-default inline-flex items-center justify-center h-7 w-7 rounded-full bg-destructive text-destructive-foreground shadow-sm">
+                            <Code className="h-4 w-4" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>Developer</TooltipContent>
+                      </Tooltip>
+                    )}
+                    {profile.isPro && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <img src="/dominion-logo.png" alt="Dominion" className="h-[85px] w-[85px] object-contain cursor-default self-center -ml-5" />
+                        </TooltipTrigger>
+                        <TooltipContent>Dominion Member</TooltipContent>
+                      </Tooltip>
+                    )}
+                  </TooltipProvider>
+                  </div>
+                </div>
                 <p className="text-muted-foreground">@{profile.username}</p>
+                {profile.bio?.trim() && <p className="text-sm mt-2 max-w-md">{profile.bio}</p>}
                 <SkillBadge points={profile.skillPoints} size="lg" className="mt-2" />
               </div>
             </div>

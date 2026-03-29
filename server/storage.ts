@@ -579,6 +579,7 @@ export class MemStorage implements IStorage {
       firstName: insertUser.firstName ?? null,
       lastName: insertUser.lastName ?? null,
       profileImageUrl: insertUser.profileImageUrl ?? null,
+      bio: insertUser.bio ?? null,
       skillPoints: insertUser.skillPoints ?? 500,
       totalDebates: insertUser.totalDebates ?? 0,
       wins: insertUser.wins ?? 0,

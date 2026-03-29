@@ -139,7 +139,13 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           {isCreator && <Badge variant="default" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5 bg-amber-600 hover:bg-amber-600"><Crown className="h-3 w-3" /> Creator</Badge>}
-          {!isCreator && (isAdmin || isDeveloper) && <Badge variant="destructive" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5"><Code className="h-3 w-3" /> Dev</Badge>}
+          {!isCreator && (isAdmin || isDeveloper) && <Badge variant="destructive" className="hidden sm:inline-flex items-center gap-1 text-[10px] h-5 px-1.5"><Code className="h-3 w-3" /> Developer</Badge>}
+          {!isCreator && !isDeveloper && authUser?.isPro && (
+            <span className="hidden sm:inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-white bg-gradient-to-r from-blue-600 to-amber-500">
+              <img src="/dominion-logo.png" alt="" className="h-3.5 w-3.5 object-contain flex-shrink-0 scale-[3]" />
+              Dominion
+            </span>
+          )}
           {isAuthenticated && <SkillBadge points={user.skillPoints} size="sm" />}
           <ThemeToggle />
 

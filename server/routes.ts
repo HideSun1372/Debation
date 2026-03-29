@@ -800,12 +800,21 @@ Respond with a JSON object:
       if (!username.trim()) return res.status(400).json({ error: "Username is required" });
       const user = await storage.getUserByUsername(username.trim());
       if (!user) return res.status(404).json({ error: "User not found" });
+      const isCreator = user.email === CREATOR_EMAIL;
+      const isDeveloper =
+        isCreator ||
+        (user as any).isDeveloper === true ||
+        (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL);
       const publicProfile = {
         id: user.id,
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
         profileImageUrl: user.profileImageUrl,
+        bio: user.bio,
+        isCreator,
+        isDeveloper: !!isDeveloper,
+        isPro: user.isPro,
         skillPoints: user.skillPoints,
         totalDebates: user.totalDebates,
         wins: user.wins,

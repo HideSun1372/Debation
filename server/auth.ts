@@ -160,7 +160,7 @@ if (isProd) {
         if (!req.isAuthenticated()) return res.sendStatus(401);
         try {
             const userId = (req.user as User).id;
-            const { username, email, firstName, lastName, profileImageUrl } = req.body;
+            const { username, email, firstName, lastName, profileImageUrl, bio } = req.body;
 
             const updates: Partial<InsertUser> = {};
             if (username !== undefined) updates.username = username;
@@ -168,6 +168,7 @@ if (isProd) {
             if (firstName !== undefined) updates.firstName = firstName;
             if (lastName !== undefined) updates.lastName = lastName;
             if (profileImageUrl !== undefined) updates.profileImageUrl = profileImageUrl;
+            if (bio !== undefined) updates.bio = bio;
 
             const updatedUser = await storage.updateUser(userId, updates);
 

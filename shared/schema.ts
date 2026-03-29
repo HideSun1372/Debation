@@ -290,7 +290,8 @@ export const users = pgTable("users", {
   email: varchar("email").unique(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
-  profileImageUrl: varchar("profile_image_url"),
+  profileImageUrl: text("profile_image_url"),
+  bio: text("bio"),
   skillPoints: integer("skill_points").notNull().default(500),
   totalDebates: integer("total_debates").notNull().default(0),
   wins: integer("wins").notNull().default(0),
@@ -319,7 +320,7 @@ export type UpsertUser = typeof users.$inferInsert;
 /** Public user info (no password, email, or isDeveloper) for search/discover */
 export type PublicUser = Pick<
   User,
-  "id" | "username" | "firstName" | "lastName" | "profileImageUrl" | "skillPoints" | "totalDebates" | "wins" | "losses"
+  "id" | "username" | "firstName" | "lastName" | "profileImageUrl" | "bio" | "skillPoints" | "totalDebates" | "wins" | "losses"
 >;
 
 // Debates table

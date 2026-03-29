@@ -5,8 +5,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { SkillBadge } from "@/components/skill-badge";
 import { SkillProgress } from "@/components/skill-progress";
 import { getSkillTier, SKILL_TIERS } from "@shared/schema";
-import { Trophy, Target, TrendingUp, TrendingDown, Percent, Award, LogIn } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Trophy, Target, TrendingUp, TrendingDown, Percent, Award, LogIn, Crown, Code } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useAdmin } from "@/hooks/use-admin";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 import { EditProfileDialog } from "@/components/edit-profile-dialog";
 import { ChangePasswordDialog } from "@/components/change-password-dialog";
 import { Settings, KeyRound } from "lucide-react";
@@ -28,6 +30,7 @@ export default function Profile() {
   const search = typeof window !== "undefined" ? window.location.search : "";
   const queryClient = useQueryClient();
   const { user, isLoading, isAuthenticated } = useAuth();
+  const { isCreator, isDeveloper } = useAdmin();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const isSuccessReturn = search.includes("success=true");
@@ -191,9 +194,46 @@ export default function Profile() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h2 className="text-2xl font-bold" data-testid="text-profile-name">{displayName}</h2>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-2xl font-bold" data-testid="text-profile-name">{displayName}</h2>
+                    <div className="h-0 overflow-visible flex items-center gap-1">
+                    <TooltipProvider>
+                      {isCreator && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-default inline-flex items-center justify-center h-7 w-7 rounded-full bg-amber-600 text-white shadow-sm self-center">
+                              <Crown className="h-4 w-4" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>Creator</TooltipContent>
+                        </Tooltip>
+                      )}
+                      {!isCreator && isDeveloper && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-default inline-flex items-center justify-center h-7 w-7 rounded-full bg-destructive text-destructive-foreground shadow-sm">
+                              <Code className="h-4 w-4" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>Developer</TooltipContent>
+                        </Tooltip>
+                      )}
+                      {user.isPro && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <img src="/dominion-logo.png" alt="Dominion" className="h-[85px] w-[85px] object-contain cursor-default self-center -ml-5" />
+                          </TooltipTrigger>
+                          <TooltipContent>Dominion Member</TooltipContent>
+                        </Tooltip>
+                      )}
+                    </TooltipProvider>
+                    </div>
+                  </div>
                   {user.email && (
                     <p className="text-sm text-muted-foreground" data-testid="text-profile-email">{user.email}</p>
+                  )}
+                  {user.bio?.trim() && (
+                    <p className="text-sm mt-2 max-w-md">{user.bio}</p>
                   )}
                   <SkillBadge points={user.skillPoints} size="lg" className="mt-2" />
                 </div>
@@ -303,7 +343,7 @@ export default function Profile() {
                       tickFormatter={(v) => `#${v}`}
                     />
                     <YAxis className="text-xs" />
-                    <Tooltip
+                    <RechartsTooltip
                       contentStyle={{
                         backgroundColor: "hsl(var(--card))",
                         border: "1px solid hsl(var(--border))",
