@@ -82,8 +82,6 @@ export function log(message: string, source = "express") {
 }
 
 app.use((req, res, next) => {
-  // Log ALL requests
-  console.log(`[Request] ${req.method} ${req.path}`);
   const start = Date.now();
   const path = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;

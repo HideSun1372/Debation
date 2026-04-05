@@ -41,12 +41,6 @@ export async function initializeSessionTable() {
         CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON sessions ("expire");
       `);
 
-      // Clean up expired sessions
-      const result = await pool.query(`
-        DELETE FROM sessions WHERE expire < NOW();
-      `);
-      console.log(`[Session Init] Cleaned up ${result.rowCount} expired sessions`);
-
       console.log("✓ Session table initialized successfully");
       return;
     } catch (err: any) {
