@@ -5,7 +5,7 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import session from "express-session";
-import { pool, initializeSessionTable } from "./db";
+import { pool, initializeSessionTable, startDbHeartbeat } from "./db";
 
 const app = express();
 
@@ -109,6 +109,8 @@ app.use((req, res, next) => {
 (async () => {
   // Ensure session table exists before registering routes (important for cold starts on Render)
   await initializeSessionTable();
+  // Keep the pool connection and Neon compute alive between requests
+  startDbHeartbeat();
 
   await registerRoutes(httpServer, app);
 

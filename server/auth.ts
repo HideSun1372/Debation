@@ -163,6 +163,9 @@ if (isProd) {
     // Auth user endpoint - returns current authenticated user
     app.get("/api/auth/user", (req, res) => {
         if (!req.isAuthenticated()) {
+            // Log enough context to diagnose cold-start logouts without needing DEBUG=true
+            const hasPassportSession = !!(req.session as any)?.passport?.user;
+            console.log(`[Auth] /api/auth/user 401 — session id: ${req.sessionID}, has passport.user: ${hasPassportSession}, isNew: ${req.session.isNew ?? 'n/a'}`);
             return res.sendStatus(401);
         }
         res.json(req.user);

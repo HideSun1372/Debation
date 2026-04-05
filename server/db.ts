@@ -68,10 +68,35 @@ export async function initializeSessionTable() {
   throw lastError;
 }
 
-// Don't initialize here - it's done in index.ts before routes are registered
-// initializeSessionTable().catch(err => {
-//   console.error("Session table initialization failed:", err.message);
-// });
+// Keep the database connection (and Neon's compute) alive with a periodic
+// heartbeat. Without this, two things happen after a cold start:
+//   1. The pg pool closes its idle connection after idleTimeoutMillis (default 10s).
+//   2. Neon's free tier suspends compute after ~5 minutes of inactivity.
+// When the first user request arrives after either of these, connect-pg-simple
+// needs to run TWO sequential DB queries before it can return a session.
+// If those queries are slow (reconnect + Neon wake), express-session may create
+// a NEW empty session and send a fresh Set-Cookie — permanently logging the user
+// out because the browser's old session cookie is replaced.
+// Pinging every 4 minutes keeps the pool connection warm and Neon awake.
+export function startDbHeartbeat() {
+  if (!pool) return;
+
+  const HEARTBEAT_INTERVAL_MS = 4 * 60 * 1000; // 4 minutes
+
+  const ping = async () => {
+    try {
+      await pool.query("SELECT 1");
+    } catch (err: any) {
+      console.warn("[DB Heartbeat] ping failed:", err.message);
+    }
+  };
+
+  const timer = setInterval(ping, HEARTBEAT_INTERVAL_MS);
+  // Don't let this timer prevent the process from exiting cleanly
+  timer.unref();
+
+  console.log("[DB Heartbeat] Started (interval: 4 min)");
+}
 
 export { pool };
 export const db = pool ? drizzle(pool) : null;
