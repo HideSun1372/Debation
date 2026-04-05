@@ -90,7 +90,7 @@ export class DatabaseStorage implements IStorage {
       this.sessionStore = new PgSession({
         pool: pool,
         tableName: "sessions",
-        createTableIfMissing: false,
+        createTableIfMissing: true,
       });
       console.log("[Storage] PgSession created successfully");
     } catch (err: any) {

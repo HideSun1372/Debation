@@ -63,11 +63,10 @@ export async function initializeSessionTable() {
   throw lastError;
 }
 
-// Call on module load for background init
-initializeSessionTable().catch(err => {
-  console.error("Session table initialization failed:", err.message);
-  // Don't exit, allow the app to run and create table on-demand if needed
-});
+// Don't initialize here - it's done in index.ts before routes are registered
+// initializeSessionTable().catch(err => {
+//   console.error("Session table initialization failed:", err.message);
+// });
 
 export { pool };
 export const db = pool ? drizzle(pool) : null;
