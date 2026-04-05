@@ -7,6 +7,17 @@ if (!process.env.DATABASE_URL) {
 
 const pool = process.env.DATABASE_URL ? new pg.Pool({
   connectionString: process.env.DATABASE_URL,
+  // Keep TCP connections alive so the first request after cold start doesn't
+  // need a full reconnect (which can fail when connect-pg-simple's session
+  // lookup races against a dropped idle connection).
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 10000,
+  // Don't close idle connections too aggressively — 60 s gives the server
+  // time to warm up and serve the first user request before the connection
+  // is dropped.
+  idleTimeoutMillis: 60000,
+  // Fail fast if Neon is somehow unreachable, rather than hanging forever.
+  connectionTimeoutMillis: 10000,
 }) : null;
 
 if (pool) {

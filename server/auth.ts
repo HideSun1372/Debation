@@ -56,6 +56,12 @@ if (isProd) {
     app.set("trust proxy", 1); // Essential for Render
 }
 
+    // Surface session store errors in Render logs — these are silent by default
+    // and are the most likely cause of cold-start logouts.
+    storage.sessionStore.on("error", (err: Error) => {
+        console.error("[Auth] Session store error:", err.message);
+    });
+
     console.log("[Auth] Applying session middleware...");
     app.use(session(sessionSettings));
     console.log("[Auth] Session middleware applied");
@@ -89,8 +95,12 @@ if (isProd) {
     passport.deserializeUser(async (id: string, done) => {
         try {
             const user = await storage.getUser(id);
+            if (!user) {
+                console.warn(`[Auth] deserializeUser: no user found for id=${id} — session will be invalidated`);
+            }
             done(null, user);
-        } catch (err) {
+        } catch (err: any) {
+            console.error(`[Auth] deserializeUser error for id=${id}:`, err.message);
             done(err);
         }
     });

@@ -91,9 +91,12 @@ app.use((req, res, next) => {
     return originalResJson.apply(res, [bodyJson, ...args]);
   };
   res.on("finish", () => {
-    if (DEBUG) {
-      const duration = Date.now() - start;
-      if (path.startsWith("/api")) {
+    const duration = Date.now() - start;
+    if (path.startsWith("/api")) {
+      // Always log non-2xx responses so cold-start failures are visible in
+      // Render logs without needing DEBUG=true.
+      const isError = res.statusCode < 200 || res.statusCode >= 300;
+      if (DEBUG || isError) {
         let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
         if (capturedJsonResponse) logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
         log(logLine);
