@@ -33,8 +33,8 @@ export function Navbar() {
       return res.json();
     },
     enabled: isAuthenticated,
-    refetchOnWindowFocus: true,
-    refetchInterval: 5000, // Poll every 5 seconds for new requests
+    refetchOnWindowFocus: false,
+    refetchInterval: 30000,
   });
 
   const { data: debateRequests } = useQuery<{ id: string }[]>({
@@ -45,8 +45,8 @@ export function Navbar() {
       return res.json();
     },
     enabled: isAuthenticated,
-    refetchOnWindowFocus: true,
-    refetchInterval: 5000, // Poll every 5 seconds for new requests
+    refetchOnWindowFocus: false,
+    refetchInterval: 30000,
   });
 
   const pendingFriendCount = pendingRequests?.length ?? 0;

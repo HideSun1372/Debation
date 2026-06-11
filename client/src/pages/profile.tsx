@@ -529,7 +529,7 @@ function FriendRequestsCard({ queryClient }: { queryClient: ReturnType<typeof us
       if (!res.ok) throw new Error("Failed to load requests");
       return res.json();
     },
-    refetchInterval: 5000, // Poll every 5 seconds for new requests
+    refetchInterval: 30000,
   });
 
   const acceptMutation = useMutation({
@@ -644,7 +644,7 @@ function DebateRequestsCard({ queryClient }: { queryClient: ReturnType<typeof us
       if (!res.ok) throw new Error("Failed to load debate requests");
       return res.json();
     },
-    refetchInterval: 5000, // Poll every 5 seconds for new requests
+    refetchInterval: 30000,
   });
 
   const acceptMutation = useMutation({

@@ -93,12 +93,16 @@ app.use((req, res, next) => {
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
-      // Always log non-2xx responses so cold-start failures are visible in
-      // Render logs without needing DEBUG=true.
-      const isError = res.statusCode < 200 || res.statusCode >= 300;
+      // Log 4xx/5xx always; log 2xx/3xx only in DEBUG.
+      // Exclude body from 304 responses — Express sets capturedJsonResponse
+      // before converting 200→304, so logging it floods the console with the
+      // full payload even though no bytes were sent to the client.
+      const isError = res.statusCode >= 400;
       if (DEBUG || isError) {
         let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-        if (capturedJsonResponse) logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        if (capturedJsonResponse && res.statusCode !== 304) {
+          logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        }
         log(logLine);
       }
     }
