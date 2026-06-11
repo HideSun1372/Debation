@@ -12,10 +12,13 @@ const pool = process.env.DATABASE_URL ? new pg.Pool({
   // lookup races against a dropped idle connection).
   keepAlive: true,
   keepAliveInitialDelayMillis: 10000,
-  // Don't close idle connections too aggressively — 60 s gives the server
-  // time to warm up and serve the first user request before the connection
-  // is dropped.
-  idleTimeoutMillis: 60000,
+  // Keep idle connections alive slightly longer than the heartbeat interval
+  // (4 min) so there is always a warm connection ready when a user request
+  // arrives between heartbeat ticks. Without this, the pool drops its
+  // connection after 60 s and every request in the 60s–240s window has to
+  // establish a new TCP+SSL connection to Neon, which can fail or be slow
+  // enough to trigger a 500 and a false client-side logout.
+  idleTimeoutMillis: 270000, // 4.5 minutes — just above the 4-min heartbeat
   // Fail fast if Neon is somehow unreachable, rather than hanging forever.
   connectionTimeoutMillis: 10000,
 }) : null;
