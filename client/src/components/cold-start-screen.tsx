@@ -18,9 +18,9 @@ export function ColdStartScreen() {
   return (
     <div className="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center gap-6 px-4">
       <div className="flex flex-col items-center gap-4 text-center max-w-sm">
-        <p className="text-lg font-semibold">Waking up the server...</p>
+        <p className="text-lg font-semibold">Calling everyone to the podium...</p>
         <p className="text-sm text-muted-foreground">
-          The server is on a free plan and sleeps after inactivity. This usually takes about 30 seconds.
+          Our budget only covers an on-demand debate team. Assembly time: ~30 seconds.
         </p>
 
         <div className="w-full">
@@ -35,7 +35,7 @@ export function ColdStartScreen() {
 
         {showConnectivityError && (
           <p className="text-xs text-muted-foreground opacity-70">
-            Taking longer than expected. Are you connected to the internet?
+            We're still waiting for the debate hall to respond. Are you connected to the internet?
           </p>
         )}
       </div>
