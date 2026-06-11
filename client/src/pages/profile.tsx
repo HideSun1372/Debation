@@ -118,9 +118,9 @@ export default function Profile() {
     ? Math.round((user.wins / user.totalDebates) * 100)
     : 0;
 
-  const displayName = user.firstName && user.lastName
-    ? `${user.firstName} ${user.lastName}`
-    : user.firstName || user.email?.split('@')[0] || 'Debater';
+  const displayName = user.displayName
+    || [user.firstName, user.lastName].filter(Boolean).join(' ')
+    || 'Debater';
 
   const initials = user.firstName && user.lastName
     ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`
@@ -231,9 +231,7 @@ export default function Profile() {
                     </TooltipProvider>
                     </div>
                   </div>
-                  {user.email && (
-                    <p className="text-sm text-muted-foreground" data-testid="text-profile-email">{user.email}</p>
-                  )}
+                  <p className="text-sm text-muted-foreground" data-testid="text-profile-email">@{user.username}</p>
                   {user.bio?.trim() && (
                     <p className="text-sm mt-2 max-w-md">{user.bio}</p>
                   )}

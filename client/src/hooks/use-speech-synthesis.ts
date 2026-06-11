@@ -22,6 +22,7 @@ interface UseSpeechSynthesisReturn {
     availableVoices: SpeechSynthesisVoice[];
     currentVoice: SpeechSynthesisVoice | null;
     setVoice: (voiceName: string) => void;
+    getPlaybackInfo: () => { currentTime: number; duration: number };
 }
 
 export function useSpeechSynthesis(

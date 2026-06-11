@@ -26,7 +26,7 @@ async function login(credentials: Pick<InsertUser, "username" | "password">): Pr
   return await res.json();
 }
 
-async function register(credentials: Pick<InsertUser, "username" | "password" | "email">): Promise<User> {
+async function register(credentials: Pick<InsertUser, "username" | "password" | "email" | "displayName">): Promise<User> {
   const res = await apiRequest("POST", "/api/register", credentials);
   return await res.json();
 }

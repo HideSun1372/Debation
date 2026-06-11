@@ -58,8 +58,20 @@ export default function Things() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl">Changelogs: March 29th, 2026</CardTitle>
+                <CardTitle className="text-xl">Changelogs: June 11th, 2026</CardTitle>
                 <Badge variant="secondary" className="text-xs">Latest</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground leading-relaxed">
+                Accounts now have a separate display name field — set how you appear to others without changing your login username. Profiles show your @username instead of your email address. Usernames are now limited to 3–20 characters and cannot contain spaces. Passwords must be at least 8 characters (max 90). Error messages during login and registration have been cleaned up to be friendlier and less technical. Developers can now rename any user's username and display name from the Developer Tools panel. The 404 page has been replaced with a proper error page.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl">Changelogs: March 29th, 2026</CardTitle>
               </div>
             </CardHeader>
             <CardContent>

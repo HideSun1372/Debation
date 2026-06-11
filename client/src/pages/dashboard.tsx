@@ -288,6 +288,34 @@ function DeveloperToolsCard({ isCreator }: { isCreator: boolean }) {
                         </>
                     )}
                     <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                            const username = targetUsername.trim() || prompt("Username of account to rename:", "");
+                            if (!username?.trim()) return;
+                            const newUsername = prompt("New username (leave blank to keep):", "") ?? "";
+                            const newDisplayName = prompt("New display name (leave blank to keep):", "") ?? "";
+                            if (!newUsername.trim() && newDisplayName === "") return;
+                            fetch(apiUrl("/api/dev/rename-user"), {
+                                method: "POST",
+                                credentials: "include",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    username: username.trim(),
+                                    ...(newUsername.trim() && { newUsername: newUsername.trim() }),
+                                    ...(newDisplayName !== "" && { newDisplayName }),
+                                }),
+                            })
+                                .then((r) => r.json())
+                                .then((data) => {
+                                    alert(data.message || data.error || "Done!");
+                                    if (data.success) window.location.reload();
+                                });
+                        }}
+                    >
+                        Rename user
+                    </Button>
+                    <Button
                         variant="destructive"
                         size="sm"
                         onClick={() => {

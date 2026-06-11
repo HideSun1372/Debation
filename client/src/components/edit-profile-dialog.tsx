@@ -50,6 +50,7 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
 
     const [formData, setFormData] = useState({
         username: user.username,
+        displayName: user.displayName || "",
         email: user.email || "",
         firstName: user.firstName || "",
         lastName: user.lastName || "",
@@ -81,8 +82,26 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (formData.username.includes(" ")) {
+            toast({ title: "Invalid username", description: "Username cannot contain spaces.", variant: "destructive" });
+            return;
+        }
+        if (formData.username.length < 3) {
+            toast({ title: "Invalid username", description: "Username must be at least 3 characters.", variant: "destructive" });
+            return;
+        }
+        if (formData.username.length > 20) {
+            toast({ title: "Invalid username", description: "Username cannot exceed 20 characters.", variant: "destructive" });
+            return;
+        }
+        if (!formData.displayName.trim()) {
+            toast({ title: "Invalid display name", description: "Display name cannot be empty.", variant: "destructive" });
+            return;
+        }
+
         const updates: Partial<User> = {};
         if (formData.username !== user.username) updates.username = formData.username;
+        if (formData.displayName !== (user.displayName || "")) updates.displayName = formData.displayName || null;
         if (formData.email !== (user.email || "")) updates.email = formData.email || null;
         if (formData.firstName !== (user.firstName || "")) updates.firstName = formData.firstName || null;
         if (formData.lastName !== (user.lastName || "")) updates.lastName = formData.lastName || null;
@@ -166,7 +185,21 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
                                 value={formData.username}
                                 onChange={handleChange}
                                 className="col-span-3"
+                                maxLength={20}
                                 required
+                            />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="displayName" className="text-right">
+                                Display Name
+                            </Label>
+                            <Input
+                                id="displayName"
+                                value={formData.displayName}
+                                onChange={handleChange}
+                                className="col-span-3"
+                                placeholder="How you appear to others"
+                                maxLength={40}
                             />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">

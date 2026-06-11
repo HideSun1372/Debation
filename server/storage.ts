@@ -30,6 +30,7 @@ const PgSession = connectPgSimple(session);
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, updates: Partial<InsertUser>): Promise<User>;
   upsertUser?: (user: InsertUser) => Promise<User>; // Keep optional for backward compat if needed, or remove
@@ -111,6 +112,12 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    if (!db) throw new Error("Database not available");
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
   async searchUsers(query: string, limit = 30): Promise<PublicUser[]> {
     if (!db) throw new Error("Database not available");
     const q = query.trim();
@@ -119,9 +126,11 @@ export class DatabaseStorage implements IStorage {
       .select({
         id: users.id,
         username: users.username,
+        displayName: users.displayName,
         firstName: users.firstName,
         lastName: users.lastName,
         profileImageUrl: users.profileImageUrl,
+        bio: users.bio,
         skillPoints: users.skillPoints,
         totalDebates: users.totalDebates,
         wins: users.wins,
@@ -139,9 +148,11 @@ export class DatabaseStorage implements IStorage {
       .select({
         id: users.id,
         username: users.username,
+        displayName: users.displayName,
         firstName: users.firstName,
         lastName: users.lastName,
         profileImageUrl: users.profileImageUrl,
+        bio: users.bio,
         skillPoints: users.skillPoints,
         totalDebates: users.totalDebates,
         wins: users.wins,
@@ -232,9 +243,11 @@ export class DatabaseStorage implements IStorage {
         createdAt: friendRequests.createdAt,
         uid: users.id,
         username: users.username,
+        displayName: users.displayName,
         firstName: users.firstName,
         lastName: users.lastName,
         profileImageUrl: users.profileImageUrl,
+        bio: users.bio,
         skillPoints: users.skillPoints,
         totalDebates: users.totalDebates,
         wins: users.wins,
@@ -252,9 +265,11 @@ export class DatabaseStorage implements IStorage {
       fromUser: {
         id: r.uid,
         username: r.username,
+        displayName: r.displayName,
         firstName: r.firstName,
         lastName: r.lastName,
         profileImageUrl: r.profileImageUrl,
+        bio: r.bio,
         skillPoints: r.skillPoints,
         totalDebates: r.totalDebates,
         wins: r.wins,
@@ -275,9 +290,11 @@ export class DatabaseStorage implements IStorage {
       .select({
         id: users.id,
         username: users.username,
+        displayName: users.displayName,
         firstName: users.firstName,
         lastName: users.lastName,
         profileImageUrl: users.profileImageUrl,
+        bio: users.bio,
         skillPoints: users.skillPoints,
         totalDebates: users.totalDebates,
         wins: users.wins,
@@ -456,9 +473,11 @@ export class DatabaseStorage implements IStorage {
     const [from] = await db.select({
       id: users.id,
       username: users.username,
+      displayName: users.displayName,
       firstName: users.firstName,
       lastName: users.lastName,
       profileImageUrl: users.profileImageUrl,
+      bio: users.bio,
       skillPoints: users.skillPoints,
       totalDebates: users.totalDebates,
       wins: users.wins,
@@ -477,9 +496,11 @@ export class DatabaseStorage implements IStorage {
       const [from] = await db.select({
         id: users.id,
         username: users.username,
+        displayName: users.displayName,
         firstName: users.firstName,
         lastName: users.lastName,
         profileImageUrl: users.profileImageUrl,
+        bio: users.bio,
         skillPoints: users.skillPoints,
         totalDebates: users.totalDebates,
         wins: users.wins,
@@ -578,6 +599,10 @@ export class MemStorage implements IStorage {
     );
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find((user) => user.email === email);
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = (this.currentId++).toString();
     const now = new Date();
@@ -585,6 +610,7 @@ export class MemStorage implements IStorage {
       ...insertUser,
       id,
       email: insertUser.email ?? null,
+      displayName: insertUser.displayName ?? null,
       firstName: insertUser.firstName ?? null,
       lastName: insertUser.lastName ?? null,
       profileImageUrl: insertUser.profileImageUrl ?? null,
@@ -741,9 +767,11 @@ export class MemStorage implements IStorage {
     return {
       id: user.id,
       username: user.username,
+      displayName: user.displayName,
       firstName: user.firstName,
       lastName: user.lastName,
       profileImageUrl: user.profileImageUrl,
+      bio: user.bio,
       skillPoints: user.skillPoints,
       totalDebates: user.totalDebates,
       wins: user.wins,

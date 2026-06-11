@@ -1554,6 +1554,43 @@ Respond with a JSON object:
     }
   });
 
+  // Rename a user's username and/or display name (developer/creator only)
+  app.post("/api/dev/rename-user", isDeveloperMiddleware, async (req: any, res) => {
+    try {
+      const { username, newUsername, newDisplayName } = req.body;
+      if (!username || typeof username !== "string" || !username.trim()) {
+        return res.status(400).json({ error: "username is required" });
+      }
+      const target = await storage.getUserByUsername(username.trim());
+      if (!target) return res.status(404).json({ error: `User not found: ${username}` });
+
+      const updates: Record<string, string | null> = {};
+
+      if (newUsername !== undefined && newUsername !== "") {
+        const u = newUsername.trim();
+        if (u.includes(" ")) return res.status(400).json({ error: "Username cannot contain spaces" });
+        if (u.length > 20) return res.status(400).json({ error: "Username cannot exceed 20 characters" });
+        const existing = await storage.getUserByUsername(u);
+        if (existing && existing.id !== target.id) return res.status(400).json({ error: "Username already taken" });
+        updates.username = u;
+      }
+
+      if (newDisplayName !== undefined) {
+        updates.displayName = newDisplayName.trim() || null;
+      }
+
+      if (Object.keys(updates).length === 0) {
+        return res.status(400).json({ error: "Provide newUsername and/or newDisplayName" });
+      }
+
+      await storage.updateUser(target.id, updates);
+      res.json({ success: true, message: `Updated ${target.username}: ${JSON.stringify(updates)}` });
+    } catch (error: any) {
+      console.error("Error renaming user:", error);
+      res.status(500).json({ error: "Failed to rename user" });
+    }
+  });
+
   // ── Gemini 2.5 Flash TTS ──────────────────────────────────────────────
   // POST /api/tts/stream  { text: string }
   // Returns audio blob using Gemini 2.5 Flash TTS.

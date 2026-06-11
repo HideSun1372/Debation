@@ -118,18 +118,43 @@ if (isProd) {
     // Auth Routes
     app.post("/api/register", async (req, res, next) => {
         try {
-            const { username, password, email } = req.body;
+            const { username, password, email, displayName } = req.body;
+            if (!username || typeof username !== "string" || username.includes(" ")) {
+                return res.status(400).send("Username cannot contain spaces");
+            }
+            if (username.length < 3) {
+                return res.status(400).send("Username must be at least 3 characters");
+            }
+            if (username.length > 20) {
+                return res.status(400).send("Username cannot exceed 20 characters");
+            }
+            if (!displayName || !displayName.trim()) {
+                return res.status(400).send("Display name cannot be empty");
+            }
+            if (!password || typeof password !== "string" || password.length < 8) {
+                return res.status(400).send("Password must be at least 8 characters");
+            }
+            if (password.length > 90) {
+                return res.status(400).send("Password cannot exceed 90 characters");
+            }
             const existingUser = await storage.getUserByUsername(username);
             if (existingUser) {
-                return res.status(400).send("Username already exists");
+                return res.status(400).send("Username already exists.");
+            }
+            if (email) {
+                const existingEmail = await storage.getUserByEmail(email);
+                if (existingEmail) {
+                    return res.status(400).send("An account with this email already exists.");
+                }
             }
 
             const hashedPassword = await hashPassword(password);
             const user = await storage.createUser({
                 username,
                 email,
+                displayName: displayName || null,
                 password: hashedPassword,
-                skillPoints: 500, // Default start
+                skillPoints: 500,
                 totalDebates: 0,
                 wins: 0,
                 losses: 0,
@@ -142,7 +167,7 @@ if (isProd) {
     });
 
     app.post("/api/login", (req, res, next) => {
-        passport.authenticate("local", (err: Error | null, user: User | false, info: { message: string } | undefined) => {
+        passport.authenticate("local", (err: Error | null, user: User | false, _info: { message: string } | undefined) => {
             if (err) {
                 return next(err);
             }
@@ -165,7 +190,7 @@ if (isProd) {
         if (!req.isAuthenticated()) {
             // Log enough context to diagnose cold-start logouts without needing DEBUG=true
             const hasPassportSession = !!(req.session as any)?.passport?.user;
-            console.log(`[Auth] /api/auth/user 401 — session id: ${req.sessionID}, has passport.user: ${hasPassportSession}, isNew: ${req.session.isNew ?? 'n/a'}`);
+            console.log(`[Auth] /api/auth/user 401 — session id: ${req.sessionID}, has passport.user: ${hasPassportSession}, isNew: ${(req.session as any).isNew ?? 'n/a'}`);
             return res.sendStatus(401);
         }
         res.json(req.user);
@@ -180,11 +205,27 @@ if (isProd) {
         if (!req.isAuthenticated()) return res.sendStatus(401);
         try {
             const userId = (req.user as User).id;
-            const { username, email, firstName, lastName, profileImageUrl, bio } = req.body;
+            const { username, email, displayName, firstName, lastName, profileImageUrl, bio } = req.body;
+
+            if (username !== undefined) {
+                if (typeof username !== "string" || username.includes(" ")) {
+                    return res.status(400).send("Username cannot contain spaces");
+                }
+                if (username.length < 3) {
+                    return res.status(400).send("Username must be at least 3 characters");
+                }
+                if (username.length > 20) {
+                    return res.status(400).send("Username cannot exceed 20 characters");
+                }
+            }
+            if (displayName !== undefined && !displayName?.trim()) {
+                return res.status(400).send("Display name cannot be empty");
+            }
 
             const updates: Partial<InsertUser> = {};
             if (username !== undefined) updates.username = username;
             if (email !== undefined) updates.email = email;
+            if (displayName !== undefined) updates.displayName = displayName || null;
             if (firstName !== undefined) updates.firstName = firstName;
             if (lastName !== undefined) updates.lastName = lastName;
             if (profileImageUrl !== undefined) updates.profileImageUrl = profileImageUrl;
@@ -211,8 +252,8 @@ if (isProd) {
             if (!currentPassword || typeof currentPassword !== "string" || !newPassword || typeof newPassword !== "string") {
                 return res.status(400).json({ error: "Current password and new password are required" });
             }
-            if (newPassword.length < 6) {
-                return res.status(400).json({ error: "New password must be at least 6 characters" });
+            if (newPassword.length < 8) {
+                return res.status(400).json({ error: "New password must be at least 8 characters" });
             }
             const user = await storage.getUser(userId);
             if (!user || !(await comparePasswords(currentPassword, user.password))) {

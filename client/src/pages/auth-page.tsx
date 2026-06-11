@@ -16,6 +16,7 @@ export default function AuthPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
+    const [displayName, setDisplayName] = useState("");
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,10 +24,10 @@ export default function AuthPage() {
             { username, password },
             {
                 onSuccess: () => { setLocation("/"); },
-                onError: (error: Error) => {
+                onError: () => {
                     toast({
                         title: "Login failed",
-                        description: error.message,
+                        description: "The username or password is incorrect.",
                         variant: "destructive",
                     });
                 },
@@ -36,14 +37,38 @@ export default function AuthPage() {
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (username.includes(" ")) {
+            toast({ title: "Invalid username", description: "Username cannot contain spaces.", variant: "destructive" });
+            return;
+        }
+        if (username.length < 3) {
+            toast({ title: "Invalid username", description: "Username must be at least 3 characters.", variant: "destructive" });
+            return;
+        }
+        if (username.length > 20) {
+            toast({ title: "Invalid username", description: "Username cannot exceed 20 characters.", variant: "destructive" });
+            return;
+        }
+        if (!displayName.trim()) {
+            toast({ title: "Invalid display name", description: "Display name cannot be empty.", variant: "destructive" });
+            return;
+        }
+        if (password.length < 8) {
+            toast({ title: "Invalid password", description: "Password must be at least 8 characters.", variant: "destructive" });
+            return;
+        }
+        if (password.length > 90) {
+            toast({ title: "Invalid password", description: "Password cannot exceed 90 characters.", variant: "destructive" });
+            return;
+        }
         registerMutation.mutate(
-            { username, password, email },
+            { username, password, email, displayName: displayName || undefined },
             {
                 onSuccess: () => { setLocation("/"); },
                 onError: (error: Error) => {
                     toast({
                         title: "Registration failed",
-                        description: error.message,
+                        description: error.message.replace(/^\d+:\s*/, ""),
                         variant: "destructive",
                     });
                 },
@@ -113,9 +138,22 @@ export default function AuthPage() {
                                     <Input
                                         id="reg-username"
                                         type="text"
-                                        placeholder="Choose a username"
+                                        placeholder="Choose a username (max 20 chars, no spaces)"
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
+                                        maxLength={20}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="reg-display-name">Display Name</Label>
+                                    <Input
+                                        id="reg-display-name"
+                                        type="text"
+                                        placeholder="How you want to appear to others"
+                                        value={displayName}
+                                        onChange={(e) => setDisplayName(e.target.value)}
+                                        maxLength={40}
                                         required
                                     />
                                 </div>
