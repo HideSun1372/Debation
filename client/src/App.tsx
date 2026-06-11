@@ -11,7 +11,6 @@ import { Navbar } from "@/components/navbar";
 import { AuthGuard } from "@/components/auth-guard";
 import { ColdStartScreen } from "@/components/cold-start-screen";
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "@/lib/api-config";
 import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
 import Learn from "@/pages/learn";
@@ -80,12 +79,15 @@ function Router() {
 }
 
 function AppContent() {
-  const [backendReady, setBackendReady] = useState(!API_BASE_URL);
+  // In dev, Vite and the API share one process — no cold start possible.
+  // In production, poll /api/health (proxied to Render by Vercel) until the
+  // backend is up before rendering the app.
+  const [backendReady, setBackendReady] = useState(!import.meta.env.PROD);
 
   useEffect(() => {
-    if (!API_BASE_URL) return;
+    if (!import.meta.env.PROD) return;
     const poll = () => {
-      fetch(`${API_BASE_URL}/api/health`)
+      fetch("/api/health")
         .then(res => { if (res.ok) setBackendReady(true); else setTimeout(poll, 2000); })
         .catch(() => setTimeout(poll, 2000));
     };
