@@ -9,6 +9,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { UserProvider } from "@/lib/user-context";
 import { Navbar } from "@/components/navbar";
 import { AuthGuard } from "@/components/auth-guard";
+import { ColdStartScreen } from "@/components/cold-start-screen";
+import { useEffect, useState } from "react";
+import { API_BASE_URL } from "@/lib/api-config";
 import Home from "@/pages/home";
 import Dashboard from "@/pages/dashboard";
 import Learn from "@/pages/learn";
@@ -76,16 +79,34 @@ function Router() {
   );
 }
 
+function AppContent() {
+  const [backendReady, setBackendReady] = useState(!API_BASE_URL);
+
+  useEffect(() => {
+    if (!API_BASE_URL) return;
+    const poll = () => {
+      fetch(`${API_BASE_URL}/api/health`)
+        .then(res => { if (res.ok) setBackendReady(true); else setTimeout(poll, 2000); })
+        .catch(() => setTimeout(poll, 2000));
+    };
+    poll();
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      {backendReady ? <Router /> : <ColdStartScreen />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <UserProvider>
           <TooltipProvider>
-            <div className="min-h-screen bg-background">
-              <Navbar />
-              <Router />
-            </div>
+            <AppContent />
             <Toaster />
           </TooltipProvider>
         </UserProvider>

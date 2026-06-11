@@ -65,6 +65,10 @@ export async function registerRoutes(
   // WebSocket for multiplayer debates
   setupWebSocket(httpServer);
 
+  app.get("/api/health", (_req, res) => {
+    res.json({ ok: true });
+  });
+
   app.get(["/api/webhook", "/api/webhook/"], (_req, res) => {
     res.status(200).send("Stripe webhook endpoint. Use POST from Stripe (or stripe listen). Server is reachable at /api/webhook.");
   });
