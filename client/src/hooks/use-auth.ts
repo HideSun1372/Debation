@@ -54,7 +54,13 @@ export function useAuth() {
   const { data: user, isLoading, error } = useQuery<User | null>({
     queryKey: ["/api/auth/user"],
     queryFn: fetchUser,
-    retry: false,
+    retry: (failureCount, err) => {
+      // Never retry a real 401 — that's a genuine "not logged in".
+      // Do retry on server/network errors (500, ECONNRESET, etc.) up to 2x.
+      if (err instanceof Error && err.message.startsWith("401")) return false;
+      return failureCount < 2;
+    },
+    retryDelay: 1500,
     staleTime: Infinity,
   });
 

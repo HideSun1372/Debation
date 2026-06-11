@@ -15,7 +15,7 @@ const pool = process.env.DATABASE_URL ? new pg.Pool({
   // Don't close idle connections too aggressively — 60 s gives the server
   // time to warm up and serve the first user request before the connection
   // is dropped.
-  idleTimeoutMillis: 300000, // 5 min — outlasts the 4-min heartbeat interval
+  idleTimeoutMillis: 60000,
   // Fail fast if Neon is somehow unreachable, rather than hanging forever.
   connectionTimeoutMillis: 10000,
 }) : null;
@@ -91,11 +91,11 @@ export function startDbHeartbeat() {
     }
   };
 
+  ping(); // warm Neon immediately — don't wait 4 min for the first tick
   const timer = setInterval(ping, HEARTBEAT_INTERVAL_MS);
-  // Don't let this timer prevent the process from exiting cleanly
   timer.unref();
 
-  console.log("[DB Heartbeat] Started (interval: 4 min)");
+  console.log("[DB Heartbeat] Started (immediate ping + interval: 4 min)");
 }
 
 export { pool };
