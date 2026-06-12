@@ -174,7 +174,7 @@ export default function Profile() {
                   onClick={handleJoinDominion}
                   className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold h-11 transition-all hover:scale-[1.01]"
                 >
-                  Upgrade to Dominion ($6/mo)
+                  Upgrade to Dominion ($6/mo) (Only a sandbox, using Stripe's payment method awards it for free.)
                 </Button>
               ) : (
                 <p className="text-sm text-amber-800/80 dark:text-amber-400/80 italic">
