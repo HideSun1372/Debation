@@ -37,7 +37,7 @@ async function buildAll() {
 
   console.log("building client...");
   execSync("npm install", { cwd: "frontend", stdio: "inherit" });
-  execSync("npm run build", { cwd: "frontend", stdio: "inherit" });
+  execSync("npm run build -- --outDir ../dist/public", { cwd: "frontend", stdio: "inherit" });
 
   console.log("building server...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));
