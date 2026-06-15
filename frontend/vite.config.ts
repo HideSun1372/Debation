@@ -5,10 +5,15 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "src"),
-      "@shared": path.resolve(import.meta.dirname, "..", "backend", "shared"),
-    },
+    alias: [
+      { find: "@", replacement: path.resolve(import.meta.dirname, "src") },
+      { find: "@shared", replacement: path.resolve(import.meta.dirname, "..", "backend", "shared") },
+      // drizzle-orm/drizzle-zod are in frontend/node_modules but imported by
+      // backend/shared/schema.ts (outside frontend/). Rollup climbs from backend/shared/
+      // upward and never reaches frontend/node_modules, so we pin them here.
+      { find: /^drizzle-orm(.*)$/, replacement: path.resolve(import.meta.dirname, "node_modules/drizzle-orm") + "$1" },
+      { find: /^drizzle-zod(.*)$/, replacement: path.resolve(import.meta.dirname, "node_modules/drizzle-zod") + "$1" },
+    ],
   },
   root: import.meta.dirname,
   build: {
