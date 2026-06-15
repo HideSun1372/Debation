@@ -1,8 +1,7 @@
 {
   "include": [
-    "client/src/**/*",
-    "shared/**/*",
-    "server/**/*"
+    "frontend/src/**/*",
+    "backend/**/*"
   ],
   "exclude": [
     "node_modules",
@@ -12,7 +11,7 @@
   ],
   "compilerOptions": {
     "incremental": true,
-    "tsBuildInfoFile": "./.tsbuildinfo",
+    "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
     "noEmit": true,
     "module": "ESNext",
     "strict": true,
@@ -32,10 +31,10 @@
     ],
     "paths": {
       "@/*": [
-        "./client/src/*"
+        "./frontend/src/*"
       ],
       "@shared/*": [
-        "./shared/*"
+        "./backend/shared/*"
       ]
     }
   }
