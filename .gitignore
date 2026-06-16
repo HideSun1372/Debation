@@ -5,3 +5,7 @@ desktop.ini
 vite.config.ts.*
 *.tar.gz
 .env
+.agents
+.claude
+.idea
+.vscode
