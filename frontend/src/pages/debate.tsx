@@ -14,6 +14,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useSpeechRecognition } from "@/hooks/use-speech-recognition";
 import { useSpeechSynthesis } from "@/hooks/use-speech-synthesis";
 import { useDebateWebSocket } from "@/hooks/use-debate-websocket";
+import { AI_DISABLED_MESSAGE } from "@/lib/ai-disabled";
 
 interface DebateMessage {
   id: string;
@@ -31,7 +32,34 @@ interface DebateResult {
   improvements: string[];
 }
 
+function AiOpponentDisabledScreen() {
+  return (
+    <div className="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center gap-6 px-4">
+      <div className="flex flex-col items-center gap-4 text-center max-w-sm">
+        <Bot className="h-10 w-10 text-muted-foreground" />
+        <p className="text-lg font-semibold">AI opponents are taking a break</p>
+        <p className="text-sm text-muted-foreground">{AI_DISABLED_MESSAGE}</p>
+        <Button onClick={() => { window.location.href = "/play"; }}>
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Back
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function Debate() {
+  const searchString = typeof window !== "undefined" ? window.location.search.slice(1) : "";
+  const isAiOpponentMode = !new URLSearchParams(searchString).get("room");
+
+  if (isAiOpponentMode) {
+    return <AiOpponentDisabledScreen />;
+  }
+
+  return <DebateInner />;
+}
+
+function DebateInner() {
   const searchString = typeof window !== "undefined" ? window.location.search.slice(1) : "";
   const { user, recordDebate, addDebateToHistory } = useUser();
   const messagesEndRef = useRef<HTMLDivElement>(null);

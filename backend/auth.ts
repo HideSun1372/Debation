@@ -6,7 +6,7 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User, InsertUser } from "@shared/schema";
+import { User, InsertUser, sanitizeUser } from "@shared/schema";
 
 const scryptAsync = promisify(scrypt);
 
@@ -110,7 +110,7 @@ if (isProd) {
             if (err) return next(err);
             req.session.save((err: Error) => {
                 if (err) return next(err);
-                res.status(statusCode).json(user);
+                res.status(statusCode).json(sanitizeUser(user));
             });
         });
     }
@@ -193,12 +193,12 @@ if (isProd) {
             console.log(`[Auth] /api/auth/user 401 — session id: ${req.sessionID}, has passport.user: ${hasPassportSession}, isNew: ${(req.session as any).isNew ?? 'n/a'}`);
             return res.sendStatus(401);
         }
-        res.json(req.user);
+        res.json(sanitizeUser(req.user as User));
     });
 
     app.get("/api/user", (req, res) => {
         if (!req.isAuthenticated()) return res.sendStatus(401);
-        res.json(req.user);
+        res.json(sanitizeUser(req.user as User));
     });
 
     app.patch("/api/user", async (req, res, next) => {

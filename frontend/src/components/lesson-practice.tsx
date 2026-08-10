@@ -15,8 +15,10 @@ import {
   Target,
   ArrowRight,
   Sparkles,
+  Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AI_DISABLED, AI_DISABLED_MESSAGE } from "@/lib/ai-disabled";
 import type {
   LessonPracticePage,
   PracticeType,
@@ -51,7 +53,7 @@ interface LessonPracticeProps {
 // All practice types now require written explanations for deeper learning
 
 export function LessonPractice({ practice, practiceId, userLevel, onComplete, onSkip }: LessonPracticeProps) {
-  const [stage, setStage] = useState<"loading" | "prompt" | "responding" | "evaluating" | "feedback">("loading");
+  const [stage, setStage] = useState<"loading" | "prompt" | "responding" | "evaluating" | "feedback" | "disabled">("loading");
   const [aiPrompt, setAiPrompt] = useState<PracticePrompt | null>(null);
   const [userResponse, setUserResponse] = useState("");
   const [feedback, setFeedback] = useState<PracticeFeedback | null>(null);
@@ -64,6 +66,11 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
   }, [practiceId]);
 
   const generatePrompt = async () => {
+    if (AI_DISABLED) {
+      setStage("disabled");
+      return;
+    }
+
     setStage("loading");
     setError(null);
     setUserResponse("");
@@ -264,6 +271,13 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {stage === "disabled" && (
+          <div className="flex flex-col items-center justify-center py-12 gap-4 text-center">
+            <Bot className="h-8 w-8 text-muted-foreground" />
+            <p className="text-muted-foreground max-w-sm">{AI_DISABLED_MESSAGE}</p>
+          </div>
+        )}
+
         {stage === "loading" && (
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -424,6 +438,12 @@ export function LessonPractice({ practice, practiceId, userLevel, onComplete, on
       </CardContent>
 
       <CardFooter className="flex justify-between gap-2">
+        {stage === "disabled" && onSkip && (
+          <Button variant="ghost" onClick={onSkip} className="ml-auto" data-testid="button-skip-practice">
+            Skip
+          </Button>
+        )}
+
         {stage === "prompt" && (
           <>
             {onSkip && (

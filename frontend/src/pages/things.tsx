@@ -58,8 +58,20 @@ export default function Things() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl">Changelogs: June 11th, 2026</CardTitle>
+                <CardTitle className="text-xl">Changelogs: August 9th, 2026</CardTitle>
                 <Badge variant="secondary" className="text-xs">Latest</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground leading-relaxed">
+                Fixed a security issue where user account data, including password hashes, could be exposed through certain profile lookups. AI opponents, voice debate, and interactive lesson practice are temporarily turned off while the app is in its testing phase — your AI Coach summary on the home page is unaffected and still works as usual.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl">Changelogs: June 11th, 2026</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
@@ -112,7 +124,7 @@ export default function Things() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground leading-relaxed">
-                Voice debate UI has been vastly improved, while switching to a different API. I also fixed security issues.
+                Voice debate now runs on a different speech API for more reliable transcription and playback. Debate and practice requests are now rate-limited, session handling is more secure, and CORS issues that could cause login problems have been fixed.
               </p>
             </CardContent>
           </Card>

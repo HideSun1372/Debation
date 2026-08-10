@@ -7,6 +7,8 @@ import { setupWebSocket } from "./websocket";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { setupAuth, isAuthenticated } from "./auth";
 import { z } from "zod";
+import type { PublicUser } from "@shared/schema";
+import { AI_DISABLED, AI_DISABLED_MESSAGE } from "./ai-disabled";
 import { generatePracticePrompt, evaluatePracticeResponse } from "./practice";
 import type { PracticeType, DifficultyLevel } from "@shared/lessons/types";
 import Stripe from "stripe";
@@ -391,6 +393,7 @@ export async function registerRoutes(
   });
 
   app.post("/api/debate/message", isAuthenticated, debateMessageLimiter, async (req: any, res) => {
+    if (AI_DISABLED) return res.status(503).json({ error: AI_DISABLED_MESSAGE });
     try {
       const {
         message,
@@ -499,6 +502,7 @@ export async function registerRoutes(
   });
 
   app.post("/api/debate/evaluate", async (req, res) => {
+    if (AI_DISABLED) return res.status(503).json({ error: AI_DISABLED_MESSAGE });
     try {
       const {
         debateId,
@@ -706,6 +710,7 @@ Be fair but consider the skill level difference. If the user is debating someone
 
   // Evaluate if a crossfire answer is complete (triggers new race if so)
   app.post("/api/debate/crossfire/evaluate", async (req, res) => {
+    if (AI_DISABLED) return res.status(503).json({ error: AI_DISABLED_MESSAGE });
     try {
       const { question, answer, topic, context } = req.body;
 
@@ -762,7 +767,20 @@ Respond with a JSON object:
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-      res.json(user);
+      const publicUser: PublicUser = {
+        id: user.id,
+        username: user.username,
+        displayName: user.displayName,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl,
+        bio: user.bio,
+        skillPoints: user.skillPoints,
+        totalDebates: user.totalDebates,
+        wins: user.wins,
+        losses: user.losses,
+      };
+      res.json(publicUser);
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ error: "Failed to fetch user" });
@@ -1205,6 +1223,7 @@ Respond with a JSON object:
   });
 
   app.post("/api/practice/generate", isAuthenticated, practiceGenerateLimiter, async (req: any, res) => {
+    if (AI_DISABLED) return res.status(503).json({ error: AI_DISABLED_MESSAGE });
     try {
       const parseResult = practiceGenerateSchema.safeParse(req.body);
       if (!parseResult.success) {
@@ -1231,6 +1250,7 @@ Respond with a JSON object:
   });
 
   app.post("/api/practice/hint", async (req, res) => {
+    if (AI_DISABLED) return res.status(503).json({ error: AI_DISABLED_MESSAGE });
     try {
       const { practiceType, difficulty, context } = req.body;
       const { generatePracticeHint } = await import("./practice");
@@ -1249,6 +1269,7 @@ Respond with a JSON object:
   });
 
   app.post("/api/practice/evaluate", async (req, res) => {
+    if (AI_DISABLED) return res.status(503).json({ error: AI_DISABLED_MESSAGE });
     try {
       const parseResult = practiceEvaluateSchema.safeParse(req.body);
       if (!parseResult.success) {
@@ -1595,6 +1616,7 @@ Respond with a JSON object:
   // POST /api/tts/stream  { text: string }
   // Returns audio blob using Gemini 2.5 Flash TTS.
   app.post("/api/tts/stream", isAuthenticated, async (req, res) => {
+    if (AI_DISABLED) return res.status(503).json({ error: AI_DISABLED_MESSAGE });
     const { text } = req.body;
     if (!text || typeof text !== "string") {
       return res.status(400).json({ error: "text is required" });
@@ -1696,6 +1718,7 @@ Respond with a JSON object:
   // POST /api/transcribe  multipart: audio file
   // Uploads audio to Gemini Files API via REST, transcribes, returns { transcript: string }.
   app.post("/api/transcribe", isAuthenticated, audioUpload.single("audio"), async (req, res) => {
+    if (AI_DISABLED) return res.status(503).json({ error: AI_DISABLED_MESSAGE });
     if (!req.file) {
       return res.status(400).json({ error: "audio file required" });
     }

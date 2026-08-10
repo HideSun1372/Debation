@@ -324,6 +324,15 @@ export type PublicUser = Pick<
   "id" | "username" | "displayName" | "firstName" | "lastName" | "profileImageUrl" | "bio" | "skillPoints" | "totalDebates" | "wins" | "losses"
 >;
 
+/** The full user record minus the password hash — safe to send to the account owner. */
+export type SafeUser = Omit<User, "password">;
+
+/** Strips the password hash before a user record is sent to a client. */
+export function sanitizeUser(user: User): SafeUser {
+  const { password, ...safeUser } = user;
+  return safeUser;
+}
+
 // Debates table
 export const debates = pgTable("debates", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
